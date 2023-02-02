@@ -1,23 +1,22 @@
 import React  from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCoffee } from '@fortawesome/free-solid-svg-icons'
+import { faGear, faNoteSticky, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 
 
  const SidebarData = [
     {
         title:"Documents",
-        icon: faCoffee,
+        icon: faNoteSticky,
         link:"/documents"
     },
     {
         title:"Settings",
-        icon: faCoffee,
+        icon: faGear,
         link:"/sample",
-        iconClosed: faCoffee,
     },
     {
         title:"Users",
-        icon: faCoffee,
+        icon: faUserPlus,
         link:"/Users"
     }
 ]
