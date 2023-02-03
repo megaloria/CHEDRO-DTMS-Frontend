@@ -1,20 +1,25 @@
 import React from 'react';
 import './Mastheader.css';
-import CHEDlogo from './CHED-Logo.png';
+import CHEDLogo from './assets/CHED-Logo.png';
 
-function MastHeader () {
+function MastHeader () 
+{
     return (
     <div className='Mastheader'>
         <div className='logo'>
-        <img src= {CHEDlogo} alt='' height={150}/>
+            <a href='#!'>
+                 <img src= {CHEDLogo} alt='' height={120}/>
+            </a>
         </div>
-        <p className='header-p'> 
-        <h1 className='republic'> REPUBLIC OF THE PHILIPPINES</h1>
-        <h2 className='president'> OFFICE OF THE PRESIDENT</h2>
-        <h2 className='ched'> COMMISION ON HIGHER EDUCATION </h2>
-        <h4 className='office'> REGIONAL OFFICE IV (CALABARZON)</h4>
-        </p>
-</div>
+
+        <div className='header-p'> 
+            <span className='republic'> REPUBLIC OF THE PHILIPPINES </span>
+            <h2 className='president'> OFFICE OF THE PRESIDENT </h2>
+            <span className='ched'> COMMISION ON HIGHER EDUCATION </span>
+            <h4 className='office'> REGIONAL OFFICE IV (CALABARZON) </h4>
+        </div>
+
+    </div>
 
         
     )
