@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+// import React, { useState } from "react";
 import "./Header.css";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
@@ -34,7 +34,7 @@ function Header() {
       <Container className="cont1">
         <OverlayTrigger
           placement="right"
-          delay={{ show: 250, hide: 300 }}
+          delay={{ show: 250, hide: 200 }}
           overlay={renderTooltip}
         >
           <Navbar.Brand className="title" href="#home">
