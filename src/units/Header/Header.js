@@ -34,7 +34,7 @@ function Header() {
       <Container className="cont1">
         <OverlayTrigger
           placement="right"
-          delay={{ show: 250, hide: 400 }}
+          delay={{ show: 250, hide: 300 }}
           overlay={renderTooltip}
         >
           <Navbar.Brand className="title" href="#home">
