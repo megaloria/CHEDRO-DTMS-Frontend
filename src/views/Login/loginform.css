@@ -1,34 +1,16 @@
-
-.mb-2{
-    /* for textbox */
-margin: 0;
-box-sizing: border-box;
-font-size: 14px;
-}
-
-
-.con1 {
-    display: flex;
-    margin-top: 16%;
-    margin-left: 8%;
-}
-
-/* .con2{
-
-    margin-top: 16%;
-    margin-right: 45%;
-    padding: 30px;
-    background-color: aqua;
-} */
-.email {
-    margin-left: 3%;
-    /* background-color: aqua; */
-}
-
-.loginform {
-    background-color: aqua;
-}
-
-.mb-3 {
-    font-size: 13px;
+.Email{
+  font-family: 'Times New Roman'
+    }
+    
+    .Pass{
+        font-family: 'Times New Roman'
+          }
+          
+           
+    .cb{
+        font-family: 'Times New Roman'
+          }
+          
+.-gdrid gap-2{
+  background-color: #4CAF50;
 }
