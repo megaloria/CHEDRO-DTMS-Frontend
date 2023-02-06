@@ -1,0 +1,11 @@
+body .tbl{
+    max-width: 90%;
+    margin:40px 65px;
+    text-align:center;
+}
+
+
+.page{
+    left: 0;
+    float: right;
+}
