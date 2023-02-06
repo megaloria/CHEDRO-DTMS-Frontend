@@ -5,7 +5,6 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import pic from '../../assets/CHEDL.png'
-
 import './loginform.css'
 
 
@@ -18,31 +17,31 @@ function loginform() {
     <Container style={{ height: '100%'}}>
       <Row style={{ height: '100%', alignItems: 'center'}}>
         <Col style={{margin:'auto'}}md={{ span: 4 }}>
+          <Form>
         <Card className='p-3' style={{backgroundColor:'white',}}>
         <Card.Body>
-      <div style={{ textAlign: 'center' }}>
-        <img src={pic} width='190' />
+      <div style={{ textAlign: 'center', marginBottom:'1rem' }}>
+        <img src={pic} width='150' />
       </div>
-
-      <Form.Group  className="Email" controlId="formGridEmail">
-            <Form.Label>Email</Form.Label>
+      <Form.Group className="mb-3" controlId="formGridEmail">
+            <Form.Label>Username</Form.Label>
             <Form.Control  placeholder="Username" required />
      </Form.Group>
 
-      <Form.Group className="Pass" controlId="formGridPassword">
+      <Form.Group className="mb-3" controlId="formGridPassword">
       <Form.Label>Password</Form.Label>
             <Form.Control pill type ='password' placeholder="Password" required />
       </Form.Group>
-      <Form.Group className= "cb" id="formGridCheckbox">
+      <Form.Group className= "mb-3" id="formGridCheckbox">
             <Form.Check pill type="checkbox" label="Remember password" />
       </Form.Group>
-      <br></br>
       <div  className="d-grid gap-2">
-             <Button  variant="dark">Login Now</Button>
+             <Button  variant="primary">Login</Button>
       </div>
 
       </Card.Body>
       </Card>
+      </Form>
         </Col>
         
 
