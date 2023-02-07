@@ -1,11 +1,18 @@
 .maindiv {
   height: 100vh;
-  background-color:#0C2245;
+  width: auto;
+  background-color: #0C2245;
 }
 
-.container {
+.container1 {
   height: 100%;
 }
+
+.p-3{
+  /* background-color: aquamarine;
+  background-color: white; */
+  margin: auto;
+} 
 
 .logo {
   text-align: center;

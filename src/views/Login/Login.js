@@ -14,7 +14,7 @@ function loginform() {
   
   <div className='maindiv'>
 
-    <Container className='Container1'>
+    <Container className='container1'>
 
     <Row style={{ height: '100%', alignItems: 'center'}}>
 
@@ -22,16 +22,16 @@ function loginform() {
 
       <Form>
 
-       <Card className='p-3' style={{backgroundColor:'white',}}>
-          
+       <Card className='p-3' style={{borderRadius:'25px'}}>
+       {/* <Card className='p-3' style={{backgroundColor:'transparent', border:'2px solid rgba(255,255,255,0.5)', borderRadius:'20px'}}>    */}
           <Card.Body>
-
+          {/* <Card.Body style={{color:'white'}}> */}
             <div className='logo'>
               <img src={pic} width='150' />
             </div>
 
               <Form.Group className="mb-3" controlId="formGridEmail">
-                    <Form.Label>Username</Form.Label>
+                    <Form.Label> Username</Form.Label>
                     <Form.Control  placeholder="Username" required />
               </Form.Group>
 
