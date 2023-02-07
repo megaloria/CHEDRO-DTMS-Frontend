@@ -5,28 +5,29 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import pic from '../../assets/CHEDL.png'
-import Validation from './Validator';
+import Validation from './Validator.js';
 import './Loginform.css'
 import { useState } from 'react';
 
 
 
-function loginform() {
+function Loginform() {
   const [values, setValues] = useState({
 
     username: '',
-    password:''
+    password: ''
     
     })
+    
     const [errors, setError] = useState({})
 
       function handleChange(e){
-      setValues({...values, [e.target.username]: e.target.value })
+      setValues({...values, [e.target.username]: e.target.values })
       }
 
       function handleSubmit(e){
       e.preventDefault();
-      Validation(values);
+      setError(Validation(values));
       }
 
 
@@ -69,7 +70,7 @@ function loginform() {
               </Form.Group>
 
               <div  className="d-grid gap-2">
-                    <Button  name='submit'variant="primary">Login</Button>
+                    <Button variant="primary">Login</Button>
               </div>
 
             </Card.Body>
@@ -82,4 +83,4 @@ function loginform() {
   );
 }
 
-export default loginform;
+export default Loginform;
