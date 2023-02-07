@@ -1,16 +1,13 @@
-/* .Email{
-  font-family: 'Times New Roman'
-    }
-    
-    .Pass{
-        font-family: 'Times New Roman'
-          }
-          
-           
-    .cb{
-        font-family: 'Times New Roman'
-          } */
-          
-.-gdrid gap-2{
-  background-color: #4CAF50;
+.maindiv {
+  height: 100vh;
+  background-color:#0C2245;
+}
+
+.container {
+  height: 100%;
+}
+
+.logo {
+  text-align: center;
+  margin-bottom: 1rem;
 }
