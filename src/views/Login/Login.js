@@ -5,31 +5,45 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import pic from '../../assets/CHEDL.png'
-import Validation from './Validator.js';
 import './Loginform.css'
 import { useState } from 'react';
+import Validator from 'validatorjs';
 
 
 
 function Loginform() {
   const [values, setValues] = useState({
-
     username: '',
     password: ''
+  });
     
-    })
-    
-    const [errors, setError] = useState({})
+    const [errors, setError] = useState({
+      username: '',
+      password: ''
+    });
 
-      function handleChange(e){
-      setValues({...values, [e.target.username]: e.target.values })
+      function handleChange(e) {
+        setValues({
+          ...values,
+          [e.target.name]: e.target.value
+        });
       }
 
       function handleSubmit(e){
-      e.preventDefault();
-      setError(Validation(values));
-      }
+        e.preventDefault();
 
+        let validation = new Validator(values, {
+          username: 'required|min:3',
+          password: 'required|min:8'
+        });
+
+        if (validation.fails()) {
+          setError({
+            username: validation.errors.first('username'),
+            password: validation.errors.first('password'),
+          });
+        }
+      }
 
   return (    
   
@@ -44,33 +58,35 @@ function Loginform() {
       <Form onSubmit={handleSubmit}>
 
        <Card className='p-3' style={{borderRadius:'25px'}}>
-       {/* <Card className='p-3' style={{backgroundColor:'transparent', border:'2px solid rgba(255,255,255,0.5)', borderRadius:'20px'}}>    */}
           <Card.Body>
-          {/* <Card.Body style={{color:'white'}}> */}
             <div className='logo'>
               <img src={pic} width='150' />
             </div>
 
-              <Form.Group className="mb-3"  value={values.username} name='username' controlId="formGridEmail" onChange={handleChange}>
+              <Form.Group className="mb-3"  value={values.username} name="username" controlId="formGridEmail" onChange={handleChange}>
                     <Form.Label> Username</Form.Label>
-                    <Form.Control  placeholder="Username" required />
-                    {errors.username && <p style={{Color:"red",fontSize:'13px' }}> {errors.username}</p>}
+                    <Form.Control  placeholder="Username" />
+                    {
+                      errors.username && (
+                        <p style={{color:'red', fontSize:'13px' }}> {errors.username}</p>
+                      )
+                    }
               </Form.Group>
 
-              <Form.Group className="mb-3" value={values.password} name='password'controlId="formGridPassword" onChange={handleChange} >
+              <Form.Group className="mb-3" value={values.password} name="password" controlId="formGridPassword" onChange={handleChange} >
                     <Form.Label>Password</Form.Label>
-                    <Form.Control pill type='password' placeholder="Password" required />
-                    {errors.password && <p style={{Color:"red",fontSize:'13px' }}> {errors.password}</p>}
-
+                    <Form.Control pill type='password' placeholder="Password" />
+                    {
+                      errors.password && (
+                        <p style={{color:'red', fontSize:'13px' }}> {errors.password}</p>
+                      )
+                    }
               </Form.Group>
-
               <Form.Group className= "mb-3" id="formGridCheckbox">
-                    <Form.Check pill type="checkbox" label="Remember password"
-                     />
+                    <Form.Check pill type="checkbox" label="Remember password"/>
               </Form.Group>
-
               <div  className="d-grid gap-2">
-                    <Button variant="primary">Login</Button>
+                     <Button type='submit' variant="primary">Login</Button>
               </div>
 
             </Card.Body>
