@@ -42,6 +42,11 @@ function Loginform() {
             username: validation.errors.first('username'),
             password: validation.errors.first('password'),
           });
+        } else {
+          setError({
+            username: '',
+            password: ''
+          });
         }
       }
 
@@ -63,31 +68,69 @@ function Loginform() {
               <img src={pic} width='150' />
             </div>
 
-              <Form.Group className="mb-3"  value={values.username} name="username" controlId="formGridEmail" onChange={handleChange}>
-                    <Form.Label> Username</Form.Label>
-                    <Form.Control  placeholder="Username" />
-                    {
-                      errors.username && (
-                        <p style={{color:'red', fontSize:'13px' }}> {errors.username}</p>
-                      )
-                    }
-              </Form.Group>
+          <Form.Group 
+              className='mb-3' 
+              value={values.username}
+              controlId='formGridusername'
+              onChange={handleChange}>
 
-              <Form.Group className="mb-3" value={values.password} name="password" controlId="formGridPassword" onChange={handleChange} >
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control pill type='password' placeholder="Password" />
-                    {
-                      errors.password && (
-                        <p style={{color:'red', fontSize:'13px' }}> {errors.password}</p>
-                      )
-                    }
+          <Form.Label>Username</Form.Label>
+          <Form.Control 
+              placeholder='Username'
+              name='username' 
+              isInvalid = {!!errors.username} />
+              <Form.Control.Feedback type='invalid'>
+              {errors.username}
+          </Form.Control.Feedback>  
+          </Form.Group>
+
+
+          <Form.Group 
+              className='mb-3' 
+              value={values.password}
+              controlId='formGridpassword'
+              onChange={handleChange}>
+
+          <Form.Label>Password</Form.Label>
+          <Form.Control 
+          type='password'
+              placeholder='Password'
+              name='password' 
+              isInvalid = {!!errors.password} />
+              <Form.Control.Feedback type='invalid'>
+              {errors.password}
+          </Form.Control.Feedback>  
+          </Form.Group>
+          {/* <Form.Group 
+                className='mb-3'
+                value={values.password}
+                controlId='formGridpassword'
+                onChange={handleChange} >      
+              <Form.Label>Password</Form.Label>
+             
+              <Form.Control 
+                type='password'
+                placeholder='Password'
+                name='password'
+                isInvalid = {!!errors.password} />
+              <Form.Control.Feedback type='invalid'>
+                {errors.password}
+              </Form.Control.Feedback>
+           </Form.Group> */}
+
+              <Form.Group 
+                className= 'mb-3'
+                controlId='rememberPassword'>
+              <Form.Check 
+                pill type='checkbox' 
+                label='Remember password'/>
               </Form.Group>
-              <Form.Group className= "mb-3" id="formGridCheckbox">
-                    <Form.Check pill type="checkbox" label="Remember password"/>
-              </Form.Group>
-              <div  className="d-grid gap-2">
-                     <Button type='submit' variant="primary">Login</Button>
-              </div>
+              <div  className='d-grid gap-2'>
+              <Button
+                type='submit' 
+                variant='primary'>Login
+            </Button>
+              </div>   
 
             </Card.Body>
         </Card>
