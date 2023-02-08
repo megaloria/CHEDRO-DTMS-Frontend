@@ -5,11 +5,13 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import pic from '../../assets/CHEDL.png'
-import './loginform.css'
+import './Loginform.css'
+import { useState } from 'react';
+import Validator from 'validatorjs';
 
 
 
-function Loginform() {
+function loginform() {
   return (    
   
   <div className='maindiv'>
@@ -20,33 +22,77 @@ function Loginform() {
 
     <Col style={{margin:'auto'}}md={{ span: 4 }}>
 
-      <Form>
+      <Form onSubmit={handleSubmit}>
 
        <Card className='p-3' style={{borderRadius:'25px'}}>
-       {/* <Card className='p-3' style={{backgroundColor:'transparent', border:'2px solid rgba(255,255,255,0.5)', borderRadius:'20px'}}>    */}
           <Card.Body>
-          {/* <Card.Body style={{color:'white'}}> */}
             <div className='logo'>
               <img src={pic} width='150' />
             </div>
 
-              <Form.Group className="mb-3" controlId="formGridEmail">
-                    <Form.Label> Username</Form.Label>
-                    <Form.Control  placeholder="Username" required />
-              </Form.Group>
+          <Form.Group 
+              className='mb-3' 
+              value={values.username}
+              controlId='formGridusername'
+              onChange={handleChange}>
 
-              <Form.Group className="mb-3" controlId="formGridPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control pill type ='password' placeholder="Password" required />
-              </Form.Group>
+          <Form.Label>Username</Form.Label>
+          <Form.Control 
+              placeholder='Username'
+              name='username' 
+              isInvalid = {!!errors.username} />
+              <Form.Control.Feedback type='invalid'>
+              {errors.username}
+          </Form.Control.Feedback>  
+          </Form.Group>
 
-              <Form.Group className= "mb-3" id="formGridCheckbox">
-                    <Form.Check pill type="checkbox" label="Remember password" />
-              </Form.Group>
 
-              <div  className="d-grid gap-2">
-                    <Button  variant="primary">Login</Button>
-              </div>
+          <Form.Group 
+              className='mb-3' 
+              value={values.password}
+              controlId='formGridpassword'
+              onChange={handleChange}>
+
+          <Form.Label>Password</Form.Label>
+          <Form.Control 
+          type='password'
+              placeholder='Password'
+              name='password' 
+              isInvalid = {!!errors.password} />
+              <Form.Control.Feedback type='invalid'>
+              {errors.password}
+          </Form.Control.Feedback>  
+          </Form.Group>
+          {/* <Form.Group 
+                className='mb-3'
+                value={values.password}
+                controlId='formGridpassword'
+                onChange={handleChange} >      
+              <Form.Label>Password</Form.Label>
+             
+              <Form.Control 
+                type='password'
+                placeholder='Password'
+                name='password'
+                isInvalid = {!!errors.password} />
+              <Form.Control.Feedback type='invalid'>
+                {errors.password}
+              </Form.Control.Feedback>
+           </Form.Group> */}
+
+              <Form.Group 
+                className= 'mb-3'
+                controlId='rememberPassword'>
+              <Form.Check 
+                pill type='checkbox' 
+                label='Remember password'/>
+              </Form.Group>
+              <div  className='d-grid gap-2'>
+              <Button
+                type='submit' 
+                variant='primary'>Login
+            </Button>
+              </div>   
 
             </Card.Body>
         </Card>
