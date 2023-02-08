@@ -1,14 +1,50 @@
-import React,{useState}  from 'react';
+import React,{ useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTrash,faRotate, faEdit, faAdd} from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Pagination, Row, Col, Spinner} from 'react-bootstrap';
+import {
+    faTrash,
+    faRotate, 
+    faEdit, 
+    faAdd
+} from '@fortawesome/free-solid-svg-icons'
+import {Button, Modal, Input, Form, Pagination, Row, Col, Table} from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import './Users-style.css';
 
 function Home() {
- 
-    // EDIT CREATE
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        setData([
+            {
+                id: 1,
+                Username: 'qwerty237',
+                Name: 'Cristobal Roel',
+                Position: 'Regional Director',
+            },
+            {
+                id: 2,
+                Username: 'dfdhgf123',
+                Name: 'Limbo Vince Brian',
+                Position: 'Chief Administrative Officer',
+            },
+            {
+                id: 3,
+                Username: 'asdwrq634',
+                Name: 'Baruelo Berth Anthony',
+                Position: 'Secretary',
+            },
+            {
+                id: 4,
+                Username: 'vnvbnvb4473',
+                Name: 'Madamba Prinz Gerard',
+                Position: 'Assistant',
+            },
+        ]);
+    }, []);
+
+
+    // ADD CREATE
     const [show, setShow] = useState(false);
  
     const handleClose = () => {
@@ -18,6 +54,7 @@ function Home() {
         setShow(true)
     };
 
+    // Change Password
     const [show2, setShow2] = useState(false);
  
     const handleClose2 = () => {
@@ -25,6 +62,16 @@ function Home() {
     };
     const handleShow2 = () => {
         setShow2(true)
+    };
+
+    // Edit Record
+    const [show3, setShow3] = useState(false);
+ 
+    const handleClose3 = () => {
+        setShow3(false)
+    };
+    const handleShow3 = () => {
+        setShow3(true)
     };
 
     // DELETE
@@ -63,7 +110,7 @@ function Home() {
             </Col>
             <Col md="auto">
               <Button variant="primary" onClick={handleShow}>
-              <FontAwesomeIcon icon={faAdd} className="addIcon"/> Add
+                <FontAwesomeIcon icon={faAdd} className="addIcon"/> Add
               </Button>
              </Col> 
             </Row>
@@ -71,7 +118,7 @@ function Home() {
         </div>
             <div class="row">
                 <div class="table-responsive " >
-                 <table class="table table-striped table-hover ">
+                 <Table striped bordered hover size="md">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -81,116 +128,27 @@ function Home() {
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>  
-                        <tr>
-                            <td>1</td>
-                            <td>User123</td>
-                            <td>Rual Octo</td>
-                            <td>Deban Steet</td>
-                            <td>
-                            <Button onClick={handleShow} variant="link"><FontAwesomeIcon icon={faEdit} className="text-primary"/></Button>
-                            <Button onClick={handleShow2} variant="link"><FontAwesomeIcon icon={faRotate} className="text-success"/></Button>
-                            <Button onClick={showAlert} variant="link"><FontAwesomeIcon icon={faTrash} className="text-danger"/></Button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>2</td>
-                            <td>User123</td>
-                            <td>Demark</td>
-                            <td>City Road.13</td>
-                            <td>
-                            <Button variant="link"><FontAwesomeIcon icon={faEdit} className="text-primary"/></Button>
-                            <Button variant="link"><FontAwesomeIcon icon={faRotate} className="text-success"/></Button>
-                            <Button onClick={showAlert} variant="link"><FontAwesomeIcon icon={faTrash} className="text-danger"/></Button>
-                            </td>
-                        </tr>  
- 
-                        <tr>
-                            <td>3</td>
-                            <td>User123</td>
-                            <td>Richa Deba</td>
-                            <td>Ocol Str. 57</td>
-                            <td>
-                            <Button variant="link"><FontAwesomeIcon icon={faEdit} className="text-primary"/></Button>
-                            <Button variant="link"><FontAwesomeIcon icon={faRotate} className="text-success"/></Button>
-                            <Button onClick={showAlert} variant="link"><FontAwesomeIcon icon={faTrash} className="text-danger"/></Button>
-                            </td>
-                        </tr>
- 
-                        <tr>
-                            <td>4</td>
-                            <td>User123</td>
-                            <td>James Cott</td>
-                            <td>Berut Road</td>
-                            <td>
-                            <Button variant="link"><FontAwesomeIcon icon={faEdit} className="text-primary"/></Button>
-                            <Button variant="link"><FontAwesomeIcon icon={faRotate} className="text-success"/></Button>
-                            <Button onClick={showAlert} variant="link"><FontAwesomeIcon icon={faTrash} className="text-danger"/></Button>
-                            </td>
-                        </tr>
- 
-                        <tr>
-                            <td>5</td>
-                            <td>User123</td>
-                            <td>Dheraj</td>
-                            <td>Bulf Str. 54</td>
-                            <td>
-                            <Button variant="link"><FontAwesomeIcon icon={faEdit} className="text-primary"/></Button>
-                            <Button variant="link"><FontAwesomeIcon icon={faRotate} className="text-success"/></Button>
-                            <Button onClick={showAlert} variant="link"><FontAwesomeIcon icon={faTrash} className="text-danger"/></Button>
-                            </td>
-                        </tr>
- 
-                        <tr>
-                            <td>6</td>
-                            <td>User123</td>
-                            <td>Maria James</td>
-                            <td>Obere Str. 76</td>
-                            <td>
-                            <Button variant="link"><FontAwesomeIcon icon={faEdit} className="text-primary"/></Button>
-                            <Button variant="link"><FontAwesomeIcon icon={faRotate} className="text-success"/></Button>
-                            <Button onClick={showAlert} variant="link"><FontAwesomeIcon icon={faTrash} className="text-danger"/></Button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>7</td>
-                            <td>User123</td>
-                            <td>Khris Gray</td>
-                            <td>Wellington Str. 12</td>
-                            <td>
-                            <Button variant="link"><FontAwesomeIcon icon={faEdit} className="text-primary"/></Button>
-                            <Button variant="link"><FontAwesomeIcon icon={faRotate} className="text-success"/></Button>
-                            <Button onClick={showAlert} variant="link"><FontAwesomeIcon icon={faTrash} className="text-danger"/></Button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>8</td>
-                            <td>User123</td>
-                            <td>Hannah Okoro</td>
-                            <td>Hayne Str. 23</td>
-                            <td>
-                            <Button variant="link"><FontAwesomeIcon icon={faEdit} className="text-primary"/></Button>
-                            <Button variant="link"><FontAwesomeIcon icon={faRotate} className="text-success"/></Button>
-                            <Button onClick={showAlert} variant="link"><FontAwesomeIcon icon={faTrash} className="text-danger"/></Button>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <td>9</td>
-                            <td>User123</td>
-                            <td>Johnson James</td>
-                            <td>Okowo Str. 98</td>
-                            <td>
-                            <Button variant="link"><FontAwesomeIcon icon={faEdit} className="text-primary"/></Button>
-                            <Button variant="link"><FontAwesomeIcon icon={faRotate} className="text-success"/></Button>
-                            <Button onClick={showAlert} variant="link"><FontAwesomeIcon icon={faTrash} className="text-danger"/></Button>
-                            </td>
-                        </tr>
+                    <tbody>
+                    {
+                        data.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.id}</td>
+                                <td>{row.Username}</td>
+                                <td>{row.Name}</td>
+                                <td>{row.Position}</td>
+                                <td>
+                                <Button onClick={handleShow3} variant="link">
+                                    <FontAwesomeIcon icon={faEdit} className="text-primary"/></Button>
+                                <Button onClick={handleShow2} variant="link">
+                                    <FontAwesomeIcon icon={faRotate} className="text-success"/></Button>
+                                <Button onClick={showAlert} variant="link">
+                                    <FontAwesomeIcon icon={faTrash} className="text-danger"/></Button>
+                                </td>
+                            </tr>
+                        ))
+                    } 
                     </tbody>
-                </table>
+                </Table>
 
                 <div>
                     <Pagination className="page">
@@ -215,7 +173,7 @@ function Home() {
             </div>   
         </div>
 
-    {/* <!--- Model Box EDIT ---> */}
+    {/* <!--- Model Box Add ---> */}
     
     <div className="model_box">
         <Modal
@@ -225,7 +183,7 @@ function Home() {
             keyboard={false}
         >
         <Modal.Header closeButton>
-        <Modal.Title>Create Record</Modal.Title>
+        <Modal.Title>Add Record</Modal.Title>
         </Modal.Header>
         <Form>
             <Modal.Body>
@@ -234,12 +192,6 @@ function Home() {
             <Form.Group className="mb-2" controlId="">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" placeholder="Enter Username" required/>
-            </Form.Group>
-            </Col>
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" placeholder="Enter Password" required/>
             </Form.Group>
             </Col>
             <Col>
@@ -303,12 +255,99 @@ function Home() {
                     Cancel
                 </Button>
                 <Button variant="primary">
-                    Create Record 
+                    Add Record 
                 </Button>
             </Modal.Footer>
             </Form>
         </Modal>
-  
+       {/* Model Box Finish */}
+
+       {/* <!--- Model Box Edit ---> */}
+    <div className="model_box">
+        <Modal
+            show={show3}
+            onHide={handleClose3}
+            backdrop="static"
+            keyboard={false}
+        >
+        <Modal.Header closeButton>
+        <Modal.Title>Edit Record</Modal.Title>
+        </Modal.Header>
+        <Form>
+            <Modal.Body>
+            <Row className="margin: 40px">
+            <Col>
+            <Form.Group className="mb-2" controlId="">
+                <Form.Label>Username</Form.Label>
+                <Form.Control type="text" placeholder="Enter Username" required/>
+            </Form.Group>
+            </Col>
+            <Col>
+            <Form.Group className="mb-2" controlId="">
+                <Form.Label>Role</Form.Label>
+                <Form.Select aria-label="Default select example">
+                    <option>Select Role</option>
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </Form.Select>
+            </Form.Group>
+            </Col>
+            </Row>
+
+            <Row>
+            <Col>
+            <Form.Group className="mb-2" controlId="">
+                <Form.Label>First Name</Form.Label>
+                <Form.Control type="text" placeholder="Enter First Name" required/>
+            </Form.Group>
+            </Col>
+            <Col>
+            <Form.Group className="mb-2" controlId="">
+                <Form.Label>Middle Name</Form.Label>
+                <Form.Control type="text" placeholder="Enter Middle Name" />
+            </Form.Group>
+            </Col>
+            <Col>
+            <Form.Group className="mb-2" controlId="">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control type="text" placeholder="Enter Last Name" required/>
+            </Form.Group>
+            </Col>
+            </Row>
+
+            <Row className="justify-content-md">
+            <Col >
+            <Form.Group className="mb-2" controlId="">
+                <Form.Label>Prefix</Form.Label>
+                <Form.Control type="text" placeholder="Prefix" required/>
+            </Form.Group>
+            </Col>
+            <Col >
+            <Form.Group className="mb-2" controlId="">
+                <Form.Label>Suffix</Form.Label>
+                <Form.Control type="text" placeholder="Enter Suffix" required/>
+            </Form.Group>
+            </Col>
+            <Col >
+            <Form.Group className="mb-2" controlId="">
+                <Form.Label>Position</Form.Label>
+                <Form.Control type="text" placeholder="Enter Position" required/>
+            </Form.Group>
+            </Col>
+            </Row>
+            </Modal.Body>
+
+            <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose3}>
+                    Cancel
+                </Button>
+                <Button variant="primary">
+                    Done
+                </Button>
+            </Modal.Footer>
+            </Form>
+        </Modal>
        {/* Model Box Finish */}
 
        <div className="model_box">
@@ -351,6 +390,7 @@ function Home() {
 
        </div>  
       </div>     
+      </div>
       </div>
 
       
