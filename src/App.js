@@ -1,10 +1,9 @@
 import logo from './logo.svg';
 import './App.css';
-import ChangePassword from './views/Change-Password/ChangePassword.js'
-
+import ChangePass from './views/Change-Password/ChangePassword'
 function ChangePassword() {
   return (
-      <ChangePassword/>
+      <ChangePass/>
 
   );
 }
