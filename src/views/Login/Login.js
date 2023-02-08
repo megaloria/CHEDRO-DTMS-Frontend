@@ -11,7 +11,45 @@ import Validator from 'validatorjs';
 
 
 
-function loginform() {
+function Loginform() {
+  const [values, setValues] = useState({
+    username: '',
+    password: ''
+  });
+    
+    const [errors, setError] = useState({
+      username: '',
+      password: ''
+    });
+
+      function handleChange(e) {
+        setValues({
+          ...values,
+          [e.target.name]: e.target.value
+        });
+      }
+
+      function handleSubmit(e){
+        e.preventDefault();
+
+        let validation = new Validator(values, {
+          username: 'required|min:3',
+          password: 'required|min:8'
+        });
+
+        if (validation.fails()) {
+          setError({
+            username: validation.errors.first('username'),
+            password: validation.errors.first('password'),
+          });
+        } else {
+          setError({
+            username: '',
+            password: ''
+          });
+        }
+      }
+
   return (    
   
   <div className='maindiv'>
