@@ -1,8 +1,8 @@
 import React,{useState}  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faTrash,faRotate, faEdit} from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Pagination, Row, Col} from 'react-bootstrap';
+import {faTrash,faRotate, faEdit, faAdd} from '@fortawesome/free-solid-svg-icons'
+import {Button, Modal, Input, Form, Pagination, Row, Col, Spinner} from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import './Users-style.css';
 
@@ -18,7 +18,6 @@ function Home() {
         setShow(true)
     };
 
-    // RESET
     const [show2, setShow2] = useState(false);
  
     const handleClose2 = () => {
@@ -47,7 +46,6 @@ function Home() {
               )
             }
           })
-
     };
   return (
        <div class="container fluid">
@@ -65,7 +63,7 @@ function Home() {
             </Col>
             <Col md="auto">
               <Button variant="primary" onClick={handleShow}>
-                Add
+              <FontAwesomeIcon icon={faAdd} className="addIcon"/> Add
               </Button>
              </Col> 
             </Row>
@@ -313,7 +311,6 @@ function Home() {
   
        {/* Model Box Finish */}
 
-        //  RESET
        <div className="model_box">
         <Modal
             show={show2}
@@ -356,8 +353,6 @@ function Home() {
       </div>     
       </div>
 
-   
-    
       
   );
 }
