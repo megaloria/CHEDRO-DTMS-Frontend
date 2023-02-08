@@ -9,7 +9,7 @@ import './loginform.css'
 
 
 
-function loginform() {
+function Loginform() {
   return (    
   
   <div className='maindiv'>
@@ -58,4 +58,4 @@ function loginform() {
   );
 }
 
-export default loginform;
+export default Loginform;
