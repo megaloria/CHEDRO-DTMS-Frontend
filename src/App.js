@@ -1,13 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
-import ChangePass from './views/Change-Password/ChangePassword'
+import ChangePassword from './views/ChangePassword/ChangePassword'
 
 
 function App() {
   return (
-      <ChangePass/>
+      <ChangePassword/>
 
   );
 }
 
-export default AppS;
+export default App;
