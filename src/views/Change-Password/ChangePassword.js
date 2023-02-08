@@ -1,1 +1,12 @@
-import React from 'react';
+
+import React from "react";
+
+
+function ChangePassword() {
+    return (
+  
+    );
+  }
+  
+  export default ChangePassword;
+  

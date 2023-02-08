@@ -1,11 +1,13 @@
 import logo from './logo.svg';
 import './App.css';
 import ChangePass from './views/Change-Password/ChangePassword'
-function ChangePassword() {
+
+
+function App() {
   return (
       <ChangePass/>
 
   );
 }
 
-export default ChangePassword;
+export default AppS;
