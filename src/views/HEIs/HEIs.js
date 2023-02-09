@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import {Button, Modal, Input, Form, Table, Row, Col} from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import './Roles-styles.css';
+import './HEIs-styles.css';
 
 
 function Home() {
@@ -19,24 +19,36 @@ function Home() {
         setData([
             {
                 id: 1,
-                description: 'Regional Director'
+                uii: 122423,
+                name: 'Roel Cristobal',
+                address: '545, Santiago, Malvar, Batangas',
+                headofins: 'Regional Director'
             },
             {
                 id: 2,
-                description: 'Chief Administrative Officer'
+                uii: 113243,
+                name: 'Roel Cristobal',
+                address: '123, Santiago, Malvar, Batangas',
+                headofins: 'Chief Administrative Officer'
             },
             {
                 id: 3,
-                description: 'Secretary'
+                uii: 132423,
+                name: 'Roel Cristobal',
+                address: '543, Santiago, Malvar, Batangas',
+                headofins: 'Secretary'
             },
             {
                 id: 4,
-                description: 'Assistant'
+                uii: 12513,
+                name: 'Roel Cristobal',
+                address: '636, Santiago, Malvar, Batangas',
+                headofins: 'Assistant'
             },
         ]);
     }, []);
 
-    //VALIDATION ON ADDING RECORD
+    //VALIDATION ON ADDING
     const [validated, setValidated] = useState(false);
 
     const handleSubmit = (event) => {
@@ -49,7 +61,7 @@ function Home() {
         setValidated(true);
     };
 
-    //MODAL ON ADDING
+     //MODAL ADD
     const [show, setShow] = useState(false);
 
     const handleClose = () => {
@@ -59,7 +71,7 @@ function Home() {
         setShow(true)
     };
 
-    //MODAL ON EDIT
+    //MODAL EDIT
     const [show2, setShow2] = useState(false);
  
     const handleClose2 = () => {
@@ -93,10 +105,9 @@ function Home() {
     return (
         <div class="container fluid">
           <div className="crud bg-body rounded"> 
-
           <Row className= "justify-content-end mt-4 mb-3">
             <Col>
-            <h1>Roles</h1>
+            <h1>HEIs</h1>
             </Col>
             <Col md="auto">
               <div className="search">
@@ -119,7 +130,10 @@ function Home() {
                 <thead>
                     <tr>
                     <th>ID</th>
-                    <th>Description</th>
+                    <th>UII</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                    <th>Head of Institution</th>
                     <th>Actions</th>
                     </tr>
                 </thead>
@@ -128,7 +142,10 @@ function Home() {
                         data.map((row, index) => (
                             <tr key={index}>
                                 <td>{row.id}</td>
-                                <td>{row.description}</td>
+                                <td>{row.uii}</td>
+                                <td>{row.name}</td>
+                                <td>{row.address}</td>
+                                <td>{row.headofins}</td>
                                 <td>
                                     <Button variant="link">
                                         <FontAwesomeIcon onClick={handleShow2} icon={faEdit} className="text-primary"/>
@@ -155,16 +172,57 @@ function Home() {
         keyboard={false}
     >
     <Modal.Header closeButton>
-    <Modal.Title>Add Role</Modal.Title>
+    <Modal.Title>Add</Modal.Title>
     </Modal.Header>
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Modal.Body>
-        <Row className="margin: 40px">
+        <Row>
+        <Col md={3}>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>UII</Form.Label>
+            <Form.Control  type="text" placeholder="Enter UII" required/>
+            <Form.Control.Feedback type="invalid">Please enter UII.</Form.Control.Feedback>
+        </Form.Group>
+        </Col>
         <Col>
         <Form.Group className="mb-2" controlId="">
-            <Form.Label>Description</Form.Label>
-            <Form.Control type="text" placeholder="Enter Description" required/>
-            <Form.Control.Feedback type="invalid">Please enter description.</Form.Control.Feedback>
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" placeholder="Enter Name" required/>
+            <Form.Control.Feedback type="invalid">Please enter name.</Form.Control.Feedback>
+        </Form.Group>
+        </Col>
+        </Row>
+
+        <Row>
+        <Col>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>Streets/Barangay</Form.Label>
+            <Form.Control type="text" placeholder="Streets/Barangay" required/>
+            <Form.Control.Feedback type="invalid">Please enter street/barangay.</Form.Control.Feedback>
+        </Form.Group>
+        </Col>
+        <Col>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>City/Municipality</Form.Label>
+            <Form.Control type="text" placeholder="Enter City/Municipality" required/>
+            <Form.Control.Feedback type="invalid">Please enter city/municipality.</Form.Control.Feedback>
+        </Form.Group>
+        </Col>
+        <Col>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>Province</Form.Label>
+            <Form.Control type="text" placeholder="Enter Province" required/>
+            <Form.Control.Feedback type="invalid">Please enter province.</Form.Control.Feedback>
+        </Form.Group>
+        </Col>
+        </Row>
+
+        <Row>
+        <Col>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>Head of Institution</Form.Label>
+            <Form.Control type="text" placeholder="Enter Head of Institution" required/>
+            <Form.Control.Feedback type="invalid">Please enter head of institution.</Form.Control.Feedback>
         </Form.Group>
         </Col>
         </Row>
@@ -193,15 +251,51 @@ function Home() {
         keyboard={false}
     >
     <Modal.Header closeButton>
-    <Modal.Title>Edit Role</Modal.Title>
+    <Modal.Title>Edit</Modal.Title>
     </Modal.Header>
     <Form>
         <Modal.Body>
-        <Row className="margin: 40px">
+        <Row>
+        <Col md={3}>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>UII</Form.Label>
+            <Form.Control  type="text" placeholder="Enter UII" required/>
+        </Form.Group>
+        </Col>
         <Col>
         <Form.Group className="mb-2" controlId="">
-            <Form.Label>Description</Form.Label>
-            <Form.Control type="text" placeholder="Enter Description" required/>
+            <Form.Label>Name</Form.Label>
+            <Form.Control type="text" placeholder="Enter Name" required/>
+        </Form.Group>
+        </Col>
+        </Row>
+
+        <Row>
+        <Col>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>Streets/Barangay</Form.Label>
+            <Form.Control type="text" placeholder="Streets/Barangay" required/>
+        </Form.Group>
+        </Col>
+        <Col>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>City/Municipality</Form.Label>
+            <Form.Control type="text" placeholder="Enter City/Municipality" required/>
+        </Form.Group>
+        </Col>
+        <Col>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>Province</Form.Label>
+            <Form.Control type="text" placeholder="Enter Province" required/>
+        </Form.Group>
+        </Col>
+        </Row>
+
+        <Row>
+        <Col>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>Head of Institution</Form.Label>
+            <Form.Control type="text" placeholder="Enter Head of Institution" required/>
         </Form.Group>
         </Col>
         </Row>

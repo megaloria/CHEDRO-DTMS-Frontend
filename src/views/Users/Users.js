@@ -5,9 +5,22 @@ import {
     faTrash,
     faRotate, 
     faEdit, 
-    faAdd
+    faAdd,
+    faEye,
+    faEyeSlash
 } from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Pagination, Row, Col, Table} from 'react-bootstrap';
+import {
+    Button, 
+    Modal, 
+    InputGroup, 
+    Form, 
+    Pagination, 
+    Row, 
+    Col, 
+    Table,
+    Select,
+    Fragment
+} from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import './Users-style.css';
 
@@ -43,6 +56,26 @@ function Home() {
         ]);
     }, []);
 
+    //VALIDATION ON ADDING RECORD
+    const [validated, setValidated] = useState(false);
+
+    const handleSubmit = (event) => {
+        const form = event.currentTarget;
+        if (form.checkValidity() === false) {
+        event.preventDefault();
+        event.stopPropagation();
+        }
+
+        setValidated(true);
+    };
+
+    // SHOW PASSWORD
+    const [passwordShown, setPasswordShown] = useState(false);
+
+        const togglePassword = () => {
+       
+        setPasswordShown(!passwordShown);
+    };
 
     // ADD CREATE
     const [show, setShow] = useState(false);
@@ -53,6 +86,21 @@ function Home() {
     const handleShow = () => {
         setShow(true)
     };
+
+    // SHOW PASSWORD
+    const [passwordType, setPasswordType] = useState("password");
+    const [passwordInput, setPasswordInput] = useState("");
+    const handlePasswordChange =(evnt)=>{
+        setPasswordInput(evnt.target.value);
+    }
+    const togglePassword3 =()=>{
+      if(passwordType==="password")
+      {
+       setPasswordType("text")
+       return;
+      }
+      setPasswordType("password")
+    }
 
     // Change Password
     const [show2, setShow2] = useState(false);
@@ -99,6 +147,9 @@ function Home() {
           <div className="crud bg-body rounded"> 
 
           <Row className= "justify-content-end mt-4 mb-3">
+            <Col>
+            <h1>Users</h1>
+            </Col>
             <Col md="auto">
               <div className="search">
                 <Form>
@@ -185,23 +236,49 @@ function Home() {
         <Modal.Header closeButton>
         <Modal.Title>Add Record</Modal.Title>
         </Modal.Header>
-        <Form>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Modal.Body>
             <Row className="margin: 40px">
             <Col>
             <Form.Group className="mb-2" controlId="">
                 <Form.Label>Username</Form.Label>
                 <Form.Control type="text" placeholder="Enter Username" required/>
+                <Form.Control.Feedback type="invalid">Please choose a username.</Form.Control.Feedback>
             </Form.Group>
             </Col>
+
+            <Col>
+            <Form.Group className="mb-2" controlId="">
+                <Form.Label>Password</Form.Label>
+                <InputGroup>
+                    <Form.Control
+                        type={passwordType} 
+                        onChange={handlePasswordChange}
+                        value={passwordInput}
+                        placeholder="Enter Password"
+                        aria-describedby="basic-addon"
+                        required
+                    />
+                        <Button className="p-1" id="button-addon" variant="outline-secondary" 
+                            onClick={togglePassword3}>
+                            { passwordType==="password"? 
+                            <FontAwesomeIcon icon={faEye}/> 
+                            :<FontAwesomeIcon icon={faEyeSlash}/>
+                            }
+                        </Button>
+                    <Form.Control.Feedback type="invalid">Please enter password.</Form.Control.Feedback>
+                </InputGroup>
+            </Form.Group>
+            </Col>
+
             <Col>
             <Form.Group className="mb-2" controlId="">
                 <Form.Label>Role</Form.Label>
-                <Form.Select aria-label="Default select example">
-                    <option>Select Role</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
+                <Form.Select name="" aria-label="Default select example" required>
+                    <option value="">Select Role</option>
+                    <option value="1">Regional Director</option>
+                    <option value="2">Chief Administrative Officer</option>
+                    <option value="3">Secretary</option>
                 </Form.Select>
             </Form.Group>
             </Col>
@@ -212,6 +289,7 @@ function Home() {
             <Form.Group className="mb-2" controlId="">
                 <Form.Label>First Name</Form.Label>
                 <Form.Control type="text" placeholder="Enter First Name" required/>
+                <Form.Control.Feedback type="invalid">Please enter first name.</Form.Control.Feedback>
             </Form.Group>
             </Col>
             <Col>
@@ -224,6 +302,7 @@ function Home() {
             <Form.Group className="mb-2" controlId="">
                 <Form.Label>Last Name</Form.Label>
                 <Form.Control type="text" placeholder="Enter Last Name" required/>
+                <Form.Control.Feedback type="invalid">Please enter last name.</Form.Control.Feedback>
             </Form.Group>
             </Col>
             </Row>
@@ -232,19 +311,21 @@ function Home() {
             <Col >
             <Form.Group className="mb-2" controlId="">
                 <Form.Label>Prefix</Form.Label>
-                <Form.Control type="text" placeholder="Prefix" required/>
+                <Form.Control type="text" placeholder="Prefix"/>
             </Form.Group>
             </Col>
             <Col >
             <Form.Group className="mb-2" controlId="">
                 <Form.Label>Suffix</Form.Label>
-                <Form.Control type="text" placeholder="Enter Suffix" required/>
+                <Form.Control type="text" placeholder="Enter Suffix"/>
+                <Form.Control.Feedback type="invalid">Please enter suffix.</Form.Control.Feedback>
             </Form.Group>
             </Col>
             <Col >
             <Form.Group className="mb-2" controlId="">
                 <Form.Label>Position</Form.Label>
                 <Form.Control type="text" placeholder="Enter Position" required/>
+                <Form.Control.Feedback type="invalid">Please enter position.</Form.Control.Feedback>
             </Form.Group>
             </Col>
             </Row>
@@ -254,7 +335,7 @@ function Home() {
                 <Button variant="secondary" onClick={handleClose}>
                     Cancel
                 </Button>
-                <Button variant="primary">
+                <Button type="submit" variant="primary">
                     Add Record 
                 </Button>
             </Modal.Footer>
@@ -366,12 +447,24 @@ function Home() {
             <Col >
             <Form.Group className="mb-2" controlId="">
                 <Form.Label>Password</Form.Label>
-                <Form.Control type="text" placeholder="Enter Password" required/>
+                <Form.Control 
+                    type={passwordShown ? "text" : "password"} 
+                    placeholder="Enter Password" 
+                    required 
+                />
             </Form.Group>
            
-            <Form.Group className="mb-2" controlId="">
+            <Form.Group className="mb-3" controlId="">
                 <Form.Label>Confirm Password</Form.Label>
-                <Form.Control type="text" placeholder="Enter Confirm Password" required/>
+                <Form.Control 
+                    type={passwordShown ? "text" : "password"} 
+                    placeholder="Enter Confirm Password" 
+                    required 
+                />
+            </Form.Group>
+
+            <Form.Group className="mb-2" controlId="">
+                <Form.Check onClick={togglePassword} type="checkbox" label="Show Password" />
             </Form.Group>
             </Col>
             </Row>
@@ -385,7 +478,7 @@ function Home() {
                     Reset Password
                 </Button>
             </Modal.Footer>
-            </Form>
+        </Form>
         </Modal>
 
        </div>  

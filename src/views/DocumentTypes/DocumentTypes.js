@@ -9,7 +9,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import {Button, Modal, Input, Form, Table, Row, Col} from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import './Roles-styles.css';
+import './DocumentTypes-styles.css';
 
 
 function Home() {
@@ -19,24 +19,28 @@ function Home() {
         setData([
             {
                 id: 1,
+                code: 'DF3FDAS2',
                 description: 'Regional Director'
             },
             {
                 id: 2,
+                code: 'SDFJS323',
                 description: 'Chief Administrative Officer'
             },
             {
                 id: 3,
+                code: 'SAF311',
                 description: 'Secretary'
             },
             {
                 id: 4,
+                code: 'DFS3D3',
                 description: 'Assistant'
             },
         ]);
     }, []);
 
-    //VALIDATION ON ADDING RECORD
+    //VALIDATION ON ADDING
     const [validated, setValidated] = useState(false);
 
     const handleSubmit = (event) => {
@@ -96,7 +100,7 @@ function Home() {
 
           <Row className= "justify-content-end mt-4 mb-3">
             <Col>
-            <h1>Roles</h1>
+            <h1>Types of Documents</h1>
             </Col>
             <Col md="auto">
               <div className="search">
@@ -119,6 +123,7 @@ function Home() {
                 <thead>
                     <tr>
                     <th>ID</th>
+                    <th>Code</th>
                     <th>Description</th>
                     <th>Actions</th>
                     </tr>
@@ -128,6 +133,7 @@ function Home() {
                         data.map((row, index) => (
                             <tr key={index}>
                                 <td>{row.id}</td>
+                                <td>{row.code}</td>
                                 <td>{row.description}</td>
                                 <td>
                                     <Button variant="link">
@@ -155,11 +161,18 @@ function Home() {
         keyboard={false}
     >
     <Modal.Header closeButton>
-    <Modal.Title>Add Role</Modal.Title>
+    <Modal.Title>Add</Modal.Title>
     </Modal.Header>
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
         <Modal.Body>
         <Row className="margin: 40px">
+        <Col md={3}>
+        <Form.Group className="mb-2" controlId="">
+            <Form.Label>Code</Form.Label>
+            <Form.Control type="text" placeholder="Enter Code" required/>
+            <Form.Control.Feedback type="invalid">Please enter code.</Form.Control.Feedback>
+        </Form.Group>
+        </Col>
         <Col>
         <Form.Group className="mb-2" controlId="">
             <Form.Label>Description</Form.Label>
@@ -193,7 +206,7 @@ function Home() {
         keyboard={false}
     >
     <Modal.Header closeButton>
-    <Modal.Title>Edit Role</Modal.Title>
+    <Modal.Title>Edit</Modal.Title>
     </Modal.Header>
     <Form>
         <Modal.Body>
