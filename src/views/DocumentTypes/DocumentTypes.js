@@ -100,7 +100,7 @@ function Home() {
 
           <Row className= "justify-content-end mt-4 mb-3">
             <Col>
-            <h1>Types of Documents</h1>
+            <h1>Document Types</h1>
             </Col>
             <Col md="auto">
               <div className="search">

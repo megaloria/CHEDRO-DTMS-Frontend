@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import Roles from './views/Roles/Roles'
+import Documents from './views/Documents/Documents'
 
 
 function App() {
   return (
-    <Roles/>
+    <Documents/>
   );
 }
 
