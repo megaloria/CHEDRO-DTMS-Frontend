@@ -60,7 +60,7 @@ function Login() {
               <Card className='p-3' style={{borderRadius:'25px'}}>
                 <Card.Body>
                   <div className='logo'>
-                    <img src={chedLogo} width='150' />
+                    <img src={chedLogo} width='150' alt='' />
                   </div>
 
                   <Form.Group 
