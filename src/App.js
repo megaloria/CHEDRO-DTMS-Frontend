@@ -1,16 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
-import Login from './views/Login/Login'
-
-
+import ErrorPage from './views/ErrorPage/ErrorPage';
 
 function App() {
   return (
  
-    <Login/>
+    <ErrorPage/>
 
 
   );
 }
 
 export default App;
+
