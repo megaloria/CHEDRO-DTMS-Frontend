@@ -58,15 +58,19 @@ function Changepassword() {
         });
       }
 
+      
+ 
       function handleSubmit(e){
         e.preventDefault();
 
         let validation = new Validator(values, {
           Currentpass:  '',
-          Newpass:      'required|min:8',
+          Newpass:      'required|min:8|',
           Confirmpass:  'required|min:8'
         });
        
+
+
         if (validation.fails()) {
           setError({
             Currentpass: validation.errors.first('Currentpass'),
