@@ -18,12 +18,7 @@ import {
 import './styles.css';
 
 function Header() {
-
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-
+  
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       Home
@@ -87,8 +82,6 @@ function Header() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
-
-
   );
 }
 
