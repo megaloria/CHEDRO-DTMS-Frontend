@@ -1,12 +1,10 @@
 import React from 'react';
 import {
   createBrowserRouter,
-  redirect,
+  // redirect,
   RouterProvider
 } from 'react-router-dom';
-import axios from 'axios';
-
-import Header from './units/Header/Header'
+// import axios from 'axios';
 
 import Login from './views/Login/Login';
 import Home from './views/Home/Home';
