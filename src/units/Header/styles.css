@@ -1,13 +1,12 @@
-.title{
-    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
-}
 #collasible-nav-dropdown {
     margin-right: 5%;
 }
+
 #button-tooltip > .tooltip-inner {
   background-color: #25282a ;
   color: white;
 }
+
 .nav-item.dropdown:hover .dropdown-menu {
     display: block;
 }
