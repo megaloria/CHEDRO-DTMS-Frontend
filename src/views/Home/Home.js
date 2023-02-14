@@ -10,13 +10,15 @@ import Sidebar from '../../units/Sidebar/Sidebar';
 export default function Home () {
   return (
     <>
-      <Header />
+      <div>
+        <Header />
+      </div>
       <MastHeader />
-      <Row>
-        <Col md={2}>
-          <Sidebar />
-        </Col>
-      </Row>
+      <Col md={2}>
+        <Sidebar />
+      </Col>
+      <Col>
+      </Col>
     </>
   );
 }
