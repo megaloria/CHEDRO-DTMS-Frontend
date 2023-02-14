@@ -2,8 +2,8 @@ import React, { useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
-    faTrash,
-    faRotate,
+    faPaperPlane,
+    faPaperclip,
     faCalendar,
     faUser,
     faFile,
@@ -55,55 +55,73 @@ function Home() {
         <div class="container fluid">
           <div className="crud bg-body rounded"> 
 
-        <Row className= "justify-content-end mt-4 mb-3">
-            <h1>View</h1>
-        </Row>
-
-
-        </div>
-            <Row className="mb-3">
-            {/* <Button>
-                forward
-            </Button> */}
-                <Col>
-                    <FontAwesomeIcon icon={faHashtag} className="text-secondary"/>
-                    23-000
+            <Row className= "justify-content-end mt-4 mb-3">
+            <Col>
+                <Breadcrumb>
+                    <Breadcrumb.Item href="#">Document</Breadcrumb.Item>
+                    <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
+                </Breadcrumb>
+            </Col>
+                <Col md="auto">
+                    <Button>
+                        <FontAwesomeIcon icon={faPaperPlane} className="text-link"/> Forward
+                    </Button>
                 </Col>
+            </Row>
+            </div>
+                <Row className="mb-3">
+                    <Col>
+                        <FontAwesomeIcon icon={faHashtag} className="text-secondary" style={{marginRight:'20px'}}/>
+                        23-000
+                    </Col>
+                
+                </Row>
+
+                <Row className="mb-3">
+                    <Col>
+                        <FontAwesomeIcon icon={faFile} className="text-secondary " variant="link" style={{marginRight:'20px'}}/>
+                        sample file 
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col>
+                        <Badge bg="primary" style={{width: 120}}>received</Badge>
+                    </Col> 
+                </Row>
+
+                <Row className="mb-3">
+                    <Col>
+                        <FontAwesomeIcon icon={faUser} className="text-secondary" style={{marginRight:'20px'}}/>
+                        user
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col>
+                        <FontAwesomeIcon icon={faCalendar} className="text-secondary" style={{marginRight:'20px'}}/>
+                        mm/dd/yyy
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col row={5}>
+                        Description
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col >
+                        <FontAwesomeIcon icon={faPaperclip} className="text-secondary" style={{marginRight:'20px'}}/>
+                        sample.docx
+                    </Col>
+                </Row>
+
+            <div>
             
-            </Row>
-
-            <Row className="mb-3">
-                <Col>
-                    <FontAwesomeIcon icon={faFile} className="text-secondary" variant="link"/>
-                    sample file
-                </Col>
-            </Row>
-
-            <Row className="mb-3">
-                <Col>
-                    <Badge bg="primary">received</Badge>
-                </Col>
-            </Row>
-
-            <Row className="mb-3">
-                <Col>
-                    <FontAwesomeIcon icon={faUser} className="text-secondary"/>
-                    user
-                </Col>
-            </Row>
-
-            <Row className="mb-3">
-                <Col>
-                    <FontAwesomeIcon icon={faCalendar} className="text-secondary"/>
-                    user
-                </Col>
-            </Row>
-
-        <div>
-            
         </div>
-
-    </div>
+        </div>
+    
         
     );
 }
