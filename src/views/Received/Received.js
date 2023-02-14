@@ -81,25 +81,24 @@ function Home() {
                 </Form.Select>
             </Col>
             <Col>
-                <Form.Label>Receive from</Form.Label>
-                <Form.Control type="date" placeholder="Receive from" />
+                <Form.Label>Date Received</Form.Label>
+                <Form.Control type="date" placeholder="Date Received" />
             </Col>
         </Row>
         <Row className="mb-3">
-            
             <Col>
-                <Form.Label>Description</Form.Label>
-                <Form.Control as="textarea" rows={4} type="text" placeholder="Description" />
+                <Form.Label>Receive from</Form.Label>
+                <Form.Control type="text" placeholder="Receive from" />
             </Col>
-        </Row>
-        <Row className="mb-3">
             <Col>
                 <Form.Label>Attachment</Form.Label>
                 <Form.Control type="file" placeholder="Attachment" />
             </Col>
+        </Row>
+        <Row className="mb-3">
             <Col>
-                <Form.Label>Date Received</Form.Label>
-                <Form.Control type="text" placeholder="Date Received" />
+                <Form.Label>Description</Form.Label>
+                <Form.Control as="textarea" rows={5} type="text" placeholder="Description" />
             </Col>
         </Row>
 
