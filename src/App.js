@@ -6,6 +6,8 @@ import {
 } from 'react-router-dom';
 import axios from 'axios';
 
+import Header from './units/Header/Header'
+
 import Login from './views/Login/Login';
 import Home from './views/Home/Home';
 
