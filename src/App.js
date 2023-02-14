@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import Viewing from './views/Documents/Viewing'
+import Documents from './views/Documents/Documents'
 
 
 function App() {
   return (
-    <Viewing/>
+    <Documents/>
   );
 }
 

@@ -9,7 +9,8 @@ import {
     faEdit,
     faPaperclip,
     faCircleArrowRight,
-    faRightToBracket
+    faRightToBracket,
+    faPaperPlane
     } from '@fortawesome/free-solid-svg-icons'
 import {
     Button, 
@@ -204,30 +205,33 @@ function Home() {
                             }
                         </td>
 
-                        <td>
-                            <Row>
-                                <Col>
-                                    <Button variant="outline-primary" size='sm' style={{ whiteSpace: 'nowrap' }}>
-                                        <FontAwesomeIcon icon={faCircleArrowRight} className=""/> View
-                                    </Button>
-                                </Col>
-                                    {
-                                        row.status !== 'Acknowledge' && (
-                                        <>
-                                <Col>
-                                    <Button variant="link" size='sm' style={{ whiteSpace: 'nowrap' }}>
-                                        <FontAwesomeIcon icon={faEdit} className="text-success"/>
-                                    </Button>
-                                </Col>
-                                <Col>
-                                    <Button onClick={showAlert} variant="link" size='sm' style={{ whiteSpace: 'nowrap' }}>
-                                        <FontAwesomeIcon icon={faTrash} className="text-danger"/>
-                                    </Button>
-                                </Col>
-                                        </>
-                                    )
-                                }
-                            </Row>
+                        <td style={{ whiteSpace: 'nowrap' }}>
+                                <Button variant="outline-primary" size='sm' >
+                                    <FontAwesomeIcon icon={faCircleArrowRight} className=""/> View
+                                </Button>
+                                {
+                                    row.status !== 'Acknowledge' && (
+                                    <>
+                                        {
+                                            row.status === 'Received' && (
+                                                <Button variant="link" size='sm'>
+                                                    <FontAwesomeIcon icon={faPaperPlane} className="text-secondary"/>
+                                                </Button>
+                                            )
+                                        }
+                            
+                                        <Button variant="link" size='sm' >
+                                            <FontAwesomeIcon icon={faEdit} className="text-success"/>
+                                        </Button>
+                                    
+                                        <Button onClick={showAlert} variant="link" size='sm' >
+                                            <FontAwesomeIcon icon={faTrash} className="text-danger"/>
+                                        </Button>
+                            
+                                    </>
+                                ) 
+                            }
+            
                         </td>
                         </tr>
                         ))

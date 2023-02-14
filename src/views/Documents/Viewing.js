@@ -58,33 +58,44 @@ function Home() {
             <h1>View</h1>
         </Row>
 
-        </div>
 
+        </div>
         <Row className="mb-3">
-            <Col>
+            <Col >
                 <Form.Label>Tracking Number</Form.Label>
-                <Form.Control type="text" placeholder="Tracking Number" readonly/>
+                <Form.Control type="text" placeholder="Tracking Number" readOnly/>
             </Col>
             <Col>
-                <Form.Label>Attachment</Form.Label>
-                <Form.Control type="file" placeholder="Attachment" />
-            </Col>
-        </Row>
-        <Row className="mb-3">
-            <Col>
-                <Form.Label>Receive from</Form.Label>
-                <Form.Control type="text" placeholder="Receive from" />
-            </Col>
-            <Col>
-                <Form.Label>Attachment</Form.Label>
-                <Form.Control type="file" placeholder="Attachment" />
+                <Form.Label>Document Type</Form.Label>
+                <Form.Control type="text" placeholder="Document Type" readOnly/>
             </Col>
         </Row>
         <Row className="mb-3">
+            <Col >
+                <Form.Label>Status</Form.Label>
+                <Form.Control type="text" placeholder="Status" readOnly/>
+            </Col>
             <Col>
+                <Form.Label>Receive From</Form.Label>
+                <Form.Control type="text" placeholder="Receive From" readOnly/>
+            </Col>
+        </Row>
+        <Row className="mb-3">
+            <Col >
+                <Form.Label>Date received</Form.Label>
+                <Form.Control type="date" placeholder="" readOnly/>
+            </Col>
+            <Col>
+                <Form.Label>Attachment</Form.Label>
+                <Form.Control type="text" placeholder="Attachment" readOnly/>
+            </Col>
+        </Row>
+        <Row className="mb-3">
+            <Col >
                 <Form.Label>Description</Form.Label>
-                <Form.Control as="textarea" rows={5} type="text" placeholder="Description" />
+                <Form.Control as="textarea" rows={5} placeholder="" readOnly/>
             </Col>
+            
         </Row>
 
         <div>
