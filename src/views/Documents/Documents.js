@@ -10,8 +10,19 @@ import {
     faPaperclip,
     faCircleArrowRight,
     faRightToBracket
-} from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Table, Row, Col, Breadcrumb} from 'react-bootstrap';
+    } from '@fortawesome/free-solid-svg-icons'
+import {
+    Button, 
+    Modal, 
+    Input, 
+    Form, 
+    Table, 
+    Row, 
+    Col, 
+    Breadcrumb,
+    Tab,
+    Tabs
+    } from 'react-bootstrap';
 import Swal from 'sweetalert2'; 
 import './Documents-styles.css';
 
