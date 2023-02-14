@@ -215,7 +215,7 @@ function Home() {
                                         {
                                             row.status === 'Received' && (
                                                 <Button variant="link" size='sm'>
-                                                    <FontAwesomeIcon icon={faPaperPlane} className="text-secondary"/>
+                                                    <FontAwesomeIcon icon={faPaperPlane} className=""/>
                                                 </Button>
                                             )
                                         }
@@ -242,6 +242,8 @@ function Home() {
         </div>
             </Tab>
             <Tab eventKey="ongoing" title="Ongoing" >
+            </Tab>
+            <Tab eventKey="releasing" title="Releasing" >
             </Tab>
             <Tab eventKey="done" title="Done">
             </Tab>

@@ -4,11 +4,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
     faTrash,
     faRotate,
-    faEdit,
-    faAdd,
-    faFile
+    faCalendar,
+    faUser,
+    faFile,
+    faHashtag
 } from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Table, Row, Col, Breadcrumb, InputGroup} from 'react-bootstrap';
+import {Button, Modal, Input, Form, Table, Row, Col, Breadcrumb, InputGroup, Badge} from 'react-bootstrap';
 import Swal from 'sweetalert2';
 
 
@@ -60,43 +61,43 @@ function Home() {
 
 
         </div>
-        <Row className="mb-3">
-            <Col >
-                <Form.Label>Tracking Number</Form.Label>
-                <Form.Control type="text" placeholder="Tracking Number" readOnly/>
-            </Col>
-            <Col>
-                <Form.Label>Document Type</Form.Label>
-                <Form.Control type="text" placeholder="Document Type" readOnly/>
-            </Col>
-        </Row>
-        <Row className="mb-3">
-            <Col >
-                <Form.Label>Status</Form.Label>
-                <Form.Control type="text" placeholder="Status" readOnly/>
-            </Col>
-            <Col>
-                <Form.Label>Receive From</Form.Label>
-                <Form.Control type="text" placeholder="Receive From" readOnly/>
-            </Col>
-        </Row>
-        <Row className="mb-3">
-            <Col >
-                <Form.Label>Date received</Form.Label>
-                <Form.Control type="date" placeholder="" readOnly/>
-            </Col>
-            <Col>
-                <Form.Label>Attachment</Form.Label>
-                <Form.Control type="text" placeholder="Attachment" readOnly/>
-            </Col>
-        </Row>
-        <Row className="mb-3">
-            <Col >
-                <Form.Label>Description</Form.Label>
-                <Form.Control as="textarea" rows={5} placeholder="" readOnly/>
-            </Col>
+            <Row className="mb-3">
+            {/* <Button>
+                forward
+            </Button> */}
+                <Col>
+                    <FontAwesomeIcon icon={faHashtag} className="text-secondary"/>
+                    23-000
+                </Col>
             
-        </Row>
+            </Row>
+
+            <Row className="mb-3">
+                <Col>
+                    <FontAwesomeIcon icon={faFile} className="text-secondary" variant="link"/>
+                    sample file
+                </Col>
+            </Row>
+
+            <Row className="mb-3">
+                <Col>
+                    <Badge bg="primary">received</Badge>
+                </Col>
+            </Row>
+
+            <Row className="mb-3">
+                <Col>
+                    <FontAwesomeIcon icon={faUser} className="text-secondary"/>
+                    user
+                </Col>
+            </Row>
+
+            <Row className="mb-3">
+                <Col>
+                    <FontAwesomeIcon icon={faCalendar} className="text-secondary"/>
+                    user
+                </Col>
+            </Row>
 
         <div>
             
