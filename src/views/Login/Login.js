@@ -9,7 +9,7 @@ import {
 } from 'react-bootstrap';
 import Validator from 'validatorjs';
 
-import pic from '../../assets/CHEDL.png'
+import chedLogo from '../../assets/ched-logo.png'
 import './styles.css'
 
 function Login() {
@@ -54,13 +54,13 @@ function Login() {
   return (    
     <div className='maindiv'>
       <Container className='container1'>
-        <Row style={{ height: '100%', alignItems: 'center'}}>
-          <Col style={{margin:'auto'}}md={{ span: 4 }}>
+        <Row style={{ height: '100%', alignItems: 'center' }}>
+          <Col style={{ margin: 'auto' }}md={{ span: 4 }}>
             <Form onSubmit={handleSubmit}>
               <Card className='p-3' style={{borderRadius:'25px'}}>
                 <Card.Body>
                   <div className='logo'>
-                    <img src={pic} width='150' />
+                    <img src={chedLogo} width='150' />
                   </div>
 
                   <Form.Group 
