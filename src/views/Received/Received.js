@@ -111,7 +111,7 @@ function Home() {
             </Col>
             <Col md="auto">
                 <Button variant="primary">
-                    Send Now 
+                    Send 
                 </Button>
             </Col>
         </Row>

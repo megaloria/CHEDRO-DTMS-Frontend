@@ -2,7 +2,7 @@ import React, { useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
-    faPaperPlane,
+    faShare,
     faPaperclip,
     faCalendar,
     faUser,
@@ -64,7 +64,7 @@ function Home() {
             </Col>
                 <Col md="auto">
                     <Button>
-                        <FontAwesomeIcon icon={faPaperPlane} className="text-link"/> Forward
+                        <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
                     </Button>
                 </Col>
             </Row>

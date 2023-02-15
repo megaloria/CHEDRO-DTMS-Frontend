@@ -10,7 +10,7 @@ import {
     faPaperclip,
     faCircleArrowRight,
     faRightToBracket,
-    faPaperPlane
+    faShare
     } from '@fortawesome/free-solid-svg-icons'
 import {
     Button, 
@@ -215,7 +215,7 @@ function Home() {
                                         {
                                             row.status === 'Received' && (
                                                 <Button variant="link" size='sm'>
-                                                    <FontAwesomeIcon icon={faPaperPlane} className=""/>
+                                                    <FontAwesomeIcon icon={faShare} className=""/>
                                                 </Button>
                                             )
                                         }
