@@ -1,21 +1,22 @@
 import { useState } from 'react';
-
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import Card from 'react-bootstrap/Card';
-import InputGroup from 'react-bootstrap/InputGroup'
-import './/styles.css'
 import Validator from 'validatorjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import  {
-
   faEye,
   faEyeSlash
 } from '@fortawesome/free-solid-svg-icons'
+import 
+{
+  Button,
+  Form,
+  Container,
+  Row,
+  Col,
+  Card,
+  InputGroup
+} from 'react-bootstrap';
 
+import './styles.css';
 
 
 function Changepassword() {
@@ -29,7 +30,7 @@ function Changepassword() {
 
   });
 
-  ///Validation
+  ///eye icon function
   const [passwordType, setPasswordType] = useState("password");
   
   const togglePassword =()=>{
@@ -41,13 +42,13 @@ function Changepassword() {
     setPasswordType("password")
 
   }
-
+///end of eye ivon function
     
     const [errors, setError] = useState({
 
          Currentpass:  '',
           Newpass:      '',
-          Confirmpass:  ''
+          Confirmpass:  '',
      
     });
 
@@ -65,7 +66,7 @@ function Changepassword() {
 
         let validation = new Validator(values, {
           Currentpass:  '',
-          Newpass:      'required|min:8|',
+          Newpass:      'required|min:8 ',
           Confirmpass:  'required|min:8'
         });
        
