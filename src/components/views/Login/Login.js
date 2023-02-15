@@ -9,10 +9,11 @@ import {
 } from 'react-bootstrap';
 import Validator from 'validatorjs';
 
-import chedLogo from '../../assets/ched-logo.png'
+import chedLogo from '../../../assets/ched-logo.png'
 import './styles.css'
 
 function Login() {
+
   const [values, setValues] = useState({
     username: '',
     password: ''
