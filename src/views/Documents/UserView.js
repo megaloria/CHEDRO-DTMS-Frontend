@@ -92,32 +92,34 @@ function Home() {
                         </Button> 
                     </Col>
                     ) : (
-                        <Button  onClick={handleShow} variant="primary">
+                        <Button onClick={handleShow} variant="primary">
                             <FontAwesomeIcon icon={faThumbsUp} className="text-link"/> Acknowledge    
                         </Button>
                     )
                 }
                 </Col>
             </Row>
+
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                <Modal.Title>Acknowledge</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Are you sure you want to acknowledge the receipt of this document?</Modal.Body>
-                <Modal.Footer>
-                <Button variant="danger" onClick={handleClose}>
-                    No
-                </Button>
-                <Button variant="primary" onClick={showButton}>
-                    Yes
-                </Button>
+                    <Modal.Title>Acknowledge</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Are you sure you want to acknowledge the receipt of this document?</Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="danger" onClick={handleClose}>
+                        No
+                    </Button>
+                    <Button variant="primary" onClick={showButton}>
+                        Yes
+                    </Button>
                 </Modal.Footer>
             </Modal>
+
             </div>
                 <Row className="mb-3">
                     <Col>
                         <FontAwesomeIcon icon={faHashtag} className="text-secondary" style={{marginRight:'20px'}}/>
-                        23-0002
+                        23-000
                     </Col>
                 
                 </Row>

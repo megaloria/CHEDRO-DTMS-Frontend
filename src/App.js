@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import UserView from './views/Documents/UserView'
+import UserDocuments from './views/Documents/UserDocuments'
 
 
 function App() {
   return (
-    <UserView/>
+    <UserDocuments/>
   );
 }
 

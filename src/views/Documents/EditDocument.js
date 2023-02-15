@@ -85,7 +85,9 @@ function Home() {
                 <Form.Control type="text" placeholder="Receive from" />
             </Col>
             <Col>
-                <Form.Label>Attachment</Form.Label>
+                <Form.Label>
+                    Attachment <span className='text-muted'>(Optional)</span>
+                </Form.Label>
                 <Form.Control type="file" placeholder="Attachment" />
             </Col>
         </Row>
