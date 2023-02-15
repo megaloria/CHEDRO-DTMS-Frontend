@@ -1,28 +1,36 @@
 import React from 'react';
 import {
   createBrowserRouter,
-  // redirect,
+  redirect,
   RouterProvider
 } from 'react-router-dom';
-// import axios from 'axios';
+import axios from 'axios';
+import apiClient from './helpers/apiClient';
 
-import Login from './views/Login/Login';
-import Home from './views/Home/Home';
+import Login from './components/views/Login/Login';
+import Home from './components/views/Home/Home';
 
-// function getCurrentUser() {
-//   return axios.get('/user').then(() => {
-//     return null;
-//   }).catch(() => {
-//     return redirect('/login')
-//   });
-// }
+async function getCurrentUser() {
+  return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
+    withCredentials: true
+  }).then(() => {
+    return apiClient.get('').then(response => {
+      return response.data.data;
+    }).catch(() => {
+      return redirect('/login');
+    });
+  }).catch(() => {
+    return redirect('/login');
+  });
+}
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <Home />,
+    id: 'user',
     // errorElement: <div>Error!</div>,
-    // loader: getCurrentUser
+    loader: getCurrentUser
   },
   {
     path: '/login',
