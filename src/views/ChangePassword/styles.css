@@ -1,10 +1,11 @@
 .maindiv {
     height: 100vh;
     width: auto;
-    background-color: #0C2245;
+    /* background-color: #0C2245; */
   }
   
   .container1 {
+    border-color: black 10px solid;
     height: 100%;
   }
   

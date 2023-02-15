@@ -46,7 +46,7 @@ function Changepassword() {
     
     const [errors, setError] = useState({
 
-         Currentpass:  '',
+          Currentpass:  '',
           Newpass:      '',
           Confirmpass:  '',
      
@@ -63,30 +63,34 @@ function Changepassword() {
  
       function handleSubmit(e){
         e.preventDefault();
+        
 
         let validation = new Validator(values, {
-          Currentpass:  '',
-          Newpass:      'required|min:8 ',
-          Confirmpass:  'required|min:8'
+          Currentpass:  'present',
+          Newpass:      'required|same:Confirmpass|min:8',
+          Confirmpass:  'required|same:Newpass|min:8'
         });
        
-
-
+      
         if (validation.fails()) {
           setError({
             Currentpass: validation.errors.first('Currentpass'),
             Newpass: validation.errors.first('Newpass'),
             Confirmpass: validation.errors.first('Confirmpass'),
               });
+
+
+              
         } else {
           setError({
-            Currentpass: '',
+             Currentpass: '',
              Newpassword: '',
              Confirmpass:''
 
           });
         }
       }
+    
 
           return (    
           
@@ -100,7 +104,7 @@ function Changepassword() {
 
               <Form onSubmit={handleSubmit}>
 
-              <Card className='p-3' style={{borderRadius:'25px'}}>
+              <Card className='p-3' style={{borderRadius:'25px', width:'70vh'}}>
                   <Card.Body>
                           
                 <Form.Group className="mb-3"
@@ -108,7 +112,7 @@ function Changepassword() {
                         controlId='formGridpassword' 
                         onChange={handleChange}>
                           
-                      <Form.Label>New Password</Form.Label>
+                <Form.Label>Current Password</Form.Label>
 
                       <InputGroup>
                           <Form.Control
@@ -116,7 +120,7 @@ function Changepassword() {
                               name='Newpass' 
                               type={passwordType}
                               isInvalid = {!!errors.Currentpass}
-                              placeholder="New Password"
+                              placeholder="Current password"
                               aria-describedby="basic-addon"
                               required
                             />
@@ -134,63 +138,29 @@ function Changepassword() {
                                 {errors.Currentpass}
                             </Form.Control.Feedback>  
                                 
-                        </InputGroup>
-                        </Form.Group>
-
-
-                    <Form.Group className="mb-3"
-                    value={values.Newpass}
-                    controlId='formGridpassword' 
-                    onChange={handleChange}>
-                      
-                  <Form.Label>New Password</Form.Label>
-
-                  <InputGroup>
-                      <Form.Control
-                          onChange={handleChange}
-                          name='Newpass' 
-                          type={passwordType}
-                          isInvalid = {!!errors.Newpass}
-                          placeholder="New Password"
-                          aria-describedby="basic-addon"
-                          required
-
-                        />
-
-                      <Button id="button-addon" variant="outline-secondary" 
-                          onClick={togglePassword}>
-                          {passwordType==="password"? 
-                          <FontAwesomeIcon icon={faEye} className='fa-fw'/> 
-                          :<FontAwesomeIcon icon={faEyeSlash} className='fa-fw'/>
-
-                          }
-
-                            </Button>
-                    <Form.Control.Feedback type='invalid'>
-                                      {errors.Newpass}
-                                  </Form.Control.Feedback>  
-                            
-                    </InputGroup>
-                    </Form.Group>
+                      </InputGroup>
+                </Form.Group>
 
 
                 <Form.Group className="mb-3"
-                value={values.passwordInput}
-                controlId='formGridpassword' 
-                onChange={handleChange}>
-                  
-                <Form.Label>Confirm Password</Form.Label>
+                          value={values.Newpass}
+                          controlId='formGridpassword' 
+                          onChange={handleChange}>
+                            
+                <Form.Label>New Password</Form.Label>
 
-                <InputGroup>
-                  <Form.Control
-                      onChange={handleChange}
-                      name='Confirmpass' 
-                      type={passwordType}
-                      isInvalid = {!!errors.Confirmpass}
-                      placeholder="Confirm Password"
-                      aria-describedby="basic-addon"
-                      required
-                    />
+                    <InputGroup>
+                        <Form.Control
+                            onChange={handleChange}
+                            name='Newpass' 
+                            type={passwordType}
+                            isInvalid = {!!errors.Newpass}
+                            placeholder="New Password"
+                            aria-describedby="basic-addon"
+                            required
+
+                          />
+
                         <Button id="button-addon" variant="outline-secondary" 
                             onClick={togglePassword}>
                             {passwordType==="password"? 
@@ -200,21 +170,57 @@ function Changepassword() {
                             }
 
                         </Button>
-                <Form.Control.Feedback type='invalid'>
-                                  {errors.Confirmpass}
-                              </Form.Control.Feedback>  
-                        
-                </InputGroup>
 
-                </Form.Group>
+                      <Form.Control.Feedback type='invalid'>
+                            {errors.Newpass}
+                      </Form.Control.Feedback>  
+                    
+                    </InputGroup>
+                    </Form.Group>
+
+
+              <Form.Group className="mb-3"
+                        value={values.passwordInput}
+                        controlId='formGridpassword' 
+                        onChange={handleChange}>
+                          
+              <Form.Label>Confirm Password</Form.Label>
+
+              <InputGroup>
+                <Form.Control
+                        onChange={handleChange}
+                        name='Confirmpass' 
+                        type={passwordType}
+                        isInvalid = {!!errors.Confirmpass}
+                        placeholder="Confirm Password"
+                        aria-describedby="basic-addon"
+                        required
+                  />
+                      <Button id="button-addon" variant="outline-secondary" 
+                        onClick={togglePassword}>
+                        {passwordType==="password"? 
+                        <FontAwesomeIcon icon={faEye} className='fa-fw'/> 
+                        :<FontAwesomeIcon icon={faEyeSlash} className='fa-fw'/>
+
+                          }
+                      </Button>
+             
+              <Form.Control.Feedback type='invalid'>
+                        {errors.Confirmpass}
+              </Form.Control.Feedback>  
+                      
+              </InputGroup>
+
+              </Form.Group>
                       <div  className='d-grid gap-2'>
                       <Button
                         type='submit' 
-                        variant='primary'> save
+                        variant='primary'> Save
                     </Button>
+
                     <Button
                         type='' 
-                        variant='danger'> cancel
+                        variant='dark'> Cancel
                     </Button>
                       </div>   
 
@@ -224,7 +230,7 @@ function Changepassword() {
             </Col>
             </Row>
           </Container>
-        </div>
+         </div>
           );
 }
 
