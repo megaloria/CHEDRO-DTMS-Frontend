@@ -34,7 +34,7 @@ function Login() {
     e.preventDefault();
 
     let validation = new Validator(values, {
-      username: 'required|min:3',
+      username: 'required|min:5',
       password: 'required|min:8'
     });
 
