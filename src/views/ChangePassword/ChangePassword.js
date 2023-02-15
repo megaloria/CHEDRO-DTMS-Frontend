@@ -22,9 +22,9 @@ import './styles.css';
 function Changepassword() {
 
   const [values, setValues] = useState({
-          Currentpass:  '',
-          Newpass:      '',
-          Confirmpass:  '',
+          Currentpassword:  '',
+          Newpassword:      '',
+          Confirmpassword:  '',
           passwordInput: '',
 
 
@@ -46,9 +46,9 @@ function Changepassword() {
     
     const [errors, setError] = useState({
 
-          Currentpass:  '',
-          Newpass:      '',
-          Confirmpass:  '',
+          Currentpassword:  '',
+          Newpassword:      '',
+          Confirmpassword:  '',
      
     });
 
@@ -66,26 +66,26 @@ function Changepassword() {
         
 
         let validation = new Validator(values, {
-          Currentpass:  'present',
-          Newpass:      'required|same:Confirmpass|min:8',
-          Confirmpass:  'required|same:Newpass|min:8'
+          Currentpassword:  'present',
+          Newpassword:      'required|same:Confirmpassword|min:8',
+          Confirmpassword:  'required|same:Newpassword|min:8'
         });
        
       
         if (validation.fails()) {
           setError({
-            Currentpass: validation.errors.first('Currentpass'),
-            Newpass: validation.errors.first('Newpass'),
-            Confirmpass: validation.errors.first('Confirmpass'),
+            Currentpassword: validation.errors.first('Currentpassword'),
+            Newpassword: validation.errors.first('Newpassword'),
+            Confirmpassword: validation.errors.first('Confirmpassword'),
               });
 
 
               
         } else {
           setError({
-             Currentpass: '',
+             Currentpassword: '',
              Newpassword: '',
-             Confirmpass:''
+             Confirmpassword:''
 
           });
         }
@@ -108,7 +108,7 @@ function Changepassword() {
                   <Card.Body>
                           
                 <Form.Group className="mb-3"
-                        value={values.Currentpass}
+                        value={values.Currentpassword}
                         controlId='formGridpassword' 
                         onChange={handleChange}>
                           
@@ -117,51 +117,51 @@ function Changepassword() {
                       <InputGroup>
                           <Form.Control
                               onChange={handleChange}
-                              name='Newpass' 
+                              name='Currentpassword' 
                               type={passwordType}
-                              isInvalid = {!!errors.Currentpass}
+                              isInvalid = {!!errors.Currentpassword}
                               placeholder="Current password"
                               aria-describedby="basic-addon"
                               required
                             />
 
-                          <Button id="button-addon" variant="outline-secondary" 
+                          <Button style={{borderRadius:'5px'}} id="button-addon" variant="outline-secondary" 
                               onClick={togglePassword}>
                               {passwordType==="password"? 
                               <FontAwesomeIcon icon={faEye} className='fa-fw'/> 
                               :<FontAwesomeIcon icon={faEyeSlash} className='fa-fw'/>
 
                               }
-
+                            
+                                
                                 </Button>
                             <Form.Control.Feedback type='invalid'>
-                                {errors.Currentpass}
+                                {errors.Currentpassword}
                             </Form.Control.Feedback>  
-                                
+                           
                       </InputGroup>
                 </Form.Group>
 
 
                 <Form.Group className="mb-3"
-                          value={values.Newpass}
+                          value={values.Newpassword}
                           controlId='formGridpassword' 
                           onChange={handleChange}>
-                            
                 <Form.Label>New Password</Form.Label>
 
                     <InputGroup>
                         <Form.Control
                             onChange={handleChange}
-                            name='Newpass' 
+                            name='Newpassword' 
                             type={passwordType}
-                            isInvalid = {!!errors.Newpass}
+                            isInvalid = {!!errors.Newpassword}
                             placeholder="New Password"
                             aria-describedby="basic-addon"
                             required
 
                           />
 
-                        <Button id="button-addon" variant="outline-secondary" 
+                        <Button  style={{borderRadius:'5px'}}  id="button-addon" variant="outline-secondary" 
                             onClick={togglePassword}>
                             {passwordType==="password"? 
                             <FontAwesomeIcon icon={faEye} className='fa-fw'/> 
@@ -172,7 +172,7 @@ function Changepassword() {
                         </Button>
 
                       <Form.Control.Feedback type='invalid'>
-                            {errors.Newpass}
+                            {errors.Newpassword}
                       </Form.Control.Feedback>  
                     
                     </InputGroup>
@@ -189,14 +189,14 @@ function Changepassword() {
               <InputGroup>
                 <Form.Control
                         onChange={handleChange}
-                        name='Confirmpass' 
+                        name='Confirmpassword' 
                         type={passwordType}
-                        isInvalid = {!!errors.Confirmpass}
+                        isInvalid = {!!errors.Confirmpassword}
                         placeholder="Confirm Password"
                         aria-describedby="basic-addon"
                         required
                   />
-                      <Button id="button-addon" variant="outline-secondary" 
+                      <Button style={{borderRadius:'5px'}} id="button-addon" variant="outline-secondary" 
                         onClick={togglePassword}>
                         {passwordType==="password"? 
                         <FontAwesomeIcon icon={faEye} className='fa-fw'/> 
@@ -206,7 +206,7 @@ function Changepassword() {
                       </Button>
              
               <Form.Control.Feedback type='invalid'>
-                        {errors.Confirmpass}
+                        {errors.Confirmpassword}
               </Form.Control.Feedback>  
                       
               </InputGroup>
