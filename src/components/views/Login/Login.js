@@ -8,11 +8,13 @@ import {
   Row
 } from 'react-bootstrap';
 import Validator from 'validatorjs';
+import apiClient from '../../../helpers/apiClient';
 
 import chedLogo from '../../../assets/ched-logo.png'
 import './styles.css'
 
 function Login() {
+  const [isLoading, setIsLoading] = useState(false);
 
   const [values, setValues] = useState({
     username: '',
@@ -44,12 +46,23 @@ function Login() {
         username: validation.errors.first('username'),
         password: validation.errors.first('password'),
       });
+      return;
     } else {
       setError({
         username: '',
         password: ''
       });
     }
+
+    setIsLoading(true);
+
+    apiClient.post('/login', values).then(response => {
+      console.log(response)
+    }).catch(error => {
+      // Swal.fire
+    }).finally(() => {
+      setIsLoading(false);
+    });
   }
 
   return (    
@@ -104,7 +117,8 @@ function Login() {
                   <div  className='d-grid gap-2'>
                     <Button
                       type='submit' 
-                      variant='primary'>
+                      variant='primary'
+                      disabled={isLoading}>
                       Login
                     </Button>
                   </div>
