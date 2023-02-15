@@ -1,5 +1,5 @@
 import React from 'react';
-import chedLogo from '../../assets/ched-logo.png';
+import chedLogo from '../../../assets/ched-logo.png';
 import './styles.css';
 
 function MastHeader () {

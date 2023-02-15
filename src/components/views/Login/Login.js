@@ -9,10 +9,11 @@ import {
 } from 'react-bootstrap';
 import Validator from 'validatorjs';
 
-import chedLogo from '../../assets/ched-logo.png'
+import chedLogo from '../../../assets/ched-logo.png'
 import './styles.css'
 
 function Login() {
+
   const [values, setValues] = useState({
     username: '',
     password: ''
@@ -34,7 +35,7 @@ function Login() {
     e.preventDefault();
 
     let validation = new Validator(values, {
-      username: 'required|min:3',
+      username: 'required|min:5',
       password: 'required|min:8'
     });
 
