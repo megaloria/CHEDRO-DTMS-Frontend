@@ -1,20 +1,19 @@
-body .tbl{
+body .tbl {
     max-width: 90%;
-    margin:0px 65px;
+    margin: 0px 65px;
     text-align:center;
 }
 
-
-.page{
+.page {
     justify-content:end;
 }
 
 .modal.show .modal-dialog {
     transform: none;
-    max-width:60%;
+    max-width: 60%;
     padding: 0px 20px;
 }
 
-.addIcon{
+.addIcon {
     color:white;
 }

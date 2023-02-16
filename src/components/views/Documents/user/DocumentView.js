@@ -20,7 +20,7 @@ import {
     Badge
 } from 'react-bootstrap';
 
-function UserView() {
+function DocumentView() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -159,4 +159,4 @@ function UserView() {
     );
 }
 
-export default UserView;
+export default DocumentView;

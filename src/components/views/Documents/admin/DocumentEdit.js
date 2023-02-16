@@ -1,5 +1,4 @@
 import React, { useEffect, useState }  from 'react';
-import "bootstrap/dist/css/bootstrap.min.css";
 import {
     Button, 
     Form, 
@@ -7,7 +6,7 @@ import {
     Col
 } from 'react-bootstrap';
 
-function EditDocu() {
+function DocumentEdit() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -45,11 +44,11 @@ function EditDocu() {
 
     return (
         <div class="container fluid">
-          <div className="crud bg-body rounded"> 
-            <Row className= "justify-content-end mt-4 mb-3">
-                <h1>Edit Document</h1>
-            </Row>
-         </div>
+            <div className="crud bg-body rounded"> 
+                <Row className= "justify-content-end mt-4 mb-3">
+                    <h1>Edit Document</h1>
+                </Row>
+            </div>
             <Row className="mb-3">
                 <Col>
                     <Form.Label>Tracking No.</Form.Label>
@@ -85,22 +84,22 @@ function EditDocu() {
                     <Form.Control as="textarea" rows={5} type="text" placeholder="Description" />
                 </Col>
             </Row>
-         <div>
-            <Row className= "justify-content-end mt-4 mb-3">
-                <Col md="auto" className="p-0">
-                    <Button variant="secondary">
-                        Cancel
-                    </Button>
-                </Col>
-                <Col md="auto">
-                    <Button variant="primary">
-                        Save 
-                    </Button>
-                </Col>
-            </Row>  
-         </div>
-    </div>   
+            <div>
+                <Row className= "justify-content-end mt-4 mb-3">
+                    <Col md="auto" className="p-0">
+                        <Button variant="secondary">
+                            Cancel
+                        </Button>
+                    </Col>
+                    <Col md="auto">
+                        <Button variant="primary">
+                            Save 
+                        </Button>
+                    </Col>
+                </Row>  
+            </div>
+        </div>
     );
 }
 
-export default EditDocu;
+export default DocumentEdit;

@@ -9,7 +9,7 @@ import {
 } from 'react-bootstrap';
 import './styles.css';
 
-function Received() {
+function DocumentReceive() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -47,16 +47,16 @@ function Received() {
 
     return (
         <div class="container fluid">
-         <div className="crud bg-body rounded"> 
-            <Row className= "justify-content-end mt-4 mb-3">
-                <Col>
-                <Breadcrumb>
-                    <Breadcrumb.Item href="#">Documents</Breadcrumb.Item>
-                    <Breadcrumb.Item href="#" active>Received</Breadcrumb.Item>
-                </Breadcrumb>
-                </Col>
-            </Row>
-         </div>
+            <div className="crud bg-body rounded"> 
+                <Row className= "justify-content-end mt-4 mb-3">
+                    <Col>
+                        <Breadcrumb>
+                            <Breadcrumb.Item href="#">Documents</Breadcrumb.Item>
+                            <Breadcrumb.Item href="#" active>Received</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </Col>
+                </Row>
+            </div>
             <Row className="mb-3">
                 <Col>
                     <Form.Label>Tracking No.</Form.Label>
@@ -92,22 +92,22 @@ function Received() {
                     <Form.Control as="textarea" rows={5} type="text" placeholder="Description" />
                 </Col>
             </Row>
-        <div>
-            <Row className= "justify-content-end mt-4 mb-3">
-                <Col md="auto" className="p-0">
-                    <Button variant="secondary">
-                        Cancel
-                    </Button>
-                </Col>
-                <Col md="auto">
-                    <Button variant="primary">
-                        Send 
-                    </Button>
-                </Col>
-            </Row>
+            <div>
+                <Row className= "justify-content-end mt-4 mb-3">
+                    <Col md="auto" className="p-0">
+                        <Button variant="secondary">
+                            Cancel
+                        </Button>
+                    </Col>
+                    <Col md="auto">
+                        <Button variant="primary">
+                            Send 
+                        </Button>
+                    </Col>
+                </Row>
+            </div>
         </div>
-    </div>
     );
 }
 
-export default Received;
+export default DocumentReceive;

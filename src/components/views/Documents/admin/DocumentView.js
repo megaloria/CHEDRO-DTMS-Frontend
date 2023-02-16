@@ -1,5 +1,11 @@
 import React, { useEffect, useState }  from 'react';
-import "bootstrap/dist/css/bootstrap.min.css";
+import {
+    Button,
+    Row, 
+    Col, 
+    Breadcrumb, 
+    Badge
+} from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faShare,
@@ -9,15 +15,8 @@ import {
     faFile,
     faHashtag
 } from '@fortawesome/free-solid-svg-icons'
-import {
-    Button, 
-    Row, 
-    Col, 
-    Breadcrumb, 
-    Badge
-} from 'react-bootstrap';
 
-function AdminView() {
+function DocumentView() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -55,21 +54,21 @@ function AdminView() {
 
     return (
         <div class="container fluid">
-          <div className="crud bg-body rounded"> 
-            <Row className= "justify-content-end mt-4 mb-3">
-                <Col>
-                    <Breadcrumb>
-                        <Breadcrumb.Item href="#">Document</Breadcrumb.Item>
-                        <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
-                    </Breadcrumb>
-                </Col>
-                <Col md="auto">
-                    <Button>
-                        <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
-                    </Button>
-                </Col>
-            </Row>
-         </div>
+            <div className="crud bg-body rounded"> 
+                <Row className= "justify-content-end mt-4 mb-3">
+                    <Col>
+                        <Breadcrumb>
+                            <Breadcrumb.Item href="#">Document</Breadcrumb.Item>
+                            <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
+                        </Breadcrumb>
+                    </Col>
+                    <Col md="auto">
+                        <Button>
+                            <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
+                        </Button>
+                    </Col>
+                </Row>
+            </div>
             <Row className="mb-3">
                 <Col>
                     <FontAwesomeIcon icon={faHashtag} className="text-secondary" style={{marginRight:'20px'}}/>
@@ -110,10 +109,8 @@ function AdminView() {
                     sample.docx
                 </Col>
             </Row>
-            <div> 
         </div>
-     </div>
     );
 }
 
-export default AdminView;
+export default DocumentView;
