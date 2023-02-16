@@ -8,11 +8,18 @@ import {
   Row
 } from 'react-bootstrap';
 import Validator from 'validatorjs';
+import Swal from 'sweetalert2';
+import apiClient from '../../../helpers/apiClient';
+import { useNavigate } from 'react-router-dom';
 
 import chedLogo from '../../../assets/ched-logo.png'
 import './styles.css'
 
+
 function Login() {
+
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
 
   const [values, setValues] = useState({
     username: '',
@@ -44,12 +51,40 @@ function Login() {
         username: validation.errors.first('username'),
         password: validation.errors.first('password'),
       });
-    } else {
+      return;
+    }else {
       setError({
         username: '',
         password: ''
       });
     }
+
+    setIsLoading(true);
+
+    apiClient.post('/login', values).then(response => {
+      
+        Swal.fire({
+        title: "Successful Login",
+        text: response.data.message,
+        icon: 'success',
+        timer: 1500
+      })
+
+      navigate('/')
+
+
+    }).catch(error => {
+
+      Swal.fire({
+        title: "Failed Login",
+        text: error,
+        icon: 'error',
+        timer: 1500
+      })
+
+    }).finally(() => {
+      setIsLoading(false);
+    });
   }
 
   return (    
@@ -97,14 +132,15 @@ function Login() {
                     className= 'mb-3'
                     controlId='rememberPassword'>
                     <Form.Check 
-                      pill type='checkbox' 
+                       type='checkbox' 
                       label='Remember password'/>
                   </Form.Group>
 
                   <div  className='d-grid gap-2'>
                     <Button
                       type='submit' 
-                      variant='primary'>
+                      variant='primary'
+                      disabled={isLoading}>
                       Login
                     </Button>
                   </div>

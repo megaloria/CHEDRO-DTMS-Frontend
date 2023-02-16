@@ -14,11 +14,45 @@ import {
   faKey,
   faUser
 } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 import './styles.css';
+import apiClient from '../../../helpers/apiClient';
 
 function Header() {
+
+  const loaderData = useRouteLoaderData('user');
   
+  console.log(loaderData);
+
+  const navigate = useNavigate();
+  
+  const handleLogout = e => {
+
+    apiClient.delete('/user').then(response => {
+
+      Swal.fire({
+        title: "Successful Logout",
+        text: response.data.message,
+        icon: 'success',
+        timer: 1500
+      })
+
+      navigate('/')
+
+    }).catch(error => {
+
+      Swal.fire({
+        title: "Unable to Logout",
+        text: error,
+        icon: 'error',
+        timer: 1500
+      })
+
+    })
+  };
+
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props}>
       Home
@@ -61,7 +95,7 @@ function Header() {
             <NavDropdown
               title={
                 <span>
-                  <FontAwesomeIcon icon={faUser} /> Username
+                  <FontAwesomeIcon icon={faUser} /> {loaderData.profile.name}
                 </span>
               }
               id='collasible-nav-dropdown'
@@ -72,7 +106,7 @@ function Header() {
                   fixedWidth /> Change Password
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href=' '>
+              <NavDropdown.Item onClick={handleLogout}>
                 <FontAwesomeIcon
                   icon={faDoorOpen}
                   fixedWidth /> Logout
