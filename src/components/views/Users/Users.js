@@ -17,12 +17,10 @@ import {
     Pagination, 
     Row, 
     Col, 
-    Table,
-    Select,
-    Fragment
+    Table
 } from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import './Users-style.css';
+import './style.css';
 
 function Home() {
     const [data, setData] = useState([]);
@@ -59,14 +57,13 @@ function Home() {
     //VALIDATION ON ADDING RECORD
     const [validated, setValidated] = useState(false);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = event => {
         const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
-        }
-
-        setValidated(true);
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            setValidated(true);
     };
 
     // SHOW PASSWORD
@@ -95,11 +92,11 @@ function Home() {
     }
     const togglePassword3 =()=>{
       if(passwordType==="password")
-      {
-       setPasswordType("text")
-       return;
-      }
-      setPasswordType("password")
+        {
+            setPasswordType("text")
+        return;
+        }
+            setPasswordType("password")
     }
 
     // Change Password
@@ -145,27 +142,25 @@ function Home() {
   return (
        <div class="container fluid">
           <div className="crud bg-body rounded"> 
-
-          <Row className= "justify-content-end mt-4 mb-3">
-            <Col>
-            <h1>Users</h1>
-            </Col>
-            <Col md="auto">
-              <div className="search">
-                <Form>
-                    <Form className="mb-3" controlId="">
-                        <Form.Control type="search" placeholder="Search" />
-                    </Form>
-                </Form>
-              </div>
-            </Col>
-            <Col md="auto">
-              <Button variant="primary" onClick={handleShow}>
-                <FontAwesomeIcon icon={faAdd} className="addIcon"/> Add
-              </Button>
-             </Col> 
+            <Row className= "justify-content-end mt-4 mb-3">
+                <Col>
+                 <h1>Users</h1>
+                </Col>
+                <Col md="auto">
+                    <div className="search">
+                        <Form>
+                            <Form className="mb-3" controlId="">
+                                <Form.Control type="search" placeholder="Search" />
+                            </Form>
+                        </Form>
+                    </div>
+                </Col>
+                <Col md="auto">
+                    <Button variant="primary" onClick={handleShow}>
+                        <FontAwesomeIcon icon={faAdd} className="addIcon"/> Add
+                    </Button>
+                </Col> 
             </Row>
-
         </div>
             <div class="row">
                 <div class="table-responsive " >
@@ -199,8 +194,7 @@ function Home() {
                         ))
                     } 
                     </tbody>
-                </Table>
-
+                 </Table>
                 <div>
                     <Pagination className="page">
                         <Pagination.First />
@@ -220,7 +214,6 @@ function Home() {
                         <Pagination.Last />
                     </Pagination>
                 </div>
-
             </div>   
         </div>
 
@@ -233,104 +226,100 @@ function Home() {
             backdrop="static"
             keyboard={false}
         >
-        <Modal.Header closeButton>
-        <Modal.Title>Add Record</Modal.Title>
-        </Modal.Header>
+            <Modal.Header closeButton>
+                <Modal.Title>Add Record</Modal.Title>
+            </Modal.Header>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <Modal.Body>
-            <Row className="margin: 40px">
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Username</Form.Label>
-                <Form.Control type="text" placeholder="Enter Username" required/>
-                <Form.Control.Feedback type="invalid">Please choose a username.</Form.Control.Feedback>
-            </Form.Group>
-            </Col>
+                <Row className="margin: 40px">
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Username" required/>
+                            <Form.Control.Feedback type="invalid">Please choose a username.</Form.Control.Feedback>
+                        </Form.Group>
+                    </Col>
 
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Password</Form.Label>
-                <InputGroup>
-                    <Form.Control
-                        type={passwordType} 
-                        onChange={handlePasswordChange}
-                        value={passwordInput}
-                        placeholder="Enter Password"
-                        aria-describedby="basic-addon"
-                        required
-                    />
-                        <Button className="p-1" id="button-addon" variant="outline-secondary" 
-                            onClick={togglePassword3}>
-                            { passwordType==="password"? 
-                            <FontAwesomeIcon icon={faEye}/> 
-                            :<FontAwesomeIcon icon={faEyeSlash}/>
-                            }
-                        </Button>
-                    <Form.Control.Feedback type="invalid">Please enter password.</Form.Control.Feedback>
-                </InputGroup>
-            </Form.Group>
-            </Col>
-
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Role</Form.Label>
-                <Form.Select name="" aria-label="Default select example" required>
-                    <option value="">Select Role</option>
-                    <option value="1">Regional Director</option>
-                    <option value="2">Chief Administrative Officer</option>
-                    <option value="3">Secretary</option>
-                </Form.Select>
-            </Form.Group>
-            </Col>
-            </Row>
-
-            <Row>
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>First Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter First Name" required/>
-                <Form.Control.Feedback type="invalid">Please enter first name.</Form.Control.Feedback>
-            </Form.Group>
-            </Col>
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Middle Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter Middle Name" />
-            </Form.Group>
-            </Col>
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter Last Name" required/>
-                <Form.Control.Feedback type="invalid">Please enter last name.</Form.Control.Feedback>
-            </Form.Group>
-            </Col>
-            </Row>
-
-            <Row className="justify-content-md">
-            <Col >
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Prefix</Form.Label>
-                <Form.Control type="text" placeholder="Prefix"/>
-            </Form.Group>
-            </Col>
-            <Col >
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Suffix</Form.Label>
-                <Form.Control type="text" placeholder="Enter Suffix"/>
-                <Form.Control.Feedback type="invalid">Please enter suffix.</Form.Control.Feedback>
-            </Form.Group>
-            </Col>
-            <Col >
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Position</Form.Label>
-                <Form.Control type="text" placeholder="Enter Position" required/>
-                <Form.Control.Feedback type="invalid">Please enter position.</Form.Control.Feedback>
-            </Form.Group>
-            </Col>
-            </Row>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Password</Form.Label>
+                            <InputGroup>
+                                <Form.Control
+                                    type={passwordType} 
+                                    onChange={handlePasswordChange}
+                                    value={passwordInput}
+                                    placeholder="Enter Password"
+                                    aria-describedby="basic-addon"
+                                    required
+                                />
+                                    <Button className="p-1" id="button-addon" variant="outline-secondary" 
+                                        onClick={togglePassword3}>
+                                        { passwordType==="password"? 
+                                        <FontAwesomeIcon icon={faEye}/> 
+                                        :<FontAwesomeIcon icon={faEyeSlash}/>
+                                        }
+                                    </Button>
+                                <Form.Control.Feedback type="invalid">Please enter password.</Form.Control.Feedback>
+                            </InputGroup>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Role</Form.Label>
+                            <Form.Select name="" aria-label="Default select example" required>
+                                <option value="">Select Role</option>
+                                <option value="1">Regional Director</option>
+                                <option value="2">Chief Administrative Officer</option>
+                                <option value="3">Secretary</option>
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>First Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter First Name" required/>
+                            <Form.Control.Feedback type="invalid">Please enter first name.</Form.Control.Feedback>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Middle Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Middle Name" />
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Last Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Last Name" required/>
+                            <Form.Control.Feedback type="invalid">Please enter last name.</Form.Control.Feedback>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row className="justify-content-md">
+                    <Col >
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Prefix</Form.Label>
+                            <Form.Control type="text" placeholder="Prefix"/>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Suffix</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Suffix"/>
+                            <Form.Control.Feedback type="invalid">Please enter suffix.</Form.Control.Feedback>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Position</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Position" required/>
+                            <Form.Control.Feedback type="invalid">Please enter position.</Form.Control.Feedback>
+                        </Form.Group>
+                    </Col>
+                </Row>
             </Modal.Body>
-
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>
                     Cancel
@@ -352,73 +341,70 @@ function Home() {
             keyboard={false}
         >
         <Modal.Header closeButton>
-        <Modal.Title>Edit Record</Modal.Title>
+            <Modal.Title>Edit Record</Modal.Title>
         </Modal.Header>
         <Form>
             <Modal.Body>
-            <Row className="margin: 40px">
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Username</Form.Label>
-                <Form.Control type="text" placeholder="Enter Username" required/>
-            </Form.Group>
-            </Col>
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Role</Form.Label>
-                <Form.Select aria-label="Default select example">
-                    <option>Select Role</option>
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </Form.Select>
-            </Form.Group>
-            </Col>
-            </Row>
-
-            <Row>
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>First Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter First Name" required/>
-            </Form.Group>
-            </Col>
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Middle Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter Middle Name" />
-            </Form.Group>
-            </Col>
-            <Col>
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Last Name</Form.Label>
-                <Form.Control type="text" placeholder="Enter Last Name" required/>
-            </Form.Group>
-            </Col>
-            </Row>
-
-            <Row className="justify-content-md">
-            <Col >
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Prefix</Form.Label>
-                <Form.Control type="text" placeholder="Prefix" required/>
-            </Form.Group>
-            </Col>
-            <Col >
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Suffix</Form.Label>
-                <Form.Control type="text" placeholder="Enter Suffix" required/>
-            </Form.Group>
-            </Col>
-            <Col >
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Position</Form.Label>
-                <Form.Control type="text" placeholder="Enter Position" required/>
-            </Form.Group>
-            </Col>
-            </Row>
+                <Row className="margin: 40px">
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Username</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Username" required/>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Role</Form.Label>
+                            <Form.Select aria-label="Default select example">
+                                <option>Select Role</option>
+                                <option value="1">One</option>
+                                <option value="2">Two</option>
+                                <option value="3">Three</option>
+                            </Form.Select>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>First Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter First Name" required/>
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Middle Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Middle Name" />
+                        </Form.Group>
+                    </Col>
+                    <Col>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Last Name</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Last Name" required/>
+                        </Form.Group>
+                    </Col>
+                </Row>
+                <Row className="justify-content-md">
+                    <Col >
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Prefix</Form.Label>
+                            <Form.Control type="text" placeholder="Prefix" required/>
+                        </Form.Group>
+                    </Col>
+                    <Col >
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Suffix</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Suffix" required/>
+                        </Form.Group>
+                    </Col>
+                    <Col >
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Position</Form.Label>
+                            <Form.Control type="text" placeholder="Enter Position" required/>
+                        </Form.Group>
+                    </Col>
+                </Row>
             </Modal.Body>
-
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose3}>
                     Cancel
@@ -439,37 +425,34 @@ function Home() {
             keyboard={false}
         >
         <Modal.Header closeButton>
-        <Modal.Title>Change Password</Modal.Title>
+            <Modal.Title>Change Password</Modal.Title>
         </Modal.Header>
         <Form>
             <Modal.Body>
-            <Row className="margin: 40px">
-            <Col >
-            <Form.Group className="mb-2" controlId="">
-                <Form.Label>Password</Form.Label>
-                <Form.Control 
-                    type={passwordShown ? "text" : "password"} 
-                    placeholder="Enter Password" 
-                    required 
-                />
-            </Form.Group>
-           
-            <Form.Group className="mb-3" controlId="">
-                <Form.Label>Confirm Password</Form.Label>
-                <Form.Control 
-                    type={passwordShown ? "text" : "password"} 
-                    placeholder="Enter Confirm Password" 
-                    required 
-                />
-            </Form.Group>
-
-            <Form.Group className="mb-2" controlId="">
-                <Form.Check onClick={togglePassword} type="checkbox" label="Show Password" />
-            </Form.Group>
-            </Col>
-            </Row>
+                <Row className="margin: 40px">
+                    <Col >
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control 
+                                type={passwordShown ? "text" : "password"} 
+                                placeholder="Enter Password" 
+                                required 
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="">
+                            <Form.Label>Confirm Password</Form.Label>
+                            <Form.Control 
+                                type={passwordShown ? "text" : "password"} 
+                                placeholder="Enter Confirm Password" 
+                                required 
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-2" controlId="">
+                            <Form.Check onClick={togglePassword} type="checkbox" label="Show Password" />
+                        </Form.Group>
+                    </Col>
+                </Row>
             </Modal.Body>
-
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose2}>
                     Cancel
@@ -480,16 +463,13 @@ function Home() {
             </Modal.Footer>
         </Form>
         </Modal>
-
        </div>  
       </div>     
-      </div>
-      </div>
-
-      
+     </div>
+    </div>  
   );
 }
 
-  
+
 
 export default Home;

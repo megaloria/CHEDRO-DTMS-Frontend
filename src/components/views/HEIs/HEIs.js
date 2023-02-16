@@ -15,8 +15,7 @@ import {
     Col
 } from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import './HEIs-styles.css';
-
+import './styles.css';
 
 function Heis() {
     const [data, setData] = useState([]);
@@ -59,11 +58,10 @@ function Heis() {
 
     const handleSubmit = event => {
         const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
-        }
-
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
         setValidated(true);
     };
 

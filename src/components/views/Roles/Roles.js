@@ -105,7 +105,7 @@ function Roles() {
 
           <Row className= 'justify-content-end mt-4 mb-3'>
             <Col>
-            <h1>Roles</h1>
+             <h1>Roles</h1>
             </Col>
             <Col md='auto'>
               <div className='search'>
@@ -116,40 +116,39 @@ function Roles() {
             </Col>
             <Col md='auto'>
               <Button variant='primary' onClick={e => handleShowModal()}>
-              <FontAwesomeIcon icon={faAdd} className='addIcon'/> Add
+                <FontAwesomeIcon icon={faAdd} className='addIcon'/> Add
               </Button>
              </Col> 
             </Row>
-
         </div>
             <div class='row'>
                 <div class='table-responsive ' >
-                <Table striped bordered hover size='md'>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Description</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        data.map((row, index) => (
-                            <tr key={index}>
-                                <td>{row.id}</td>
-                                <td>{row.description}</td>
-                                <td>
-                                    <Button variant='link'>
-                                        <FontAwesomeIcon onClick={e => handleShowModal(row)} icon={faEdit} className='text-primary'/>
-                                    </Button>
-                                    <Button onClick={showAlert} variant='link'>
-                                        <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                    </Button>
-                                </td>
+                    <Table striped bordered hover size='md'>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Description</th>
+                                <th>Actions</th>
                             </tr>
-                        ))
-                    }
-                </tbody>
+                        </thead>
+                        <tbody>
+                            {
+                                data.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.id}</td>
+                                        <td>{row.description}</td>
+                                        <td>
+                                            <Button variant='link'>
+                                                <FontAwesomeIcon onClick={e => handleShowModal(row)} icon={faEdit} className='text-primary'/>
+                                            </Button>
+                                            <Button onClick={showAlert} variant='link'>
+                                                <FontAwesomeIcon icon={faTrash} className='text-danger'/>
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
                 </Table>
             </div>   
         </div>
@@ -157,43 +156,42 @@ function Roles() {
 
     {/* <!--- Model Box ---> */}
     <div className='model_box'>
-    <Modal
-        show={show}
-        onHide={handleHideModal}
-        backdrop='static'
-        keyboard={false}
-    >
-    <Modal.Header closeButton>
-        <Modal.Title>{modal.data ? 'Edit' : 'Add'} Role</Modal.Title>
-    </Modal.Header>
-    <Form onSubmit={handleSubmit}>
-        <Modal.Body>
-        <Row className='margin: 40px'>
-        <Col>
-        <Form.Group className='mb-2' controlId=''>
-            <Form.Label>Description</Form.Label>
-            <Form.Control type='text' placeholder='Enter Description' value={modal.data?.description} />
-            <Form.Control.Feedback type='invalid'>Please enter description.</Form.Control.Feedback>
-        </Form.Group>
-        </Col>
-        </Row>
-        </Modal.Body>
+        <Modal
+            show={show}
+            onHide={handleHideModal}
+            backdrop='static'
+            keyboard={false}
+        >
+        <Modal.Header closeButton>
+            <Modal.Title>{modal.data ? 'Edit' : 'Add'} Role</Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={handleSubmit}>
+            <Modal.Body>
+                <Row className='margin: 40px'>
+                    <Col>
+                        <Form.Group className='mb-2' controlId=''>
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control type='text' placeholder='Enter Description' value={modal.data?.description} />
+                            <Form.Control.Feedback type='invalid'>Please enter description.</Form.Control.Feedback>
+                        </Form.Group>
+                    </Col>
+                </Row>
+            </Modal.Body>
 
-        <Modal.Footer>
-            <Button variant='secondary' onClick={handleHideModal}>
-                Cancel
-            </Button>
-            <Button type='submit' variant='primary'>
-                {modal.data ? 'Edit' : 'Add'}
-            </Button>
-        </Modal.Footer>
+            <Modal.Footer>
+                <Button variant='secondary' onClick={handleHideModal}>
+                    Cancel
+                </Button>
+                <Button type='submit' variant='primary'>
+                    {modal.data ? 'Edit' : 'Add'}
+                </Button>
+            </Modal.Footer>
         </Form>
     </Modal>
-
    {/* Model Box Finish */}
 
-   </div>
-   </div>
+        </div>
+    </div>
     );
 }
 

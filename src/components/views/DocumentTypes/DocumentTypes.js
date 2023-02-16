@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
-    faRotate,
     faEdit,
     faAdd
 } from '@fortawesome/free-solid-svg-icons'
@@ -16,8 +15,7 @@ import {
     Col
 } from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import './DocumentTypes-styles.css';
-
+import './styles.css';
 
 function DocuType() {
     const [data, setData] = useState([]);
@@ -52,12 +50,11 @@ function DocuType() {
 
     const handleSubmit = event => {
         const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
-        }
-
-        setValidated(true);
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            setValidated(true);
     };
 
     //MODAL ON ADDING
@@ -122,7 +119,6 @@ function DocuType() {
               </Button>
              </Col> 
             </Row>
-
         </div>
             <div class="row">
                 <div class="table-responsive " >
@@ -158,7 +154,6 @@ function DocuType() {
             </div>   
         </div>
      
-
     {/* <!--- Model Box ADD ---> */}
     <div className="model_box">
     <Modal
@@ -200,9 +195,7 @@ function DocuType() {
         </Modal.Footer>
         </Form>
     </Modal>
-
    {/* Model Box Finish */}
-
 
    {/* <!--- Model Box EDIT ---> */}
    <div className="model_box">
@@ -237,8 +230,8 @@ function DocuType() {
         </Modal.Footer>
         </Form>
     </Modal>
-
    {/* Model Box Finish */}
+
    </div>
    </div>
    </div>

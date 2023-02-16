@@ -21,7 +21,6 @@ import {
 } from 'react-bootstrap';
 
 function UserView() {
-
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -50,12 +49,11 @@ function UserView() {
 
     const handleSubmit = (event) => {
         const form = event.currentTarget;
-        if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
-        }
-
-        setValidated(true);
+            if (form.checkValidity() === false) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            setValidated(true);
     };
 
     // 2 buttons will show
@@ -74,14 +72,13 @@ function UserView() {
     return (
         <div class="container fluid">
           <div className="crud bg-body rounded"> 
-
             <Row className= "justify-content-end mt-4 mb-3">
-            <Col>
-                <Breadcrumb>
-                    <Breadcrumb.Item href="#">Document</Breadcrumb.Item>
-                    <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
-                </Breadcrumb>
-            </Col>
+                <Col>
+                    <Breadcrumb>
+                        <Breadcrumb.Item href="#">Document</Breadcrumb.Item>
+                        <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
+                    </Breadcrumb>
+                </Col>
                 <Col md="auto">
                     {btnShow ? (
                     <Col>
@@ -101,20 +98,20 @@ function UserView() {
                 }
                 </Col>
             </Row>
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                <Modal.Title>Acknowledge</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>Are you sure you want to acknowledge the receipt of this document?</Modal.Body>
-                <Modal.Footer>
-                <Button variant="danger" onClick={handleClose}>
-                    No
-                </Button>
-                <Button variant="primary" onClick={showButton}>
-                    Yes
-                </Button>
-                </Modal.Footer>
-            </Modal>
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                    <Modal.Title>Acknowledge</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>Are you sure you want to acknowledge the receipt of this document?</Modal.Body>
+                    <Modal.Footer>
+                    <Button variant="danger" onClick={handleClose}>
+                        No
+                    </Button>
+                    <Button variant="primary" onClick={showButton}>
+                        Yes
+                    </Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
                 <Row className="mb-3">
                     <Col>
@@ -122,50 +119,43 @@ function UserView() {
                         23-000
                     </Col>
                 </Row>
-
                 <Row className="mb-3">
                     <Col>
                         <FontAwesomeIcon icon={faFile} className="text-secondary " variant="link" style={{marginRight:'20px'}}/>
                         sample file 
                     </Col>
                 </Row>
-
                 <Row className="mb-3">
                     <Col>
                         <Badge bg="primary" style={{width: 120}}>received</Badge>
                     </Col> 
                 </Row>
-
                 <Row className="mb-3">
                     <Col>
                         <FontAwesomeIcon icon={faUser} className="text-secondary" style={{marginRight:'20px'}}/>
                         user
                     </Col>
                 </Row>
-
                 <Row className="mb-3">
                     <Col>
                         <FontAwesomeIcon icon={faCalendar} className="text-secondary" style={{marginRight:'20px'}}/>
                         mm/dd/yyy
                     </Col>
                 </Row>
-
                 <Row className="mb-3">
                     <Col row={5}>
                         Description
                     </Col>
                 </Row>
-
                 <Row className="mb-3">
                     <Col >
                         <FontAwesomeIcon icon={faPaperclip} className="text-secondary" style={{marginRight:'20px'}}/>
                         sample.docx
                     </Col>
                 </Row>
-
             <div>
         </div>
-        </div> 
+      </div> 
     );
 }
 
