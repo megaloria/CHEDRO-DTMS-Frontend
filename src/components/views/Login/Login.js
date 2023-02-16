@@ -8,6 +8,7 @@ import {
   Row
 } from 'react-bootstrap';
 import Validator from 'validatorjs';
+import Swal from 'sweetalert2';
 import apiClient from '../../../helpers/apiClient';
 
 import chedLogo from '../../../assets/ched-logo.png'
@@ -57,9 +58,26 @@ function Login() {
     setIsLoading(true);
 
     apiClient.post('/login', values).then(response => {
-      console.log(response)
+      
+        Swal.fire({
+        title: "Successful Login",
+        text: response.data.message,
+        icon: 'success',
+        timer: 1500
+      })
+
+      console.log(response);
     }).catch(error => {
-      // Swal.fire
+
+      Swal.fire({
+        title: "Failed Login",
+        text: error,
+        icon: 'error',
+        timer: 1500
+      })
+
+      console.log(error);
+
     }).finally(() => {
       setIsLoading(false);
     });
