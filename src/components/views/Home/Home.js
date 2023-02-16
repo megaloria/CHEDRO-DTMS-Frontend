@@ -6,7 +6,7 @@ import { Outlet } from 'react-router-dom';
 import Header from '../../units/Header/Header';
 import MastHeader from '../../units/MastHeader/MastHeader';
 import Sidebar from '../../units/Sidebar/Sidebar';
-
+import Footer from '../../units/Footer/Footer';
 export default function Home () {
   return (
     <>
@@ -20,6 +20,9 @@ export default function Home () {
       <Col>
         <Outlet />
       </Col>
+      <div>
+        <Footer/>
+      </div>
     </>
   );
 }
