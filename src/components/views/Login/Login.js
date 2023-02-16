@@ -10,14 +10,17 @@ import {
 import Validator from 'validatorjs';
 import Swal from 'sweetalert2';
 import apiClient from '../../../helpers/apiClient';
+import { useNavigate } from 'react-router-dom';
 
 import chedLogo from '../../../assets/ched-logo.png'
 import './styles.css'
-import { useNavigate } from 'react-router-dom';
+
 
 function Login() {
+
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
   const [values, setValues] = useState({
     username: '',
     password: ''
@@ -49,7 +52,7 @@ function Login() {
         password: validation.errors.first('password'),
       });
       return;
-    } else {
+    }else {
       setError({
         username: '',
         password: ''
@@ -129,7 +132,7 @@ function Login() {
                     className= 'mb-3'
                     controlId='rememberPassword'>
                     <Form.Check 
-                      pill type='checkbox' 
+                       type='checkbox' 
                       label='Remember password'/>
                   </Form.Group>
 
