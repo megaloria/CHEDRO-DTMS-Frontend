@@ -6,7 +6,7 @@ function MastHeader () {
     return (
         <div className='Mastheader'>
             <div className='logo'>
-                <a href='#'>
+                <a href='#Home'>
                     <img src= {chedLogo} alt='' height={120}/>
                 </a>
             </div>
