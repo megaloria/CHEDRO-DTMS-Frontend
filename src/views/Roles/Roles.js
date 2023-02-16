@@ -11,7 +11,6 @@ import {Button, Modal, Form, Table, Row, Col} from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import './Roles-styles.css';
 
-
 function Roles() {
     const [data, setData] = useState([]);
 
@@ -44,8 +43,8 @@ function Roles() {
     const handleSubmit = event => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
-        event.preventDefault();
-        event.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
         }
 
         setValidated(true);
@@ -116,7 +115,7 @@ function Roles() {
             </Col>
             <Col md="auto">
               <Button variant="primary" onClick={handleShow}>
-              <FontAwesomeIcon icon={faAdd} className="addIcon"/> Add
+                <FontAwesomeIcon icon={faAdd} className="addIcon"/> Add
               </Button>
              </Col> 
             </Row>
