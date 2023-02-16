@@ -1,15 +1,14 @@
 import React from 'react';
-import Sidebar from './units/Sidebar/Sidebar'
 // import {
 //   createBrowserRouter,
 //   // redirect,
 //   RouterProvider
 // } from 'react-router-dom';
-// import axios from 'axios';
+// // import axios from 'axios';
 
 // import Login from './views/Login/Login';
 // import Home from './views/Home/Home';
-
+import Sidebar from './units/Sidebar/Sidebar';
 
 // function getCurrentUser() {
 //   return axios.get('/user').then(() => {
