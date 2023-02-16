@@ -23,6 +23,7 @@ import apiClient from '../../../helpers/apiClient';
 function Header() {
 
   const loaderData = useRouteLoaderData('user');
+  
   console.log(loaderData);
 
   const navigate = useNavigate();
