@@ -14,7 +14,7 @@ import {
   faKey,
   faUser
 } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 import './styles.css';
@@ -22,10 +22,13 @@ import apiClient from '../../../helpers/apiClient';
 
 function Header() {
 
+  const loaderData = useRouteLoaderData('user');
+  console.log(loaderData);
+
   const navigate = useNavigate();
   
   const handleLogout = e => {
-    
+
     apiClient.delete('/user').then(response => {
 
       Swal.fire({
@@ -91,7 +94,7 @@ function Header() {
             <NavDropdown
               title={
                 <span>
-                  <FontAwesomeIcon icon={faUser} /> Username
+                  <FontAwesomeIcon icon={faUser} /> {loaderData.profile.name}
                 </span>
               }
               id='collasible-nav-dropdown'
