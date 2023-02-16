@@ -13,10 +13,11 @@ import apiClient from '../../../helpers/apiClient';
 
 import chedLogo from '../../../assets/ched-logo.png'
 import './styles.css'
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [isLoading, setIsLoading] = useState(false);
-
+  const navigate = useNavigate();
   const [values, setValues] = useState({
     username: '',
     password: ''
@@ -66,7 +67,9 @@ function Login() {
         timer: 1500
       })
 
-      console.log(response);
+      navigate('/')
+
+
     }).catch(error => {
 
       Swal.fire({
@@ -75,8 +78,6 @@ function Login() {
         icon: 'error',
         timer: 1500
       })
-
-      console.log(error);
 
     }).finally(() => {
       setIsLoading(false);
