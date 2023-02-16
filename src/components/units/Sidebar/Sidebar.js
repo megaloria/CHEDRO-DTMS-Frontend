@@ -15,7 +15,7 @@ function Sidebar() {
     return(
         <div className='Sidebar'>
             <Nav defaultActiveKey='/home' className='flex'>
-                <Nav.Link a href='/document' className='flex1'>
+                <Nav.Link  href='/document' className='flex1'>
                     <span style={{ color: 'white', fontSize: '15px' }}>
                         <FontAwesomeIcon icon={faNoteSticky} className='me-2' />Documents
                     </span>
