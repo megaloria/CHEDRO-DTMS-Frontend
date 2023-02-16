@@ -1,21 +1,17 @@
 import React, { useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    FontAwesomeIcon, 
-    } from '@fortawesome/react-fontawesome'
-import {
-    faTrash,
-    faRotate,
+    faTrash, 
     faEdit,
     faPaperclip,
     faCircleArrowRight,
     faRightToBracket,
-    faShare
-    } from '@fortawesome/free-solid-svg-icons'
+    faShare,
+    faSearch
+} from '@fortawesome/free-solid-svg-icons'
 import {
     Button, 
-    Modal, 
-    Input, 
     Form, 
     Table, 
     Row, 
@@ -23,13 +19,14 @@ import {
     Breadcrumb,
     Tab,
     Tabs,
-    Badge
-    } from 'react-bootstrap';
+    Badge,
+    Modal,
+} from 'react-bootstrap';
 import Swal from 'sweetalert2'; 
 import './Documents-styles.css';
 
 
-function Home() {
+function AdminDocu() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -59,7 +56,7 @@ function Home() {
                 description: 'Lorem ipsum dolor',
                 attach: 'sample file',
                 datereceived: 'April 23, 2023',
-                status: 'Acknowledge',
+                status: 'Acknowledge by OIC',
             }
         ]);
     }, []);
@@ -77,7 +74,7 @@ function Home() {
         setValidated(true);
     };
 
-     //MODAL ADD
+     //MODAL FORWARD
     const [show, setShow] = useState(false);
 
     const handleClose = () => {
@@ -87,15 +84,6 @@ function Home() {
         setShow(true)
     };
 
-    //MODAL EDIT
-    const [show2, setShow2] = useState(false);
- 
-    const handleClose2 = () => {
-        setShow2(false)
-    };
-    const handleShow2 = () => {
-        setShow2(true)
-    };
 
     // DELETE
     const showAlert = () => {
@@ -128,9 +116,16 @@ function Home() {
             </Col>
             
             <Col md="auto">
-              <div className="search">
-                    <Form className="mb-3" controlId="">
-                        <Form.Control type="search" placeholder="Search" />
+            <div className="search">
+                    <Form className="d-flex" controlId="">
+                        <Form.Control 
+                        type="search" 
+                        placeholder="Search" 
+                        className="me-2"
+                        />
+                        <Button>
+                            <FontAwesomeIcon icon={faSearch} />
+                        </Button>
                     </Form>
               </div>
             </Col>
@@ -138,7 +133,11 @@ function Home() {
             <Breadcrumb>
                 <Breadcrumb.Item href="#">
                     <Button variant="primary">  
-                        <FontAwesomeIcon icon={faRightToBracket} rotation = {90} className="addIcon"/> Receive
+                        <FontAwesomeIcon 
+                        icon={faRightToBracket} 
+                        rotation = {90} 
+                        className="" 
+                        /> Receive
                     </Button>
               </Breadcrumb.Item>
             </Breadcrumb>
@@ -182,7 +181,7 @@ function Home() {
                         <td>{row.datereceived}</td>
 
                         <td>{
-                                row.status === 'Acknowledge' && (
+                                row.status === 'Acknowledge by OIC' && (
                                     <>
                                     <Badge bg="info" >
                                      {row.status}
@@ -214,7 +213,7 @@ function Home() {
                                     <>
                                         {
                                             row.status === 'Received' && (
-                                                <Button variant="link" size='sm'>
+                                                <Button variant="link" size='sm' onClick={handleShow}>
                                                     <FontAwesomeIcon icon={faShare} className=""/>
                                                 </Button>
                                             )
@@ -249,8 +248,28 @@ function Home() {
             </Tab>
             </Tabs>
   
+        <Modal 
+        style={{width:'fitContent'}}
+        show={show} onHide={handleClose}>
+            <Modal.Header closeButton>
+            <Modal.Title>Forward</Modal.Title>
+            </Modal.Header>
+                <Modal.Body>
+                    <p> You're about to forward this document to Dr. Virginia Akiate (Regional Director)</p>
+                    <p> Are you sure you want to continue?</p>
+                
+                </Modal.Body>
+            <Modal.Footer>
+            <Button variant="danger" onClick={handleClose}>
+                No
+            </Button>
+            <Button variant="primary" onClick={handleClose}>
+                Yes
+            </Button>
+            </Modal.Footer>
+      </Modal>
    </div>
     );
 }
 
-export default Home;
+export default AdminDocu;

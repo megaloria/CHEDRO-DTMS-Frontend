@@ -1,13 +1,14 @@
 import React,{ useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
     faRotate, 
     faEdit, 
     faAdd,
     faEye,
-    faEyeSlash
+    faEyeSlash,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Button, 
@@ -18,13 +19,11 @@ import {
     Row, 
     Col, 
     Table,
-    Select,
-    Fragment
 } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import './Users-style.css';
 
-function Home() {
+function Users() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -59,7 +58,7 @@ function Home() {
     //VALIDATION ON ADDING RECORD
     const [validated, setValidated] = useState(false);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = event => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
         event.preventDefault();
@@ -151,13 +150,18 @@ function Home() {
             <h1>Users</h1>
             </Col>
             <Col md="auto">
-              <div className="search">
-                <Form>
-                    <Form className="mb-3" controlId="">
-                        <Form.Control type="search" placeholder="Search" />
-                    </Form>
-                </Form>
-              </div>
+                <div className="search">
+                        <Form className="d-flex" controlId="">
+                            <Form.Control 
+                            type="search" 
+                            placeholder="Search" 
+                            className="me-2"
+                            />
+                            <Button>
+                                <FontAwesomeIcon icon={faSearch} />
+                            </Button>
+                        </Form>
+                </div>
             </Col>
             <Col md="auto">
               <Button variant="primary" onClick={handleShow}>
@@ -486,10 +490,7 @@ function Home() {
       </div>
       </div>
 
-      
   );
 }
 
-  
-
-export default Home;
+export default Users;

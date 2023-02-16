@@ -11,11 +11,17 @@ import {
     faHashtag,
     faSquareCheck
 } from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Table, Row, Col, Breadcrumb, InputGroup, Badge} from 'react-bootstrap';
-import Swal from 'sweetalert2';
+import {
+    Button, 
+    Modal,  
+    Row, 
+    Col, 
+    Breadcrumb,  
+    Badge
+} from 'react-bootstrap';
 
 
-function Home() {
+function UserView() {
 
     const [data, setData] = useState([]);
 
@@ -173,4 +179,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default UserView;

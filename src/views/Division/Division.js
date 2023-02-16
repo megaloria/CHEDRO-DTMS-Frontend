@@ -9,32 +9,29 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import {Button, Modal, Form, Table, Row, Col} from 'react-bootstrap';
 import Swal from 'sweetalert2';
-import './Roles-styles.css';
 
 
-function Roles() {
+function Division() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
         setData([
             {
                 id: 1,
-                division: 'Technical Division',
-                description: 'Regional Director',
-                level: 1,
+                description: 'Regional Director'
             },
             {
                 id: 2,
-                division: 'Technical Division',
-                description: 'Chief Administrative Officer',
-                level: 2
+                description: 'Chief Administrative Officer'
             },
             {
                 id: 3,
-                division: 'Admin Division',
-                description: 'Secretary',
-                level: 3
-            }
+                description: 'Secretary'
+            },
+            {
+                id: 4,
+                description: 'Assistant'
+            },
         ]);
     }, []);
 
@@ -98,7 +95,7 @@ function Roles() {
 
           <Row className= "justify-content-end mt-4 mb-3">
             <Col>
-            <h1>Roles</h1>
+            <h1>Division</h1>
             </Col>
             <Col md="auto">
                 <div className="search">
@@ -128,10 +125,8 @@ function Roles() {
                 <thead>
                     <tr>
                     <th>ID</th>
-                    <th>Division</th>
                     <th>Description</th>
-                    <th>Level</th>
-                    <th md={1}>Actions</th>
+                    <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -139,9 +134,7 @@ function Roles() {
                         data.map((row, index) => (
                             <tr key={index}>
                                 <td>{row.id}</td>
-                                <td>{row.division}</td>
                                 <td>{row.description}</td>
-                                <td>{row.level}</td>
                                 <td style={{width: '100px'}}>
                                     <Button variant="link">
                                         <FontAwesomeIcon onClick={handleShow2} icon={faEdit} className="text-primary"/>
@@ -238,4 +231,4 @@ function Roles() {
     );
 }
 
-export default Roles;
+export default Division;

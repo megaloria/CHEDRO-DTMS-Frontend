@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import UserDocuments from './views/Documents/UserDocuments'
+import AdminDocuments from './views/Documents/AdminDocuments'
 
 
 function App() {
   return (
-    <UserDocuments/>
+    <AdminDocuments/>
   );
 }
 

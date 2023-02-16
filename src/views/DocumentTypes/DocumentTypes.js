@@ -1,18 +1,25 @@
 import React, { useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
-    faRotate,
     faEdit,
-    faAdd
+    faAdd,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Table, Row, Col} from 'react-bootstrap';
+import {
+    Button, 
+    Modal, 
+    Form, 
+    Table, 
+    Row, 
+    Col
+} from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import './DocumentTypes-styles.css';
 
 
-function Home() {
+function DocuType() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -103,11 +110,18 @@ function Home() {
             <h1>Document Types</h1>
             </Col>
             <Col md="auto">
-              <div className="search">
-                    <Form className="mb-3" controlId="">
-                        <Form.Control type="search" placeholder="Search" />
-                    </Form>
-              </div>
+                <div className="search">
+                        <Form className="d-flex" controlId="">
+                            <Form.Control 
+                            type="search" 
+                            placeholder="Search" 
+                            className="me-2"
+                            />
+                            <Button>
+                                <FontAwesomeIcon icon={faSearch} />
+                            </Button>
+                        </Form>
+                </div>
             </Col>
             <Col md="auto">
               <Button variant="primary" onClick={handleShow}>
@@ -238,4 +252,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default DocuType;

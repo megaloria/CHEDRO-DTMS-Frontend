@@ -1,6 +1,6 @@
 import React, { useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import  {FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faShare,
     faPaperclip,
@@ -9,11 +9,10 @@ import {
     faFile,
     faHashtag
 } from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Table, Row, Col, Breadcrumb, InputGroup, Badge} from 'react-bootstrap';
-import Swal from 'sweetalert2';
+import {Button, Row, Col, Breadcrumb, Badge} from 'react-bootstrap';
 
 
-function Home() {
+function AdminView() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -126,4 +125,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default AdminView;

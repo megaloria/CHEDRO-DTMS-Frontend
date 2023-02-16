@@ -2,33 +2,30 @@ import React, { useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import {
     FontAwesomeIcon, 
-    } from '@fortawesome/react-fontawesome'
+} from '@fortawesome/react-fontawesome'
 import {
     faThumbsUp,
-    faRotate,
     faSquareCheck,
     faPaperclip,
     faCircleArrowRight,
-    faRightToBracket,
-    faUserCheck
-    } from '@fortawesome/free-solid-svg-icons'
+    faUserCheck,
+    faSearch
+} from '@fortawesome/free-solid-svg-icons'
 import {
     Button, 
     Modal, 
-    Input, 
     Form, 
     Table, 
     Row, 
     Col, 
-    Breadcrumb,
     Tab,
     Tabs,
     Badge
-    } from 'react-bootstrap';
-import './Documents-styles.css';
+} from 'react-bootstrap';
+import './userdocu-styles.css';
 
 
-function Home() {
+function UserDocu() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -87,8 +84,15 @@ function Home() {
             
             <Col md="auto">
               <div className="search">
-                    <Form className="mb-3" controlId="">
-                        <Form.Control type="search" placeholder="Search" />
+                    <Form className="d-flex" controlId="">
+                        <Form.Control 
+                        type="search" 
+                        placeholder="Search" 
+                        className="me-2"
+                        />
+                        <Button>
+                            <FontAwesomeIcon icon={faSearch} />
+                        </Button>
                     </Form>
               </div>
             </Col>
@@ -163,7 +167,7 @@ function Home() {
                             }
                         </td>
 
-                        <td style={{ whiteSpace: 'nowrap' }}>
+                        <td className="column" >
                                 <Button variant="outline-primary" size='sm' className="me-2">
                                     <FontAwesomeIcon icon={faCircleArrowRight} className=""/> View
                                 </Button>
@@ -171,12 +175,12 @@ function Home() {
                                 row.status === 'Forwarded from RD' && (
                                     <>
                                 {btnShow ? (
-                                    <Col className="mt-2">
+                                    <Col className="mt-2" >
                                     <Button className="me-1" size='sm' variant="outline-warning">
-                                        <FontAwesomeIcon icon={faUserCheck} className="text-link" />
+                                        <FontAwesomeIcon icon={faUserCheck} className="link" />
                                     </Button>
                                     <Button className="" size='sm' variant="outline-success">
-                                        <FontAwesomeIcon icon={faSquareCheck} className="text-link" />
+                                        <FontAwesomeIcon icon={faSquareCheck} className="link" />
                                     </Button> 
                                     </Col>
                                 ) : (
@@ -220,21 +224,22 @@ function Home() {
             </Button>
             </Modal.Footer>
         </Modal>
-        
             </Tab>
+
+            
             <Tab eventKey="new" title="New" >
             </Tab>
-            <Tab eventKey="rejected" title="Rejected" >
 
+            <Tab eventKey="reject" title="Rejected" >
 
             </Tab>
+
             <Tab eventKey="approved" title="Approved">
             </Tab>
-            </Tabs>
-           
+            </Tabs> 
      
    </div>
     );
 }
 
-export default Home;
+export default UserDocu;

@@ -1,19 +1,15 @@
 import React, { useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {
-    faTrash,
-    faRotate,
-    faEdit,
-    faAdd,
-    faFile
-} from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Table, Row, Col, Breadcrumb} from 'react-bootstrap';
-import Swal from 'sweetalert2';
+    Button, 
+    Form, 
+    Row, 
+    Col, 
+    Breadcrumb
+} from 'react-bootstrap';
 import './Received-styles.css';
 
-
-function Home() {
+function Received() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -117,10 +113,8 @@ function Home() {
         </Row>
             
         </div>
-
-    </div>
-        
+    </div> 
     );
 }
 
-export default Home;
+export default Received;
