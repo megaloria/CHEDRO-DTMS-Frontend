@@ -1,6 +1,6 @@
 import React, { useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faUserCheck,
     faThumbsUp,
@@ -11,11 +11,16 @@ import {
     faHashtag,
     faSquareCheck
 } from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Table, Row, Col, Breadcrumb, InputGroup, Badge} from 'react-bootstrap';
-import Swal from 'sweetalert2';
+import {
+    Button, 
+    Modal, 
+    Row, 
+    Col, 
+    Breadcrumb, 
+    Badge
+} from 'react-bootstrap';
 
-
-function Home() {
+function UserView() {
 
     const [data, setData] = useState([]);
 
@@ -66,9 +71,6 @@ function Home() {
         setShow(false);
     };
     
-
-    
-
     return (
         <div class="container fluid">
           <div className="crud bg-body rounded"> 
@@ -119,7 +121,6 @@ function Home() {
                         <FontAwesomeIcon icon={faHashtag} className="text-secondary" style={{marginRight:'20px'}}/>
                         23-000
                     </Col>
-                
                 </Row>
 
                 <Row className="mb-3">
@@ -163,12 +164,9 @@ function Home() {
                 </Row>
 
             <div>
-            
         </div>
-        </div>
-    
-        
+        </div> 
     );
 }
 
-export default Home;
+export default UserView;

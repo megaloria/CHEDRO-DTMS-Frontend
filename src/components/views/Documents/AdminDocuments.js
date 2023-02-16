@@ -1,21 +1,17 @@
 import React, { useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-    FontAwesomeIcon, 
-    } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
-    faRotate,
     faEdit,
     faPaperclip,
     faCircleArrowRight,
     faRightToBracket,
     faShare
-    } from '@fortawesome/free-solid-svg-icons'
+} from '@fortawesome/free-solid-svg-icons'
 import {
     Button, 
     Modal, 
-    Input, 
     Form, 
     Table, 
     Row, 
@@ -24,12 +20,12 @@ import {
     Tab,
     Tabs,
     Badge
-    } from 'react-bootstrap';
+} from 'react-bootstrap';
 import Swal from 'sweetalert2'; 
 import './Documents-styles.css';
 
 
-function Home() {
+function AdminDocu() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -67,7 +63,7 @@ function Home() {
     //VALIDATION ON ADDING
     const [validated, setValidated] = useState(false);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = event => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
         event.preventDefault();
@@ -407,4 +403,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default AdminDocu;

@@ -78,16 +78,6 @@ function Roles() {
         setShow(true)
     };
 
-    //MODAL ON EDIT
-    const [show2, setShow2] = useState(false);
- 
-    const handleClose2 = () => {
-        setShow2(false)
-    };
-    const handleShow2 = () => {
-        setShow2(true)
-    };
-
     // DELETE
     const showAlert = () => {
         Swal.fire({
@@ -165,7 +155,7 @@ function Roles() {
         </div>
      
 
-    {/* <!--- Model Box ADD ---> */}
+    {/* <!--- Model Box ---> */}
     <div className='model_box'>
     <Modal
         show={show}
@@ -201,7 +191,6 @@ function Roles() {
     </Modal>
 
    {/* Model Box Finish */}
-
 
    </div>
    </div>

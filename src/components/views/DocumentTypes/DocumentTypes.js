@@ -1,18 +1,25 @@
 import React, { useEffect, useState }  from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
     faRotate,
     faEdit,
     faAdd
 } from '@fortawesome/free-solid-svg-icons'
-import {Button, Modal, Input, Form, Table, Row, Col} from 'react-bootstrap';
+import {
+    Button, 
+    Modal, 
+    Form, 
+    Table, 
+    Row, 
+    Col
+} from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import './DocumentTypes-styles.css';
 
 
-function Home() {
+function DocuType() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -43,7 +50,7 @@ function Home() {
     //VALIDATION ON ADDING
     const [validated, setValidated] = useState(false);
 
-    const handleSubmit = (event) => {
+    const handleSubmit = event => {
         const form = event.currentTarget;
         if (form.checkValidity() === false) {
         event.preventDefault();
@@ -238,4 +245,4 @@ function Home() {
     );
 }
 
-export default Home;
+export default DocuType;
