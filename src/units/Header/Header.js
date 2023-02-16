@@ -38,10 +38,10 @@ function Header() {
           overlay={renderTooltip}>
           <Navbar.Brand className='title' href='#home'>
             <span className='d-none d-md-inline-block'>
-              CHEDRO4 Document Tracking Management System
+              CHED IV Document Tracking Management System
             </span>
             <span className='d-inline-block d-md-none'>
-              CHED DTMS
+              CHED IV DTMS
             </span>
           </Navbar.Brand>
         </OverlayTrigger>
