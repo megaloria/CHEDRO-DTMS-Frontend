@@ -1,13 +1,15 @@
 import React from 'react';
-import {
-  createBrowserRouter,
-  // redirect,
-  RouterProvider
-} from 'react-router-dom';
+import Sidebar from './units/Sidebar/Sidebar'
+// import {
+//   createBrowserRouter,
+//   // redirect,
+//   RouterProvider
+// } from 'react-router-dom';
 // import axios from 'axios';
 
-import Login from './views/Login/Login';
-import Home from './views/Home/Home';
+// import Login from './views/Login/Login';
+// import Home from './views/Home/Home';
+
 
 // function getCurrentUser() {
 //   return axios.get('/user').then(() => {
@@ -17,22 +19,23 @@ import Home from './views/Home/Home';
 //   });
 // }
 
-const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Home />,
-    // errorElement: <div>Error!</div>,
-    // loader: getCurrentUser
-  },
-  {
-    path: '/login',
-    element: <Login />
-  },
-]);
+// const router = createBrowserRouter([
+//   {
+//     path: '/',
+//     element: <Home />,
+//     // errorElement: <div>Error!</div>,
+//     // loader: getCurrentUser
+//   },
+//   {
+//     path: '/login',
+//     element: <Login />
+//   },
+// ]);
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <Sidebar />
+    // <RouterProvider router={router} />
   );
 }
 

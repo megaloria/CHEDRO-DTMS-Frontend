@@ -1,5 +1,8 @@
 .Sidebar {
     background-color: #0c2245;
+    width: fit-content;
+    height: 43rem;
+    padding-top: 2rem;
 }
 
 .flex {
@@ -7,15 +10,19 @@
 }
 
 .dropdown-toggle::after {
-    color:white
+    color:white;
 }
 
 .flex1.nav-link {
-    padding: 20px 30px;
+    align-items: center;
+    padding: 10px 30px;
+    margin-bottom: 1rem;
 }
 
 .flex1.dropdown > a {
-    padding: 20px 30px;
+    align-items: center;
+    padding: 10px 30px;
+    
 }
 
 .flex1:hover { 
