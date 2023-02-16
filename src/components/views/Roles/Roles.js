@@ -152,7 +152,7 @@ function Roles() {
                     </Table>
                 </div>
             </div>
-     
+
 
             {/* <!--- Model Box ---> */}
             <div className='model_box'>
