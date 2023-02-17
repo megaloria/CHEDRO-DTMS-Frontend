@@ -21,31 +21,31 @@ import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 
 function Roles() {
-    const [isLoading, setIsLoading] = useState(true);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [data, setData] = useState([]);
-    const [divisions, setDivisions] = useState([]);
+    const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [errorMessage, setErrorMessage] = useState(''); //error message variable
+    const [data, setData] = useState([]); //data variable
+    const [divisions, setDivisions] = useState([]); //division variable
 
-    const [modal, setModal] = useState({
+    const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
         isLoading: false
     });
 
-    const [formInputs, setFormInputs] = useState({
+    const [formInputs, setFormInputs] = useState({ // input inside the modal
         division: '',
         description: '',
         level: 0
     });
 
-    const [formErrors, setFormErrors] = useState({
+    const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
         division: '',
         description: '',
         level: 0
     });
 
     useEffect(() => {
-        apiClient.get('/settings/roles').then(response => {
+        apiClient.get('/settings/roles').then(response => { //GET ALL function
             setData(response.data.data.roles);
             setDivisions(response.data.data.divisions);
         }).catch(error => {

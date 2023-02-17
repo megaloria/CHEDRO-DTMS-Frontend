@@ -48,8 +48,12 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <Documents />
+      },
+      {
+        path: '/settings/roles',
         element: <Roles />
-      }
+      },
     ]
   },
   {
