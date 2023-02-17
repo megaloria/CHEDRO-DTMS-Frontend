@@ -9,6 +9,7 @@ import apiClient from './helpers/apiClient';
 
 import Login from './components/views/Login/Login';
 import Home from './components/views/Home/Home';
+import Timeline from './components/units/Timeline/Timeline';
 
 async function getCurrentUser(isHome=true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Login />,
+    element: <Timeline />,
     loader: () => getCurrentUser(false)
   },
 ]);
