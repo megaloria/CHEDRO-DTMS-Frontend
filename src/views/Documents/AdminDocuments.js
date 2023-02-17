@@ -112,7 +112,7 @@ function AdminDocu() {
             
           <Row className= "justify-content-end mt-4 mb-3">
             <Col>
-            <h1>Admin-View-Documents</h1>
+            <h1>Documents</h1>
             </Col>
             
             <Col md="auto">

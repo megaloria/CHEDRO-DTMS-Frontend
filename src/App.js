@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
-import Roles from './views/Roles/Roles'
+import EditDocument from './views/Documents/EditDocument'
 
 
 function App() {
   return (
-    <Roles/>
+    <EditDocument/>
   );
 }
 
