@@ -156,7 +156,6 @@ function Roles() {
                 </Table>
             </div>   
         </div>
-     
 
     {/* <!--- Model Box ADD ---> */}
     <div className="model_box">
@@ -192,7 +191,6 @@ function Roles() {
         </Modal.Footer>
         </Form>
     </Modal>
-
    {/* Model Box Finish */}
 
 
@@ -231,6 +229,7 @@ function Roles() {
     </Modal>
 
    {/* Model Box Finish */}
+   
    </div>
    </div>
    </div>
