@@ -14,7 +14,7 @@ import './styles.css';
 
 function Sidebar() {
     return(
-        <div className='Sidebar'>
+        <div>
             <Nav defaultActiveKey='/home' className='flex'>
                 <Nav.Link  href='/document' className='flex1'>
                     <span style={{ color: 'white', fontSize: '15px' }}>
