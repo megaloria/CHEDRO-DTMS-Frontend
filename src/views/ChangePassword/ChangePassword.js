@@ -3,18 +3,15 @@ import Validator from 'validatorjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import  {
   faEye,
-  faEyeSlash
-} from '@fortawesome/free-solid-svg-icons'
-import 
-{
+  faEyeSlash} from '@fortawesome/free-solid-svg-icons'
+import {
   Button,
   Form,
   Container,
   Row,
   Col,
   Card,
-  InputGroup
-} from 'react-bootstrap';
+  InputGroup} from 'react-bootstrap';
 
 import './styles.css';
 
@@ -42,7 +39,7 @@ function Changepassword() {
     setPasswordType("password")
 
   }
-///end of eye ivon function
+///end of eye icon function
     
     const [errors, setError] = useState({
 
@@ -53,7 +50,7 @@ function Changepassword() {
     });
 
       function handleChange(e) {
-        setValues({
+          setValues({
           ...values,
           [e.target.name]: e.target.value
         });
@@ -65,7 +62,7 @@ function Changepassword() {
         e.preventDefault();
         
 
-        let validation = new Validator(values, {
+      let validation = new Validator(values, {
           Currentpassword:  'present',
           Newpassword:      'required|same:Confirmpassword|min:8',
           Confirmpassword:  'required|same:Newpassword|min:8'
@@ -79,9 +76,9 @@ function Changepassword() {
             Confirmpassword: validation.errors.first('Confirmpassword'),
               });
 
-
-              
-        } else {
+        } 
+        
+        else {
           setError({
              Currentpassword: '',
              Newpassword: '',
@@ -91,7 +88,6 @@ function Changepassword() {
         }
       }
     
-
           return (    
           
           <div className='maindiv'>
@@ -224,8 +220,8 @@ function Changepassword() {
                     </Button>
                       </div>   
 
-                    </Card.Body>
-                </Card>
+                  </Card.Body>
+              </Card>
               </Form>
             </Col>
             </Row>
