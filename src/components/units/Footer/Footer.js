@@ -7,17 +7,17 @@ import './styles.css';
 
 function Footer(){
     return(
-        <div className='Footer'>
-            <div className='footer'>
+        <div className='footer'>
+            <div>
                 City Hall Compound, Barangay Marawoy, Jose P. Laurel Highway, Lipa City
             </div>
             
-            <div className='footer'>
+            <div>
                 ched4a@ched.gov.ph / (043) 727-2764
             </div>
 
-            <div className='footer'>
-                <a href="https://www.facebook.com/ched4/">
+            <div>
+                <a href='https://www.facebook.com/ched4/' target='_blank' rel='noopener noreferrer'>
                     <FontAwesomeIcon icon={faFacebookSquare} />
                 </a>
             </div>
