@@ -1,6 +1,8 @@
 import React from 'react';
 import {
-  Col
+  Col,
+  Container,
+  Row
 } from 'react-bootstrap';
 import { Outlet } from 'react-router-dom';
 import Header from '../../units/Header/Header';
@@ -10,16 +12,18 @@ import Sidebar from '../../units/Sidebar/Sidebar';
 export default function Home () {
   return (
     <>
-      <div>
-        <Header />
-      </div>
+      <Header />
       <MastHeader />
-      <Col md={2}>
-        <Sidebar />
-      </Col>
-      <Col>
-        <Outlet />
-      </Col>
+      <Container fluid>
+        <Row>
+          <Col md={2} className='p-0' style={{ backgroundColor: '#13336d' }}>
+            <Sidebar />
+          </Col>
+          <Col md={10} className='p-3'>
+            <Outlet />
+          </Col>
+        </Row>
+      </Container>
     </>
   );
 }

@@ -9,27 +9,26 @@ import apiClient from './helpers/apiClient';
 
 import Login from './components/views/Login/Login';
 import Home from './components/views/Home/Home';
+import Documents from './components/views/Documents/Documents';
 
-async function getCurrentUser(isHome=true) {
+async function getCurrentUser (isHome = true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
     withCredentials: true
   }).then(() => {
     return apiClient.get('/user').then(response => {
       if (isHome){
         return response.data.data;
-      }else{
+      } else {
         return redirect('/');
       }
-     
     }).catch(() => {
-      if (isHome){
+      if (isHome) {
         return redirect('/login');
       }
       return null;
       
     });
   }).catch(() => {
-    
     if (isHome) {
       return redirect('/login');
     }
@@ -45,7 +44,14 @@ const router = createBrowserRouter([
     element: <Home />,
     id: 'user',
     // errorElement: <div>Error!</div>,
-    loader: () => getCurrentUser()
+    loader: () => getCurrentUser(),
+    children: [
+      {
+        index: true,
+        path: '/documents',
+        element: <Documents />
+      }
+    ]
   },
   {
     path: '/login',

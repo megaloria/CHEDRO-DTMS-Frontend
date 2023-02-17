@@ -64,6 +64,7 @@ function Header() {
       collapseOnSelect
       expand='lg'
       variant='light'
+      className='bg-white'
       sticky='top'>
       <Container className='cont1'>
         <OverlayTrigger

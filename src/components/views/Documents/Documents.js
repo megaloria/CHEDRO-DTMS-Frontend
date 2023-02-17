@@ -113,7 +113,7 @@ function Documents() {
 
     return (
         <div class="container fluid">
-            <div className="crud bg-body rounded">
+            <div className="crud rounded">
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
                         <h1>Documents</h1>
