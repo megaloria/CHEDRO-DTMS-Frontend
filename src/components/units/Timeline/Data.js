@@ -12,7 +12,8 @@ const data = [
             url:
                 '#',
             text: 'Read more'
-        }
+        },
+        circleColor: '#e17b77'
     },
     {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -25,7 +26,8 @@ const data = [
             url:
                 '#',
             text: 'Read more'
-        }
+        },
+        circleColor: 'green'
     },
     {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -38,7 +40,8 @@ const data = [
             url:
                 '#',
             text: 'Read more'
-        }
+        },
+        circleColor: 'blue'
     },
     {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -51,7 +54,8 @@ const data = [
             url:
                 '#',
             text: 'Read more'
-        }
+        },
+        circleColor: 'yellow'
     },
     {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
@@ -64,7 +68,8 @@ const data = [
             url:
                 '#',
             text: 'Read more'
-        }
+        },
+        circleColor: 'green'
     }
 ]
 

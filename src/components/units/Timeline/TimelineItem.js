@@ -17,7 +17,8 @@ const TimelineItem = ({ data }) => (
                     {data.link.text}
                 </a>
             )}
-            <span className="circle" />
+            <span className="circle" style={{ borderColor: data.circleColor}}/>
+                {/* , backgroundColor: data.circleColor  */}
         </div>
     </div>
 );
