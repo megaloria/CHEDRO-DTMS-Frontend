@@ -1,0 +1,24 @@
+.Sidebar {
+    background-color: #13336d;
+}
+
+.flex {
+    flex-direction: column;
+}
+
+.dropdown-toggle::after {
+    color:white
+}
+
+.flex1.nav-link {
+    padding: 20px 30px;
+}
+
+.flex1.dropdown > a {
+    padding: 20px 30px;
+}
+
+.flex1:hover { 
+    background: #4e7ccf;
+    transition: all 1.5s;
+}
