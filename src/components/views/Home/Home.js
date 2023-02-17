@@ -14,7 +14,7 @@ export default function Home () {
         <Header />
       </div>
       <MastHeader />
-      <Col md={2}>
+      <Col md={2} style={{ backgroundColor: '#0c2245' }}>
         <Sidebar />
       </Col>
       <Col>
