@@ -1,82 +1,134 @@
 import React, { useEffect, useState }  from 'react';
 import {
+    Alert,
     Button,
-    Modal,
+    Col,
+    Container,
     Form,
-    Table,
+    Modal,
     Row,
-    Col
+    Table,
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faTrash,
     faEdit,
-    faAdd
+    faAdd,
+    faSpinner
 } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
-import './styles.css';
+import Validator from 'validatorjs';
+import apiClient from '../../../helpers/apiClient';
 
 function Roles() {
+    const [isLoading, setIsLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('');
     const [data, setData] = useState([]);
 
     const [modal, setModal] = useState({
         show: false,
-        data: null
+        data: null,
+        isLoading: false
+    });
+
+    const [formInputs, setFormInputs] = useState({
+        description: ''
+    });
+
+    const [formErrors, setFormErrors] = useState({
+        description: ''
     });
 
     useEffect(() => {
-        setData([
-            {
-                id: 1,
-                description: 'Regional Director'
-            },
-            {
-                id: 2,
-                description: 'Chief Administrative Officer'
-            },
-            {
-                id: 3,
-                description: 'Secretary'
-            },
-            {
-                id: 4,
-                description: 'Assistant'
-            },
-        ]);
+        apiClient.get('/settings/roles').then(response => {
+            setData(response.data.data);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsLoading(false);
+        });
     }, []);
-
-    //VALIDATION ON ADDING RECORD
-    const [validated, setValidated] = useState(false);
 
     const handleSubmit = event => {
         event.preventDefault();
 
-        setValidated(true);
+        let validation = new Validator(formInputs, {
+            description: 'required|min:2'
+        });
+
+        if (validation.fails()) {
+            setFormErrors({
+                description: validation.errors.first('description')
+            });
+            return;
+        } else {
+            setFormErrors({
+                description: ''
+            });
+        }
+
+        setModal({
+            ...modal,
+            isLoading: true
+        });
+        if (modal.data !== null) {
+            // handleEdit();
+        } else {
+            handleAdd();
+        }
     };
 
+    const handleAdd = () => {
+        apiClient.post('/settings/roles', formInputs).then(response => {
+            setData([
+                ...data,
+                response.data.data
+            ]);
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setModal({
+                ...modal,
+                isLoading: false
+            });
+        });
+    }
+
+    const handleInputChange = e => {
+        setFormInputs({
+            ...formInputs,
+            [e.target.name]: e.target.value
+        });
+    }
+
     const handleShowModal = (data = null) => {
+        if (data !== null) {
+            setFormInputs({
+                description: data.description
+            });
+        }
+
         setModal({
             show: true,
-            data
+            data,
+            isLoading: false
         });
     }
 
     const handleHideModal = () => {
+        setFormInputs({
+            description: ''
+        });
         setModal({
             show: false,
-            data: null
+            data: null,
+            isLoading: false
         });
     }
-
-    //MODAL ON ADDING
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => {
-        setShow(false)
-    };
-    const handleShow = () => {
-        setShow(true)
-    };
 
     // DELETE
     const showAlert = () => {
@@ -90,107 +142,116 @@ function Roles() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-            Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
                 );
             }
         });
     };
 
+    if (isLoading) {
+        return (
+            <FontAwesomeIcon icon={faSpinner} spin lg />
+        );
+    }
+
+
+    if (errorMessage) {
+        return (
+            <Alert variant='danger'>
+                {errorMessage}
+            </Alert>
+        );
+    }
+
     return (
-        <div class='container fluid'>
-            <div className='crud bg-body rounded'> 
+        <Container fluid>
+            <div className='bg-body rounded'> 
                 <Row className= 'justify-content-end mt-4 mb-3'>
                     <Col>
                         <h1>Roles</h1>
                     </Col>
                     <Col md='auto'>
                         <div className='search'>
-                            <Form className='mb-3' controlId=''>
+                            <Form className='mb-3'>
                                 <Form.Control type='search' placeholder='Search' />
                             </Form>
                         </div>
                     </Col>
                     <Col md='auto'>
                         <Button variant='primary' onClick={e => handleShowModal()}>
-                            <FontAwesomeIcon icon={faAdd} className='addIcon'/> Add
+                            <FontAwesomeIcon icon={faAdd} /> Add
                         </Button>
                     </Col> 
                 </Row>
             </div>
 
-            <div class='row'>
-                <div class='table-responsive'>
-                    <Table striped bordered hover size='md'>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Description</th>
-                                <th>Actions</th>
+            <Table striped bordered hover responsive size='md'>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        data.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.id}</td>
+                                <td>{row.description}</td>
+                                <td>
+                                    <Button onClick={e => handleShowModal(row)} variant='link'>
+                                        <FontAwesomeIcon icon={faEdit} className='text-primary'/>
+                                    </Button>
+                                    <Button onClick={showAlert} variant='link'>
+                                        <FontAwesomeIcon icon={faTrash} className='text-danger'/>
+                                    </Button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                data.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.id}</td>
-                                        <td>{row.description}</td>
-                                        <td>
-                                            <Button variant='link'>
-                                                <FontAwesomeIcon onClick={e => handleShowModal(row)} icon={faEdit} className='text-primary'/>
-                                            </Button>
-                                            <Button onClick={showAlert} variant='link'>
-                                                <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))
-                            }
-                        </tbody>
-                    </Table>
-                </div>
-            </div>
+                        ))
+                    }
+                </tbody>
+            </Table>
 
+            <Modal
+                show={modal.show}
+                onHide={handleHideModal}
+                backdrop='static'
+                keyboard={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{modal.data ? 'Edit' : 'Add'} role</Modal.Title>
+                </Modal.Header>
+                <Form onSubmit={handleSubmit}>
+                    <Modal.Body>
+                        <Form.Group className='mb-2'>
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control
+                                type='text'
+                                name='description'
+                                placeholder='Enter Description'
+                                value={formInputs.description}
+                                onChange={handleInputChange}
+                                isInvalid={!!formErrors.description} />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.description}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                    </Modal.Body>
 
-            {/* <!--- Model Box ---> */}
-            <div className='model_box'>
-                <Modal
-                    show={show}
-                    onHide={handleHideModal}
-                    backdrop='static'
-                    keyboard={false}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>{modal.data ? 'Edit' : 'Add'} Role</Modal.Title>
-                    </Modal.Header>
-                    <Form onSubmit={handleSubmit}>
-                        <Modal.Body>
-                            <Row className='margin: 40px'>
-                                <Col>
-                                    <Form.Group className='mb-2' controlId=''>
-                                        <Form.Label>Description</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter Description' value={modal.data?.description} />
-                                        <Form.Control.Feedback type='invalid'>Please enter description.</Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                        </Modal.Body>
-
-                        <Modal.Footer>
-                            <Button variant='secondary' onClick={handleHideModal}>
-                                Cancel
-                            </Button>
-                            <Button type='submit' variant='primary'>
-                                {modal.data ? 'Edit' : 'Add'}
-                            </Button>
-                        </Modal.Footer>
-                    </Form>
-                </Modal>
-                {/* Model Box Finish */}
-
-            </div>
-        </div>
+                    <Modal.Footer>
+                        <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                            Cancel
+                        </Button>
+                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                            {modal.data ? 'Edit' : 'Add'}
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
+        </Container>
     );
 }
 

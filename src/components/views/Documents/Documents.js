@@ -21,7 +21,6 @@ import {
     faShare
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
-import './styles.css';
 
 function Documents() {
     const [data, setData] = useState([]);
