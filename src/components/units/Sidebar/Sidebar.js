@@ -8,7 +8,6 @@ import {
     faFileLines,
     faUserGroup,
     faCaretRight
-   
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './styles.css';
@@ -29,38 +28,36 @@ function Sidebar() {
                 </Nav.Link>
 
                 <NavDropdown
-                    title=
-                        {
+                    title={
                             <span style={{ color:'white', fontSize:'15px' }}>
                                 <FontAwesomeIcon icon={faGear} className='me-2' />Settings
                             </span>
                         }
-                        id='nav-dropdown'
-                        className='flex1'>
-                        <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
+                    id='nav-dropdown'
+                    className='flex1'>
+                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
                         <NavDropdown.Item eventKey='4.1'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
                             HEIs</NavDropdown.Item>
-                        </span>
+                    </span>
                         <NavDropdown.Divider />
 
-                        <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
+                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
                         <NavDropdown.Item eventKey='4.2'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
                             Document Types</NavDropdown.Item>
-                        </span>
+                    </span>
                         <NavDropdown.Divider />
 
-                        <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
+                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
                         <NavDropdown.Item eventKey='4.3'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
                             Roles</NavDropdown.Item>
-                        </span>
+                    </span>
                         <NavDropdown.Divider />
 
-                        <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
+                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
                         <NavDropdown.Item eventKey='4.4'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
                             Divisions</NavDropdown.Item>
-                        </span>
+                    </span>
                 </NavDropdown>
-               
             </Nav>
         </div>
     );
