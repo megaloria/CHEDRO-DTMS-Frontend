@@ -1,8 +1,5 @@
 .Sidebar {
-    background-color: #0c2245;
-    width: fit-content;
-    height: 43rem;
-    padding-top: 2rem;
+    /* background-color: #0c2245; */
 }
 
 .flex {
@@ -15,17 +12,16 @@
 
 .flex1.nav-link {
     align-items: center;
-    padding: 10px 30px;
-    margin-bottom: 1rem;
+    padding: 1rem 30px;
 }
 
 .flex1.dropdown > a {
     align-items: center;
-    padding: 10px 30px;
+    padding: 1rem 30px;
     
 }
 
 .flex1:hover { 
     background: #4e7ccf;
-    transition: all 1.5s;
+    transition: all .3s;
 }

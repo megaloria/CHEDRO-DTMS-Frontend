@@ -16,7 +16,7 @@ export default function Home () {
       <MastHeader />
       <Container fluid>
         <Row>
-          <Col md={2} className='p-0' style={{ backgroundColor: '#13336d' }}>
+          <Col md={2} className='p-0' style={{ backgroundColor: '#0c2245' }}>
             <Sidebar />
           </Col>
           <Col md={10} className='p-3'>
