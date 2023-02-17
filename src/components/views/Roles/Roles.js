@@ -24,6 +24,7 @@ function Roles() {
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
     const [data, setData] = useState([]);
+    const [divisions, setDivisions] = useState([]);
 
     const [modal, setModal] = useState({
         show: false,
@@ -32,16 +33,21 @@ function Roles() {
     });
 
     const [formInputs, setFormInputs] = useState({
-        description: ''
+        division: '',
+        description: '',
+        level: 0
     });
 
     const [formErrors, setFormErrors] = useState({
-        description: ''
+        division: '',
+        description: '',
+        level: 0
     });
 
     useEffect(() => {
         apiClient.get('/settings/roles').then(response => {
-            setData(response.data.data);
+            setData(response.data.data.roles);
+            setDivisions(response.data.data.divisions);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -53,17 +59,23 @@ function Roles() {
         event.preventDefault();
 
         let validation = new Validator(formInputs, {
-            description: 'required|min:2'
+            division: 'present|integer|min:1',
+            description: 'required|min:2',
+            level: 'required|integer|min:1'
         });
 
         if (validation.fails()) {
             setFormErrors({
-                description: validation.errors.first('description')
+                division: validation.errors.first('description'),
+                description: validation.errors.first('description'),
+                level: validation.errors.first('level')
             });
             return;
         } else {
             setFormErrors({
-                description: ''
+                division: '',
+                description: '',
+                level: ''
             });
         }
 
@@ -72,18 +84,62 @@ function Roles() {
             isLoading: true
         });
         if (modal.data !== null) {
-            // handleEdit();
+            handleEdit();
         } else {
             handleAdd();
         }
     };
 
     const handleAdd = () => {
-        apiClient.post('/settings/roles', formInputs).then(response => {
+        apiClient.post('/settings/roles', {
+            ...formInputs,
+            division_id: formInputs.division
+        }).then(response => {
             setData([
                 ...data,
                 response.data.data
             ]);
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            }).then(() => {
+                handleHideModal();
+            });
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setModal({
+                ...modal,
+                isLoading: false
+            });
+        });
+    }
+
+    const handleEdit = () => {
+        apiClient.post(`/settings/roles/${modal.data?.id}`, {
+            ...formInputs,
+            division_id: formInputs.division
+        }).then(response => {
+            let newData = data.map(d => {
+                if (d.id === response.data.data.id) {
+                    return {...response.data.data};
+                }
+
+                return {...d};
+            })
+            setData(newData);
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            }).then(() => {
+                handleHideModal();
+            });
         }).catch(error => {
             Swal.fire({
                 title: 'Error',
@@ -108,7 +164,10 @@ function Roles() {
     const handleShowModal = (data = null) => {
         if (data !== null) {
             setFormInputs({
-                description: data.description
+                ...formInputs,
+                division: data.division_id,
+                description: data.description,
+                level: data.level
             });
         }
 
@@ -121,7 +180,9 @@ function Roles() {
 
     const handleHideModal = () => {
         setFormInputs({
-            description: ''
+            division: '',
+            description: '',
+            level: 0
         });
         setModal({
             show: false,
@@ -130,23 +191,38 @@ function Roles() {
         });
     }
 
-    // DELETE
-    const showAlert = () => {
+    const getDivisionDescription = (divisionId) => {
+        let division = divisions.find(div => div.id === divisionId);
+        return division?.description;
+    }
+
+    const showDeleteAlert = role => {
         Swal.fire({
-            title: 'Are you sure?',
+            title: `Are you sure you want to delete "${role.description}"?`,
             text: 'You won\'t be able to revert this!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                );
+            confirmButtonText: 'Yes, delete it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.delete(`/settings/roles/${role.id}`).then(response => {
+                    let newData = data.filter(d => d.id !== role.id);
+                    setData(newData);
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                });
             }
         });
     };
@@ -192,7 +268,9 @@ function Roles() {
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Division</th>
                         <th>Description</th>
+                        <th>Level</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -201,12 +279,14 @@ function Roles() {
                         data.map((row, index) => (
                             <tr key={index}>
                                 <td>{row.id}</td>
+                                <td>{getDivisionDescription(row.division_id)}</td>
                                 <td>{row.description}</td>
+                                <td>{row.level}</td>
                                 <td>
                                     <Button onClick={e => handleShowModal(row)} variant='link'>
                                         <FontAwesomeIcon icon={faEdit} className='text-primary'/>
                                     </Button>
-                                    <Button onClick={showAlert} variant='link'>
+                                    <Button onClick={e => showDeleteAlert(row)} variant='link'>
                                         <FontAwesomeIcon icon={faTrash} className='text-danger'/>
                                     </Button>
                                 </td>
@@ -227,16 +307,42 @@ function Roles() {
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
                         <Form.Group className='mb-2'>
+                            <Form.Label>Division</Form.Label>
+                            <Form.Select name='division' value={formInputs.division} onChange={handleInputChange}>
+                                <option value=''>Select division...</option>
+                                {
+                                    divisions.map(division => (
+                                        <option key={division.id} value={division.id}>{division.description}</option>
+                                    ))
+                                }
+                            </Form.Select>
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.division}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className='mb-2'>
                             <Form.Label>Description</Form.Label>
                             <Form.Control
                                 type='text'
                                 name='description'
-                                placeholder='Enter Description'
+                                placeholder='Enter description'
                                 value={formInputs.description}
                                 onChange={handleInputChange}
                                 isInvalid={!!formErrors.description} />
                             <Form.Control.Feedback type='invalid'>
                                 {formErrors.description}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className='mb-2'>
+                            <Form.Label>Level</Form.Label>
+                            <Form.Control
+                                type='number'
+                                name='level'
+                                value={formInputs.level}
+                                onChange={handleInputChange}
+                                isInvalid={!!formErrors.level} />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.level}
                             </Form.Control.Feedback>
                         </Form.Group>
                     </Modal.Body>
