@@ -54,7 +54,7 @@ function Sidebar() {
                         <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item eventKey='4.4'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
+                        <NavDropdown.Item href="division"> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
                             Divisions</NavDropdown.Item>
                     </span>
                 </NavDropdown>

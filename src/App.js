@@ -15,6 +15,8 @@ import Roles from './components/views/Roles/Roles';
 import DocumentTypes from './components/views/DocumentTypes/DocumentTypes';
 import HEIs from './components/views/HEIs/HEIs';
 import Users from './components/views/Users/Users';
+import Division from './components/views/Division/Division';
+
 
 async function getCurrentUser (isHome = true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
@@ -72,6 +74,10 @@ const router = createBrowserRouter([
       {
         path: 'Documents',
         element: <Documents />
+      },
+      {
+        path: '/settings/divisions',
+        element: <Division />
       },
     ]
   },
