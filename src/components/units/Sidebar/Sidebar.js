@@ -36,7 +36,7 @@ function Sidebar() {
                     id='nav-dropdown'
                     className='flex1'>
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item eventKey='4.1'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
+                        <NavDropdown.Item href="/settings/heis"> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
                             HEIs</NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
