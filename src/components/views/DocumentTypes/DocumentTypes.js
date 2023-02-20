@@ -5,44 +5,214 @@ import {
     Form, 
     Table, 
     Row, 
-    Col
+    Col,
+    Alert
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
     faEdit,
-    faAdd
+    faAdd,
+    faSpinner
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
+import Validator from 'validatorjs';
+import apiClient from '../../../helpers/apiClient';
 
 function DocumentTypes() {
     const [data, setData] = useState([]);
+    const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [errorMessage, setErrorMessage] = useState(''); //error message variable
+
+    const [modal, setModal] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    const [formInputs, setFormInputs] = useState({ // input inside the modal
+        code: '',
+        description: ''
+    });
+
+    const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
+        code: '',
+        description: ''
+    });
 
     useEffect(() => {
-        setData([
-            {
-                id: 1,
-                code: 'DF3FDAS2',
-                description: 'Regional Director'
-            },
-            {
-                id: 2,
-                code: 'SDFJS323',
-                description: 'Chief Administrative Officer'
-            },
-            {
-                id: 3,
-                code: 'SAF311',
-                description: 'Secretary'
-            },
-            {
-                id: 4,
-                code: 'DFS3D3',
-                description: 'Assistant'
-            },
-        ]);
+        apiClient.get('/settings/document-types').then(response => { //GET ALL function
+            setData(response.data.data.documents);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsLoading(false);
+        });
     }, []);
+    
+    // const handleSubmit = event => {
+    //     event.preventDefault();
+
+    //     let validation = new Validator(formInputs, {
+    //         description: 'required|min:2',
+    //         code: 'required|string|min:4'
+    //     });
+
+    //     if (validation.fails()) {
+    //         setFormErrors({
+    //             description: validation.errors.first('description'),
+    //             code: validation.errors.first('code'),
+    //         });
+    //         return;
+    //     } else {
+    //         setFormErrors({
+    //             description: '',
+    //             code: ''
+    //         });
+    //     }
+
+    //     setModal({
+    //         ...modal,
+    //         isLoading: true
+    //     });
+    //     if (modal.data !== null) {
+    //         handleEdit();
+    //     } else {
+    //         handleAdd();
+    //     }
+    // };
+
+    // const handleAdd = () => {
+    //     apiClient.post('/settings/document-types', {
+    //         ...formInputs,
+    //         division_id: formInputs.division
+    //     }).then(response => {
+    //         setData([
+    //             ...data,
+    //             response.data.data
+    //         ]);
+    //         Swal.fire({
+    //             title: 'Success',
+    //             text: response.data.message,
+    //             icon: 'success'
+    //         }).then(() => {
+    //             handleHideModal();
+    //         });
+    //     }).catch(error => {
+    //         Swal.fire({
+    //             title: 'Error',
+    //             text: error,
+    //             icon: 'error'
+    //         });
+    //     }).finally(() => {
+    //         setModal({
+    //             ...modal,
+    //             isLoading: false
+    //         });
+    //     });
+    // }
+
+    //  const handleEdit = () => {
+    //     apiClient.post(`/settings/roles/${modal.data?.id}`, {
+    //         ...formInputs,
+    //         division_id: formInputs.division
+    //     }).then(response => {
+    //         let newData = data.map(d => {
+    //             if (d.id === response.data.data.id) {
+    //                 return {...response.data.data};
+    //             }
+
+    //             return {...d};
+    //         })
+    //         setData(newData);
+    //         Swal.fire({
+    //             title: 'Success',
+    //             text: response.data.message,
+    //             icon: 'success'
+    //         }).then(() => {
+    //             handleHideModal();
+    //         });
+    //     }).catch(error => {
+    //         Swal.fire({
+    //             title: 'Error',
+    //             text: error,
+    //             icon: 'error'
+    //         });
+    //     }).finally(() => {
+    //         setModal({
+    //             ...modal,
+    //             isLoading: false
+    //         });
+    //     });
+    // }
+
+    // const handleInputChange = e => {
+    //     setFormInputs({
+    //         ...formInputs,
+    //         [e.target.name]: e.target.value
+    //     });
+    // }
+
+    // const handleShowModal = (data = null) => {
+    //     if (data !== null) {
+    //         setFormInputs({
+    //             ...formInputs,
+    //             division: data.division_id,
+    //             description: data.description,
+    //             level: data.level
+    //         });
+    //     }
+
+    //     setModal({
+    //         show: true,
+    //         data,
+    //         isLoading: false
+    //     });
+    // }
+
+    // const handleHideModal = () => {
+    //     setFormInputs({
+    //         division: '',
+    //         description: '',
+    //         level: 0
+    //     });
+    //     setModal({
+    //         show: false,
+    //         data: null,
+    //         isLoading: false
+    //     });
+    // }
+
+
+
+
+
+
+    // useEffect(() => {
+    //     setData([
+    //         {
+    //             id: 1,
+    //             code: 'DF3FDAS2',
+    //             description: 'Regional Director'
+    //         },
+    //         {
+    //             id: 2,
+    //             code: 'SDFJS323',
+    //             description: 'Chief Administrative Officer'
+    //         },
+    //         {
+    //             id: 3,
+    //             code: 'SAF311',
+    //             description: 'Secretary'
+    //         },
+    //         {
+    //             id: 4,
+    //             code: 'DFS3D3',
+    //             description: 'Assistant'
+    //         },
+    //     ]);
+    // }, []);
 
     //VALIDATION ON ADDING
     const [validated, setValidated] = useState(false);
@@ -85,17 +255,42 @@ function DocumentTypes() {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
+            confirmButtonText: 'Yes, delete it!',
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.delete(`/settings/document-types/${document.id}`).then(response => {
+                    let newData = data.filter(d => d.id !== document.id);
+                    setData(newData);
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                });
             }
-        });
+            });
     };
+
+    if (isLoading) {
+        return (
+            <FontAwesomeIcon icon={faSpinner} spin lg />
+        );
+    }
+
+
+    if (errorMessage) {
+        return (
+            <Alert variant='danger'>
+                {errorMessage}
+            </Alert>
+        );
+    }
 
     return (
         <div class='container fluid'>
