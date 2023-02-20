@@ -8,6 +8,7 @@ import {
     Modal,
     Row,
     Table,
+    InputGroup
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -15,7 +16,9 @@ import {
     faEdit,
     faAdd,
     faSpinner,
-    faRotate
+    faRotate,
+    faEye,
+    faEyeSlash
 } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
@@ -25,7 +28,7 @@ function Roles() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
-    const [divisions, setDivisions] = useState([]); //division variable
+    const [username, setUsers] = useState([]); //division variable
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -34,21 +37,32 @@ function Roles() {
     });
 
     const [formInputs, setFormInputs] = useState({ // input inside the modal
-        division: '',
-        description: '',
-        level: 0
+        username: '',
+        password: '',
+        role: '',
+        firstname: '',
+        middlename: '',
+        lastname: '',
+        prefix: '',
+        suffix: '',
+        position: ''
     });
 
     const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
-        division: '',
-        description: '',
-        level: 0
+        username: '',
+        password: '',
+        role: '',
+        firstname: '',
+        middlename: '',
+        lastname: '',
+        prefix: '',
+        suffix: '',
+        position: ''
     });
 
     useEffect(() => {
-        apiClient.get('/settings/roles').then(response => { //GET ALL function
-            setData(response.data.data.roles);
-            setDivisions(response.data.data.divisions);
+        apiClient.get('/home/users').then(response => { //GET ALL function
+            setData(response.data.data.users);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -60,23 +74,41 @@ function Roles() {
         event.preventDefault();
 
         let validation = new Validator(formInputs, {
-            division: 'present|integer|min:1',
-            description: 'required|min:2',
-            level: 'required|integer|min:1'
+            username: 'min:1',
+            password: 'min:1',
+            role: 'min:1',
+            firstname: 'min:2',
+            middlename: 'min:1',
+            lastname: 'min:1',
+            prefix: 'min:2',
+            suffix: 'min:1',
+            position: 'min:1'
         });
 
         if (validation.fails()) {
             setFormErrors({
-                division: validation.errors.first('description'),
-                description: validation.errors.first('description'),
-                level: validation.errors.first('level')
+                username: validation.errors.first('username'),
+                password: validation.errors.first('password'),
+                role: validation.errors.first('role'),
+                firstname: validation.errors.first('firstname'),
+                middlename: validation.errors.first('middlename'),
+                lastname: validation.errors.first('lastname'),
+                prefix: validation.errors.first('prefix'),
+                suffix: validation.errors.first('suffix'),
+                position: validation.errors.first('position')
             });
             return;
         } else {
             setFormErrors({
-                division: '',
-                description: '',
-                level: ''
+                username: '',
+                password: '',
+                role: '',
+                firstname: '',
+                middlename: '',
+                lastname: '',
+                prefix: '',
+                suffix: '',
+                position: ''
             });
         }
 
@@ -84,17 +116,15 @@ function Roles() {
             ...modal,
             isLoading: true
         });
-        if (modal.data !== null) {
-            handleEdit();
-        } else {
+        if (modal.data === null) {
             handleAdd();
         }
     };
 
     const handleAdd = () => {
-        apiClient.post('/settings/roles', {
+        apiClient.post('/home/users', {
             ...formInputs,
-            division_id: formInputs.division
+            user_id: formInputs.users
         }).then(response => {
             setData([
                 ...data,
@@ -193,7 +223,7 @@ function Roles() {
     }
 
     const getDivisionDescription = (divisionId) => {
-        let division = divisions.find(div => div.id === divisionId);
+        let division = username.find(div => div.id === divisionId);
         return division?.description;
     }
 
@@ -209,7 +239,7 @@ function Roles() {
             reverseButtons: true,
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return apiClient.delete(`/settings/roles/${role.id}`).then(response => {
+                return apiClient.delete(`/home/users/${role.id}`).then(response => {
                     let newData = data.filter(d => d.id !== role.id);
                     setData(newData);
                     Swal.fire({
@@ -227,6 +257,21 @@ function Roles() {
             }
         });
     };
+
+    // SHOW PASSWORD
+    const [passwordType, setPasswordType] = useState('password');
+    const [passwordInput, setPasswordInput] = useState('');
+
+    const handlePasswordChange = evnt => {
+        setPasswordInput(evnt.target.value);
+    }
+    const togglePassword3 = () => {
+        if(passwordType === 'password') {
+            setPasswordType('text');
+            return;
+        }
+        setPasswordType('password')
+    }
 
     if (isLoading) {
         return (
@@ -280,14 +325,14 @@ function Roles() {
                         data.map((row, index) => (
                             <tr key={index}>
                                 <td>{row.id}</td>
-                                <td>{getDivisionDescription(row.username)}</td>
-                                <td>{row.name}</td>
-                                <td>{row.posDesign}</td>
+                                <td>{getDivisionDescription(row.division_id)}</td>
+                                <td>{row.description}</td>
+                                <td>{row.level}</td>
                                 <td>
-                                    <Button onClick={e => handleShowModal(row)} variant='link'>
+                                    <Button onClick={""} variant='link'>
                                         <FontAwesomeIcon icon={faEdit} className='text-primary'/>
                                     </Button>
-                                    <Button onClick={e => (row)} variant='link'>
+                                    <Button onClick={""} variant='link'>
                                         <FontAwesomeIcon icon={faRotate} className='text-success'/>
                                     </Button>
                                     <Button onClick={e => showDeleteAlert(row)} variant='link'>
@@ -306,48 +351,139 @@ function Roles() {
                 backdrop='static'
                 keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{modal.data ? 'Edit' : 'Add'} user</Modal.Title>
+                    <Modal.Title>Add role</Modal.Title>
                 </Modal.Header>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
-                        <Form.Group className='mb-2'>
-                            <Form.Label>Username</Form.Label>
-                            <Form.Control
-                                type='text'
-                                name='username'
-                                placeholder='Enter username'
-                                value={formInputs.username}
-                                onChange={handleInputChange}
-                                isInvalid={!!formErrors.username} />
-                            <Form.Control.Feedback type='invalid'>
+                    <Row className='margin: 40px'>
+                        <Col>
+                            <Form.Group className='mb-2'>
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control 
+                                type='text' 
+                                placeholder='Enter Username' 
+                                name='username' 
+                                value={formInputs.username}/>
+                                <Form.Control.Feedback type='invalid'>
                                 {formErrors.username}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                        </Col>
+
+                        <Col>
+                            <Form.Group className='mb-2'>
+                                <Form.Label>Password</Form.Label>
+                                <InputGroup>
+                                    <Form.Control
+                                        type={passwordType} 
+                                        onChange={handlePasswordChange}
+                                        placeholder='Enter Password'
+                                        aria-describedby='basic-addon'
+                                        name='password' 
+                                        value={formInputs.password} />
+                                        <Button className='p-1' id='button-addon' variant='outline-secondary' 
+                                            onClick={togglePassword3}>
+                                                {
+                                                    passwordType === 'password'? (
+                                                        <FontAwesomeIcon icon={faEye}/> 
+                                                    ) : (
+                                                        <FontAwesomeIcon icon={faEyeSlash}/>
+                                                    )
+                                                }
+                                        </Button>
+                                        <Form.Control.Feedback type='invalid'>
+                                            {formErrors.password}
+                                        </Form.Control.Feedback>
+                                </InputGroup>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group className='mb-2' controlId=''>
+                                <Form.Label>Role</Form.Label>
+                                <Form.Select name='' aria-label='Default select example' >
+                                    <option value=''>Select Role</option>
+                                    <option value='1'>Regional Director</option>
+                                    <option value='2'>Chief Administrative Officer</option>
+                                    <option value='3'>Secretary</option>
+                                </Form.Select>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col>
+                            <Form.Group className='mb-2'>
+                                <Form.Label>First Name</Form.Label>
+                                <Form.Control 
+                                type='text' 
+                                placeholder='Enter First Name' 
+                                name='firstname'
+                                value={formInputs.firstname}/>
+                                <Form.Control.Feedback type='invalid'>
+                                {formErrors.firstname}
                             </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group className='mb-2'>
-                            <Form.Label>Password</Form.Label>
-                            <Form.Control
-                                type='password'
-                                name='password'
-                                placeholder='Enter password'
-                                value={formInputs.password}
-                                onChange={handleInputChange}
-                                isInvalid={!!formErrors.password} />
-                            <Form.Control.Feedback type='invalid'>
-                                {formErrors.password}
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                        <Form.Group className='mb-2'>
-                        <Form.Label>Role</Form.Label>
-                            <Form.Control
-                                type='select'
-                                name='role'
-                                value={formInputs.role}
-                                onChange={handleInputChange}
-                                isInvalid={!!formErrors.role} />
-                            <Form.Control.Feedback type='invalid'>
-                                {formErrors.role}
-                            </Form.Control.Feedback>
-                        </Form.Group>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group className='mb-2'>
+                                <Form.Label>Middle Name</Form.Label>
+                                <Form.Control 
+                                type='text' 
+                                placeholder='Enter Middle Name'
+                                name='middlename'
+                                value={formInputs.middlename}/>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group className='mb-2'>
+                                <Form.Label>Last Name</Form.Label>
+                                <Form.Control 
+                                type='text' 
+                                placeholder='Enter Last Name' name='lastname'
+                                value={formInputs.lastname}/>
+                                <Form.Control.Feedback type='invalid'>
+                                {formErrors.lastname}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                        </Col>
+                    </Row>
+                    <Row className='justify-content-md'>
+                        <Col>
+                            <Form.Group className='mb-2'>
+                                <Form.Label>Prefix</Form.Label>
+                                <Form.Control 
+                                type='text' 
+                                placeholder='Prefix'
+                                name='prefix'
+                                value={formInputs.prefix}/>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group className='mb-2'>
+                                <Form.Label>Suffix</Form.Label>
+                                <Form.Control 
+                                type='text' 
+                                placeholder='Enter Suffix'
+                                name='suffix'
+                                value={formInputs.suffix}/>
+                                <Form.Control.Feedback type='invalid'>
+                                {formErrors.suffix}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                        </Col>
+                        <Col>
+                            <Form.Group className='mb-2'>
+                                <Form.Label>Position</Form.Label>
+                                <Form.Control 
+                                type='text' 
+                                placeholder='Enter Position' 
+                                name='position'
+                                value={formInputs.position}/>
+                                <Form.Control.Feedback type='invalid'>
+                                {formErrors.position}
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                        </Col>
+                     </Row>
                     </Modal.Body>
 
                     <Modal.Footer>
@@ -355,7 +491,7 @@ function Roles() {
                             Cancel
                         </Button>
                         <Button type='submit' variant='primary' disabled={modal.isLoading}>
-                            {modal.data ? 'Edit' : 'Add'}
+                            {modal.data} Add
                         </Button>
                     </Modal.Footer>
                 </Form>
