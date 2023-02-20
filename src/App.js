@@ -12,6 +12,7 @@ import Login from './components/views/Login/Login';
 import Home from './components/views/Home/Home';
 import Documents from './components/views/Documents/Documents';
 import Roles from './components/views/Roles/Roles';
+import HEIs from './components/views/HEIs/HEIs';
 import DocumentTypes from './components/views/DocumentTypes/DocumentTypes';
 
 async function getCurrentUser (isHome = true) {
@@ -56,9 +57,15 @@ const router = createBrowserRouter([
         element: <Roles />
       },
       {
+        path: '/settings/heis',
+        element: <HEIs />
+      },
+      {
         path: '/settings/document-types',
         element: <DocumentTypes />
-      }
+      },
+      
+      
     ]
   },
   {
