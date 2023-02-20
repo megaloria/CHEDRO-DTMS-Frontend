@@ -241,92 +241,6 @@ function Heis() {
         );
     }
 
-    // useEffect(() => {
-    //     setData([
-    //         {
-    //             id: 1,
-    //             uii: 122423,
-    //             name: 'Roel Cristobal',
-    //             address: '545, Santiago, Malvar, Batangas',
-    //             headofins: 'Regional Director'
-    //         },
-    //         {
-    //             id: 2,
-    //             uii: 113243,
-    //             name: 'Roel Cristobal',
-    //             address: '123, Santiago, Malvar, Batangas',
-    //             headofins: 'Chief Administrative Officer'
-    //         },
-    //         {
-    //             id: 3,
-    //             uii: 132423,
-    //             name: 'Roel Cristobal',
-    //             address: '543, Santiago, Malvar, Batangas',
-    //             headofins: 'Secretary'
-    //         },
-    //         {
-    //             id: 4,
-    //             uii: 12513,
-    //             name: 'Roel Cristobal',
-    //             address: '636, Santiago, Malvar, Batangas',
-    //             headofins: 'Assistant'
-    //         },
-    //     ]);
-    // }, []);
-
-    //VALIDATION ON ADDING
-    // const [validated, setValidated] = useState(false);
-
-    // const handleSubmit = event => {
-    //     const form = event.currentTarget;
-    //         if (form.checkValidity() === false) {
-    //             event.preventDefault();
-    //             event.stopPropagation();
-    //         }
-    //     setValidated(true);
-    // };
-
-     //MODAL ADD
-    // const [show, setShow] = useState(false);
-
-    // const handleClose = () => {
-    //     setShow(false)
-    // };
-    // const handleShow = () => {
-    //     setShow(true)
-    // };
-
-    // //MODAL EDIT
-    // const [show2, setShow2] = useState(false);
- 
-    // const handleClose2 = () => {
-    //     setShow2(false)
-    // };
-    // const handleShow2 = () => {
-    //     setShow2(true)
-    // };
-
-    // // DELETE
-    // const showAlert = () => {
-    //     Swal.fire({
-    //         title: 'Are you sure?',
-    //         text: 'You won\'t be able to revert this!',
-    //         icon: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#3085d6',
-    //         cancelButtonColor: '#d33',
-    //         confirmButtonText: 'Yes, delete it!'
-    //     }).then((result) => {
-    //         if (result.isConfirmed) {
-    //         Swal.fire(
-    //             'Deleted!',
-    //             'Your file has been deleted.',
-    //             'success'
-    //             );
-    //         }
-    //     });
-    // };
-
     return (
         <div class='container fluid'>
             <div className='crud bg-body rounded'> 
@@ -385,8 +299,6 @@ function Heis() {
                     </Table>
                 </div>   
             </div>
-
-            {/* <!--- Model Box ADD and EDIT ---> */}
             <div className='model_box'>
                 <Modal
                     show={modal.show}
@@ -394,7 +306,7 @@ function Heis() {
                     backdrop='static'
                     keyboard={false}>
                     <Modal.Header closeButton>
-                    <Modal.Title>{modal.data ? 'Edit' : 'Add'} HEI</Modal.Title>
+                        <Modal.Title>{modal.data ? 'Edit' : 'Add'} HEI</Modal.Title>
                     </Modal.Header>
                     <Form onSubmit={handleSubmit}>
                         <Modal.Body>
@@ -409,7 +321,9 @@ function Heis() {
                                             value={formInputs.uii} 
                                             onChange={handleInputChange}
                                             isInvalid={!!formErrors.uii} />
-                                        <Form.Control.Feedback type='invalid'>{formErrors.uii}.</Form.Control.Feedback>
+                                        <Form.Control.Feedback type='invalid'>
+                                            {formErrors.uii}.
+                                        </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
                                 <Col>
@@ -445,20 +359,7 @@ function Heis() {
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
-                                {/* <Col>
-                                    <Form.Group className='mb-2' controlId=''>
-                                        <Form.Label>City/Municipality</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter City/Municipality' required/>
-                                        <Form.Control.Feedback type='invalid'>Please enter city/municipality.</Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Group className='mb-2' controlId=''>
-                                        <Form.Label>Province</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter Province' required/>
-                                        <Form.Control.Feedback type='invalid'>Please enter province.</Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col> */}
+                              
                             </Row>
                             <Row>
                                 <Col>
@@ -484,85 +385,13 @@ function Heis() {
                                 Cancel
                             </Button>
                             <Button type='submit' variant='primary' disabled={modal.isLoading}>
-                            {modal.data ? 'Edit' : 'Add'} 
+                                 {modal.data ? 'Edit' : 'Add'} 
                             </Button>
                         </Modal.Footer>
                     </Form>
                 </Modal>
-                {/* Model Box Finish */}
-
-                {/* <!--- Model Box EDIT ---> */}
-                {/* <div className='model_box'>
-                    <Modal
-                        show={show2}
-                        onHide={handleClose2}
-                        backdrop='static'
-                        keyboard={false}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Edit</Modal.Title>
-                        </Modal.Header>
-                        <Form>
-                            <Modal.Body>
-                                <Row>
-                                    <Col md={3}>
-                                        <Form.Group className='mb-2' controlId=''>
-                                            <Form.Label>UII</Form.Label>
-                                            <Form.Control  type='text' placeholder='Enter UII' required/>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col>
-                                        <Form.Group className='mb-2' controlId=''>
-                                            <Form.Label>Name</Form.Label>
-                                            <Form.Control type='text' placeholder='Enter Name' required/>
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-
-                                <Row>
-                                    <Col>
-                                        <Form.Group className='mb-2' controlId=''>
-                                            <Form.Label>Streets/Barangay</Form.Label>
-                                            <Form.Control type='text' placeholder='Streets/Barangay' required/>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col>
-                                        <Form.Group className='mb-2' controlId=''>
-                                            <Form.Label>City/Municipality</Form.Label>
-                                            <Form.Control type='text' placeholder='Enter City/Municipality' required/>
-                                        </Form.Group>
-                                    </Col>
-                                    <Col>
-                                        <Form.Group className='mb-2' controlId=''>
-                                            <Form.Label>Province</Form.Label>
-                                            <Form.Control type='text' placeholder='Enter Province' required/>
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-
-                                <Row>
-                                    <Col>
-                                        <Form.Group className='mb-2' controlId=''>
-                                            <Form.Label>Head of Institution</Form.Label>
-                                            <Form.Control type='text' placeholder='Enter Head of Institution' required/>
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                            </Modal.Body>
-
-                            <Modal.Footer>
-                                <Button variant='secondary' onClick={handleClose2}>
-                                    Cancel
-                                </Button>
-                                <Button variant='primary'>
-                                    Done 
-                                </Button>
-                            </Modal.Footer>
-                        </Form>
-                    </Modal>
-                    Model Box Finish */}
-                </div>
             </div>
-        
+        </div>
     );
 }
 
