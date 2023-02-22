@@ -8,6 +8,7 @@ import {
     Modal,
     Row,
     Table,
+    InputGroup
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -15,7 +16,9 @@ import {
     faEdit,
     faAdd,
     faSpinner,
-    faRotate
+    faRotate,
+    faEye,
+    faEyeSlash
 } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
@@ -281,6 +284,21 @@ function Users() {
         );
     }
 
+    // SHOW PASSWORD
+    const [passwordType, setPasswordType] = ('password');
+    const [passwordInput, setPasswordInput] = ('');
+
+    const handlePasswordChange = evnt => {
+        setPasswordInput(evnt.target.value);
+    }
+    const togglePassword = () => {
+        if(passwordType === 'password') {
+            setPasswordType('text');
+            return;
+        }
+        setPasswordType('password')
+    }
+
     return (
         <Container fluid>
             <div className='bg-body rounded'> 
@@ -369,11 +387,30 @@ function Users() {
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Password</Form.Label>
-                                        <Form.Control 
-                                            type='password' 
-                                            placeholder='Enter Password'
-                                            name='password'
-                                            value={formInputs.password}/>
+                                        <InputGroup>
+                                            <Form.Control
+                                                type={passwordType} 
+                                                onChange={handlePasswordChange}
+                                                value={passwordInput}
+                                                name='password'
+                                                placeholder='Enter Password'
+                                                aria-describedby='basic-addon'
+                                                required />
+                                                <Button
+                                                    className='p-1'
+                                                    id='button-addon'
+                                                    variant='outline-secondary' 
+                                                    onClick={togglePassword}>
+                                                        {
+                                                            passwordType === 'password' ? (
+                                                                <FontAwesomeIcon icon={faEye}/> 
+                                                            ) : (
+                                                                <FontAwesomeIcon icon={faEyeSlash}/>
+                                                            )
+                                                        }
+                                                </Button>
+                                            <Form.Control.Feedback type='invalid'>Please enter password.</Form.Control.Feedback>
+                                        </InputGroup>
                                     </Form.Group>
                                 </Col>
                             )
