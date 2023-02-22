@@ -66,7 +66,7 @@ const router = createBrowserRouter([
         element: <DocumentTypes />
       },
       {
-        path: 'Home/Documents',
+        path: '/Home/Documents',
         element: <Documents />
       },
       {

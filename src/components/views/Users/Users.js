@@ -8,7 +8,6 @@ import {
     Modal,
     Row,
     Table,
-    InputGroup
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -16,19 +15,18 @@ import {
     faEdit,
     faAdd,
     faSpinner,
-    faRotate,
-    faEye,
-    faEyeSlash
+    faRotate
 } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 
-function Roles() {
+function Users() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
-    const [username, setUsers] = useState([]); //division variable
+    const [roles, setRoles] = useState([]); //user variable
+    // const [profiles, setProfile] = useState([]); //user variable
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -39,30 +37,32 @@ function Roles() {
     const [formInputs, setFormInputs] = useState({ // input inside the modal
         username: '',
         password: '',
-        role: '',
-        firstname: '',
-        middlename: '',
-        lastname: '',
+        roles: '',
+        first_name: '',
+        middle_name: '',
+        last_name: '',
         prefix: '',
         suffix: '',
-        position: ''
+        position_designation: ''
     });
 
     const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
         username: '',
         password: '',
-        role: '',
-        firstname: '',
-        middlename: '',
-        lastname: '',
+        roles: '',
+        first_name: '',
+        middle_name: '',
+        last_name: '',
         prefix: '',
         suffix: '',
-        position: ''
+        position_designation: '',
     });
 
     useEffect(() => {
-        apiClient.get('/home/users').then(response => { //GET ALL function
+        apiClient.get('/users').then(response => { //GET ALL function
             setData(response.data.data.users);
+            setRoles(response.data.data.roles);
+            // setProfile(response.data.data.profiles);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -74,41 +74,42 @@ function Roles() {
         event.preventDefault();
 
         let validation = new Validator(formInputs, {
-            username: 'min:1',
-            password: 'min:1',
-            role: 'min:1',
-            firstname: 'min:2',
-            middlename: 'min:1',
-            lastname: 'min:1',
-            prefix: 'min:2',
-            suffix: 'min:1',
-            position: 'min:1'
+            username: 'required|string|min:1',
+            password: 'required|string|min:4',
+            roles: '',
+            first_name: 'required|string|min:1',
+            middle_name: 'string|min:4',
+            last_name: 'required|string|min:4',
+            prefix: 'string|min:2',
+            suffix: 'string|min:2',
+            position_designation: 'required|string|min:2'
         });
 
         if (validation.fails()) {
             setFormErrors({
                 username: validation.errors.first('username'),
                 password: validation.errors.first('password'),
-                role: validation.errors.first('role'),
-                firstname: validation.errors.first('firstname'),
-                middlename: validation.errors.first('middlename'),
-                lastname: validation.errors.first('lastname'),
+                roles: validation.errors.first(''),
+                first_name: validation.errors.first('first_name'),
+                middle_name: validation.errors.first('middle_name'),
+                last_name: validation.errors.first('last_name'),
                 prefix: validation.errors.first('prefix'),
                 suffix: validation.errors.first('suffix'),
-                position: validation.errors.first('position')
+                position_designation: validation.errors.first('position_designation'),
+                division_id: validation.errors.first('division_id')
             });
             return;
         } else {
             setFormErrors({
                 username: '',
                 password: '',
-                role: '',
-                firstname: '',
-                middlename: '',
-                lastname: '',
+                roles: '',
+                first_name: '',
+                middle_name: '',
+                last_name: '',
                 prefix: '',
                 suffix: '',
-                position: ''
+                position_designation: '',
             });
         }
 
@@ -116,15 +117,16 @@ function Roles() {
             ...modal,
             isLoading: true
         });
-        if (modal.data === null) {
+        if (modal.data !== null) {
+            handleEdit();
+        } else {
             handleAdd();
         }
     };
 
     const handleAdd = () => {
-        apiClient.post('/home/users', {
+        apiClient.post('/users', {
             ...formInputs,
-            user_id: formInputs.users
         }).then(response => {
             setData([
                 ...data,
@@ -152,9 +154,8 @@ function Roles() {
     }
 
     const handleEdit = () => {
-        apiClient.post(`/settings/roles/${modal.data?.id}`, {
+        apiClient.post(`/users/${modal.data?.id}`, {
             ...formInputs,
-            division_id: formInputs.division
         }).then(response => {
             let newData = data.map(d => {
                 if (d.id === response.data.data.id) {
@@ -196,9 +197,14 @@ function Roles() {
         if (data !== null) {
             setFormInputs({
                 ...formInputs,
-                division: data.division_id,
-                description: data.description,
-                level: data.level
+                username: data.username,
+                roles: data.role_id,
+                first_name: data.profile.first_name,
+                middle_name: data.profile.middle_name,
+                last_name: data.profile.last_name,
+                prefix: data.profile.prefix,
+                suffix: data.profile.suffix,
+                position: data.profile.position_designation
             });
         }
 
@@ -211,7 +217,7 @@ function Roles() {
 
     const handleHideModal = () => {
         setFormInputs({
-            division: '',
+            user: '',
             description: '',
             level: 0
         });
@@ -222,10 +228,12 @@ function Roles() {
         });
     }
 
-    const getDivisionDescription = (divisionId) => {
-        let division = username.find(div => div.id === divisionId);
-        return division?.description;
+    const getRoleDescription = (role_id) => {
+        let role = roles.find(roles => roles.id === role_id);
+        return role?.description;
     }
+
+    
 
     const showDeleteAlert = role => {
         Swal.fire({
@@ -239,7 +247,7 @@ function Roles() {
             reverseButtons: true,
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return apiClient.delete(`/home/users/${role.id}`).then(response => {
+                return apiClient.delete(`/users/${role.id}`).then(response => {
                     let newData = data.filter(d => d.id !== role.id);
                     setData(newData);
                     Swal.fire({
@@ -257,21 +265,6 @@ function Roles() {
             }
         });
     };
-
-    // SHOW PASSWORD
-    const [passwordType, setPasswordType] = useState('password');
-    const [passwordInput, setPasswordInput] = useState('');
-
-    const handlePasswordChange = evnt => {
-        setPasswordInput(evnt.target.value);
-    }
-    const togglePassword3 = () => {
-        if(passwordType === 'password') {
-            setPasswordType('text');
-            return;
-        }
-        setPasswordType('password')
-    }
 
     if (isLoading) {
         return (
@@ -322,17 +315,17 @@ function Roles() {
                 </thead>
                 <tbody>
                     {
-                        data.map((row, index) => (
+                        data.data.map((row, index) => (
                             <tr key={index}>
                                 <td>{row.id}</td>
-                                <td>{getDivisionDescription(row.division_id)}</td>
-                                <td>{row.description}</td>
-                                <td>{row.level}</td>
+                                <td>{row.username}</td>
+                                <td>{getRoleDescription(row.role_id)}</td>
+                                <td>{row.profile.position_designation}</td>
                                 <td>
-                                    <Button onClick={""} variant='link'>
+                                    <Button onClick={e => handleShowModal(row)} variant='link'>
                                         <FontAwesomeIcon icon={faEdit} className='text-primary'/>
                                     </Button>
-                                    <Button onClick={""} variant='link'>
+                                    <Button onClick={''} variant='link'>
                                         <FontAwesomeIcon icon={faRotate} className='text-success'/>
                                     </Button>
                                     <Button onClick={e => showDeleteAlert(row)} variant='link'>
@@ -351,60 +344,55 @@ function Roles() {
                 backdrop='static'
                 keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Add role</Modal.Title>
+                    <Modal.Title> {modal.data ? 'Edit' : 'Add'} Users</Modal.Title>
                 </Modal.Header>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
                     <Row className='margin: 40px'>
                         <Col>
-                            <Form.Group className='mb-2'>
+                            <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Username</Form.Label>
                                 <Form.Control 
-                                type='text' 
-                                placeholder='Enter Username' 
-                                name='username' 
-                                value={formInputs.username}/>
-                                <Form.Control.Feedback type='invalid'>
-                                {formErrors.username}
-                                </Form.Control.Feedback>
+                                    type='text' 
+                                    placeholder='Enter Username'
+                                    name='username'
+                                    value={formInputs.username} 
+                                    onChange={handleInputChange}
+                                    isInvalid={!!formErrors.username}/>
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.username}
+                                    </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
-
-                        <Col>
-                            <Form.Group className='mb-2'>
-                                <Form.Label>Password</Form.Label>
-                                <InputGroup>
-                                    <Form.Control
-                                        type={passwordType} 
-                                        onChange={handlePasswordChange}
-                                        placeholder='Enter Password'
-                                        aria-describedby='basic-addon'
-                                        name='password' 
-                                        value={formInputs.password} />
-                                        <Button className='p-1' id='button-addon' variant='outline-secondary' 
-                                            onClick={togglePassword3}>
-                                                {
-                                                    passwordType === 'password'? (
-                                                        <FontAwesomeIcon icon={faEye}/> 
-                                                    ) : (
-                                                        <FontAwesomeIcon icon={faEyeSlash}/>
-                                                    )
-                                                }
-                                        </Button>
-                                        <Form.Control.Feedback type='invalid'>
-                                            {formErrors.password}
-                                        </Form.Control.Feedback>
-                                </InputGroup>
-                            </Form.Group>
-                        </Col>
+                        {
+                            !modal.data && (
+                                <Col>
+                                    <Form.Group className='mb-2' controlId=''>
+                                        <Form.Label>Password</Form.Label>
+                                        <Form.Control 
+                                            type='password' 
+                                            placeholder='Enter Password'
+                                            name='password'
+                                            value={formInputs.password}/>
+                                    </Form.Group>
+                                </Col>
+                            )
+                        }
                         <Col>
                             <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Role</Form.Label>
-                                <Form.Select name='' aria-label='Default select example' >
-                                    <option value=''>Select Role</option>
-                                    <option value='1'>Regional Director</option>
-                                    <option value='2'>Chief Administrative Officer</option>
-                                    <option value='3'>Secretary</option>
+                                <Form.Select 
+                                aria-label='Default select example'
+                                name='roles'
+                                value={formInputs.roles} 
+                                onChange={handleInputChange}
+                                isInvalid={!!formErrors.roles}>
+                                    <option value=''>Select role...</option>
+                                    {
+                                        roles.map(roles => (
+                                            <option key={roles.id} value={roles.id}>{roles.description}</option>
+                                        ))
+                                    }
                                 </Form.Select>
                             </Form.Group>
                         </Col>
@@ -414,90 +402,111 @@ function Roles() {
                             <Form.Group className='mb-2'>
                                 <Form.Label>First Name</Form.Label>
                                 <Form.Control 
-                                type='text' 
-                                placeholder='Enter First Name' 
-                                name='firstname'
-                                value={formInputs.firstname}/>
-                                <Form.Control.Feedback type='invalid'>
-                                {formErrors.firstname}
-                            </Form.Control.Feedback>
+                                    type='text' 
+                                    placeholder='Enter First Name'
+                                    name='first_name'
+                                    value={formInputs.first_name}
+                                    onChange={handleInputChange}
+                                    isInvalid={!!formErrors.first_name}/>
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.first_name}
+                                    </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
                         <Col>
-                            <Form.Group className='mb-2'>
+                            <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Middle Name</Form.Label>
                                 <Form.Control 
                                 type='text' 
-                                placeholder='Enter Middle Name'
-                                name='middlename'
-                                value={formInputs.middlename}/>
+                                placeholder='Enter Middle Name' 
+                                name='middle_name'
+                                value={formInputs.middle_name}
+                                onChange={handleInputChange}
+                                isInvalid={!!formErrors.middle_name}/>
+                                <Form.Control.Feedback type='invalid'>
+                                    {formErrors.middle_name}
+                                </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
                         <Col>
-                            <Form.Group className='mb-2'>
+                            <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Last Name</Form.Label>
                                 <Form.Control 
-                                type='text' 
-                                placeholder='Enter Last Name' name='lastname'
-                                value={formInputs.lastname}/>
+                                    type='text' 
+                                    placeholder='Enter Last Name'
+                                    name='last_name'
+                                    value={formInputs.last_name}
+                                    onChange={handleInputChange}
+                                    isInvalid={!!formErrors.last_name}/>
                                 <Form.Control.Feedback type='invalid'>
-                                {formErrors.lastname}
+                                    {formErrors.last_name}
                                 </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
                     </Row>
                     <Row className='justify-content-md'>
-                        <Col>
-                            <Form.Group className='mb-2'>
+                        <Col >
+                            <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Prefix</Form.Label>
                                 <Form.Control 
-                                type='text' 
-                                placeholder='Prefix'
-                                name='prefix'
-                                value={formInputs.prefix}/>
+                                    type='text' 
+                                    placeholder='Prefix'
+                                    name='prefix'
+                                    value={formInputs.prefix}
+                                    onChange={handleInputChange}
+                                    isInvalid={!!formErrors.prefix}/>
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.prefix}
+                                    </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
-                        <Col>
-                            <Form.Group className='mb-2'>
+                        <Col >
+                            <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Suffix</Form.Label>
                                 <Form.Control 
-                                type='text' 
-                                placeholder='Enter Suffix'
-                                name='suffix'
-                                value={formInputs.suffix}/>
-                                <Form.Control.Feedback type='invalid'>
-                                {formErrors.suffix}
-                                </Form.Control.Feedback>
+                                    type='text' 
+                                    placeholder='Enter Suffix'
+                                    name='suffix'
+                                    value={formInputs.suffix} 
+                                    onChange={handleInputChange}
+                                    isInvalid={!!formErrors.suffix}/>
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.suffix}
+                                    </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
-                        <Col>
-                            <Form.Group className='mb-2'>
-                                <Form.Label>Position</Form.Label>
+                        <Col >
+                            <Form.Group className='mb-2' controlId=''>
+                                <Form.Label>Position/Designation</Form.Label>
                                 <Form.Control 
-                                type='text' 
-                                placeholder='Enter Position' 
-                                name='position'
-                                value={formInputs.position}/>
-                                <Form.Control.Feedback type='invalid'>
-                                {formErrors.position}
-                                </Form.Control.Feedback>
+                                    type='text' 
+                                    placeholder='Enter Position'
+                                    name='position'
+                                    value={formInputs.position}
+                                    onChange={handleInputChange}
+                                    isInvalid={!!formErrors.position}/>
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.position}
+                                    </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
-                     </Row>
-                    </Modal.Body>
-
-                    <Modal.Footer>
-                        <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
-                            Cancel
-                        </Button>
-                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
-                            {modal.data} Add
-                        </Button>
-                    </Modal.Footer>
-                </Form>
+                    </Row>
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                                Cancel
+                            </Button>
+                            <Button 
+                            type='submit'
+                            variant='primary' 
+                            disabled={modal.isLoading}>
+                                {modal.data ? 'Edit' : 'Add'}
+                            </Button>
+                        </Modal.Footer>
+                    </Form>
             </Modal>
         </Container>
     );
 }
 
-export default Roles;
+export default Users;
