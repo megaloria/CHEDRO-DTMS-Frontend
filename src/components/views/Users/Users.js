@@ -1,5 +1,6 @@
 import React,{ useEffect, useState }  from 'react';
 import {
+    Alert,
     Button, 
     Modal, 
     InputGroup, 
@@ -16,128 +17,334 @@ import {
     faEdit, 
     faAdd,
     faEye,
-    faEyeSlash
+    faEyeSlash,
+    faSpinner
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
-import './style.css';
+import './style.css';import Validator from 'validatorjs';
+import apiClient from '../../../helpers/apiClient';
 
 function Users() {
-    const [data, setData] = useState([]);
+    
+    const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [errorMessage, setErrorMessage] = useState(''); //error message variable
+    const [data, setData] = useState({ data: [] }); //data variable
+    const [roles, setRoles] = useState([]); //division variable
+    const [profiles, setProfiles] = useState([]); //division variable
+
+    const [modal, setModal] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    const [formInputs, setFormInputs] = useState({ // input inside the modal
+        role_id: '',
+        username: '',
+        password: '',
+        prefix	: '',
+        first_name: '',
+        middle_name: '',
+        last_name: '',
+        suffix: '',
+        position_designation: '',
+        division_id: '',
+        level: '',
+        description: ''
+    });
+
+    const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
+        role_id: '',
+        username: '',
+        password: '',
+        prefix	: '',
+        first_name: '',
+        middle_name: '',
+        last_name: '',
+        suffix: '',
+        position_designation: '',
+        division_id: '',
+        level: '',
+        description: ''
+    });
 
     useEffect(() => {
-        setData([
-            {
-                id: 1,
-                Username: 'qwerty237',
-                Name: 'Cristobal Roel',
-                Position: 'Regional Director',
-            },
-            {
-                id: 2,
-                Username: 'dfdhgf123',
-                Name: 'Limbo Vince Brian',
-                Position: 'Chief Administrative Officer',
-            },
-            {
-                id: 3,
-                Username: 'asdwrq634',
-                Name: 'Baruelo Berth Anthony',
-                Position: 'Secretary',
-            },
-            {
-                id: 4,
-                Username: 'vnvbnvb4473',
-                Name: 'Madamba Prinz Gerard',
-                Position: 'Assistant',
-            },
-        ]);
+        apiClient.get('/users').then(response => { //GET ALL function
+            setData(response.data.data.users);
+            setProfiles(response.data.data.profiles);
+            setRoles(response.data.data.roles);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsLoading(false);
+        });
     }, []);
 
-    //VALIDATION ON ADDING RECORD
-    const [validated, setValidated] = useState(false);
-
     const handleSubmit = event => {
-        const form = event.currentTarget;
-            if (form.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            setValidated(true);
-    };
+        let validation = new Validator(formInputs, {
+            username: 'required|string|min:5',
+            password: 'required|min:8',
+            first_name: 'required|string',
+            last_name: 'required|string|min:5',
+            prefix: 'nullable|present|string',
+            suffix: 'nullable|present|string',
+            middle_name: 'nullable|present|string',
+            role_id: 'required|integer|exists:roles,id',
+            division_id: 'required|integer|exists:divisions,id',
+            level: 'required|integer',
+            description: 'required|string',
+            position_designation: 'nullable|present|string'
+        });
 
-    // SHOW PASSWORD
-    const [passwordShown, setPasswordShown] = useState(false);
-
-        const togglePassword = () => {
-       
-        setPasswordShown(!passwordShown);
-    };
-
-    // ADD CREATE
-    const [show, setShow] = useState(false);
- 
-    const handleClose = () => {
-        setShow(false)
-    };
-    const handleShow = () => {
-        setShow(true)
-    };
-
-    // SHOW PASSWORD
-    const [passwordType, setPasswordType] = useState('password');
-    const [passwordInput, setPasswordInput] = useState('');
-
-    const handlePasswordChange = evnt => {
-        setPasswordInput(evnt.target.value);
-    }
-    const togglePassword3 = () => {
-        if(passwordType === 'password') {
-            setPasswordType('text');
+        if (validation.fails()) {
+            setFormErrors({
+                username: validation.errors.first('description'),
+                password: validation.errors.first('description'),
+                first_name: validation.errors.first('level'),
+                last_name: validation.errors.first('description'),
+                prefix: validation.errors.first('description'),
+                suffix: validation.errors.first('level'),
+                middle_name: validation.errors.first('description'),
+                division_id: validation.errors.first('description'),
+                level: validation.errors.first('level'),
+                division: validation.errors.first('description'),
+                description: validation.errors.first('description'),
+                position_designation: validation.errors.first('level')
+            });
             return;
+        } else {
+            setFormErrors({
+                role_id: '',
+                username: '',
+                password: '',
+                prefix	: '',
+                first_name: '',
+                middle_name: '',
+                last_name: '',
+                suffix: '',
+                position_designation: '',
+                division_id: '',
+                level: '',
+                description: ''
+            });
         }
-        setPasswordType('password')
+
+        setModal({
+            ...modal,
+            isLoading: true
+        });
+        if (modal.data !== null) {
+            handleEdit();
+        } else {
+            handleAdd();
+        }
+    };
+  
+    const handleAdd = () => {
+        apiClient.post('/users', {
+            ...formInputs,
+            role_id: formInputs.roles,
+            id: formInputs.profiles
+        }).then(response => {
+            setData([
+                ...data,
+                response.data.data
+            ]);
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            }).then(() => {
+                handleHideModal();
+            });
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setModal({
+                ...modal,
+                isLoading: false
+            });
+        });
     }
 
-    // Change Password
-    const [show2, setShow2] = useState(false);
+    // // SHOW PASSWORD
+    
+    // const [passwordShown, setPasswordShown] = useState(false);
+
+    //     const togglePassword = () => {
+       
+    //     setPasswordShown(!passwordShown);
+    // };
+
+    // // ADD CREATE
+    // const [show, setShow] = useState(false);
  
-    const handleClose2 = () => {
-        setShow2(false)
-    };
-    const handleShow2 = () => {
-        setShow2(true)
-    };
+    // const handleClose = () => {
+    //     setShow(false)
+    // };
+    // const handleShow = () => {
+    //     setShow(true)
+    // };
+
+    // // SHOW PASSWORD
+
+
+    // const [passwordType, setPasswordType] = useState('password');
+    // const [passwordInput, setPasswordInput] = useState('');
+
+    // const handlePasswordChange = evnt => {
+    //     setPasswordInput(evnt.target.value);
+    // }
+    // const togglePassword3 = () => {
+    //     if(passwordType === 'password') {
+    //         setPasswordType('text');
+    //         return;
+    //     }
+    //     setPasswordType('password')
+    // }
+
+    // // Change Password
+    // const [show2, setShow2] = useState(false);
+ 
+    // const handleClose2 = () => {
+    //     setShow2(false)
+    // };
+    // const handleShow2 = () => {
+    //     setShow2(true)
+    // };
 
     // Edit Record
-    const [show3, setShow3] = useState(false);
- 
-    const handleClose3 = () => {
-        setShow3(false)
-    };
-    const handleShow3 = () => {
-        setShow3(true)
-    };
 
-    // DELETE
-    const showAlert = () => {
+    const handleEdit = () => {
+        apiClient.post(`/users/${modal.data?.id}`, {
+            ...formInputs,
+            role_id: formInputs.role,
+            id: formInputs.profiles
+        }).then(response => {
+            let newData = data.map(d => {
+                if (d.id === response.data.data.id) {
+                    return {...response.data.data};
+                }
+
+                return {...d};
+            })
+            setData(newData);
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            }).then(() => {
+                handleHideModal();
+            });
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setModal({
+                ...modal,
+                isLoading: false
+            });
+        });
+    }
+
+    const handleInputChange = e => {
+        setFormInputs({
+            ...formInputs,
+            [e.target.name]: e.target.value
+        });
+    }
+
+    const handleShowModal = (data = null) => {
+        if (data !== null) {
+            setFormInputs({
+                ...formInputs,
+                role_id: data.role_id,
+                username: data.username,
+                password: data.password
+            });
+        }
+
+        setModal({
+            show: true,
+            data,
+            isLoading: false
+        });
+    }
+
+    const handleHideModal = () => {
+        setFormInputs({
+            role_id: '',
+            username: '',
+            password: ''
+        });
+        setModal({
+            show: false,
+            data: null,
+            isLoading: false
+        });
+    } 
+
+    const getRolesDescription = (role_id) => {
+        let role = roles.find(div => div.id === role_id);
+        return role?.description;
+    }
+    const getProfileDescription = (position_designation) => {
+        let Profiles = profiles.find(div => div.id === position_designation);
+        return profiles?.position_designation;
+    }
+
+    
+    const showDeleteAlert = users => {
         Swal.fire({
-            title: 'Are you sure?',
+            title: `Are you sure you want to delete "${users.username}"?`,
             text: 'You won\'t be able to revert this!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-              Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-              );
+            confirmButtonText: 'Yes, delete it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.delete(`/users/${users.id}`).then(response => {
+                    let newData = data.filter(d => d.id !== users.id);
+                    setData(newData);
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                });
             }
         });
     };
+
+    if (isLoading) {
+        return (
+            <FontAwesomeIcon icon={faSpinner} spin lg />
+        );
+    }
+
+    if (errorMessage) {
+        return (
+            <Alert variant='danger'>
+                {errorMessage}
+            </Alert>
+        );
+    }
 
     return (
         <div class='container fluid'>
@@ -156,7 +363,7 @@ function Users() {
                         </div>
                     </Col>
                     <Col md='auto'>
-                        <Button variant='primary' onClick={handleShow}>
+                        <Button variant='primary' onClick={e => handleShowModal()}>
                             <FontAwesomeIcon icon={faAdd} className='addIcon'/> Add
                         </Button>
                     </Col> 
@@ -169,26 +376,28 @@ function Users() {
                             <tr>
                                 <th>ID</th>
                                 <th>Username</th>
-                                <th>Name </th>
+                                <th>Role</th>
                                 <th>Position/Designation</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                         {
-                            data.map((row, index) => (
+                            data.data.map((row,index) => (
                                 <tr key={index}>
                                     <td>{row.id}</td>
-                                    <td>{row.Username}</td>
-                                    <td>{row.Name}</td>
-                                    <td>{row.Position}</td>
+                                    <td>{row.username}</td>
+                                    <td>{getRolesDescription(row.role_id)}</td>
+                                    <td>{row.profile.position_designation}</td>
                                     <td>
-                                    <Button onClick={handleShow3} variant='link'>
-                                        <FontAwesomeIcon icon={faEdit} className='text-primary'/></Button>
-                                    <Button onClick={handleShow2} variant='link'>
-                                        <FontAwesomeIcon icon={faRotate} className='text-success'/></Button>
-                                    <Button onClick={showAlert} variant='link'>
-                                        <FontAwesomeIcon icon={faTrash} className='text-danger'/></Button>
+                                    <Button onClick={e => handleShowModal(row)} variant='link'>
+                                        <FontAwesomeIcon icon={faEdit} className='text-primary'/>
+                                    </Button>
+                                    {/* <Button onClick={handleShow2} variant='link'>
+                                        <FontAwesomeIcon icon={faRotate} className='text-success'/></Button> */}
+                                        <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                        <FontAwesomeIcon icon={faTrash} className='text-danger'/>
+                                    </Button>
                                     </td>
                                 </tr>
                             ))
@@ -219,26 +428,39 @@ function Users() {
 
             {/* <!--- Model Box Add ---> */}    
             <div className='model_box'>
-                <Modal
-                    show={show}
-                    onHide={handleClose}
-                    backdrop='static'
-                    keyboard={false}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add Record</Modal.Title>
-                    </Modal.Header>
-                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
+            <Modal
+                show={modal.show}
+                onHide={handleHideModal}
+                backdrop='static'
+                keyboard={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{modal.data ? 'Edit' : 'Add'} Add Record</Modal.Title>
+                </Modal.Header>
+                    <Form onSubmit={handleSubmit}>
                         <Modal.Body>
                             <Row className='margin: 40px'>
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Username</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter Username' required/>
-                                        <Form.Control.Feedback type='invalid'>Please choose a username.</Form.Control.Feedback>
+
+
+                                        <Form.Control 
+                                        type='text' 
+                                        name='username'
+                                        placeholder='Enter Username'
+                                        value={formInputs.username}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.username} />
+                                        <Form.Control.Feedback type='invalid'>
+                                            {formErrors.description}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
+
+
                                 </Col>
 
-                                <Col>
+                                {/* <Col>
+
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Password</Form.Label>
                                         <InputGroup>
@@ -262,11 +484,11 @@ function Users() {
                                             <Form.Control.Feedback type='invalid'>Please enter password.</Form.Control.Feedback>
                                         </InputGroup>
                                     </Form.Group>
-                                </Col>
+                                </Col> */}
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Role</Form.Label>
-                                        <Form.Select name='' aria-label='Default select example' required>
+                                        <Form.Select name='position_designation' aria-label='Default select example' required>
                                             <option value=''>Select Role</option>
                                             <option value='1'>Regional Director</option>
                                             <option value='2'>Chief Administrative Officer</option>
@@ -279,20 +501,20 @@ function Users() {
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>First Name</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter First Name' required/>
+                                        <Form.Control type='text' name='first_name' placeholder='Enter First Name' required/>
                                         <Form.Control.Feedback type='invalid'>Please enter first name.</Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Middle Name</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter Middle Name' />
+                                        <Form.Control type='text' name='middle_name' placeholder='Enter Middle Name' />
                                     </Form.Group>
                                 </Col>
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Last Name</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter Last Name' required/>
+                                        <Form.Control type='text' name='last_name' placeholder='Enter Last Name' required/>
                                         <Form.Control.Feedback type='invalid'>Please enter last name.</Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
@@ -301,45 +523,44 @@ function Users() {
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Prefix</Form.Label>
-                                        <Form.Control type='text' placeholder='Prefix'/>
+                                        <Form.Control type='text' name='prefix' placeholder='Prefix'/>
                                     </Form.Group>
                                 </Col>
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Suffix</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter Suffix'/>
+                                        <Form.Control type='text'  name='suffix' placeholder='Enter Suffix'/>
                                         <Form.Control.Feedback type='invalid'>Please enter suffix.</Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Position</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter Position' required/>
+                                        <Form.Control type='text' name='position_designation' placeholder='Enter Position' required/>
                                         <Form.Control.Feedback type='invalid'>Please enter position.</Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
                             </Row>
                         </Modal.Body>
                         <Modal.Footer>
-                            <Button variant='secondary' onClick={handleClose}>
-                                Cancel
-                            </Button>
-                            <Button type='submit' variant='primary'>
-                                Add Record 
-                            </Button>
+                        <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                            Cancel
+                        </Button>
+                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                            {modal.data ? 'Edit' : 'Add'}
+                        </Button>
                         </Modal.Footer>
                     </Form>
                 </Modal>
                 {/* Model Box Finish */}
 
-                {/* <!--- Model Box Edit ---> */}
+
                 <div className='model_box'>
                     <Modal
-                        show={show3}
-                        onHide={handleClose3}
-                        backdrop='static'
-                        keyboard={false}
-                    >
+                    show={modal.show}
+                    onHide={handleHideModal}
+                    backdrop='static'
+                    keyboard={false}>
                     <Modal.Header closeButton>
                         <Modal.Title>Edit Record</Modal.Title>
                     </Modal.Header>
@@ -405,64 +626,17 @@ function Users() {
                                 </Col>
                             </Row>
                         </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant='secondary' onClick={handleClose3}>
-                                Cancel
-                            </Button>
-                            <Button variant='primary'>
-                                Done
-                            </Button>
-                        </Modal.Footer>
+
+                    <Modal.Footer>
+                        <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                            Cancel
+                        </Button>
+                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                            {modal.data ? 'Edit' : 'Add'}
+                        </Button>
+                    </Modal.Footer>
                         </Form>
                     </Modal>
-                {/* Model Box Finish */}
-
-                    <div className='model_box'>
-                        <Modal
-                            show={show2}
-                            onHide={handleClose2}
-                            backdrop='static'
-                            keyboard={false}>
-                            <Modal.Header closeButton>
-                                <Modal.Title>Change Password</Modal.Title>
-                            </Modal.Header>
-                            <Form>
-                                <Modal.Body>
-                                    <Row className='margin: 40px'>
-                                        <Col>
-                                            <Form.Group className='mb-2' controlId=''>
-                                                <Form.Label>Password</Form.Label>
-                                                <Form.Control 
-                                                    type={passwordShown ? 'text' : 'password'} 
-                                                    placeholder='Enter Password' 
-                                                    required 
-                                                />
-                                            </Form.Group>
-                                            <Form.Group className='mb-3' controlId=''>
-                                                <Form.Label>Confirm Password</Form.Label>
-                                                <Form.Control 
-                                                    type={passwordShown ? 'text' : 'password'} 
-                                                    placeholder='Enter Confirm Password' 
-                                                    required 
-                                                />
-                                            </Form.Group>
-                                            <Form.Group className='mb-2' controlId=''>
-                                                <Form.Check onClick={togglePassword} type='checkbox' label='Show Password' />
-                                            </Form.Group>
-                                        </Col>
-                                    </Row>
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <Button variant='secondary' onClick={handleClose2}>
-                                        Cancel
-                                    </Button>
-                                    <Button variant='primary'>
-                                        Reset Password
-                                    </Button>
-                                </Modal.Footer>
-                            </Form>
-                        </Modal>
-                    </div>
                 </div>
             </div>
         </div>

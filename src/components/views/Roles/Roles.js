@@ -320,8 +320,10 @@ function Roles() {
                                 {formErrors.division}
                             </Form.Control.Feedback>
                         </Form.Group>
+
                         <Form.Group className='mb-2'>
                             <Form.Label>Description</Form.Label>
+                            
                             <Form.Control
                                 type='text'
                                 name='description'
