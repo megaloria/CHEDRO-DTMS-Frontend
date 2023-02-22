@@ -554,7 +554,7 @@ function Users() {
                 </Modal>
                 {/* Model Box Finish */}
 
-
+</div>
                 <div className='model_box'>
                     <Modal
                     show={modal.show}
@@ -639,7 +639,7 @@ function Users() {
                     </Modal>
                 </div>
             </div>
-        </div>
+
     );
 }
 
