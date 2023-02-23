@@ -40,25 +40,26 @@ function Users() {
     const [formInputs, setFormInputs] = useState({ // input inside the modal
         username: '',
         password: '',
-        roles: '',
+        role_id: '',
         first_name: '',
         middle_name: '',
         last_name: '',
         prefix: '',
         suffix: '',
         position_designation: ''
+
     });
 
     const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
         username: '',
         password: '',
-        roles: '',
+        role_id: '',
         first_name: '',
         middle_name: '',
         last_name: '',
         prefix: '',
         suffix: '',
-        position_designation: '',
+        position_designation: ''
     });
 
     useEffect(() => {
@@ -78,41 +79,43 @@ function Users() {
 
         let validation = new Validator(formInputs, {
             username: 'required|string|min:1',
-            password: 'required|string|min:4',
-            roles: '',
+            ...(modal.data ? {} : { password: 'required|string|min:4' }),
+            role_id: 'required|integer|min:1',
             first_name: 'required|string|min:1',
             middle_name: 'string|min:4',
             last_name: 'required|string|min:4',
             prefix: 'string|min:2',
             suffix: 'string|min:2',
             position_designation: 'required|string|min:2'
+
         });
 
         if (validation.fails()) {
             setFormErrors({
                 username: validation.errors.first('username'),
-                password: validation.errors.first('password'),
-                roles: validation.errors.first(''),
+                ...(modal.data ? {} : { password: validation.errors.first('password') }),
+                role_id: validation.errors.first('roles'),
                 first_name: validation.errors.first('first_name'),
                 middle_name: validation.errors.first('middle_name'),
                 last_name: validation.errors.first('last_name'),
                 prefix: validation.errors.first('prefix'),
                 suffix: validation.errors.first('suffix'),
                 position_designation: validation.errors.first('position_designation'),
-                division_id: validation.errors.first('division_id')
+
             });
             return;
         } else {
             setFormErrors({
                 username: '',
                 password: '',
-                roles: '',
+                role_id: '',
                 first_name: '',
                 middle_name: '',
                 last_name: '',
                 prefix: '',
                 suffix: '',
-                position_designation: '',
+                position_designation: ''
+ 
             });
         }
 
@@ -130,11 +133,15 @@ function Users() {
     const handleAdd = () => {
         apiClient.post('/users', {
             ...formInputs,
+      
         }).then(response => {
-            setData([
+            setData({
                 ...data,
-                response.data.data
-            ]);
+                data: [
+                    ...data.data,
+                    response.data.data
+                ]
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -160,14 +167,17 @@ function Users() {
         apiClient.post(`/users/${modal.data?.id}`, {
             ...formInputs,
         }).then(response => {
-            let newData = data.map(d => {
+            let newData = data.data.map(d => {
                 if (d.id === response.data.data.id) {
                     return {...response.data.data};
                 }
 
                 return {...d};
             })
-            setData(newData);
+            setData({
+                ...data,
+                data: newData
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -201,13 +211,13 @@ function Users() {
             setFormInputs({
                 ...formInputs,
                 username: data.username,
-                roles: data.role_id,
+                role_id: data.role_id,
                 first_name: data.profile.first_name,
                 middle_name: data.profile.middle_name,
                 last_name: data.profile.last_name,
                 prefix: data.profile.prefix,
                 suffix: data.profile.suffix,
-                position: data.profile.position_designation
+                position_designation: data.profile.position_designation,
             });
         }
 
@@ -238,9 +248,9 @@ function Users() {
 
     
 
-    const showDeleteAlert = role => {
+    const showDeleteAlert = users => {
         Swal.fire({
-            title: `Are you sure you want to delete "${role.description}"?`,
+            title: `Are you sure you want to delete "${users.username}"?`,
             text: 'You won\'t be able to revert this!',
             icon: 'warning',
             showCancelButton: true,
@@ -250,9 +260,12 @@ function Users() {
             reverseButtons: true,
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return apiClient.delete(`/users/${role.id}`).then(response => {
-                    let newData = data.filter(d => d.id !== role.id);
-                    setData(newData);
+                return apiClient.delete(`/users/${users.id}`).then(response => {
+                    let newData = data.data.filter(d => d.id !== users.id);
+                    setData({
+                        ...data,
+                        data: newData
+                    });
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -285,19 +298,19 @@ function Users() {
     }
 
     // SHOW PASSWORD
-    const [passwordType, setPasswordType] = ('password');
-    const [passwordInput, setPasswordInput] = ('');
+    // const [passwordType, setPasswordType] = ('password');
+    // const [passwordInput, setPasswordInput] = ('');
 
-    const handlePasswordChange = evnt => {
-        setPasswordInput(evnt.target.value);
-    }
-    const togglePassword = () => {
-        if(passwordType === 'password') {
-            setPasswordType('text');
-            return;
-        }
-        setPasswordType('password')
-    }
+    // const handlePasswordChange = evnt => {
+    //     setPasswordInput(evnt.target.value);
+    // }
+    // const togglePassword = () => {
+    //     if(passwordType === 'password') {
+    //         setPasswordType('text');
+    //         return;
+    //     }
+    //     setPasswordType('password')
+    // }
 
     return (
         <Container fluid>
@@ -326,7 +339,7 @@ function Users() {
                     <tr>
                         <th>ID</th>
                         <th>Username</th>
-                        <th>Name</th>
+                        <th>Role</th>
                         <th>Position/Designation</th>
                         <th>Actions</th>
                     </tr>
@@ -389,14 +402,14 @@ function Users() {
                                         <Form.Label>Password</Form.Label>
                                         <InputGroup>
                                             <Form.Control
-                                                type={passwordType} 
-                                                onChange={handlePasswordChange}
-                                                value={passwordInput}
+                                                type='password' 
+                                                onChange={handleInputChange}
+                                                value={formInputs.password}
                                                 name='password'
                                                 placeholder='Enter Password'
-                                                aria-describedby='basic-addon'
+                                                // aria-describedby='basic-addon'
                                                 required />
-                                                <Button
+                                                {/* <Button
                                                     className='p-1'
                                                     id='button-addon'
                                                     variant='outline-secondary' 
@@ -408,7 +421,7 @@ function Users() {
                                                                 <FontAwesomeIcon icon={faEyeSlash}/>
                                                             )
                                                         }
-                                                </Button>
+                                                </Button> */}
                                             <Form.Control.Feedback type='invalid'>Please enter password.</Form.Control.Feedback>
                                         </InputGroup>
                                     </Form.Group>
@@ -420,10 +433,10 @@ function Users() {
                                 <Form.Label>Role</Form.Label>
                                 <Form.Select 
                                 aria-label='Default select example'
-                                name='roles'
-                                value={formInputs.roles} 
+                                name='role_id'
+                                value={formInputs.role_id} 
                                 onChange={handleInputChange}
-                                isInvalid={!!formErrors.roles}>
+                                isInvalid={!!formErrors.role_id}>
                                     <option value=''>Select role...</option>
                                     {
                                         roles.map(roles => (
@@ -482,6 +495,7 @@ function Users() {
                         </Col>
                     </Row>
                     <Row className='justify-content-md'>
+                        
                         <Col >
                             <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Prefix</Form.Label>
@@ -497,6 +511,7 @@ function Users() {
                                     </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
+
                         <Col >
                             <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Suffix</Form.Label>
@@ -512,22 +527,25 @@ function Users() {
                                     </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
+
                         <Col >
                             <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Position/Designation</Form.Label>
                                 <Form.Control 
                                     type='text' 
                                     placeholder='Enter Position'
-                                    name='position'
-                                    value={formInputs.position}
+                                    name='position_designation'
+                                    value={formInputs.position_designation}
                                     onChange={handleInputChange}
-                                    isInvalid={!!formErrors.position}/>
+                                    isInvalid={!!formErrors.position_designation}/>
                                     <Form.Control.Feedback type='invalid'>
-                                        {formErrors.position}
+                                        {formErrors.position_designation}
                                     </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
+
                     </Row>
+                   
                         </Modal.Body>
                         <Modal.Footer>
                             <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
@@ -536,11 +554,12 @@ function Users() {
                             <Button 
                             type='submit'
                             variant='primary' 
+
                             disabled={modal.isLoading}>
                                 {modal.data ? 'Edit' : 'Add'}
                             </Button>
                         </Modal.Footer>
-                    </Form>
+                </Form>
             </Modal>
         </Container>
     );
