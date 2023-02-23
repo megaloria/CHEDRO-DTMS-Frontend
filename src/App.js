@@ -11,9 +11,13 @@ import ErrorPage from './components/views/ErrorPage/ErrorPage';
 import Login from './components/views/Login/Login';
 import Home from './components/views/Home/Home';
 import Documents from './components/views/Documents/Documents';
+import Users from './components/views/Users/Users';
 import Roles from './components/views/Roles/Roles';
 import HEIs from './components/views/HEIs/HEIs';
 import DocumentTypes from './components/views/DocumentTypes/DocumentTypes';
+import Divisions from './components/views/Divisions/Divisions';
+import NGA from './components/views/NGA/NGA';
+import CHED from './components/views/CHED/CHED';
 
 async function getCurrentUser (isHome = true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
@@ -57,15 +61,33 @@ const router = createBrowserRouter([
         element: <Roles />
       },
       {
-        path: '/settings/heis',
+        path: '/settings/HEIs',
         element: <HEIs />
       },
       {
-        path: '/settings/document-types',
+        path: '/settings/DocumentTypes',
         element: <DocumentTypes />
       },
-      
-      
+      {
+        path: '/settings/Divisions',
+        element: <Divisions />
+      },
+      {
+        path: '/settings/NGA',
+        element: <NGA />
+      },
+      {
+        path: '/settings/CHED',
+        element: <CHED />
+      },
+      {
+        path: '/Home/Documents',
+        element: <Documents />
+      },
+      {
+        path: '/Home/Users',
+        element: <Users />
+      },
     ]
   },
   {
