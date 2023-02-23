@@ -16,9 +16,7 @@ import {
     faEdit,
     faAdd,
     faSpinner,
-    faRotate,
-    faEye,
-    faEyeSlash
+    faRotate
 } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
