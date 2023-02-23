@@ -66,7 +66,7 @@ function Roles() {
 
         if (validation.fails()) {
             setFormErrors({
-                division: validation.errors.first('description'),
+                division: validation.errors.first('division'),
                 description: validation.errors.first('description'),
                 level: validation.errors.first('level')
             });

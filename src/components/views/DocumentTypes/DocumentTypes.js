@@ -7,7 +7,8 @@ import {
     Table, 
     Row, 
     Col,
-    Container,
+    Container,,
+    Alert
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -211,7 +212,7 @@ function DocumentTypes() {
                     });
                 });
             }
-        });
+            });
     };
 
     if (isLoading) {
