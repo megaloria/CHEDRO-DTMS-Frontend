@@ -43,32 +43,32 @@ function Sidebar() {
                         <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="" eventKey='4.1'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
+                        <NavDropdown.Item href="/settings/NGA" eventKey='4.2'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
                             NGA </NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="" eventKey='4.1'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
+                        <NavDropdown.Item href="/settings/CHED" eventKey='4.3'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
                             CHED Offices </NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
                
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/DocumentTypes" eventKey='4.2'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
+                        <NavDropdown.Item href="/settings/DocumentTypes" eventKey='4.4'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
                             Document Types</NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/roles" eventKey='4.3'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
+                        <NavDropdown.Item href="/settings/roles" eventKey='4.5'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
                             Roles</NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/divisions" eventKey='4.4'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
+                        <NavDropdown.Item href="/settings/divisions" eventKey='4.6'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
                             Divisions</NavDropdown.Item>
                     </span>
                 </NavDropdown>

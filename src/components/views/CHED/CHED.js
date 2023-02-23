@@ -15,7 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 
-function NGA() {
+function CHED() {
     const [data, setData] = useState([]);
 
     useEffect(() => {
@@ -23,22 +23,26 @@ function NGA() {
             {
                 id: 1,
                 code: 'DF3FDAS2',
-                description: 'Regional Director'
+                description: 'Regional Director',
+                email: 'wasda@gmail.com'
             },
             {
                 id: 2,
                 code: 'SDFJS323',
-                description: 'Chief Administrative Officer'
+                description: 'Chief Administrative Officer',
+                email: 'qwerty@gmail.com'
             },
             {
                 id: 3,
                 code: 'SAF311',
-                description: 'Secretary'
+                description: 'Secretary',
+                email: 'zxcv@gmail.com'
             },
             {
                 id: 4,
                 code: 'DFS3D3',
-                description: 'Assistant'
+                description: 'Assistant',
+                email: 'ghjkl@gmail.com'
             },
         ]);
     }, []);
@@ -102,7 +106,7 @@ function NGA() {
 
                 <Row className= 'justify-content-end mt-4 mb-3'>
                     <Col>
-                        <h1>National Government Agency</h1>
+                        <h1>CHED Offices</h1>
                     </Col>
                     <Col md='auto'>
                         <div className='search'>
@@ -126,6 +130,7 @@ function NGA() {
                             <th>ID</th>
                             <th>Code</th>
                             <th>Description</th>
+                            <th>Email</th>
                             <th>Actions</th>
                             </tr>
                         </thead>
@@ -136,6 +141,7 @@ function NGA() {
                                         <td>{row.id}</td>
                                         <td>{row.code}</td>
                                         <td>{row.description}</td>
+                                        <td>{row.email}</td>
                                         <td>
                                             <Button variant='link'>
                                                 <FontAwesomeIcon onClick={handleShow2} icon={faEdit} className='text-primary'/>
@@ -234,4 +240,4 @@ function NGA() {
     );
 }
 
-export default NGA;
+export default CHED;
