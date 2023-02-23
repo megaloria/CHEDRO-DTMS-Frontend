@@ -64,7 +64,7 @@ function Login() {
     apiClient.post('/login', values).then(response => {
       
         Swal.fire({
-        title: "Successful Login",
+        title: "Success",
         text: response.data.message,
         icon: 'success',
         timer: 1500
@@ -76,7 +76,7 @@ function Login() {
     }).catch(error => {
 
       Swal.fire({
-        title: "Failed Login",
+        title: "Failed",
         text: error,
         icon: 'error',
         timer: 1500
