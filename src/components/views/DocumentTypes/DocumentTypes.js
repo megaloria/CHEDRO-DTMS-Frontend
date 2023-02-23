@@ -7,10 +7,9 @@ import {
     Table, 
     Row, 
     Col,
-    Container,,
-    Alert
+    Container
 } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faTrash,
     faEdit,
