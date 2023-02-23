@@ -29,7 +29,6 @@ function Users() {
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
     const [roles, setRoles] = useState([]); //user variable
-    // const [profiles, setProfile] = useState([]); //user variable
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -66,7 +65,6 @@ function Users() {
         apiClient.get('/users').then(response => { //GET ALL function
             setData(response.data.data.users);
             setRoles(response.data.data.roles);
-            // setProfile(response.data.data.profiles);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -94,7 +92,7 @@ function Users() {
             setFormErrors({
                 username: validation.errors.first('username'),
                 ...(modal.data ? {} : { password: validation.errors.first('password') }),
-                role_id: validation.errors.first('roles'),
+                role_id: validation.errors.first('role_id'),
                 first_name: validation.errors.first('first_name'),
                 middle_name: validation.errors.first('middle_name'),
                 last_name: validation.errors.first('last_name'),
@@ -230,9 +228,15 @@ function Users() {
 
     const handleHideModal = () => {
         setFormInputs({
-            user: '',
-            description: '',
-            level: 0
+            username: '',
+            role_id: '',
+            first_name: '',
+            middle_name: '',
+            last_name: '',
+            first_name: '',
+            prefix: '',
+            suffix: '',
+            position_designation: '',
         });
         setModal({
             show: false,
@@ -245,6 +249,16 @@ function Users() {
         let role = roles.find(roles => roles.id === role_id);
         return role?.description;
     }
+
+     //MODAL Password
+     const [show, setShow] = useState(false);
+
+     const handleClose = () => {
+         setShow(false)
+     };
+     const handleShow = () => {
+         setShow(true)
+     };
 
     
 
@@ -312,6 +326,7 @@ function Users() {
     //     setPasswordType('password')
     // }
 
+ 
     return (
         <Container fluid>
             <div className='bg-body rounded'> 
@@ -356,7 +371,7 @@ function Users() {
                                     <Button onClick={e => handleShowModal(row)} variant='link'>
                                         <FontAwesomeIcon icon={faEdit} className='text-primary'/>
                                     </Button>
-                                    <Button onClick={''} variant='link'>
+                                    <Button onClick={handleShow} variant='link'>
                                         <FontAwesomeIcon icon={faRotate} className='text-success'/>
                                     </Button>
                                     <Button onClick={e => showDeleteAlert(row)} variant='link'>
@@ -373,6 +388,7 @@ function Users() {
                 show={modal.show}
                 onHide={handleHideModal}
                 backdrop='static'
+                size='lg'
                 keyboard={false}>
                 <Modal.Header closeButton>
                     <Modal.Title> {modal.data ? 'Edit' : 'Add'} Users</Modal.Title>
@@ -407,8 +423,8 @@ function Users() {
                                                 value={formInputs.password}
                                                 name='password'
                                                 placeholder='Enter Password'
-                                                // aria-describedby='basic-addon'
-                                                required />
+                                                isInvalid={!!formErrors.password}
+                                                 />
                                                 {/* <Button
                                                     className='p-1'
                                                     id='button-addon'
@@ -422,7 +438,9 @@ function Users() {
                                                             )
                                                         }
                                                 </Button> */}
-                                            <Form.Control.Feedback type='invalid'>Please enter password.</Form.Control.Feedback>
+                                            <Form.Control.Feedback type='invalid'>
+                                                {formErrors.password}
+                                            </Form.Control.Feedback>
                                         </InputGroup>
                                     </Form.Group>
                                 </Col>
@@ -444,6 +462,9 @@ function Users() {
                                         ))
                                     }
                                 </Form.Select>
+                                <Form.Control.Feedback type='invalid'>
+                                    {formErrors.role_id}
+                                </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
                     </Row>
@@ -561,8 +582,56 @@ function Users() {
                         </Modal.Footer>
                 </Form>
             </Modal>
+
+            {/* <!--- Model Box Reset password ---> */}
+                <Modal
+                    show={show}
+                    onHide={handleClose}
+                    backdrop="static"
+                    keyboard={false}
+                    aria-labelledby="example-custom-modal-styling-title"
+                    centered
+                >
+                    <Modal.Header closeButton>
+                        <Modal.Title id="example-custom-modal-styling-title">Reset Password</Modal.Title>
+                    </Modal.Header>
+                    <Form onSubmit={handleSubmit}>
+                        <Modal.Body>
+                            <Form.Group>
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control 
+                                type="text" 
+                                placeholder="Enter New Password" 
+                                required/>
+                                <Form.Control.Feedback 
+                                type="invalid">
+                                    Please enter new password.
+                                </Form.Control.Feedback>
+                            </Form.Group>
+                        </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleClose}>
+                                    Cancel
+                                </Button>
+                                <Button type="submit" variant="primary">
+                                    Reset 
+                                </Button>
+                            </Modal.Footer>
+                    </Form>
+                </Modal>
         </Container>
     );
 }
+
+
+
+
+
+
+
+
+
+
+
 
 export default Users;
