@@ -67,18 +67,17 @@ const router = createBrowserRouter([
         element: <DocumentTypes />
       },
       {
+        path: '/settings/Divisions',
+        element: <Divisions />
+      },
+      {
         path: '/Home/Documents',
         element: <Documents />
       },
       {
-        path: 'Home/Users',
+        path: '/Home/Users',
         element: <Users />
       },
-      {
-        path: '/settings/Divisions',
-        element: <Divisions />
-      },
-      
     ]
   },
   {
