@@ -9,7 +9,7 @@ import {
     Col,
     Container
 } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faTrash,
     faEdit,

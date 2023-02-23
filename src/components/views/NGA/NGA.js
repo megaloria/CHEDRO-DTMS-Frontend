@@ -1,237 +1,357 @@
 import React, { useEffect, useState }  from 'react';
 import {
-    Button, 
-    Modal, 
-    Form, 
-    Table, 
-    Row, 
-    Col
+    Alert,
+    Button,
+    Col,
+    Container,
+    Form,
+    Modal,
+    Row,
+    Table
 } from 'react-bootstrap';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faTrash,
     faEdit,
-    faAdd
-} from '@fortawesome/free-solid-svg-icons'
+    faAdd,
+    faSpinner
+} from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
+import Validator from 'validatorjs';
+import apiClient from '../../../helpers/apiClient';
 
-function NGA() {
-    const [data, setData] = useState([]);
+function Roles() {
+    const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [errorMessage, setErrorMessage] = useState(''); //error message variable
+    const [data, setData] = useState([]); //data variable
+
+    const [modal, setModal] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    const [formInputs, setFormInputs] = useState({ // input inside the modal
+        code: '',
+        description: '',
+        email: ''
+    });
+
+    const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
+        code: '',
+        description: '',
+        email: ''
+    });
 
     useEffect(() => {
-        setData([
-            {
-                id: 1,
-                code: 'DF3FDAS2',
-                description: 'Regional Director'
-            },
-            {
-                id: 2,
-                code: 'SDFJS323',
-                description: 'Chief Administrative Officer'
-            },
-            {
-                id: 3,
-                code: 'SAF311',
-                description: 'Secretary'
-            },
-            {
-                id: 4,
-                code: 'DFS3D3',
-                description: 'Assistant'
-            },
-        ]);
+        apiClient.get('/settings/ngas').then(response => {
+            setData(response.data.data);//GET ALL function
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsLoading(false);
+        });
     }, []);
 
-    //VALIDATION ON ADDING
-    const [validated, setValidated] = useState(false);
-
     const handleSubmit = event => {
-        const form = event.currentTarget;
-            if (form.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            setValidated(true);
+        event.preventDefault();
+
+        let validation = new Validator(formInputs, {
+            code: 'required|string',
+            description: 'required|min:5',
+            email: 'required|email',
+        });
+
+        if (validation.fails()) {
+            setFormErrors({
+                code: validation.errors.first('code'),
+                description: validation.errors.first('description'),
+                email: validation.errors.first('email')
+            });
+            return;
+        } else {
+            setFormErrors({
+                code: '',
+                description: '',
+                email: ''
+            });
+        }
+
+        setModal({
+            ...modal,
+            isLoading: true
+        });
+        if (modal.data !== null) {
+            handleEdit();
+        } else {
+            handleAdd();
+        }
     };
 
-    //MODAL ON ADDING
-    const [show, setShow] = useState(false);
+    const handleAdd = () => {
+        apiClient.post('/settings/ngas', {
+            ...formInputs,
+        }).then(response => {
+            setData([
+                ...data,
+                response.data.data
+            ]);
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            }).then(() => {
+                handleHideModal();
+            });
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setModal({
+                ...modal,
+                isLoading: false
+            });
+        });
+    }
 
-    const handleClose = () => {
-        setShow(false)
-    };
-    const handleShow = () => {
-        setShow(true)
-    };
+    const handleEdit = () => {
+        apiClient.post(`/settings/ngas/${modal.data?.id}`, {
+            ...formInputs
+        }).then(response => {
+            let newData = data.map(d => {
+                if (d.id === response.data.data.id) {
+                    return {...response.data.data};
+                }
 
-    //MODAL ON EDIT
-    const [show2, setShow2] = useState(false);
- 
-    const handleClose2 = () => {
-        setShow2(false)
-    };
-    const handleShow2 = () => {
-        setShow2(true)
-    };
+                return {...d};
+            })
+            setData(newData);
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            }).then(() => {
+                handleHideModal();
+            });
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setModal({
+                ...modal,
+                isLoading: false
+            });
+        });
+    }
 
-    // DELETE
-    const showAlert = () => {
+    const handleInputChange = e => {
+        setFormInputs({
+            ...formInputs,
+            [e.target.name]: e.target.value
+        });
+    }
+
+    const handleShowModal = (data = null) => {
+        if (data !== null) {
+            setFormInputs({
+                ...formInputs,
+                code: data.code,
+                description: data.description,
+                email: data.email
+            });
+        }
+
+        setModal({
+            show: true,
+            data,
+            isLoading: false
+        });
+    }
+
+    const handleHideModal = () => {
+        setFormInputs({
+            code: '',
+            description: '',
+            email: ''
+        });
+        setModal({
+            show: false,
+            data: null,
+            isLoading: false
+        });
+    }
+
+    const showDeleteAlert = code => {
         Swal.fire({
-            title: 'Are you sure?',
+            title: `Are you sure you want to delete "${code.description}"?`,
             text: 'You won\'t be able to revert this!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
+            confirmButtonText: 'Yes, delete it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.delete(`/settings/ngas/${code.id}`).then(response => {
+                    let newData = data.filter(d => d.id !== code.id);
+                    setData(newData);
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                });
             }
         });
     };
 
-    return (
-        <div class='container fluid'>
-            <div className='crud bg-body rounded'> 
+    if (isLoading) {
+        return (
+            <FontAwesomeIcon icon={faSpinner} spin lg />
+        );
+    }
 
+
+    if (errorMessage) {
+        return (
+            <Alert variant='danger'>
+                {errorMessage}
+            </Alert>
+        );
+    }
+
+    return (
+        <Container fluid>
+            <div className='bg-body rounded'> 
                 <Row className= 'justify-content-end mt-4 mb-3'>
                     <Col>
-                        <h1>National Government Agency</h1>
+                        <h1>NGAs</h1>
                     </Col>
                     <Col md='auto'>
                         <div className='search'>
-                                <Form className='mb-3' controlId=''>
-                                    <Form.Control type='search' placeholder='Search' />
-                                </Form>
+                            <Form className='mb-3'>
+                                <Form.Control type='search' placeholder='Search' />
+                            </Form>
                         </div>
                     </Col>
                     <Col md='auto'>
-                        <Button variant='primary' onClick={handleShow}>
-                            <FontAwesomeIcon icon={faAdd} className='addIcon'/> Add
+                        <Button variant='primary' onClick={e => handleShowModal()}>
+                            <FontAwesomeIcon icon={faAdd} /> Add
                         </Button>
                     </Col> 
                 </Row>
             </div>
-            <div class='row'>
-                <div class='table-responsive'>
-                    <Table striped bordered hover size='md'>
-                        <thead>
-                            <tr>
-                            <th>ID</th>
-                            <th>Code</th>
-                            <th>Description</th>
-                            <th>Actions</th>
+
+            <Table striped bordered hover responsive size='md'>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Code</th>
+                        <th>Description</th>
+                        <th>Email</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        data.map((row, index) => (
+                            <tr key={index}>
+                                <td>{row.id}</td>
+                                <td>{row.code}</td>
+                                <td>{row.description}</td>
+                                <td>{row.email}</td>
+                                <td>
+                                    <Button onClick={e => handleShowModal(row)} variant='link'>
+                                        <FontAwesomeIcon icon={faEdit} className='text-primary'/>
+                                    </Button>
+                                    <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                        <FontAwesomeIcon icon={faTrash} className='text-danger'/>
+                                    </Button>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                data.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.id}</td>
-                                        <td>{row.code}</td>
-                                        <td>{row.description}</td>
-                                        <td>
-                                            <Button variant='link'>
-                                                <FontAwesomeIcon onClick={handleShow2} icon={faEdit} className='text-primary'/>
-                                            </Button>
-                                            <Button onClick={showAlert} variant='link'>
-                                                <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))
-                            }
-                        </tbody>
-                    </Table>
-                </div>   
-            </div>
-     
-            {/* <!--- Model Box ADD ---> */}
-            <div className='model_box'>
-                <Modal
-                    show={show}
-                    onHide={handleClose}
-                    backdrop='static'
-                    keyboard={false}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add</Modal.Title>
-                    </Modal.Header>
-                    <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                        <Modal.Body>
-                            <Row className='margin: 40px'>
-                                <Col md={3}>
-                                    <Form.Group className='mb-2' controlId=''>
-                                        <Form.Label>Code</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter Code' required/>
-                                        <Form.Control.Feedback type='invalid'>Please enter code.</Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                                <Col>
-                                    <Form.Group className='mb-2' controlId=''>
-                                        <Form.Label>Description</Form.Label>
-                                        <Form.Control type='text' placeholder='Enter Description' required/>
-                                        <Form.Control.Feedback type='invalid'>Please enter description.</Form.Control.Feedback>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                        </Modal.Body>
+                        ))
+                    }
+                </tbody>
+            </Table>
 
-                        <Modal.Footer>
-                            <Button variant='secondary' onClick={handleClose}>
-                                Cancel
-                            </Button>
-                            <Button type='submit' variant='primary'>
-                                Add 
-                            </Button>
-                        </Modal.Footer>
-                    </Form>
-                </Modal>
-                {/* Model Box Finish */}
+            <Modal
+                show={modal.show}
+                onHide={handleHideModal}
+                backdrop='static'
+                keyboard={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{modal.data ? 'Edit' : 'Add'} NGA</Modal.Title>
+                </Modal.Header>
+                <Form onSubmit={handleSubmit}>
+                    <Modal.Body>
+                        <Form.Group className='mb-2'>
+                            <Form.Label>Code</Form.Label>
+                            <Form.Control
+                                type='text'
+                                name='code'
+                                placeholder='Enter Code'
+                                value={formInputs.code}
+                                onChange={handleInputChange}
+                                isInvalid={!!formErrors.code} />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.code}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className='mb-2'>
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control
+                                type='text'
+                                name='description'
+                                placeholder='Enter description'
+                                value={formInputs.description}
+                                onChange={handleInputChange}
+                                isInvalid={!!formErrors.description} />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.description}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                        <Form.Group className='mb-2'>
+                            <Form.Label>Email</Form.Label>
+                            <Form.Control
+                                type='text'
+                                name='email'
+                                value={formInputs.email}
+                                onChange={handleInputChange}
+                                isInvalid={!!formErrors.email} />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.email}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                    </Modal.Body>
 
-        {/* <!--- Model Box EDIT ---> */}
-                <div className='model_box'>
-                    <Modal
-                        show={show2}
-                        onHide={handleClose2}
-                        backdrop='static'
-                        keyboard={false}>
-                        <Modal.Header closeButton>
-                            <Modal.Title>Edit</Modal.Title>
-                        </Modal.Header>
-                        <Form>
-                            <Modal.Body>
-                                <Row className='margin: 40px'>
-                                    <Col>
-                                        <Form.Group className='mb-2' controlId=''>
-                                            <Form.Label>Description</Form.Label>
-                                            <Form.Control type='text' placeholder='Enter Description' required/>
-                                        </Form.Group>
-                                    </Col>
-                                </Row>
-                            </Modal.Body>
-
-                            <Modal.Footer>
-                                <Button variant='secondary' onClick={handleClose2}>
-                                    Cancel
-                                </Button>
-                                <Button variant='primary'>
-                                    Done 
-                                </Button>
-                            </Modal.Footer>
-                        </Form>
-                    </Modal>
-                    {/* Model Box Finish */}
-
-                </div>
-            </div>
-        </div>
+                    <Modal.Footer>
+                        <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                            Cancel
+                        </Button>
+                        <Button 
+                        type='submit' 
+                        variant='primary' 
+                        disabled={modal.isLoading}>
+                            {modal.data ? 'Edit' : 'Add'}
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
+        </Container>
     );
 }
 
-export default NGA;
+export default Roles;
