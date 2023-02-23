@@ -351,7 +351,10 @@ function Roles() {
                         <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                             Cancel
                         </Button>
-                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                        <Button 
+                        type='submit' 
+                        variant='primary' 
+                        disabled={modal.isLoading}>
                             {modal.data ? 'Edit' : 'Add'}
                         </Button>
                     </Modal.Footer>

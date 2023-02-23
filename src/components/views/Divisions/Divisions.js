@@ -1,31 +1,31 @@
 import React, { useEffect, useState }  from 'react';
-import {
-    Alert,
-    Button, 
-    Modal, 
-    Form, 
-    Table, 
-    Row, 
-    Col,
-    Container,
-} from 'react-bootstrap';
+import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
     faEdit,
     faAdd,
+    faSearch,
     faSpinner
 } from '@fortawesome/free-solid-svg-icons'
+import {
+    Button,
+    Modal,
+    Form,
+    Table,
+    Row,
+    Col,
+    Alert
+} from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 
 
-function DocumentTypes() {
+function Division() {
+    const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
-    const [data, setData] = useState([]); //data variable
-
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
@@ -33,18 +33,17 @@ function DocumentTypes() {
     });
 
     const [formInputs, setFormInputs] = useState({ // input inside the modal
-        code: '',
-        description: '',
+        description: ''
     });
 
-    const [formErrors, setFormErrors] = useState({ // input inside the modal
-        code: '',
-        description: '',
+    const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
+        description: ''
     });
 
     useEffect(() => {
-        apiClient.get('/settings/document-types').then(response => { //GET ALL function
+        apiClient.get('/settings/divisions').then(response => { //GET ALL function
             setData(response.data.data);
+            // setDivisions(response.data.data.divisions);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -56,21 +55,16 @@ function DocumentTypes() {
         event.preventDefault();
 
         let validation = new Validator(formInputs, {
-            code: 'required|string|min:4',
-            description: 'required|min:3',
-            
+            description: 'required|min:2',
         });
 
         if (validation.fails()) {
             setFormErrors({
-                code: validation.errors.first('code'),
                 description: validation.errors.first('description')
-                
             });
             return;
         } else {
             setFormErrors({
-                code: '',
                 description: ''
             });
         }
@@ -87,8 +81,9 @@ function DocumentTypes() {
     };
 
     const handleAdd = () => {
-        apiClient.post('/settings/document-types', {
-            ...formInputs
+        apiClient.post('/settings/divisions', {
+            ...formInputs,
+            division_id: formInputs.division
         }).then(response => {
             setData([
                 ...data,
@@ -114,16 +109,18 @@ function DocumentTypes() {
             });
         });
     }
+
     const handleEdit = () => {
-        apiClient.post(`/settings/document-types/${modal.data?.id}`, {
-            ...formInputs
+        apiClient.post(`/settings/divisions/${modal.data?.id}`, {
+            ...formInputs,
+            division_id: formInputs.division
         }).then(response => {
-            let newData = data.map(c => {
-                if (c.id === response.data.data.id) {
+            let newData = data.map(d => {
+                if (d.id === response.data.data.id) {
                     return {...response.data.data};
                 }
 
-                return {...c};
+                return {...d};
             })
             setData(newData);
             Swal.fire({
@@ -158,8 +155,7 @@ function DocumentTypes() {
         if (data !== null) {
             setFormInputs({
                 ...formInputs,
-                code: data.code,
-                description: data.description,
+                description: data.description
             });
         }
 
@@ -172,20 +168,18 @@ function DocumentTypes() {
 
     const handleHideModal = () => {
         setFormInputs({
-            code: '',
-            description: '',
+            description: ''
         });
         setModal({
             show: false,
             data: null,
             isLoading: false
         });
-    }
-
-
-    const showDeleteAlert = DocumentTypes => {
+    } 
+    
+    const showDeleteAlert = division => {
         Swal.fire({
-            title: `Are you sure you want to delete "${DocumentTypes.description}"?`,
+            title: `Are you sure you want to delete "${division.description}"?`,
             text: 'You won\'t be able to revert this!',
             icon: 'warning',
             showCancelButton: true,
@@ -195,8 +189,8 @@ function DocumentTypes() {
             reverseButtons: true,
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return apiClient.delete(`/settings/document-types/${DocumentTypes.id}`).then(response => {
-                    let newData = data.filter(d => d.id !== DocumentTypes.id);
+                return apiClient.delete(`/settings/divisions/${division.id}`).then(response => {
+                    let newData = data.filter(d => d.id !== division.id);
                     setData(newData);
                     Swal.fire({
                         title: 'Success',
@@ -220,7 +214,6 @@ function DocumentTypes() {
         );
     }
 
-
     if (errorMessage) {
         return (
             <Alert variant='danger'>
@@ -228,34 +221,44 @@ function DocumentTypes() {
             </Alert>
         );
     }
+
     return (
-        <Container fluid>
-            <div className='bg-body rounded'> 
-                <Row className= 'justify-content-end mt-4 mb-3'>
-                    <Col>
-                        <h1>Document Types</h1>
-                    </Col>
-                    <Col md='auto'>
-                        <div className='search'>
-                            <Form className='mb-3'>
-                                <Form.Control type='search' placeholder='Search' />
-                            </Form>
-                        </div>
-                    </Col>
-                    <Col md='auto'>
-                        <Button variant='primary' onClick={e => handleShowModal()}>
-                            <FontAwesomeIcon icon={faAdd} /> Add
-                        </Button>
-                    </Col> 
-                </Row>
-            </div>
-            <Table striped bordered hover responsive size='md'>
+        <div class="container fluid">
+          <div className="crud bg-body rounded"> 
+
+          <Row className= "justify-content-end mt-4 mb-3">
+            <Col>
+            <h1>Division</h1>
+            </Col>
+            <Col md="auto">
+                <div className="search">
+                        <Form className="d-flex" controlId="">
+                            <Form.Control 
+                            type="search" 
+                            placeholder="Search" 
+                            className="me-2"
+                            />
+                            <Button>
+                                <FontAwesomeIcon icon={faSearch} />
+                            </Button>
+                        </Form>
+                </div>
+            </Col>
+                <Col md='auto'>
+                    <Button variant='primary' onClick={e => handleShowModal()}>
+                        <FontAwesomeIcon icon={faAdd} /> Add
+                    </Button>
+                </Col>  
+            </Row>
+        </div>
+            <div class="row">
+                <div class="table-responsive " >
+                <Table striped bordered hover size="md">
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Code</th>
-                        <th>Description</th>
-                        <th>Actions</th>
+                    <th>ID</th>
+                    <th>Description</th>
+                    <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -263,7 +266,6 @@ function DocumentTypes() {
                         data.map((row, index) => (
                             <tr key={index}>
                                 <td>{row.id}</td>
-                                <td>{row.code}</td>
                                 <td>{row.description}</td>
                                 <td>
                                     <Button onClick={e => handleShowModal(row)} variant='link'>
@@ -277,63 +279,54 @@ function DocumentTypes() {
                         ))
                     }
                 </tbody>
-            </Table>
+                </Table>
+            </div>   
+        </div>
+     
 
-            <Modal
-                show={modal.show}
-                onHide={handleHideModal}
-                backdrop='static'
-                keyboard={false}>
-                <Modal.Header closeButton>
-                    <Modal.Title>{modal.data ? 'Edit' : 'Add'} Document Types</Modal.Title>
-                </Modal.Header>
-                <Form onSubmit={handleSubmit}>
-                    <Modal.Body>
-                        
-                        <Form.Group className='mb-2'>
-                            <Form.Label>Code</Form.Label>
-                            <Form.Control
-                                type='text'
-                                name='code'
-                                placeholder='Enter code'
-                                value={formInputs.code}
-                                onChange={handleInputChange}
-                                isInvalid={!!formErrors.code} />
-                            <Form.Control.Feedback type='invalid'>
-                                {formErrors.code}
-                            </Form.Control.Feedback>
-                        </Form.Group>
+    {/* <!--- Model Box ADD ---> */}
+    <Modal
+        show={modal.show}
+        onHide={handleHideModal}
+        backdrop='static'
+        keyboard={false}>
+        <Modal.Header closeButton>
+            <Modal.Title>{modal.data ? 'Edit' : 'Add'} division</Modal.Title>
+    </Modal.Header>
 
-                        <Form.Group className='mb-2'>
-                            <Form.Label>Description</Form.Label>
-                            <Form.Control
-                                type='text'
-                                name='description'
-                                placeholder='Enter description'
-                                value={formInputs.description}
-                                onChange={handleInputChange}
-                                isInvalid={!!formErrors.description} />
-                            <Form.Control.Feedback type='invalid'>
-                                {formErrors.description}
-                            </Form.Control.Feedback>
-                        </Form.Group>
-                     
-                    </Modal.Body>
+    <Form onSubmit={handleSubmit}>
+        <Modal.Body>
+        <Row className="margin: 40px">
+        <Col>
+        <Form.Group className='mb-2'>
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+                type='text'
+                name='description'
+                placeholder='Enter description'
+                value={formInputs.description}
+                onChange={handleInputChange}
+                isInvalid={!!formErrors.description} />
+            <Form.Control.Feedback type='invalid'>
+                {formErrors.description}
+            </Form.Control.Feedback>
+        </Form.Group>
+        </Col>
+        </Row>
+        </Modal.Body>
 
-                    <Modal.Footer>
-                        <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
-                            Cancel
-                        </Button>
-                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
-                            {modal.data ? 'Edit' : 'Add'}
-                        </Button>
-                    </Modal.Footer>
-                </Form>
-            </Modal>
-        </Container>
-    
-   
+        <Modal.Footer>
+            <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                Cancel
+            </Button>
+            <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                {modal.data ? 'Edit' : 'Add'}
+            </Button>
+        </Modal.Footer>
+     </Form>
+     </Modal>
+   </div>
     );
 }
 
-export default DocumentTypes;
+export default Division;
