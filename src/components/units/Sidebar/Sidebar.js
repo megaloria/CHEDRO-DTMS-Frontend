@@ -41,6 +41,18 @@ function Sidebar() {
                             HEIs </NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
+
+                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
+                        <NavDropdown.Item href="" eventKey='4.1'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
+                            NGA </NavDropdown.Item>
+                    </span>
+                        <NavDropdown.Divider />
+
+                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
+                        <NavDropdown.Item href="" eventKey='4.1'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
+                            CHED Offices </NavDropdown.Item>
+                    </span>
+                        <NavDropdown.Divider />
                
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
