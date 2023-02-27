@@ -20,11 +20,14 @@ import {
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
+import './style.css';
 
 function Roles() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
+
+    const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -45,7 +48,7 @@ function Roles() {
     });
 
     useEffect(() => {
-        apiClient.get('/settings/ngas').then(response => {
+        apiClient.get(`/settings/ngas`).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -53,6 +56,18 @@ function Roles() {
             setIsLoading(false);
         });
     }, []);
+
+    const handlePageChange = (pageNumber) => {
+        setIsTableLoading(true);
+
+        apiClient.get(`/settings/ngas?page=${pageNumber}`).then(response => {
+            setData(response.data.data);//GET ALL function
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    };
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -256,57 +271,57 @@ function Roles() {
                 </Row>
             </div>
 
-            <Table striped bordered hover responsive size='md'>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Code</th>
-                        <th>Description</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        data.map((row, index) => (
-                            <tr key={index}>
-                                <td>{row.id}</td>
-                                <td>{row.code}</td>
-                                <td>{row.description}</td>
-                                <td>{row.email}</td>
-                                <td>
-                                    <Button onClick={e => handleShowModal(row)} variant='link'>
-                                        <FontAwesomeIcon icon={faEdit} className='text-primary'/>
-                                    </Button>
-                                    <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                        <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </Table>
-
-            <div>
-                <Pagination style={{float:'right'}}>
-                    <Pagination.First />
-                    <Pagination.Prev />
-                    <Pagination.Item>{1}</Pagination.Item>
-                    <Pagination.Ellipsis />
-
-                    <Pagination.Item>{10}</Pagination.Item>
-                    <Pagination.Item>{11}</Pagination.Item>
-                    <Pagination.Item active>{12}</Pagination.Item>
-                    <Pagination.Item>{13}</Pagination.Item>
-                    <Pagination.Item disabled>{14}</Pagination.Item>
-
-                    <Pagination.Ellipsis />
-                    <Pagination.Item>{20}</Pagination.Item>
-                    <Pagination.Next />
-                    <Pagination.Last />
-                </Pagination>
-                </div>  
+            <div className='loading-table-container'>
+                <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
+                    <div className='spinner-icon'>
+                        <FontAwesomeIcon icon={faSpinner} spin size='lg' />
+                    </div>
+                </div>
+                <Table striped bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            data.data.map((row, index) => (
+                                <tr key={index}>
+                                    <td>{row.id}</td>
+                                    <td>{row.code}</td>
+                                    <td>{row.description}</td>
+                                    <td>{row.email}</td>
+                                    <td>
+                                        <Button onClick={e => handleShowModal(row)} variant='link'>
+                                            <FontAwesomeIcon icon={faEdit} className='text-primary' />
+                                        </Button>
+                                        <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                            <FontAwesomeIcon icon={faTrash} className='text-danger' />
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </Table>
+                <div>
+                    {data.data.length > 0 && (
+                        <Pagination style={{ float: 'right' }}>
+                            <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                            <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                            <Pagination.Item disabled>
+                                {`${data.current_page} / ${data.last_page}`}
+                            </Pagination.Item>
+                            <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                            <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                        </Pagination>
+                    )}
+                </div>
+            </div>
 
             <Modal
                 show={modal.show}
