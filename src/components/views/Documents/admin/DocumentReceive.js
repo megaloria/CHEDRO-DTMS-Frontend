@@ -59,16 +59,20 @@ function DocumentReceive() {
             </div>
             <Row className="mb-3">
                 <Col>
-                    <Form.Label>Tracking No.</Form.Label>
-                    <Form.Control type="text" placeholder="Tracking Number" readOnly/>
+                <Form.Label>Tracking No.</Form.Label>
+                    <Form.Control 
+                    type="text" 
+                    placeholder="Tracking Number" 
+                    aria-label="Tracking Number"
+                    disabled
+                    readOnly
+                    />
                 </Col>
                 <Col>
                     <Form.Label>Document Type</Form.Label>
-                    <Form.Select aria-label="Select Document Type">
-                        <option value="">Select Document Type</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                    <Form.Select 
+                        aria-label='Default select example'>
+                        <option value=''>Select Document Type...</option>    
                     </Form.Select>
                 </Col>
                 <Col>
@@ -79,10 +83,13 @@ function DocumentReceive() {
             <Row className="mb-3">
                 <Col>
                     <Form.Label>Receive from</Form.Label>
-                    <Form.Control type="text" placeholder="Receive from" />
+                    <Form.Select 
+                     aria-label='Default select example'>
+                    <option value=''> Receive From...</option>
+                    </Form.Select>
                 </Col>
                 <Col>
-                    <Form.Label>Attachment</Form.Label>
+                    <Form.Label>Attachment (Optional)</Form.Label>
                     <Form.Control type="file" placeholder="Attachment" />
                 </Col>
             </Row>
@@ -95,7 +102,9 @@ function DocumentReceive() {
             <div>
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col md="auto" className="p-0">
-                        <Button variant="secondary">
+                        <Button 
+                        variant="secondary"
+                        href="/home/documents">
                             Cancel
                         </Button>
                     </Col>
