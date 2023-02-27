@@ -583,7 +583,7 @@ function Users() {
 
             {/* <!--- Model Box Reset password ---> */}
                 <Modal
-                    show={show}
+                    show={modal.show}
                     onHide={handleClose}
                     backdrop="static"
                     keyboard={false}
@@ -598,7 +598,8 @@ function Users() {
                             <Form.Group>
                                 <Form.Label>Password</Form.Label>
                                 <Form.Control 
-                                type="text" 
+                                type="text"
+                                name='reset_password'
                                 placeholder="Enter New Password" 
                                 required/>
                                 <Form.Control.Feedback 
@@ -620,16 +621,5 @@ function Users() {
         </Container>
     );
 }
-
-
-
-
-
-
-
-
-
-
-
 
 export default Users;
