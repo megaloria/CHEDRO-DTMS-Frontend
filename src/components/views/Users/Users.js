@@ -44,7 +44,6 @@ function Users() {
         prefix: '',
         suffix: '',
         position_designation: '',
-        reset_password: ''
     });
 
     const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
@@ -57,7 +56,6 @@ function Users() {
         prefix: '',
         suffix: '',
         position_designation: '',
-        reset_password: ''
     });
 
     useEffect(() => {
@@ -84,8 +82,6 @@ function Users() {
             prefix: 'string|min:2',
             suffix: 'string|min:2',
             position_designation: 'required|string|min:2',
-            reset_password: 'required|string|min:4'
-
         });
 
         if (validation.fails()) {
@@ -99,7 +95,6 @@ function Users() {
                 prefix: validation.errors.first('prefix'),
                 suffix: validation.errors.first('suffix'),
                 position_designation: validation.errors.first('position_designation'),
-                reset_password: 'required|string|min:4'
             });
             return;
         } else {
@@ -113,7 +108,6 @@ function Users() {
                 prefix: '',
                 suffix: '',
                 position_designation: '',
-                reset_password: ''
             });
         }
 
@@ -572,7 +566,6 @@ function Users() {
                             <Button 
                             type='submit'
                             variant='primary' 
-
                             disabled={modal.isLoading}>
                                 {modal.data ? 'Edit' : 'Add'}
                             </Button>
