@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
     faEdit,
-    faPaperclip,
+    // faPaperclip,
     faCircleArrowRight,
     faRightToBracket,
     faShare
@@ -149,12 +149,12 @@ function Documents() {
                             <tr>
                             <th>Tracking No.</th>
                             <th>Document Type</th>
-                            <th>Received From</th>
-                            <th>Description</th>
                             <th>Category</th>
+                            <th>Received From</th>
                             <th>Date Received</th>
+                            <th>Description</th>
                             <th>Status</th>
-                            <th> Actions </th>
+                            <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -163,16 +163,16 @@ function Documents() {
                                     <tr key={index}>
                                         <td>{row.tracking}</td>
                                         <td>{row.documenttype}</td>
-                                        <td>{row.receivedfrom}</td>
-                                        <td>{row.description}</td>
                                         <td>{row.category}</td>
+                                        <td>{row.receivedfrom}</td>
+                                        <td>{row.datereceived}</td>
+                                        <td>{row.description}</td>
                                         {/* <td className="p-0 m-2">
                                             <Button variant="link">
                                                 <FontAwesomeIcon icon={faPaperclip} className="text-primary ml-2"/> {row.attach}
                                             </Button>
-                                        </td> */}
-                                        <td>{row.datereceived}</td>
-
+                                        </td> */}  
+                                        
                                         <td>{
                                                 row.status === 'Acknowledge' && (
                                                     <>
