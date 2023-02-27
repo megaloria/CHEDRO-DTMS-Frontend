@@ -32,7 +32,7 @@ function Documents() {
                 documenttype: 'Curriculum',
                 receivedfrom: 'Roel Cristobal',
                 description: 'Lorem ipsum dolor',
-                attach: 'sample file',
+                // attach: 'sample file',
                 datereceived: 'February 5, 2023',
                 status: 'Received',
             },
@@ -41,7 +41,7 @@ function Documents() {
                 documenttype: 'CAV',
                 receivedfrom: 'Roel Cristobal',
                 description: 'Lorem ipsum dolor',
-                attach: 'sample file',
+                // attach: 'sample file',
                 datereceived: 'March 22, 2023',
                 status: 'Forwarded to RD',
             },
@@ -50,7 +50,7 @@ function Documents() {
                 documenttype: 'CAV',
                 receivedfrom: 'Roel Cristobal',
                 description: 'Lorem ipsum dolor',
-                attach: 'sample file',
+                // attach: 'sample file',
                 datereceived: 'April 23, 2023',
                 status: 'Acknowledge',
             }
@@ -98,7 +98,8 @@ function Documents() {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!'
+            confirmButtonText: 'Yes, delete it!',
+            reverseButtons: true
           }).then((result) => {
             if (result.isConfirmed) {
               Swal.fire(
@@ -126,7 +127,7 @@ function Documents() {
                     </Col>
                     <Col md="auto">
                         <Breadcrumb>
-                            <Breadcrumb.Item href="#">
+                            <Breadcrumb.Item href="/Documents/Documents-Receive">
                                 <Button variant="primary">  
                                     <FontAwesomeIcon icon={faRightToBracket} rotation = {90} className="addIcon"/> Receive
                                 </Button>
@@ -150,10 +151,10 @@ function Documents() {
                             <th>Document Type</th>
                             <th>Received From</th>
                             <th>Description</th>
-                            <th>Attachment</th>
+                            <th>Category</th>
                             <th>Date Received</th>
                             <th>Status</th>
-                            <th> </th>
+                            <th> Actions </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -164,11 +165,12 @@ function Documents() {
                                         <td>{row.documenttype}</td>
                                         <td>{row.receivedfrom}</td>
                                         <td>{row.description}</td>
-                                        <td className="p-0 m-2">
+                                        <td>{row.category}</td>
+                                        {/* <td className="p-0 m-2">
                                             <Button variant="link">
                                                 <FontAwesomeIcon icon={faPaperclip} className="text-primary ml-2"/> {row.attach}
                                             </Button>
-                                        </td>
+                                        </td> */}
                                         <td>{row.datereceived}</td>
 
                                         <td>{
@@ -196,7 +198,7 @@ function Documents() {
                                         </td>
 
                                         <td style={{ whiteSpace: 'nowrap' }}>
-                                                <Button variant="outline-primary" size='sm' >
+                                            <Button variant="outline-primary" size='sm' href='/Documents/Documents-View' >
                                                     <FontAwesomeIcon icon={faCircleArrowRight} className=""/> View
                                                 </Button>
                                                 {
@@ -210,7 +212,7 @@ function Documents() {
                                                             )
                                                         }
                                             
-                                                        <Button variant="link" size='sm' >
+                                                        <Button variant="link" size='sm' href='/Documents/Documents-Edit'>
                                                             <FontAwesomeIcon icon={faEdit} className="text-success"/>
                                                         </Button>
                                                     
