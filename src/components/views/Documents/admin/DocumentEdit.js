@@ -61,20 +61,28 @@ function DocumentEdit() {
                     />
                 </Col>
                 <Col>
-                    <Form.Label>Document Type</Form.Label>
-                    <Form.Select aria-label="Select Document Type">
-                        <option value="">Select Document Type</option>
-                        <option value="1">One</option>
-                        <option value="2">Two</option>
-                        <option value="3">Three</option>
+                <Form.Label>Document Type</Form.Label>
+                    <Form.Select 
+                        aria-label='Default select example'>
+                        <option value=''>Select Document Type...</option>    
                     </Form.Select>
                 </Col>
+
+                <Col>
+                    <Form.Label>Category</Form.Label>
+                    <Form.Select 
+                        aria-label='Default select example'>
+                        <option value=''>Select Category...</option>    
+                    </Form.Select>
+                </Col>  
+            </Row>
+            
+            <Row className="mb-3">
                 <Col>
                     <Form.Label>Date Received</Form.Label>
                     <Form.Control type="date" placeholder="Date Received" />
                 </Col>
-            </Row>
-            <Row className="mb-3">
+                
                 <Col>
                 <Form.Label>Receive from</Form.Label>
                     <Form.Select 
