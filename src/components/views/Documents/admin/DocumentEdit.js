@@ -87,7 +87,7 @@ function DocumentEdit() {
             <div>
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col md="auto" className="p-0">
-                        <Button variant="secondary">
+                        <Button variant="secondary" href='/home/documents'>
                             Cancel
                         </Button>
                     </Col>
