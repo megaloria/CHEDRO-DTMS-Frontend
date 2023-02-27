@@ -58,7 +58,7 @@ function DocumentView() {
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
                         <Breadcrumb>
-                            <Breadcrumb.Item href="#">Document</Breadcrumb.Item>
+                            <Breadcrumb.Item href="/home/documents">Document</Breadcrumb.Item>
                             <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>

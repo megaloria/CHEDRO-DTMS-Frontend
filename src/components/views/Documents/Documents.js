@@ -126,7 +126,7 @@ function Documents() {
                     </Col>
                     <Col md="auto">
                         <Breadcrumb>
-                            <Breadcrumb.Item href="#">
+                            <Breadcrumb.Item href="/Documents/Documents-Receive">
                                 <Button variant="primary">  
                                     <FontAwesomeIcon icon={faRightToBracket} rotation = {90} className="addIcon"/> Receive
                                 </Button>
@@ -196,7 +196,7 @@ function Documents() {
                                         </td>
 
                                         <td style={{ whiteSpace: 'nowrap' }}>
-                                                <Button variant="outline-primary" size='sm' >
+                                            <Button variant="outline-primary" size='sm' href='/Documents/Documents-View' >
                                                     <FontAwesomeIcon icon={faCircleArrowRight} className=""/> View
                                                 </Button>
                                                 {
@@ -210,7 +210,7 @@ function Documents() {
                                                             )
                                                         }
                                             
-                                                        <Button variant="link" size='sm' >
+                                                        <Button variant="link" size='sm' href='/Documents/Documents-Edit'>
                                                             <FontAwesomeIcon icon={faEdit} className="text-success"/>
                                                         </Button>
                                                     

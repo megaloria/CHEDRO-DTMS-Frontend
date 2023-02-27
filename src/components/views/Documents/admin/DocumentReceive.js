@@ -7,7 +7,7 @@ import {
     Col, 
     Breadcrumb
 } from 'react-bootstrap';
-import './styles.css';
+// import './styles.css';
 
 function DocumentReceive() {
     const [data, setData] = useState([]);
@@ -51,7 +51,7 @@ function DocumentReceive() {
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
                         <Breadcrumb>
-                            <Breadcrumb.Item href="#">Documents</Breadcrumb.Item>
+                            <Breadcrumb.Item href="/home/documents">Documents</Breadcrumb.Item>
                             <Breadcrumb.Item href="#" active>Received</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>

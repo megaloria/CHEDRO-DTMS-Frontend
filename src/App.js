@@ -18,6 +18,9 @@ import DocumentTypes from './components/views/DocumentTypes/DocumentTypes';
 import Divisions from './components/views/Divisions/Divisions';
 import NGA from './components/views/NGA/NGA';
 import CHED from './components/views/CHED/CHED';
+import AdminDocReceive from './components/views/Documents/admin/DocumentReceive';
+import AdminDocEdit from './components/views/Documents/admin/DocumentEdit';
+import AdminDocView from './components/views/Documents/admin/DocumentView';
 
 async function getCurrentUser (isHome = true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
@@ -87,6 +90,18 @@ const router = createBrowserRouter([
       {
         path: '/Home/Users',
         element: <Users />
+      },
+      {
+        path: '/Documents/Documents-Receive',
+        element: <AdminDocReceive />
+      },
+      {
+        path: '/Documents/Documents-Edit',
+        element: <AdminDocEdit />
+      },
+      {
+        path: '/Documents/Documents-View',
+        element: <AdminDocView />
       },
     ]
   },
