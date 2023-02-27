@@ -231,7 +231,6 @@ function Users() {
             first_name: '',
             middle_name: '',
             last_name: '',
-            first_name: '',
             prefix: '',
             suffix: '',
             position_designation: '',
