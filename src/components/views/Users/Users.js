@@ -43,8 +43,8 @@ function Users() {
         last_name: '',
         prefix: '',
         suffix: '',
-        position_designation: ''
-
+        position_designation: '',
+        reset_password: ''
     });
 
     const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
@@ -56,7 +56,8 @@ function Users() {
         last_name: '',
         prefix: '',
         suffix: '',
-        position_designation: ''
+        position_designation: '',
+        reset_password: ''
     });
 
     useEffect(() => {
@@ -82,7 +83,8 @@ function Users() {
             last_name: 'required|string|min:4',
             prefix: 'string|min:2',
             suffix: 'string|min:2',
-            position_designation: 'required|string|min:2'
+            position_designation: 'required|string|min:2',
+            reset_password: 'required|string|min:4'
 
         });
 
@@ -97,7 +99,7 @@ function Users() {
                 prefix: validation.errors.first('prefix'),
                 suffix: validation.errors.first('suffix'),
                 position_designation: validation.errors.first('position_designation'),
-
+                reset_password: 'required|string|min:4'
             });
             return;
         } else {
@@ -110,8 +112,8 @@ function Users() {
                 last_name: '',
                 prefix: '',
                 suffix: '',
-                position_designation: ''
- 
+                position_designation: '',
+                reset_password: ''
             });
         }
 
@@ -231,7 +233,6 @@ function Users() {
             first_name: '',
             middle_name: '',
             last_name: '',
-            first_name: '',
             prefix: '',
             suffix: '',
             position_designation: '',
@@ -249,14 +250,12 @@ function Users() {
     }
 
      //MODAL Password
-     const [show, setShow] = useState(false);
+     const [modal2, setModal2] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
 
-     const handleClose = () => {
-         setShow(false)
-     };
-     const handleShow = () => {
-         setShow(true)
-     };
 
     
 
@@ -369,7 +368,7 @@ function Users() {
                                     <Button onClick={e => handleShowModal(row)} variant='link'>
                                         <FontAwesomeIcon icon={faEdit} className='text-primary'/>
                                     </Button>
-                                    <Button onClick={handleShow} variant='link'>
+                                    <Button onClick={e => handleShowModal(row)} variant='link'>
                                         <FontAwesomeIcon icon={faRotate} className='text-success'/>
                                     </Button>
                                     <Button onClick={e => showDeleteAlert(row)} variant='link'>
@@ -583,8 +582,8 @@ function Users() {
 
             {/* <!--- Model Box Reset password ---> */}
                 <Modal
-                    show={modal.show}
-                    onHide={handleClose}
+                    show={modal2.show}
+                    onHide={''}
                     backdrop="static"
                     keyboard={false}
                     aria-labelledby="example-custom-modal-styling-title"
@@ -609,7 +608,7 @@ function Users() {
                             </Form.Group>
                         </Modal.Body>
                             <Modal.Footer>
-                                <Button variant="secondary" onClick={handleClose}>
+                                <Button variant="secondary" onClick={''}>
                                     Cancel
                                 </Button>
                                 <Button type="submit" variant="primary">
