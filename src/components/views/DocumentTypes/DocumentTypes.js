@@ -35,11 +35,13 @@ function DocumentTypes() {
     const [formInputs, setFormInputs] = useState({ // input inside the modal
         code: '',
         description: '',
+        days: ''
     });
 
     const [formErrors, setFormErrors] = useState({ // input inside the modal
         code: '',
         description: '',
+        days: ''
     });
 
     useEffect(() => {
@@ -58,20 +60,23 @@ function DocumentTypes() {
         let validation = new Validator(formInputs, {
             code: 'required|string|min:4',
             description: 'required|min:3',
+            days:'required|integer|min:1'
             
         });
 
         if (validation.fails()) {
             setFormErrors({
                 code: validation.errors.first('code'),
-                description: validation.errors.first('description')
+                description: validation.errors.first('description'),
+                days: validation.errors.first('days')
                 
             });
             return;
         } else {
             setFormErrors({
                 code: '',
-                description: ''
+                description: '',
+                days: ''
             });
         }
 
@@ -160,6 +165,7 @@ function DocumentTypes() {
                 ...formInputs,
                 code: data.code,
                 description: data.description,
+                days: data.days,
             });
         }
 
@@ -174,6 +180,7 @@ function DocumentTypes() {
         setFormInputs({
             code: '',
             description: '',
+            days: ''
         });
         setModal({
             show: false,
@@ -255,6 +262,7 @@ function DocumentTypes() {
                         <th>ID</th>
                         <th>Code</th>
                         <th>Description</th>
+                        <th>Days</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -265,6 +273,7 @@ function DocumentTypes() {
                                 <td>{row.id}</td>
                                 <td>{row.code}</td>
                                 <td>{row.description}</td>
+                                <td>{row.days}</td>
                                 <td>
                                     <Button onClick={e => handleShowModal(row)} variant='link'>
                                         <FontAwesomeIcon icon={faEdit} className='text-primary'/>
@@ -315,6 +324,20 @@ function DocumentTypes() {
                                 isInvalid={!!formErrors.description} />
                             <Form.Control.Feedback type='invalid'>
                                 {formErrors.description}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+
+                        <Form.Group className='mb-2'>
+                            <Form.Label>Days</Form.Label>
+                            <Form.Control
+                                type='inetger'
+                                name='days'
+                                placeholder='Enter number of days'
+                                value={formInputs.days}
+                                onChange={handleInputChange}
+                                isInvalid={!!formErrors.days} />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.days}
                             </Form.Control.Feedback>
                         </Form.Group>
                      
