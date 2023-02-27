@@ -44,7 +44,7 @@ function Sidebar() {
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
                         <NavDropdown.Item href="/settings/NGA" eventKey='4.2'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
-                            NGA </NavDropdown.Item>
+                            NGAs </NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
 
