@@ -32,17 +32,23 @@ function Heis() {
     });
 
     const [formInputs, setFormInputs] = useState({ // input inside the modal
-        uii: 0,
+        uii: '',
         name: '',
-        address: '',
-        head_of_institution: ''
+        street_barangay: '',
+        city_municipality: '',
+        province: '',
+        head_of_institution: '',
+        email: ''
     });
 
     const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
-        uii: 0,
+        uii: '',
         name: '',
-        address: '',
-        head_of_institution: ''
+        street_barangay: '',
+        city_municipality: '',
+        province: '',
+        head_of_institution: '',
+        email: '',
     });
 
     useEffect(() => {
@@ -60,26 +66,35 @@ function Heis() {
         event.preventDefault();
 
         let validation = new Validator(formInputs, {
-            uii : 'required|integer',
+            uii: 'required|string',
             name: 'required|string|min:5',
-            address: 'required|string',
-            head_of_institution: 'required|string|min:5'
+            head_of_institution: 'required|string|min:5',
+            street_barangay: 'required|string|min:5',
+            city_municipality: 'required|string|min:5',
+            province: 'required|string|min:5',
+            email: 'required|email',
         });
 
         if (validation.fails()) {
             setFormErrors({
                 uii: validation.errors.first('uii'),
                 name: validation.errors.first('name'),
-                address: validation.errors.first('address'),
-                head_of_institution: validation.errors.first('head_of_institution')
+                street_barangay: validation.errors.first('street_barangay'),
+                city_municipality: validation.errors.first('city_municipality'),
+                province: validation.errors.first('province'),
+                head_of_institution: validation.errors.first('head_of_institution'),
+                email: validation.errors.first('email'),
             });
             return;
         } else {
             setFormErrors({
-                uii: 0,
+                uii: '',
                 name: '',
-                address: '',
-                head_of_institution: ''
+                street_barangay: '',
+                city_municipality: '',
+                province: '',
+                head_of_institution: '',
+                email: '',
             });
         }
 
@@ -169,8 +184,11 @@ function Heis() {
                 ...formInputs,
                 uii: data.uii,
                 name: data.name,
-                address: data.address,
-                head_of_institution: data.head_of_institution
+                street_barangay: data.street_barangay,
+                city_municipality: data.city_municipality,
+                province: data.province,
+                head_of_institution: data.head_of_institution,
+                email: data.email
             });
         }
 
@@ -183,10 +201,13 @@ function Heis() {
 
     const handleHideModal = () => {
         setFormInputs({
-            uii: 0,
+            uii: '',
             name: '',
-            address: '',
-            head_of_institution: ''
+            street_barangay: '',
+            city_municipality: '',
+            province: '',
+            head_of_institution: '',
+            email: '',
         });
         setModal({
             show: false,
@@ -270,8 +291,11 @@ function Heis() {
                                 <th>ID</th>
                                 <th>UII</th>
                                 <th>Name</th>
-                                <th>Address</th>
+                                <th>Street/Barangay</th>
+                                <th>City/Municipality</th>
+                                <th>Province</th>
                                 <th>Head of Institution</th>
+                                <th>Email</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -282,8 +306,11 @@ function Heis() {
                                         <td>{row.id}</td>
                                         <td>{row.uii}</td>
                                         <td>{row.name}</td>
-                                        <td>{row.address}</td>
+                                        <td>{row.street_barangay}</td>
+                                        <td>{row.city_municipality}</td>
+                                        <td>{row.province}</td>
                                         <td>{row.head_of_institution}</td>
+                                        <td>{row.email}</td>
                                         <td>
                                             <Button onClick={e => handleShowModal(row)} variant='link'>
                                                 <FontAwesomeIcon  icon={faEdit} className='text-primary'/>
@@ -315,7 +342,7 @@ function Heis() {
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>UII</Form.Label>
                                         <Form.Control  
-                                            type='number' 
+                                            type='text' 
                                             name='uii' 
                                             placeholder='Enter UII'
                                             value={formInputs.uii} 
@@ -346,21 +373,57 @@ function Heis() {
                             <Row>
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
-                                        <Form.Label>Address</Form.Label>
+                                        <Form.Label>Street/Barangay</Form.Label>
                                         <Form.Control 
                                             type='text' 
-                                            placeholder='Enter Institution Address' 
-                                            name='address'
-                                            value={formInputs.address}
-                                            isInvalid={!!formErrors.address}
+                                            placeholder='Enter Street/Barangay' 
+                                            name='street_barangay'
+                                            value={formInputs.street_barangay}
+                                            isInvalid={!!formErrors.street_barangay}
                                             onChange={handleInputChange} />
                                         <Form.Control.Feedback type='invalid'>
-                                             {formErrors.address}
+                                            {formErrors.street_barangay}
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
-                              
                             </Row>
+
+                            <Row>
+                                <Col>
+                                    <Form.Group className='mb-2' controlId=''>
+                                        <Form.Label>City/Municipality</Form.Label>
+                                        <Form.Control
+                                            type='text'
+                                            placeholder='Enter City/Municipality'
+                                            name='city_municipality'
+                                            value={formInputs.city_municipality}
+                                            isInvalid={!!formErrors.city_municipality}
+                                            onChange={handleInputChange} />
+                                        <Form.Control.Feedback type='invalid'>
+                                            {formErrors.city_municipality}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
+                            <Row>
+                                <Col>
+                                    <Form.Group className='mb-2' controlId=''>
+                                        <Form.Label>Province</Form.Label>
+                                        <Form.Control
+                                            type='text'
+                                            placeholder='Enter Province'
+                                            name='province'
+                                            value={formInputs.province}
+                                            isInvalid={!!formErrors.province}
+                                            onChange={handleInputChange} />
+                                        <Form.Control.Feedback type='invalid'>
+                                            {formErrors.province}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
                             <Row>
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
@@ -378,6 +441,25 @@ function Heis() {
                                     </Form.Group>
                                 </Col>
                             </Row>
+
+                            <Row>
+                                <Col>
+                                    <Form.Group className='mb-2' controlId=''>
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control
+                                            type='text'
+                                            placeholder='Enter Email Address'
+                                            name='email'
+                                            value={formInputs.email}
+                                            isInvalid={!!formErrors.email}
+                                            onChange={handleInputChange} />
+                                        <Form.Control.Feedback type='invalid'>
+                                            {formErrors.email}
+                                        </Form.Control.Feedback>
+                                    </Form.Group>
+                                </Col>
+                            </Row>
+
                         </Modal.Body>
 
                         <Modal.Footer>
