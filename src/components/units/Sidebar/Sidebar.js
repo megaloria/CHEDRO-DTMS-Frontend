@@ -73,7 +73,6 @@ function Sidebar() {
                         <NavDropdown.Item href="/settings/divisions" eventKey='4.6'> <FontAwesomeIcon className='me-2' />
                             Divisions</NavDropdown.Item>
                     </span>
-                        <NavDropdown.Divider />
 
                 </NavDropdown>
             </Nav>
