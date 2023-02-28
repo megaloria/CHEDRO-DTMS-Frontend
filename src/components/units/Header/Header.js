@@ -33,7 +33,7 @@ function Header() {
     apiClient.delete('/user').then(response => {
 
       Swal.fire({
-        title: "Successful Logout",
+        title: "Success",
         text: response.data.message,
         icon: 'success',
         timer: 1500
@@ -44,7 +44,7 @@ function Header() {
     }).catch(error => {
 
       Swal.fire({
-        title: "Unable to Logout",
+        title: "Failed",
         text: error,
         icon: 'error',
         timer: 1500
