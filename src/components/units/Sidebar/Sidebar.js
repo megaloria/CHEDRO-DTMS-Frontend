@@ -6,8 +6,8 @@ import {
 import {
     faGear,
     faFileLines,
-    faUserGroup,
-    faCaretRight
+    faUserGroup
+    // faCaretRight
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import './styles.css';
@@ -37,38 +37,40 @@ function Sidebar() {
                     className='flex1'>
                                       
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/HEIs" eventKey='4.1'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
+                        <NavDropdown.Item href="/settings/HEIs" eventKey='4.1'> <FontAwesomeIcon className='me-2' /> 
                             HEIs </NavDropdown.Item>
                     </span>
-                        <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/NGA" eventKey='4.2'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
+                        <NavDropdown.Item href="/settings/NGA" eventKey='4.2'> <FontAwesomeIcon className='me-2' /> 
                             NGAs </NavDropdown.Item>
                     </span>
-                        <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/CHED" eventKey='4.3'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
+                        <NavDropdown.Item href="/settings/CHED" eventKey='4.3'> <FontAwesomeIcon className='me-2' /> 
                             CHED Offices </NavDropdown.Item>
                     </span>
-                        <NavDropdown.Divider />
-               
+                        <NavDropdown.Divider/>
 
+                    {/* <h6 class="dropdown-header">Document</h6> */}
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/DocumentTypes" eventKey='4.4'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
+                        <NavDropdown.Item href="/settings/DocumentTypes" eventKey='4.4'> <FontAwesomeIcon className='me-2' />
                             Document Types</NavDropdown.Item>
                     </span>
-                        <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/roles" eventKey='4.5'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
-                            Roles</NavDropdown.Item>
+                        <NavDropdown.Item href="" eventKey='4.4'> <FontAwesomeIcon className='me-2' />
+                            Category</NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/divisions" eventKey='4.6'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
+                        <NavDropdown.Item href="/settings/roles" eventKey='4.5'> <FontAwesomeIcon className='me-2' />
+                            Roles</NavDropdown.Item>
+                    </span>
+
+                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
+                        <NavDropdown.Item href="/settings/divisions" eventKey='4.6'> <FontAwesomeIcon className='me-2' />
                             Divisions</NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />

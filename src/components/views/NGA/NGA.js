@@ -20,7 +20,7 @@ import {
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
-import './style.css';
+import './styles.css';
 
 function Roles() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
