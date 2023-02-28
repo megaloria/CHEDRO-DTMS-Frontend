@@ -276,10 +276,10 @@ function DocumentTypes() {
             <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                     <div className='spinner-icon'>
-                        <FontAwesomeIcon icon={faSpinner} spin size='lg' className={isTableLoading ? 'table-loading' : ''} />
+                        <FontAwesomeIcon icon={faSpinner} spin size='lg' />
                     </div>
                 </div>
-            <Table striped bordered hover responsive size='md'>
+            <Table striped bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''} >
                 <thead>
                     <tr>
                         <th>ID</th>
