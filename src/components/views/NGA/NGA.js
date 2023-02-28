@@ -331,6 +331,7 @@ function Roles() {
                 <Modal.Header closeButton>
                     <Modal.Title>{modal.data ? 'Edit' : 'Add'} NGA</Modal.Title>
                 </Modal.Header>
+
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
                         <Form.Group className='mb-2'>
@@ -372,7 +373,7 @@ function Roles() {
                             </Form.Control.Feedback>
                         </Form.Group>
                     </Modal.Body>
-
+                    
                     <Modal.Footer>
                         <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                             Cancel

@@ -305,45 +305,46 @@ function Heis() {
                         <FontAwesomeIcon icon={faSpinner} spin size='lg' />
                     </div>
                 </div>
-                        <Table striped bordered hover size='md' className={isTableLoading ? 'table-loading' : ''}>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>UII</th>
-                                    <th>Name</th>
-                                    <th>Street/Barangay</th>
-                                    <th>City/Municipality</th>
-                                    <th>Province</th>
-                                    <th>Head of Institution</th>
-                                    <th>Email</th>
-                                    <th>Actions</th>
+                <Table striped bordered hover size='md' className={isTableLoading ? 'table-loading' : ''}>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>UII</th>
+                            <th>Name</th>
+                            <th>Street/Barangay</th>
+                            <th>City/Municipality</th>
+                            <th>Province</th>
+                            <th>Head of Institution</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            data.data.map((row, index) => (
+                                <tr key={index}>
+                                    <td>{row.id}</td>
+                                    <td>{row.uii}</td>
+                                    <td>{row.name}</td>
+                                    <td>{row.street_barangay}</td>
+                                    <td>{row.city_municipality}</td>
+                                    <td>{row.province}</td>
+                                    <td>{row.head_of_institution}</td>
+                                    <td>{row.email}</td>
+                                    <td>
+                                        <Button onClick={e => handleShowModal(row)} variant='link'>
+                                            <FontAwesomeIcon icon={faEdit} className='text-primary' />
+                                        </Button>
+                                        <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                            <FontAwesomeIcon icon={faTrash} className='text-danger' />
+                                        </Button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    data.data.map((row, index) => (
-                                        <tr key={index}>
-                                            <td>{row.id}</td>
-                                            <td>{row.uii}</td>
-                                            <td>{row.name}</td>
-                                            <td>{row.street_barangay}</td>
-                                            <td>{row.city_municipality}</td>
-                                            <td>{row.province}</td>
-                                            <td>{row.head_of_institution}</td>
-                                            <td>{row.email}</td>
-                                            <td>
-                                                <Button onClick={e => handleShowModal(row)} variant='link'>
-                                                    <FontAwesomeIcon icon={faEdit} className='text-primary' />
-                                                </Button>
-                                                <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                                    <FontAwesomeIcon icon={faTrash} className='text-danger' />
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </Table>
+                            ))
+                        }
+                    </tbody>
+                </Table>
+
                 <div>
                     {data.data.length > 0 && (
                         <Pagination style={{ float: 'right' }}>
@@ -358,6 +359,7 @@ function Heis() {
                     )}
                 </div>  
             </div>
+
             <div className='model_box'>
                 <Modal
                     show={modal.show}
@@ -367,6 +369,7 @@ function Heis() {
                     <Modal.Header closeButton>
                         <Modal.Title>{modal.data ? 'Edit' : 'Add'} HEI</Modal.Title>
                     </Modal.Header>
+                    
                     <Form onSubmit={handleSubmit}>
                         <Modal.Body>
                             <Row>
@@ -493,7 +496,6 @@ function Heis() {
                             </Row>
 
                         </Modal.Body>
-
                         <Modal.Footer>
                             <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                                 Cancel

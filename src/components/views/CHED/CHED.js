@@ -131,6 +131,7 @@ function CHED() {
             });
         });
     }
+
     const handleEdit = () => {
         apiClient.post(`/settings/ched-offices/${modal.data?.id}`, {
             ...formInputs
@@ -238,7 +239,6 @@ function CHED() {
         );
     }
 
-
     if (errorMessage) {
         return (
             <Alert variant='danger'>
@@ -246,6 +246,7 @@ function CHED() {
             </Alert>
         );
     }
+
     return (
         <Container fluid>
             <div className='crud bg-body rounded'>
@@ -320,7 +321,8 @@ function CHED() {
                     )}
                 </div>  
 
-                </div>
+            </div>
+
             <Modal
                 show={modal.show}
                 onHide={handleHideModal}
@@ -329,9 +331,9 @@ function CHED() {
                 <Modal.Header closeButton>
                     <Modal.Title>{modal.data ? 'Edit' : 'Add'} Ched Offices</Modal.Title>
                 </Modal.Header>
+
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
-
                         <Form.Group className='mb-2'>
                             <Form.Label>Code</Form.Label>
                             <Form.Control type='text' 
@@ -374,19 +376,18 @@ function CHED() {
                             </Form.Control.Feedback>
                         </Form.Group>
                     </Modal.Body>
-
-                        <Modal.Footer>
-                            <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
-                                Cancel
-                            </Button>
-                            <Button type='submit' variant='primary' disabled={modal.isLoading}>
-                                {modal.data ? 'Edit' : 'Add'}
-                            </Button>
-                        </Modal.Footer>
-                    </Form>
-                </Modal>
-            </Container>
-                     
+                    
+                    <Modal.Footer>
+                        <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                            Cancel
+                        </Button>
+                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                            {modal.data ? 'Edit' : 'Add'}
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
+        </Container>               
     );
 }
 

@@ -8,6 +8,7 @@ import {
     Modal,
     Row,
     Table,
+    Pagination
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -19,12 +20,15 @@ import {
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
+import './styles.css';
 
 function Roles() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
     const [divisions, setDivisions] = useState([]); //division variable
+
+    const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -54,6 +58,18 @@ function Roles() {
             setIsLoading(false);
         });
     }, []);
+
+    const handlePageChange = (pageNumber) => {
+        setIsTableLoading(true);
+
+        apiClient.get(`/settings/roles?page=${pageNumber}`).then(response => {
+            setData(response.data.data);//GET ALL function
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    };
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -264,37 +280,57 @@ function Roles() {
                 </Row>
             </div>
 
-            <Table striped bordered hover responsive size='md'>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Division</th>
-                        <th>Description</th>
-                        <th>Level</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        data.map((row, index) => (
-                            <tr key={index}>
-                                <td>{row.id}</td>
-                                <td>{getDivisionDescription(row.division_id)}</td>
-                                <td>{row.description}</td>
-                                <td>{row.level}</td>
-                                <td>
-                                    <Button onClick={e => handleShowModal(row)} variant='link'>
-                                        <FontAwesomeIcon icon={faEdit} className='text-primary'/>
-                                    </Button>
-                                    <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                        <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </Table>
+            <div className='loading-table-container'>
+                <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
+                    <div className='spinner-icon'>
+                        <FontAwesomeIcon icon={faSpinner} spin size='lg' />
+                    </div>
+                </div>
+                <Table striped bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Division</th>
+                            <th>Description</th>
+                            <th>Level</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            data.data.map((row, index) => (
+                                <tr key={index}>
+                                    <td>{row.id}</td>
+                                    <td>{getDivisionDescription(row.division_id)}</td>
+                                    <td>{row.description}</td>
+                                    <td>{row.level}</td>
+                                    <td>
+                                        <Button onClick={e => handleShowModal(row)} variant='link'>
+                                            <FontAwesomeIcon icon={faEdit} className='text-primary'/>
+                                        </Button>
+                                        <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                            <FontAwesomeIcon icon={faTrash} className='text-danger'/>
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </Table>
+                <div>
+                    {data.data.length > 0 && (
+                        <Pagination style={{ float: 'right' }}>
+                            <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                            <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                            <Pagination.Item disabled>
+                                {`${data.current_page} / ${data.last_page}`}
+                            </Pagination.Item>
+                            <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                            <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                        </Pagination>
+                    )}
+                </div>
+            </div>
 
             <Modal
                 show={modal.show}
@@ -304,6 +340,7 @@ function Roles() {
                 <Modal.Header closeButton>
                     <Modal.Title>{modal.data ? 'Edit' : 'Add'} role</Modal.Title>
                 </Modal.Header>
+
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
                         <Form.Group className='mb-2'>
