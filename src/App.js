@@ -85,7 +85,7 @@ const router = createBrowserRouter([
         element: <CHED />
       },
       {
-        path: '/settings/Category',
+        path: '/settings/Categories',
         element: <Category />
       },
       {
