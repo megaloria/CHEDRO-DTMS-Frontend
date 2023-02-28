@@ -33,10 +33,12 @@ function Category() {
 
     const [formInputs, setFormInputs] = useState({ // input inside the modal
         description: '',
+        is_assignable: false
     });
 
     const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
         description: '',
+        is_assignable: false
     });
 
     useEffect(() => {
@@ -53,16 +55,19 @@ function Category() {
 
         let validation = new Validator(formInputs, {
             description: 'required|min:2',
+            is_assignable: 'boolean'
         });
 
         if (validation.fails()) {
             setFormErrors({
-                description: validation.errors.first('description')
+                description: validation.errors.first('description'),
+                is_assignable: validation.errors.first('is_assignable')
             });
             return;
         } else {
             setFormErrors({
                 description: '',
+                is_assignable: false
             });
         }
 
@@ -80,7 +85,8 @@ function Category() {
     const handleAdd = () => {
         apiClient.post('/settings/category', {
             ...formInputs,
-            description: formInputs.description
+            description: formInputs.description,
+            is_assignable: formInputs.is_assignable
         }).then(response => {
             setData([
                 ...data,
@@ -187,7 +193,7 @@ function Category() {
             reverseButtons: true,
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return apiClient.delete(`/settings/roles/${category.id}`).then(response => {
+                return apiClient.delete(`/settings/category/${category.id}`).then(response => {
                     let newData = data.filter(d => d.id !== category.id);
                     setData(newData);
                     Swal.fire({
@@ -257,6 +263,7 @@ function Category() {
                             <tr key={index}>
                                 <td>{row.id}</td>
                                 <td>{row.description}</td>
+                                <td>{row.is_assignable}</td>
                                 <td>
                                     <Button onClick={e => handleShowModal(row)} variant='link'>
                                         <FontAwesomeIcon icon={faEdit} className='text-primary'/>
@@ -297,7 +304,14 @@ function Category() {
                         <Form.Group>
                             <Form.Check 
                             type='checkbox'
+                            name='is_assignable'
+                            value={formInputs.is_assignable}
+                            onChange={handleInputChange}
+                            isInvalid={!!formErrors.is_assignable}
                             label='is assignable?'/>
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.is_assignable}
+                            </Form.Control.Feedback>
                         </Form.Group>
                     </Modal.Body>
 
