@@ -59,7 +59,7 @@ function Sidebar() {
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/category" eventKey='4.5'> <FontAwesomeIcon className='me-2' />
+                        <NavDropdown.Item href="/settings/Categories" eventKey='4.5'> <FontAwesomeIcon className='me-2' />
                             Category</NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />

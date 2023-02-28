@@ -14,7 +14,9 @@ import {
     faTrash,
     faEdit,
     faAdd,
-    faSpinner
+    faSpinner,
+    faCheck,
+    faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
@@ -42,7 +44,8 @@ function Category() {
     });
 
     useEffect(() => {
-        apiClient.get('/settings/category').then(response => { //GET ALL function
+        apiClient.get('/settings/categories').then(response => { //GET ALL function
+            setData(response.data.data);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -83,7 +86,7 @@ function Category() {
     };
 
     const handleAdd = () => {
-        apiClient.post('/settings/category', {
+        apiClient.post('/settings/categories', {
             ...formInputs,
             description: formInputs.description,
             is_assignable: formInputs.is_assignable
@@ -114,15 +117,13 @@ function Category() {
     }
 
     const handleEdit = () => {
-        apiClient.post(`/settings/category/${modal.data?.id}`, {
-            ...formInputs,
-            description: formInputs.description
+        apiClient.post(`/settings/categories/${modal.data?.id}`, {
+            ...formInputs
         }).then(response => {
-            let newData = data.data.map(d => {
+            let newData = data.map(d => {
                 if (d.id === response.data.data.id) {
                     return {...response.data.data};
                 }
-
                 return {...d};
             })
             setData(newData);
@@ -147,6 +148,13 @@ function Category() {
         });
     }
 
+    const handleCheckboxChange = e => {
+        setFormInputs({
+            ...formInputs,
+            is_assignable: e.target.checked
+        });
+    }
+
     const handleInputChange = e => {
         setFormInputs({
             ...formInputs,
@@ -159,6 +167,7 @@ function Category() {
             setFormInputs({
                 ...formInputs,
                 description: data.description,
+                is_assignable: data.is_assignable
             });
         }
 
@@ -171,7 +180,8 @@ function Category() {
 
     const handleHideModal = () => {
         setFormInputs({
-            description: ''
+            description: '',
+            is_assignable: false
         });
         setModal({
             show: false,
@@ -193,7 +203,7 @@ function Category() {
             reverseButtons: true,
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return apiClient.delete(`/settings/category/${category.id}`).then(response => {
+                return apiClient.delete(`/settings/categories/${category.id}`).then(response => {
                     let newData = data.filter(d => d.id !== category.id);
                     setData(newData);
                     Swal.fire({
@@ -263,7 +273,7 @@ function Category() {
                             <tr key={index}>
                                 <td>{row.id}</td>
                                 <td>{row.description}</td>
-                                <td>{row.is_assignable}</td>
+                                <td>{row.is_assignable ? <FontAwesomeIcon icon={faCheck} className='text-success' /> : <FontAwesomeIcon icon={faTimes} className='text-danger' /> } </td>
                                 <td>
                                     <Button onClick={e => handleShowModal(row)} variant='link'>
                                         <FontAwesomeIcon icon={faEdit} className='text-primary'/>
@@ -301,17 +311,14 @@ function Category() {
                                 {formErrors.description}
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group controlId='is_assignable'>
                             <Form.Check 
                             type='checkbox'
-                            name='is_assignable'
-                            value={formInputs.is_assignable}
-                            onChange={handleInputChange}
+                            label='is assignable?'
+                            checked={formInputs.is_assignable}
+                            onChange={handleCheckboxChange}
                             isInvalid={!!formErrors.is_assignable}
-                            label='is assignable?'/>
-                            <Form.Control.Feedback type='invalid'>
-                                {formErrors.is_assignable}
-                            </Form.Control.Feedback>
+                            />
                         </Form.Group>
                     </Modal.Body>
 
