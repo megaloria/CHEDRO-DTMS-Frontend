@@ -224,108 +224,107 @@ function Division() {
 
     return (
         <div class="container fluid">
-          <div className="crud bg-body rounded"> 
+            <div className="crud bg-body rounded"> 
+                <Row className= "justify-content-end mt-4 mb-3">
+                    <Col>
+                        <h1>Division</h1>
+                    </Col>
+                    <Col md="auto">
+                        <div className="search">
+                            <Form className="d-flex" controlId="">
+                                <Form.Control 
+                                    type="search" 
+                                    placeholder="Search" 
+                                    className="me-2"
+                                />
+                                <Button>
+                                    <FontAwesomeIcon icon={faSearch} />
+                                </Button>
+                            </Form>
+                        </div>
+                    </Col>
+                    <Col md='auto'>
+                        <Button variant='primary' onClick={e => handleShowModal()}>
+                            <FontAwesomeIcon icon={faAdd} /> Add
+                        </Button>
+                    </Col>  
+                </Row>
+            </div>
 
-          <Row className= "justify-content-end mt-4 mb-3">
-            <Col>
-            <h1>Division</h1>
-            </Col>
-            <Col md="auto">
-                <div className="search">
-                        <Form className="d-flex" controlId="">
-                            <Form.Control 
-                            type="search" 
-                            placeholder="Search" 
-                            className="me-2"
-                            />
-                            <Button>
-                                <FontAwesomeIcon icon={faSearch} />
-                            </Button>
-                        </Form>
-                </div>
-            </Col>
-                <Col md='auto'>
-                    <Button variant='primary' onClick={e => handleShowModal()}>
-                        <FontAwesomeIcon icon={faAdd} /> Add
-                    </Button>
-                </Col>  
-            </Row>
-        </div>
             <div class="row">
                 <div class="table-responsive " >
-                <Table striped bordered hover size="md">
-                <thead>
-                    <tr>
-                    <th>ID</th>
-                    <th>Description</th>
-                    <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        data.map((row, index) => (
-                            <tr key={index}>
-                                <td>{row.id}</td>
-                                <td>{row.description}</td>
-                                <td>
-                                    <Button onClick={e => handleShowModal(row)} variant='link'>
-                                        <FontAwesomeIcon icon={faEdit} className='text-primary'/>
-                                    </Button>
-                                    <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                        <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                    </Button>
-                                </td>
+                    <Table striped bordered hover size="md">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Description</th>
+                                <th>Actions</th>
                             </tr>
-                        ))
-                    }
-                </tbody>
-                </Table>
-            </div>   
+                        </thead>
+                        <tbody>
+                            {
+                                data.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.id}</td>
+                                        <td>{row.description}</td>
+                                        <td>
+                                            <Button onClick={e => handleShowModal(row)} variant='link'>
+                                                <FontAwesomeIcon icon={faEdit} className='text-primary'/>
+                                            </Button>
+                                            <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                                <FontAwesomeIcon icon={faTrash} className='text-danger'/>
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))
+                                }
+                        </tbody>
+                    </Table>
+                </div>   
+            </div>
+    
+              {/* <!--- Model Box ADD ---> */}
+            <Modal
+                show={modal.show}
+                onHide={handleHideModal}
+                backdrop='static'
+                keyboard={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title>{modal.data ? 'Edit' : 'Add'} division</Modal.Title>
+                </Modal.Header>
+                
+                <Form onSubmit={handleSubmit}>
+                    <Modal.Body>
+                        <Row className="margin: 40px">
+                            <Col>
+                                <Form.Group className='mb-2'>
+                                    <Form.Label>Description</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        name='description'
+                                        placeholder='Enter description'
+                                        value={formInputs.description}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.description} />
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.description}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                    </Modal.Body>
+
+                    <Modal.Footer>
+                        <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                            Cancel
+                        </Button>
+                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                            {modal.data ? 'Edit' : 'Add'}
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
         </div>
-     
-
-    {/* <!--- Model Box ADD ---> */}
-    <Modal
-        show={modal.show}
-        onHide={handleHideModal}
-        backdrop='static'
-        keyboard={false}>
-        <Modal.Header closeButton>
-            <Modal.Title>{modal.data ? 'Edit' : 'Add'} division</Modal.Title>
-    </Modal.Header>
-
-    <Form onSubmit={handleSubmit}>
-        <Modal.Body>
-        <Row className="margin: 40px">
-        <Col>
-        <Form.Group className='mb-2'>
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-                type='text'
-                name='description'
-                placeholder='Enter description'
-                value={formInputs.description}
-                onChange={handleInputChange}
-                isInvalid={!!formErrors.description} />
-            <Form.Control.Feedback type='invalid'>
-                {formErrors.description}
-            </Form.Control.Feedback>
-        </Form.Group>
-        </Col>
-        </Row>
-        </Modal.Body>
-
-        <Modal.Footer>
-            <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
-                Cancel
-            </Button>
-            <Button type='submit' variant='primary' disabled={modal.isLoading}>
-                {modal.data ? 'Edit' : 'Add'}
-            </Button>
-        </Modal.Footer>
-     </Form>
-     </Modal>
-   </div>
     );
 }
 

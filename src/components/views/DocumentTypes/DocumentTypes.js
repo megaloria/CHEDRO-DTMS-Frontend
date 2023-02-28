@@ -100,6 +100,7 @@ function DocumentTypes() {
             ...modal,
             isLoading: true
         });
+
         if (modal.data !== null) {
             handleEdit();
         } else {
@@ -135,6 +136,7 @@ function DocumentTypes() {
             });
         });
     }
+    
     const handleEdit = () => {
         apiClient.post(`/settings/document-types/${modal.data?.id}`, {
             ...formInputs
@@ -143,7 +145,6 @@ function DocumentTypes() {
                 if (c.id === response.data.data.id) {
                     return {...response.data.data};
                 }
-
                 return {...c};
             })
             setData(newData);
@@ -205,7 +206,6 @@ function DocumentTypes() {
         });
     }
 
-
     const showDeleteAlert = DocumentTypes => {
         Swal.fire({
             title: `Are you sure you want to delete "${DocumentTypes.description}"?`,
@@ -243,7 +243,6 @@ function DocumentTypes() {
         );
     }
 
-
     if (errorMessage) {
         return (
             <Alert variant='danger'>
@@ -251,6 +250,7 @@ function DocumentTypes() {
             </Alert>
         );
     }
+
     return (
         <Container fluid>
             <div className='bg-body rounded'> 
@@ -279,38 +279,38 @@ function DocumentTypes() {
                         <FontAwesomeIcon icon={faSpinner} spin size='lg' />
                     </div>
                 </div>
-            <Table striped bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''} >
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Code</th>
-                        <th>Description</th>
-                        <th>Days</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        data.data.map((row, index) => (
-                            <tr key={index}>
-                                <td>{row.id}</td>
-                                <td>{row.code}</td>
-                                <td>{row.description}</td>
-                                <td>{row.days}</td>
-                                <td>
-                                    <Button onClick={e => handleShowModal(row)} variant='link'>
-                                        <FontAwesomeIcon icon={faEdit} className='text-primary'/>
-                                    </Button>
-                                    <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                        <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))
-                    }
-                </tbody>
-            </Table>
-        </div>
+                <Table striped bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''} >
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Days</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            data.data.map((row, index) => (
+                                <tr key={index}>
+                                    <td>{row.id}</td>
+                                    <td>{row.code}</td>
+                                    <td>{row.description}</td>
+                                    <td>{row.days}</td>
+                                    <td>
+                                        <Button onClick={e => handleShowModal(row)} variant='link'>
+                                            <FontAwesomeIcon icon={faEdit} className='text-primary'/>
+                                        </Button>
+                                        <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                            <FontAwesomeIcon icon={faTrash} className='text-danger'/>
+                                        </Button>
+                                    </td>
+                                </tr>
+                            ))
+                        }
+                    </tbody>
+                </Table>
+            </div>
             
             <div>
                 {data.data.length > 0 && (
@@ -334,9 +334,9 @@ function DocumentTypes() {
                 <Modal.Header closeButton>
                     <Modal.Title>{modal.data ? 'Edit' : 'Add'} Document Types</Modal.Title>
                 </Modal.Header>
+                
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
-                        
                         <Form.Group className='mb-2'>
                             <Form.Label>Code</Form.Label>
                             <Form.Control
@@ -378,7 +378,6 @@ function DocumentTypes() {
                                 {formErrors.days}
                             </Form.Control.Feedback>
                         </Form.Group>
-                     
                     </Modal.Body>
 
                     <Modal.Footer>
@@ -392,8 +391,6 @@ function DocumentTypes() {
                 </Form>
             </Modal>
         </Container>
-    
-   
     );
 }
 

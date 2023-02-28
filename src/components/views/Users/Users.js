@@ -97,6 +97,7 @@ function Users() {
             handleReset();
         }
     };
+
     const handleReset = () => {
         apiClient.post(`/users/${modal2.data?.id}`, {
             ...formInputs2,
@@ -132,12 +133,14 @@ function Users() {
             });
         });
     }
+
     const handleInputChange2 = e => {
         setFormInputs2({
             ...formInputs2,
             [e.target.name]: e.target.value
         });
     }
+
     const handleShowModal2 = (data = null) => {
         if (data !== null) {
             setFormInputs2({
@@ -152,6 +155,7 @@ function Users() {
             isLoading: false
         });
     }
+
     const handleHideModal2 = () => {
         setFormInputs2({
             reset_password: '',
@@ -162,8 +166,6 @@ function Users() {
             isLoading: false
         });
     }
-
-
 
     const [formInputs, setFormInputs] = useState({ // input inside the modal
         username: '',
