@@ -9,7 +9,8 @@ import {
     Breadcrumb,
     Tab,
     Tabs,
-    Badge
+    Badge,
+    Pagination
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -21,6 +22,7 @@ import {
     faShare
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
+import './styles.css';
 
 function Documents() {
     const [data, setData] = useState([]);
@@ -231,6 +233,26 @@ function Documents() {
                             </Table>
                         </div>   
                     </div>
+
+                    <div>
+                       
+                            <Pagination style={{ float: 'right' }}>
+                                {/* <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />  */}
+                                <Pagination.First />
+                                {/* <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} /> */}
+                                <Pagination.Prev />
+                                <Pagination.Item disabled>
+                                    {/* {`${data.current_page} / ${data.last_page}`} */}
+                                    /
+                                </Pagination.Item>
+                                {/* <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} /> */}
+                                <Pagination.Next />
+                                {/* <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} /> */}
+                                <Pagination.Last />
+                            </Pagination>
+                      
+                    </div> 
+
                 </Tab>
                 <Tab eventKey="ongoing" title="Ongoing" >
                 </Tab>
