@@ -8,7 +8,8 @@ import {
     Modal,
     Row,
     Table,
-    InputGroup
+    InputGroup,
+    Pagination
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -28,6 +29,8 @@ function Users() {
     const [data, setData] = useState([]); //data variable
     const [roles, setRoles] = useState([]); //user variable
 
+    const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
@@ -39,12 +42,15 @@ function Users() {
         data: null,
         isLoading: false
     });
+
     const [formInputs2, setFormInputs2] = useState({ // input inside the modal
         reset_password: '',
     });
+
     const [formErrors2, setFormErrors2] = useState({ //errors for the inputs in the modal
         reset_password: '',
     });
+
     useEffect(() => {
         apiClient.get('/users').then(response => { //GET ALL function
             setData(response.data.data.users);
@@ -54,6 +60,18 @@ function Users() {
             setIsLoading(false);
         });
     }, []);
+
+     const handlePageChange = (pageNumber) => {
+        setIsTableLoading(true);
+
+        apiClient.get(`/users?page=${pageNumber}`).then(response => {
+            setData(response.data.data);//GET ALL function
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    };
 
     const handleSubmit2 = event => {
         event.preventDefault();
@@ -443,7 +461,13 @@ function Users() {
                 </Row>
             </div>
 
-            <Table striped bordered hover responsive size='md'>
+            <div className='loading-table-container'>
+                <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
+                    <div className='spinner-icon'>
+                        <FontAwesomeIcon icon={faSpinner} spin size='lg' />
+                    </div>
+                </div>
+            <Table striped bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -477,6 +501,22 @@ function Users() {
                     }
                 </tbody>
             </Table>
+        </div>
+
+        <div>
+                {data.data.length > 0 && (
+                    <Pagination style={{ float: 'right' }}>
+                        <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                        <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                        <Pagination.Item disabled>
+                            {`${data.current_page} / ${data.last_page}`}
+                        </Pagination.Item>
+                        <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                        <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                    </Pagination>
+                )}
+            </div> 
+
 
             <Modal
                 show={modal.show}
@@ -504,8 +544,7 @@ function Users() {
                                         {formErrors.username}
                                     </Form.Control.Feedback>
                             </Form.Group>
-                        </Col>
-                        {
+                        </Col> {
                             !modal.data && (
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
