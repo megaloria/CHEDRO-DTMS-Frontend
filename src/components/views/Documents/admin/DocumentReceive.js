@@ -11,6 +11,7 @@ import {
 
 function DocumentReceive() {
     const [data, setData] = useState([]);
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
         setData([
@@ -79,8 +80,17 @@ function DocumentReceive() {
                 <Col>
                     <Form.Label>Category</Form.Label>
                     <Form.Select 
+                        name='category'
+                        value={''}
+                        onChange={''}
+                        isInvalid={''}
                         aria-label='Default select example'>
-                        <option value=''>Select Category...</option>    
+                            <option value=''>Select Category...</option>  
+                                {
+                                    categories.map(categories => (
+                                        <option key={categories.id} value={categories.id}> {categories.description} </option>
+                                    ))
+                                }  
                     </Form.Select>
                 </Col>
                 
