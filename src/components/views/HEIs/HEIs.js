@@ -20,11 +20,14 @@ import Swal from 'sweetalert2';
 import './styles.css';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
+import './styles.css';
 
 function Heis() {
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
+
+    const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -55,13 +58,24 @@ function Heis() {
     useEffect(() => {
         apiClient.get('/settings/heis').then(response => { //GET ALL function
             setData(response.data.data);
-        
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
             setIsLoading(false);
         });
     }, []);
+
+    const handlePageChange = (pageNumber) => {
+        setIsTableLoading(true);
+
+        apiClient.get(`/settings/heis?page=${pageNumber}`).then(response => {
+            setData(response.data.data);//GET ALL function
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    };
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -284,66 +298,64 @@ function Heis() {
                     </Col> 
                 </Row>
             </div>
-            <div class='row'>
-                <div class='table-responsive ' >
-                    <Table striped bordered hover size='md'>
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>UII</th>
-                                <th>Name</th>
-                                <th>Street/Barangay</th>
-                                <th>City/Municipality</th>
-                                <th>Province</th>
-                                <th>Head of Institution</th>
-                                <th>Email</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                data.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.id}</td>
-                                        <td>{row.uii}</td>
-                                        <td>{row.name}</td>
-                                        <td>{row.street_barangay}</td>
-                                        <td>{row.city_municipality}</td>
-                                        <td>{row.province}</td>
-                                        <td>{row.head_of_institution}</td>
-                                        <td>{row.email}</td>
-                                        <td>
-                                            <Button onClick={e => handleShowModal(row)} variant='link'>
-                                                <FontAwesomeIcon  icon={faEdit} className='text-primary'/>
-                                            </Button>
-                                            <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                                <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))
-                            }
-                        </tbody>
-                    </Table>
-                </div> 
+
+            <div className='loading-table-container'>
+                <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
+                    <div className='spinner-icon'>
+                        <FontAwesomeIcon icon={faSpinner} spin size='lg' />
+                    </div>
+                </div>
+                        <Table striped bordered hover size='md' className={isTableLoading ? 'table-loading' : ''}>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>UII</th>
+                                    <th>Name</th>
+                                    <th>Street/Barangay</th>
+                                    <th>City/Municipality</th>
+                                    <th>Province</th>
+                                    <th>Head of Institution</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    data.data.map((row, index) => (
+                                        <tr key={index}>
+                                            <td>{row.id}</td>
+                                            <td>{row.uii}</td>
+                                            <td>{row.name}</td>
+                                            <td>{row.street_barangay}</td>
+                                            <td>{row.city_municipality}</td>
+                                            <td>{row.province}</td>
+                                            <td>{row.head_of_institution}</td>
+                                            <td>{row.email}</td>
+                                            <td>
+                                                <Button onClick={e => handleShowModal(row)} variant='link'>
+                                                    <FontAwesomeIcon icon={faEdit} className='text-primary' />
+                                                </Button>
+                                                <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                                    <FontAwesomeIcon icon={faTrash} className='text-danger' />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </Table>
                 <div>
-                <Pagination style={{float:'right'}}>
-                    <Pagination.First />
-                    <Pagination.Prev />
-                    <Pagination.Item>{1}</Pagination.Item>
-                    <Pagination.Ellipsis />
-
-                    <Pagination.Item>{10}</Pagination.Item>
-                    <Pagination.Item>{11}</Pagination.Item>
-                    <Pagination.Item active>{12}</Pagination.Item>
-                    <Pagination.Item>{13}</Pagination.Item>
-                    <Pagination.Item disabled>{14}</Pagination.Item>
-
-                    <Pagination.Ellipsis />
-                    <Pagination.Item>{20}</Pagination.Item>
-                    <Pagination.Next />
-                    <Pagination.Last />
-                </Pagination>
+                    {data.data.length > 0 && (
+                        <Pagination style={{ float: 'right' }}>
+                            <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                            <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                            <Pagination.Item disabled>
+                                {`${data.current_page} / ${data.last_page}`}
+                            </Pagination.Item>
+                            <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                            <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                        </Pagination>
+                    )}
                 </div>  
             </div>
             <div className='model_box'>
