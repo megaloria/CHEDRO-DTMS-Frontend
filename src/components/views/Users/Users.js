@@ -28,12 +28,14 @@ function Users() {
     const [data, setData] = useState([]); //data variable
     const [roles, setRoles] = useState([]); //user variable
 
+    // MODAL FOR ADD AND EDIT USERS
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
         isLoading: false
     });
 
+    // RESET PASSWORD
     const [modal2, setModal2] = useState({ //modal variables
         show: false,
         data: null,
@@ -145,8 +147,7 @@ function Users() {
         });
     }
 
-
-
+    // ADD AND EDIT INPUT
     const [formInputs, setFormInputs] = useState({ // input inside the modal
         username: '',
         password: '',
@@ -707,14 +708,14 @@ function Users() {
                             </Form.Group>
                         </Modal.Body>
                             <Modal.Footer>
-                                <Button 
-                                    variant="secondary" 
+                                <Button
+                                    variant="secondary"
                                     onClick={handleHideModal2}
                                     disabled={modal2.isLoading}>
-                                    Cancel
+                                       Cancel
                                 </Button>
                                 <Button 
-                                    type='submit' 
+                                    type='submit'
                                     variant='primary'
                                     disabled={modal2.isLoading}>
                                        Reset

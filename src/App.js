@@ -18,6 +18,7 @@ import DocumentTypes from './components/views/DocumentTypes/DocumentTypes';
 import Divisions from './components/views/Divisions/Divisions';
 import NGA from './components/views/NGA/NGA';
 import CHED from './components/views/CHED/CHED';
+import Category from './components/views/Category/Category';
 import AdminDocReceive from './components/views/Documents/admin/DocumentReceive';
 import AdminDocEdit from './components/views/Documents/admin/DocumentEdit';
 import AdminDocView from './components/views/Documents/admin/DocumentView';
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
       {
         path: '/settings/CHED',
         element: <CHED />
+      },
+      {
+        path: '/settings/Category',
+        element: <Category />
       },
       {
         path: '/Home/Documents',

@@ -71,6 +71,13 @@ function Sidebar() {
                         <NavDropdown.Item href="/settings/divisions" eventKey='4.6'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
                             Divisions</NavDropdown.Item>
                     </span>
+                        <NavDropdown.Divider />
+
+                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
+                        <NavDropdown.Item href="/settings/category" eventKey='4.7'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
+                            Category</NavDropdown.Item>
+                    </span>
+                        <NavDropdown.Divider />
                 </NavDropdown>
             </Nav>
         </div>
