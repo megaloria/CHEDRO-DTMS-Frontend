@@ -40,7 +40,7 @@ function Category() {
     });
 
     useEffect(() => {
-        apiClient.get('/settings/roles').then(response => { //GET ALL function
+        apiClient.get('/settings/category').then(response => { //GET ALL function
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -78,7 +78,7 @@ function Category() {
     };
 
     const handleAdd = () => {
-        apiClient.post('/settings/roles', {
+        apiClient.post('/settings/category', {
             ...formInputs,
             description: formInputs.description
         }).then(response => {
@@ -108,11 +108,11 @@ function Category() {
     }
 
     const handleEdit = () => {
-        apiClient.post(`/settings/roles/${modal.data?.id}`, {
+        apiClient.post(`/settings/category/${modal.data?.id}`, {
             ...formInputs,
             description: formInputs.description
         }).then(response => {
-            let newData = data.map(d => {
+            let newData = data.data.map(d => {
                 if (d.id === response.data.data.id) {
                     return {...response.data.data};
                 }

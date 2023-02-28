@@ -59,13 +59,13 @@ function Sidebar() {
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="" eventKey='4.4'> <FontAwesomeIcon className='me-2' />
+                        <NavDropdown.Item href="/settings/category" eventKey='4.5'> <FontAwesomeIcon className='me-2' />
                             Category</NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/roles" eventKey='4.5'> <FontAwesomeIcon className='me-2' />
+                        <NavDropdown.Item href="/settings/roles" eventKey='4.6'> <FontAwesomeIcon className='me-2' />
                             Roles</NavDropdown.Item>
                     </span>
 
@@ -75,11 +75,6 @@ function Sidebar() {
                     </span>
                         <NavDropdown.Divider />
 
-                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/category" eventKey='4.7'> <FontAwesomeIcon className='me-2' />
-                            Category</NavDropdown.Item>
-                    </span>
-                        <NavDropdown.Divider />
                 </NavDropdown>
             </Nav>
         </div>
