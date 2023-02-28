@@ -76,23 +76,12 @@ function DocumentReceive() {
                         <option value=''>Select Document Type...</option>    
                     </Form.Select>
                 </Col>
-
                 <Col>
-                    <Form.Label>Category</Form.Label>
-                    <Form.Select 
-                        name='category'
-                        value={''}
-                        onChange={''}
-                        isInvalid={''}
-                        aria-label='Default select example'>
-                            <option value=''>Select Category...</option>  
-                                {
-                                    categories.map(categories => (
-                                        <option key={categories.id} value={categories.id}> {categories.description} </option>
-                                    ))
-                                }  
-                    </Form.Select>
+                    <Form.Label>Attachment (Optional)</Form.Label>
+                    <Form.Control type="file" placeholder="Attachment" />
                 </Col>
+
+               
                 
             </Row>
  
@@ -109,16 +98,39 @@ function DocumentReceive() {
                     <option value=''> Receive From...</option>
                     </Form.Select>
                 </Col>
-                <Col>
-                    <Form.Label>Attachment (Optional)</Form.Label>
-                    <Form.Control type="file" placeholder="Attachment" />
+
+                <Col> 
                 </Col>
             </Row>
+
             <Row className="mb-3">
-                <Col>
+            <Row>
+            <Col>
                     <Form.Label>Description</Form.Label>
                     <Form.Control as="textarea" rows={5} type="text" placeholder="Description" />
                 </Col>
+            </Row>
+            </Row>
+            <Row className="mb-3">
+                
+                <Row>
+                     <Col>
+                    <Form.Label>Category</Form.Label>
+                    <Form.Select 
+                        name='category'
+                        value={''}
+                        onChange={''}
+                        isInvalid={''}
+                        aria-label='Default select example'>
+                            <option value=''>Select Category...</option>  
+                                {
+                                    categories.map(categories => (
+                                        <option key={categories.id} value={categories.id}> {categories.description} </option>
+                                    ))
+                                }  
+                    </Form.Select>
+                </Col> 
+                </Row>
             </Row>
             <div>
                 <Row className= "justify-content-end mt-4 mb-3">
