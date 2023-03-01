@@ -7,44 +7,34 @@ import {
     Col, 
     Breadcrumb
 } from 'react-bootstrap';
+import apiClient from '../../../../helpers/apiClient';
 // import './styles.css';
 
 function DocumentReceive() {
-    const [data, setData] = useState([]);
-    const [categories, setCategories] = useState([]);
+    // const [data, setData] = useState([]);
+    const [documentTypes, setDocumentTypes] = useState([]);
 
     useEffect(() => {
-        setData([
-            {
-                id: 1,
-                description: 'Regional Director'
-            },
-            {
-                id: 2,
-                description: 'Chief Administrative Officer'
-            },
-            {
-                id: 3,
-                description: 'Secretary'
-            },
-            {
-                id: 4,
-                description: 'Assistant'
-            },
-        ]);
+        apiClient.get('/settings/all-document-types')
+            .then(response => {
+                setDocumentTypes(response.data.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
     }, []);
 
     //VALIDATION ON ADDING RECORD
-    const [validated, setValidated] = useState(false);
+    // const [validated, setValidated] = useState(false);
 
-    const handleSubmit = event => {
-        const form = event.currentTarget;
-            if (form.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            setValidated(true);
-    };
+    // const handleSubmit = event => {
+    //     const form = event.currentTarget;
+    //         if (form.checkValidity() === false) {
+    //             event.preventDefault();
+    //             event.stopPropagation();
+    //         }
+    //         setValidated(true);
+    // };
 
     return (
         <div class="container fluid">
@@ -73,7 +63,10 @@ function DocumentReceive() {
                     <Form.Label>Document Type</Form.Label>
                     <Form.Select 
                         aria-label='Default select example'>
-                        <option value=''>Select Document Type...</option>    
+                        <option value=''>Select Document Type...</option>
+                        {documentTypes.map(item => (
+                            <option key={item.id} value={item.id}>{item.description}</option>
+                        ))}    
                     </Form.Select>
                 </Col>
                 <Col>
@@ -81,8 +74,6 @@ function DocumentReceive() {
                     <Form.Control type="file" placeholder="Attachment" />
                 </Col>
 
-               
-                
             </Row>
  
                 <Row className="mb-3">
@@ -123,11 +114,11 @@ function DocumentReceive() {
                         isInvalid={''}
                         aria-label='Default select example'>
                             <option value=''>Select Category...</option>  
-                                {
+                                {/* {
                                     categories.map(categories => (
                                         <option key={categories.id} value={categories.id}> {categories.description} </option>
                                     ))
-                                }  
+                                }   */}
                     </Form.Select>
                 </Col> 
                 </Row>
