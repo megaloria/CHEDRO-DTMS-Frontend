@@ -85,6 +85,10 @@ const router = createBrowserRouter([
         ]
       },
       {
+        path: 'users',
+        element: <Users />
+      },
+      {
         path: '/settings',
         element: <div><Outlet /></div>,
         children: [
@@ -116,10 +120,6 @@ const router = createBrowserRouter([
             path: 'categories',
             element: <Category />
           },
-          {
-            path: 'users',
-            element: <Users />
-          }
         ]
       },
     ]
