@@ -48,19 +48,19 @@ function Sidebar() {
                     className='flex1'>
                                       
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item as={Link} to='settings/heis'> 
+                        <NavDropdown.Item as={Link} to='settings/heis' eventKey='4.1'> 
                         <FontAwesomeIcon className='me-2' icon={faBuildingColumns} /> 
                             HEIs </NavDropdown.Item>
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item as={Link} to='settings/ngas'> 
+                        <NavDropdown.Item as={Link} to='settings/ngas' eventKey='4.2'> 
                         <FontAwesomeIcon className='me-2' icon={faLandmarkFlag}/> 
                             NGAs </NavDropdown.Item>
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item as={Link} to='settings/ched-offices'> 
+                        <NavDropdown.Item as={Link} to='settings/ched-offices' eventKey='4.3'> 
                         <FontAwesomeIcon className='me-2' icon={faSchoolFlag}/> 
                             CHED Offices </NavDropdown.Item>
                     </span>
@@ -74,7 +74,7 @@ function Sidebar() {
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item as={Link} to='settings/categories'> 
+                        <NavDropdown.Item as={Link} to='settings/categories' eventKey='4.5'> 
                         <FontAwesomeIcon className='me-2' icon={faTag}/>
                             Categories</NavDropdown.Item>
                     </span>
@@ -87,8 +87,7 @@ function Sidebar() {
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item as={Link} to='settings/divisions'> 
-                        <FontAwesomeIcon className='me-2' icon={faUsersLine} />
+                        <NavDropdown.Item as={Link} to='settings/divisions' eventKey='4.7'> <FontAwesomeIcon className='me-2' icon={faUsersLine}/>
                             Divisions</NavDropdown.Item>
                     </span>
 
