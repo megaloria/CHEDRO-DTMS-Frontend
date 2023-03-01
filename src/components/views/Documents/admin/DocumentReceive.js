@@ -13,7 +13,6 @@ import apiClient from '../../../../helpers/apiClient';
 // import './styles.css';
 
 function DocumentReceive() {
-    // const [data, setData] = useState([]);
     const [documentTypes, setDocumentTypes] = useState([]);
 
     useEffect(() => {
@@ -26,17 +25,18 @@ function DocumentReceive() {
             });
     }, []);
 
-    //VALIDATION ON ADDING RECORD
-    // const [validated, setValidated] = useState(false);
+    //Category
+    const [category, setCategory] = useState([]);
 
-    // const handleSubmit = event => {
-    //     const form = event.currentTarget;
-    //         if (form.checkValidity() === false) {
-    //             event.preventDefault();
-    //             event.stopPropagation();
-    //         }
-    //         setValidated(true);
-    // };
+    useEffect(() => {
+        apiClient.get('/settings/categories')
+            .then(response => {
+                setCategory(response.data.data);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, []);
 
     return (
         <div class="container fluid">
@@ -78,7 +78,7 @@ function DocumentReceive() {
 
             </Row>
  
-                <Row className="mb-3">
+            <Row className="mb-3">
                 <Col>
                     <Form.Label>Date Received</Form.Label>
                     <Form.Control type="date" placeholder="Date Received" />
@@ -91,39 +91,31 @@ function DocumentReceive() {
                     <option value=''> Receive From...</option>
                     </Form.Select>
                 </Col>
-
-                <Col> 
-                </Col>
             </Row>
 
             <Row className="mb-3">
-            <Row>
             <Col>
                     <Form.Label>Description</Form.Label>
                     <Form.Control as="textarea" rows={5} type="text" placeholder="Description" />
                 </Col>
             </Row>
-            </Row>
-            <Row className="mb-3">
-                
-                <Row>
-                     <Col>
-                    <Form.Label>Category</Form.Label>
-                    <Form.Select 
-                        name='category'
-                        value={''}
-                        onChange={''}
-                        isInvalid={''}
-                        aria-label='Default select example'>
-                            <option value=''>Select Category...</option>  
-                                {/* {
-                                    categories.map(categories => (
-                                        <option key={categories.id} value={categories.id}> {categories.description} </option>
-                                    ))
-                                }   */}
-                    </Form.Select>
-                </Col> 
-                </Row>
+            <Row className="mb-3"> 
+            <Form.Group>
+                <Form.Label>Category</Form.Label>
+                    {category.map(category => (
+                        <div key={`inline-${category}`} className="mb-3">
+                            <Form.Check
+                                inline
+                                name='category'
+                                type='radio'
+                                id={`inline-${category}-1`}
+                                value={category.id}
+                                key={category.id}
+                            />      
+                            {category.description}
+                        </div>
+                    ))}
+                </Form.Group>
             </Row>
             <div>
                 <Row className= "justify-content-end mt-4 mb-3">
