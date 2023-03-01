@@ -83,7 +83,7 @@ function Sidebar() {
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/divisions" eventKey='4.6'> <FontAwesomeIcon className='me-2' />
+                        <NavDropdown.Item href="/settings/divisions" eventKey='4.6'> <FontAwesomeIcon className='me-2' icon={faUsersLine}/>
                             Divisions</NavDropdown.Item>
                     </span>
 
