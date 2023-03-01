@@ -127,14 +127,14 @@ function DocumentReceive() {
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col md="auto" className="p-0">
                         <Button 
-                        variant="secondary"
+                        variant="primary"
                         href="/home/documents">
-                            Cancel
+                            Forward
                         </Button>
                     </Col>
                     <Col md="auto">
-                        <Button variant="primary">
-                            Send 
+                        <Button variant="outline-primary">
+                            Received
                         </Button>
                     </Col>
                 </Row>
