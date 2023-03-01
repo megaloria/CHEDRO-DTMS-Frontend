@@ -136,8 +136,8 @@ function DocumentReceive() {
                         </Button>
                     </Col>
                     <Col md="auto">
-                        <Button variant="primary">
-                            Send 
+                        <Button variant="outline-primary">
+                            Received
                         </Button>
                     </Col>
                 </Row>
