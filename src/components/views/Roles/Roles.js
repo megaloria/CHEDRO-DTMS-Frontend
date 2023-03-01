@@ -15,7 +15,8 @@ import {
     faTrash,
     faEdit,
     faAdd,
-    faSpinner
+    faSpinner,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
@@ -274,10 +275,17 @@ function Roles() {
                     <Col>
                         <h1>Roles</h1>
                     </Col>
-                    <Col md='auto'>
-                        <div className='search'>
-                            <Form className='mb-3'>
-                                <Form.Control type='search' placeholder='Search' />
+                    <Col md="auto">
+                        <div className="search">
+                            <Form className="d-flex" controlId="">
+                                <Form.Control 
+                                    type="search" 
+                                    placeholder="Search" 
+                                    className="me-2"
+                                />
+                                <Button>
+                                    <FontAwesomeIcon icon={faSearch} />
+                                </Button>
                             </Form>
                         </div>
                     </Col>
