@@ -234,7 +234,7 @@ function Roles() {
                     let newData = data.data.filter(d => d.id !== role.id);
                     setData({
                         ...data,
-                            data: newData
+                        data: newData
                     });
                     Swal.fire({
                         title: 'Success',

@@ -108,10 +108,13 @@ function Roles() {
         apiClient.post('/settings/ngas', {
             ...formInputs,
         }).then(response => {
-            setData([
+            setData({
                 ...data,
-                response.data.data
-            ]);
+                data: [
+                    ...data.data,
+                    response.data.data
+                ]
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -137,14 +140,17 @@ function Roles() {
         apiClient.post(`/settings/ngas/${modal.data?.id}`, {
             ...formInputs
         }).then(response => {
-            let newData = data.map(d => {
+            let newData = data.data.map(d => {
                 if (d.id === response.data.data.id) {
                     return {...response.data.data};
                 }
 
                 return {...d};
             })
-            setData(newData);
+            setData({
+                ...data,
+                data: newData
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -216,8 +222,11 @@ function Roles() {
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return apiClient.delete(`/settings/ngas/${code.id}`).then(response => {
-                    let newData = data.filter(d => d.id !== code.id);
-                    setData(newData);
+                    let newData = data.data.filter(d => d.id !== code.id);
+                    setData({
+                        ...data,
+                        data: newData
+                    });
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -352,7 +361,7 @@ function Roles() {
                             <Form.Control
                                 type='text'
                                 name='description'
-                                placeholder='Enter description'
+                                placeholder='Enter Description'
                                 value={formInputs.description}
                                 onChange={handleInputChange}
                                 isInvalid={!!formErrors.description} />
@@ -365,6 +374,7 @@ function Roles() {
                             <Form.Control
                                 type='text'
                                 name='email'
+                                placeholder='Enter Email Address'
                                 value={formInputs.email}
                                 onChange={handleInputChange}
                                 isInvalid={!!formErrors.email} />
