@@ -6,7 +6,6 @@ import {
     Table, 
     Row, 
     Col, 
-    Breadcrumb,
     Tab,
     Tabs,
     Badge,
@@ -80,9 +79,9 @@ function Documents() {
     const handleClose = () => {
         setShow(false)
     };
-    const handleShow = () => {
-        setShow(true)
-    };
+    // const handleShow = () => {
+    //     setShow(true)
+    // };
 
     //MODAL EDIT
     const [show2, setShow2] = useState(false);
@@ -90,9 +89,9 @@ function Documents() {
     const handleClose2 = () => {
         setShow2(false)
     };
-    const handleShow2 = () => {
-        setShow2(true)
-    };
+    // const handleShow2 = () => {
+    //     setShow2(true)
+    // };
 
     // DELETE
     const showAlert = () => {
@@ -175,20 +174,20 @@ function Documents() {
                                         </td> */}  
                                         
                                         <td>{
-                                                row.status === 'Acknowledge' && (
+                                                row.status === 'Acknowledge' & (
                                                     <>
                                                     <Badge bg="info" >
                                                     {row.status}
                                                     </Badge>
                                                     </>
-                                                ) || row.status === 'Forwarded to RD' && (
+                                                ) || row.status === 'Forwarded to RD' & (
                                                     <>
                                                     <Badge bg="warning" >
                                                     {row.status}
                                                     </Badge>
                                                     </>
                                                 )
-                                                || row.status === 'Received' && (
+                                                || row.status === 'Received' & (
                                                     <>
                                                     <Badge bg="primary">
                                                     {row.status}
