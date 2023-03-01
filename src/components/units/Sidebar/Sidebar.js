@@ -11,7 +11,8 @@ import {
     faLandmarkFlag,
     faSchoolFlag,
     faFile,
-    faFilePen,
+    // faFilePen,
+    faTag,
     faUserTie,
     faUsersLine
     // faCaretRight
@@ -71,7 +72,7 @@ function Sidebar() {
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
                         <NavDropdown.Item href="/settings/Categories" eventKey='4.5'> 
-                        <FontAwesomeIcon className='me-2' icon={faFilePen}/>
+                        <FontAwesomeIcon className='me-2' icon={faTag}/>
                             Category</NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
