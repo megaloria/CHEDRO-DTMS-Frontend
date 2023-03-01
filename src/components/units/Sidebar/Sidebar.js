@@ -17,18 +17,22 @@ import {
     // faCaretRight
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    Link
+} from 'react-router-dom';
+
 import './styles.css';
 
 function Sidebar() {
     return(
         <div>
             <Nav defaultActiveKey='/home' className='flex'>
-                <Nav.Link  href='/home/documents' className='flex1'>
+                <Nav.Link as={Link} to='documents' className='flex1'>
                     <span style={{ color: 'white', fontSize: '15px' }}>
                         <FontAwesomeIcon icon={faFileLines} className='me-2' />Documents
                     </span>
                 </Nav.Link>
-                <Nav.Link href='/home/users' className='flex1'>
+                <Nav.Link as={Link} to='settings/users' className='flex1'>
                     <span style={{ color: 'white', fontSize: '15px' }}>
                         <FontAwesomeIcon icon={faUserGroup} className='me-2' />Users
                     </span>
@@ -44,19 +48,19 @@ function Sidebar() {
                     className='flex1'>
                                       
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/HEIs" eventKey='4.1'> 
+                        <NavDropdown.Item as={Link} to='settings/heis' eventKey='4.1'> 
                         <FontAwesomeIcon className='me-2' icon={faBuildingColumns} /> 
                             HEIs </NavDropdown.Item>
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/NGA" eventKey='4.2'> 
+                        <NavDropdown.Item as={Link} to='settings/ngas' eventKey='4.2'> 
                         <FontAwesomeIcon className='me-2' icon={faLandmarkFlag}/> 
                             NGAs </NavDropdown.Item>
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/CHED" eventKey='4.3'> 
+                        <NavDropdown.Item as={Link} to='settings/ched-offices' eventKey='4.3'> 
                         <FontAwesomeIcon className='me-2' icon={faSchoolFlag}/> 
                             CHED Offices </NavDropdown.Item>
                     </span>
@@ -64,26 +68,26 @@ function Sidebar() {
 
                     {/* <h6 class="dropdown-header">Document</h6> */}
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/DocumentTypes" eventKey='4.4'> 
+                        <NavDropdown.Item as={Link} to='settings/document-types' eventKey='4.4'> 
                         <FontAwesomeIcon className='me-2' icon={faFile}/>
                             Document Types</NavDropdown.Item>
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/Categories" eventKey='4.5'> 
+                        <NavDropdown.Item as={Link} to='settings/categories' eventKey='4.5'> 
                         <FontAwesomeIcon className='me-2' icon={faTag}/>
                             Category</NavDropdown.Item>
                     </span>
                         <NavDropdown.Divider />
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/roles" eventKey='4.6'> 
+                        <NavDropdown.Item as={Link} to='settings/roles' eventKey='4.6'> 
                         <FontAwesomeIcon className='me-2' icon={faUserTie} />
                             Roles</NavDropdown.Item>
                     </span>
 
                     <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/divisions" eventKey='4.6'> <FontAwesomeIcon className='me-2' icon={faUsersLine}/>
+                        <NavDropdown.Item as={Link} to='settings/divisions' eventKey='4.7'> <FontAwesomeIcon className='me-2' icon={faUsersLine}/>
                             Divisions</NavDropdown.Item>
                     </span>
 

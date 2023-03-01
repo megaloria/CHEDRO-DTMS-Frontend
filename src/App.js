@@ -85,36 +85,42 @@ const router = createBrowserRouter([
         ]
       },
       {
-        path: '/settings/roles',
-        element: <Roles />
-      },
-      {
-        path: '/settings/HEIs',
-        element: <HEIs />
-      },
-      {
-        path: '/settings/DocumentTypes',
-        element: <DocumentTypes />
-      },
-      {
-        path: '/settings/Divisions',
-        element: <Divisions />
-      },
-      {
-        path: '/settings/NGA',
-        element: <NGA />
-      },
-      {
-        path: '/settings/CHED',
-        element: <CHED />
-      },
-      {
-        path: '/settings/Categories',
-        element: <Category />
-      },
-      {
-        path: '/Home/Users',
-        element: <Users />
+        path: '/settings',
+        element: <div><Outlet /></div>,
+        children: [
+          {
+            path: 'roles',
+            element: <Roles />,
+          },
+          {
+            path: 'heis',
+            element: <HEIs />
+          },
+          {
+            path: 'document-types',
+            element: <DocumentTypes />
+          },
+          {
+            path: 'divisions',
+            element: <Divisions />
+          },
+          {
+            path: 'ngas',
+            element: <NGA />
+          },
+          {
+            path: 'ched-offices',
+            element: <CHED />
+          },
+          {
+            path: 'categories',
+            element: <Category />
+          },
+          {
+            path: 'users',
+            element: <Users />
+          }
+        ]
       },
     ]
   },
