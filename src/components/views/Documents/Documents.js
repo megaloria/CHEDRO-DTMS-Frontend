@@ -12,6 +12,9 @@ import {
     Badge,
     Pagination
 } from 'react-bootstrap';
+import {
+    Link
+} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
@@ -128,13 +131,9 @@ function Documents() {
                     </div>
                     </Col>
                     <Col md="auto">
-                        <Breadcrumb>
-                            <Breadcrumb.Item href="/Documents/Documents-Receive">
-                                <Button variant="primary">  
-                                    <FontAwesomeIcon icon={faRightToBracket} rotation = {90} className="addIcon"/> Receive
-                                </Button>
-                            </Breadcrumb.Item>
-                        </Breadcrumb>
+                        <Button variant="primary" as={Link} to='receive'>
+                            <FontAwesomeIcon icon={faRightToBracket} rotation={90} className="addIcon" /> Receive
+                        </Button>
                     </Col> 
                 </Row>
             </div>

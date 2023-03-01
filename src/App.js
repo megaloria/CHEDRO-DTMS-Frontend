@@ -1,6 +1,8 @@
 import React from 'react';
 import {
   createBrowserRouter,
+  Navigate,
+  Outlet,
   redirect,
   RouterProvider
 } from 'react-router-dom';
@@ -58,7 +60,29 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Documents />
+        element: <Navigate to='/documents' />
+      },
+      {
+        path: '/documents',
+        element: <div><Outlet /></div>,
+        children: [
+          {
+            index: true,
+            element: <Documents />,
+          },
+          {
+            path: 'receive',
+            element: <AdminDocReceive />
+          },
+          {
+            path: 'edit',
+            element: <AdminDocEdit />
+          },
+          {
+            path: 'view',
+            element: <AdminDocView />
+          },
+        ]
       },
       {
         path: '/settings/roles',
@@ -89,24 +113,8 @@ const router = createBrowserRouter([
         element: <Category />
       },
       {
-        path: '/Home/Documents',
-        element: <Documents />
-      },
-      {
         path: '/Home/Users',
         element: <Users />
-      },
-      {
-        path: '/Documents/Documents-Receive',
-        element: <AdminDocReceive />
-      },
-      {
-        path: '/Documents/Documents-Edit',
-        element: <AdminDocEdit />
-      },
-      {
-        path: '/Documents/Documents-View',
-        element: <AdminDocView />
       },
     ]
   },

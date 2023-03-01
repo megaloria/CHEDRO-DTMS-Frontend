@@ -111,10 +111,13 @@ function Roles() {
             ...formInputs,
             division_id: formInputs.division
         }).then(response => {
-            setData([
+            setData({
                 ...data,
-                response.data.data
-            ]);
+                data: [
+                    ...data.data,
+                    response.data.data
+                ]
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -141,14 +144,17 @@ function Roles() {
             ...formInputs,
             division_id: formInputs.division
         }).then(response => {
-            let newData = data.map(d => {
+            let newData = data.data.map(d => {
                 if (d.id === response.data.data.id) {
                     return {...response.data.data};
                 }
 
                 return {...d};
             })
-            setData(newData);
+            setData({
+                ...data,
+                data: newData
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -225,8 +231,11 @@ function Roles() {
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return apiClient.delete(`/settings/roles/${role.id}`).then(response => {
-                    let newData = data.filter(d => d.id !== role.id);
-                    setData(newData);
+                    let newData = data.data.filter(d => d.id !== role.id);
+                    setData({
+                        ...data,
+                            data: newData
+                    });
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,

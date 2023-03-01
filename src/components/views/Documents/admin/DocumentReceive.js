@@ -1,5 +1,4 @@
 import React, { useEffect, useState }  from 'react';
-import "bootstrap/dist/css/bootstrap.min.css";
 import {
     Button, 
     Form, 
@@ -7,6 +6,9 @@ import {
     Col, 
     Breadcrumb
 } from 'react-bootstrap';
+import {
+    Link
+} from 'react-router-dom';
 import apiClient from '../../../../helpers/apiClient';
 // import './styles.css';
 
@@ -42,7 +44,7 @@ function DocumentReceive() {
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
                         <Breadcrumb>
-                            <Breadcrumb.Item href="/home/documents">Documents</Breadcrumb.Item>
+                            <Breadcrumb.Item linkAs={Link} linkProps={{  to: '../' }}>Documents</Breadcrumb.Item>
                             <Breadcrumb.Item href="#" active>Received</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
@@ -128,7 +130,8 @@ function DocumentReceive() {
                     <Col md="auto" className="p-0">
                         <Button 
                         variant="secondary"
-                        href="/home/documents">
+                        as={Link}
+                        to='../'>
                             Cancel
                         </Button>
                     </Col>
