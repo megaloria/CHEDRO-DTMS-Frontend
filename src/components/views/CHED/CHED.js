@@ -107,10 +107,13 @@ function CHED() {
         apiClient.post('/settings/ched-offices', {
             ...formInputs
         }).then(response => {
-            setData([
+            setData({
                 ...data,
-                response.data.data
-            ]);
+                data: [
+                    ...data.data,
+                    response.data.data
+                ]
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -136,14 +139,17 @@ function CHED() {
         apiClient.post(`/settings/ched-offices/${modal.data?.id}`, {
             ...formInputs
         }).then(response => {
-            let newData = data.map(c => {
+            let newData = data.data.map(c => {
                 if (c.id === response.data.data.id) {
                     return {...response.data.data};
                 }
 
                 return {...c};
             })
-            setData(newData);
+            setData({
+                ...data,
+                data: newData
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -215,8 +221,11 @@ function CHED() {
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return apiClient.delete(`/settings/ched-offices/${Ched.id}`).then(response => {
-                    let newData = data.filter(d => d.id !== Ched.id);
-                    setData(newData);
+                    let newData = data.data.filter(d => d.id !== Ched.id);
+                    setData({
+                        ...data,
+                        data: newData
+                    });
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
