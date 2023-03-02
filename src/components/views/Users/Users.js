@@ -38,123 +38,6 @@ function Users() {
         isLoading: false
     });
 
-    // RESET PASSWORD
-    const [modal2, setModal2] = useState({ //modal variables
-        show: false,
-        data: null,
-        isLoading: false
-    });
-
-    const [formInputs2, setFormInputs2] = useState({ // input inside the modal
-        reset_password: ''
-    });
-
-    const [formErrors2, setFormErrors2] = useState({ //errors for the inputs in the modal
-        reset_password: ''
-    });
-
-    useEffect(() => {
-        apiClient.get('/users').then(response => { //GET ALL function
-            setData(response.data.data.users);
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsLoading(false);
-        });
-    }, []);
-
-    const handleSubmit2 = event => {
-        event.preventDefault();
-        let validation = new Validator(formInputs2, {
-            reset_password: 'required|string|min:2'
-        });
-        if (validation.fails()) {
-            setFormErrors2({
-                reset_password: validation.errors.first('reset_password'),
-            });
-            return;
-        } else {
-            setFormErrors2({
-                reset_password: '',
-            });
-        }
-        setModal2({
-            ...modal2,
-            isLoading: true
-        });
-        handleReset();
-    };
-
-    const handleReset = () => {
-        apiClient.post(`/users/${modal2.data?.id}/reset`, {
-            ...formInputs2,
-        }).then(response => {
-            let newData = data.data.map(d => {
-                if (d.id === response.data.data.id) {
-                    return {...response.data.data};
-                }
-
-                return {...d};
-            })
-            setData({
-                ...data,
-                data: newData
-            });
-            Swal.fire({
-                title: 'Success',
-                text: response.data.message,
-                icon: 'success'
-            }).then(() => {
-                handleHideModal2();
-            });
-        }).catch(error => {
-            Swal.fire({
-                title: 'Error',
-                text: error,
-                icon: 'error'
-            });
-        }).finally(() => {
-            setModal2({
-                ...modal2,
-                isLoading: false
-            });
-        });
-    }
-
-    const handleInputChange2 = e => {
-        setFormInputs2({
-            ...formInputs2,
-            [e.target.name]: e.target.value
-        });
-    }
-
-    const handleShowModal2 = (data = null) => {
-        if (data !== null) {
-            setFormInputs2({
-                ...formInputs2,
-                reset_password: data.reset_password,
-            });
-        }
-
-        setModal2({
-            show: true,
-            data,
-            isLoading: false
-        });
-    }
-
-    const handleHideModal2 = () => {
-        setFormInputs2({
-            reset_password: '',
-        });
-        setModal2({
-            show: false,
-            data: null,
-            isLoading: false
-        });
-    }
-    // END of RESET PASSWORD //
-
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
@@ -208,10 +91,10 @@ function Users() {
 
         let validation = new Validator(formInputs, {
             username: 'required|string|min:1',
-            ...(modal.data ? {} : { password: 'required|string|min:4' }),
+            ...(modal.data ? {} : { password: 'required|string|min:8' }),
             role_id: 'required|integer|min:1',
             first_name: 'required|string|min:1',
-            middle_name: 'string|min:4',
+            middle_name: 'string|min:2',
             last_name: 'required|string|min:4',
             prefix: 'string|min:2',
             suffix: 'string|min:2',
@@ -372,6 +255,122 @@ function Users() {
         });
     }
 
+    // RESET PASSWORD
+    const [modalReset, setmodalReset] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    const [formInputPass, setformInputPass] = useState({ // input inside the modal
+        reset_password: ''
+    });
+
+    const [formErrorPass, setformErrorPass] = useState({ //errors for the inputs in the modal
+        reset_password: ''
+    });
+
+    useEffect(() => {
+        apiClient.get('/users').then(response => { //GET ALL function
+            setData(response.data.data.users);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsLoading(false);
+        });
+    }, []);
+
+    const handleSubmitReset = event => {
+        event.preventDefault();
+        let validation = new Validator(formInputPass, {
+            reset_password: 'required|string|min:8'
+        });
+        if (validation.fails()) {
+            setformErrorPass({
+                reset_password: validation.errors.first('reset_password'),
+            });
+            return;
+        } else {
+            setformErrorPass({
+                reset_password: '',
+            });
+        }
+        setmodalReset({
+            ...modalReset,
+            isLoading: true
+        });
+        handleReset();
+    };
+
+    const handleReset = () => {
+        apiClient.post(`/users/${modalReset.data?.id}/reset`, {
+            ...formInputPass,
+        }).then(response => {
+            let newData = data.data.map(d => {
+                if (d.id === response.data.data.id) {
+                    return {...response.data.data};
+                }
+
+                return {...d};
+            })
+            setData({
+                ...data,
+                data: newData
+            });
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            }).then(() => {
+                handleHidemodalReset();
+            });
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setmodalReset({
+                ...modalReset,
+                isLoading: false
+            });
+        });
+    }
+
+    const handleInputChangePass = e => {
+        setformInputPass({
+            ...formInputPass,
+            [e.target.name]: e.target.value
+        });
+    }
+
+    const handleShowmodalReset = (data = null) => {
+        if (data !== null) {
+            setformInputPass({
+                ...formInputPass,
+                reset_password: data.reset_password,
+            });
+        }
+
+        setmodalReset({
+            show: true,
+            data,
+            isLoading: false
+        });
+    }
+
+    const handleHidemodalReset = () => {
+        setformInputPass({
+            reset_password: '',
+        });
+        setmodalReset({
+            show: false,
+            data: null,
+            isLoading: false
+        });
+    }
+
     const getRoleDescription = (role_id) => {
         let role = roles.find(roles => roles.id === role_id);
         return role?.description;
@@ -499,7 +498,7 @@ function Users() {
                                     <Button onClick={e => handleShowModal(row)} variant='link'>
                                         <FontAwesomeIcon icon={faEdit} className='text-primary'/>
                                     </Button>
-                                    <Button onClick={e => handleShowModal2(row)} variant='link'>
+                                    <Button onClick={e => handleShowmodalReset(row)} variant='link'>
                                         <FontAwesomeIcon icon={faRotate} className='text-success'/>
                                     </Button>
                                     <Button onClick={e => showDeleteAlert(row)} variant='link'>
@@ -730,8 +729,8 @@ function Users() {
 
             {/* <!--- Model Box Reset password ---> */}
                 <Modal
-                    show={modal2.show}
-                    onHide={handleHideModal2}
+                    show={modalReset.show}
+                    onHide={handleHidemodalReset}
                     backdrop="static"
                     keyboard={false}
                     aria-labelledby="example-custom-modal-styling-title"
@@ -740,32 +739,32 @@ function Users() {
                     <Modal.Header closeButton>
                         <Modal.Title id="example-custom-modal-styling-title">Reset Password</Modal.Title>
                     </Modal.Header>
-                    <Form onSubmit={handleSubmit2}>
+                    <Form onSubmit={handleSubmitReset}>
                         <Modal.Body>
                             <Form.Group>
                                 <Form.Label>Password</Form.Label>
                                     <Form.Control 
                                         type='password'
                                         name='reset_password'
-                                        value={formInputs2.reset_password} 
-                                        onChange={handleInputChange2}
-                                        isInvalid={!!formErrors2.reset_password}/>
+                                        value={formInputPass.reset_password} 
+                                        onChange={handleInputChangePass}
+                                        isInvalid={!!formErrorPass.reset_password}/>
                                         <Form.Control.Feedback type='invalid'>
-                                            {formErrors2.reset_password}
+                                            {formErrorPass.reset_password}
                                         </Form.Control.Feedback>
                             </Form.Group>
                         </Modal.Body>
                             <Modal.Footer>
                                 <Button
                                     variant="secondary"
-                                    onClick={handleHideModal2}
-                                    disabled={modal2.isLoading}>
+                                    onClick={handleHidemodalReset}
+                                    disabled={modalReset.isLoading}>
                                        Cancel
                                 </Button>
                                 <Button 
                                     type='submit'
                                     variant='primary'
-                                    disabled={modal2.isLoading}>
+                                    disabled={modalReset.isLoading}>
                                        Reset
                                 </Button>
                             </Modal.Footer>
