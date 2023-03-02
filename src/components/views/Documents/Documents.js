@@ -35,6 +35,7 @@ function Documents() {
             {
                 tracking: 1,
                 documenttype: 'Curriculum',
+                category: 'Ordinary',
                 receivedfrom: 'Roel Cristobal',
                 description: 'Lorem ipsum dolor',
                 // attach: 'sample file',
@@ -44,6 +45,7 @@ function Documents() {
             {
                 tracking: 2,
                 documenttype: 'CAV',
+                category: 'Confidential',
                 receivedfrom: 'Roel Cristobal',
                 description: 'Lorem ipsum dolor',
                 // attach: 'sample file',
@@ -53,6 +55,7 @@ function Documents() {
             {
                 tracking: 3,
                 documenttype: 'CAV',
+                category: 'Urgent',
                 receivedfrom: 'Roel Cristobal',
                 description: 'Lorem ipsum dolor',
                 // attach: 'sample file',

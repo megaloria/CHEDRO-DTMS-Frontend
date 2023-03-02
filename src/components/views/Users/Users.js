@@ -46,11 +46,11 @@ function Users() {
     });
 
     const [formInputs2, setFormInputs2] = useState({ // input inside the modal
-        reset_password: '',
+        reset_password: ''
     });
 
     const [formErrors2, setFormErrors2] = useState({ //errors for the inputs in the modal
-        reset_password: '',
+        reset_password: ''
     });
 
     useEffect(() => {
@@ -63,27 +63,14 @@ function Users() {
         });
     }, []);
 
-     const handlePageChange = (pageNumber) => {
-        setIsTableLoading(true);
-
-        apiClient.get(`/users?page=${pageNumber}`).then(response => {
-            setData(response.data.data);//GET ALL function
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsTableLoading(false);
-        });
-    };
-
     const handleSubmit2 = event => {
         event.preventDefault();
-
         let validation = new Validator(formInputs2, {
             reset_password: 'required|string|min:2'
         });
         if (validation.fails()) {
             setFormErrors2({
-                reset_password: validation.errors.first('password'),
+                reset_password: validation.errors.first('reset_password'),
             });
             return;
         } else {
@@ -95,13 +82,11 @@ function Users() {
             ...modal2,
             isLoading: true
         });
-        if (modal2.data === null) {
-            handleReset();
-        }
+        handleReset();
     };
 
     const handleReset = () => {
-        apiClient.post(`/users/${modal2.data?.id}`, {
+        apiClient.post(`/users/${modal2.data?.id}/reset`, {
             ...formInputs2,
         }).then(response => {
             let newData = data.data.map(d => {
@@ -168,6 +153,19 @@ function Users() {
             isLoading: false
         });
     }
+    // END of RESET PASSWORD //
+
+    const handlePageChange = (pageNumber) => {
+        setIsTableLoading(true);
+
+        apiClient.get(`/users?page=${pageNumber}`).then(response => {
+            setData(response.data.data);//GET ALL function
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    };
 
     // ADD AND EDIT INPUT
     const [formInputs, setFormInputs] = useState({ // input inside the modal
@@ -501,7 +499,7 @@ function Users() {
                                     <Button onClick={e => handleShowModal(row)} variant='link'>
                                         <FontAwesomeIcon icon={faEdit} className='text-primary'/>
                                     </Button>
-                                    <Button onClick={e => handleShowModal2()} variant='link'>
+                                    <Button onClick={e => handleShowModal2(row)} variant='link'>
                                         <FontAwesomeIcon icon={faRotate} className='text-success'/>
                                     </Button>
                                     <Button onClick={e => showDeleteAlert(row)} variant='link'>
