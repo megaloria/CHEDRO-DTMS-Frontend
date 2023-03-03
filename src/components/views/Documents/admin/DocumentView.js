@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from 'react';
+// import React, { useEffect, useState }  from 'react';
 import {
     Button,
     Row, 
@@ -15,45 +15,42 @@ import {
     faFile,
     faHashtag
 } from '@fortawesome/free-solid-svg-icons'
-import {
-    Link
-} from 'react-router-dom';
 
 function DocumentView() {
-    const [data, setData] = useState([]);
+    // const [data, setData] = useState([]);
 
-    useEffect(() => {
-        setData([
-            {
-                id: 1,
-                description: 'Regional Director'
-            },
-            {
-                id: 2,
-                description: 'Chief Administrative Officer'
-            },
-            {
-                id: 3,
-                description: 'Secretary'
-            },
-            {
-                id: 4,
-                description: 'Assistant'
-            },
-        ]);
-    }, []);
+    // useEffect(() => {
+    //     setData([
+    //         {
+    //             id: 1,
+    //             description: 'Regional Director'
+    //         },
+    //         {
+    //             id: 2,
+    //             description: 'Chief Administrative Officer'
+    //         },
+    //         {
+    //             id: 3,
+    //             description: 'Secretary'
+    //         },
+    //         {
+    //             id: 4,
+    //             description: 'Assistant'
+    //         },
+    //     ]);
+    // }, []);
 
     //VALIDATION ON ADDING RECORD
-    const [validated, setValidated] = useState(false);
+    // const [validated, setValidated] = useState(false);
 
-    const handleSubmit = event => {
-        const form = event.currentTarget;
-            if (form.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-        setValidated(true);
-    };
+    // const handleSubmit = event => {
+    //     const form = event.currentTarget;
+    //         if (form.checkValidity() === false) {
+    //             event.preventDefault();
+    //             event.stopPropagation();
+    //         }
+    //     setValidated(true);
+    // };
 
     return (
         <div class="container fluid">
@@ -61,7 +58,7 @@ function DocumentView() {
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
                         <Breadcrumb>
-                            <Breadcrumb.Item linkAs={Link} linkProps={{ to: '../' }}>Document</Breadcrumb.Item>
+                            <Breadcrumb.Item href="/home/documents">Document</Breadcrumb.Item>
                             <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>

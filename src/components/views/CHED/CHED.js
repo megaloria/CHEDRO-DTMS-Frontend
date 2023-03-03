@@ -15,7 +15,8 @@ import {
     faTrash,
     faEdit,
     faAdd,
-    faSpinner
+    faSpinner,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
@@ -107,10 +108,13 @@ function CHED() {
         apiClient.post('/settings/ched-offices', {
             ...formInputs
         }).then(response => {
-            setData([
+            setData({
                 ...data,
-                response.data.data
-            ]);
+                data: [
+                    ...data.data,
+                    response.data.data
+                ]
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -136,14 +140,17 @@ function CHED() {
         apiClient.post(`/settings/ched-offices/${modal.data?.id}`, {
             ...formInputs
         }).then(response => {
-            let newData = data.map(c => {
+            let newData = data.data.map(c => {
                 if (c.id === response.data.data.id) {
                     return {...response.data.data};
                 }
 
                 return {...c};
             })
-            setData(newData);
+            setData({
+                ...data,
+                data: newData
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -215,8 +222,11 @@ function CHED() {
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return apiClient.delete(`/settings/ched-offices/${Ched.id}`).then(response => {
-                    let newData = data.filter(d => d.id !== Ched.id);
-                    setData(newData);
+                    let newData = data.data.filter(d => d.id !== Ched.id);
+                    setData({
+                        ...data,
+                        data: newData
+                    });
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -254,11 +264,18 @@ function CHED() {
                     <Col>
                         <h1>CHED Offices</h1>
                     </Col>
-                    <Col md='auto'>
-                        <div className='search'>
-                                <Form className='mb-3' controlId=''>
-                                    <Form.Control type='search' placeholder='Search' />
-                                </Form>
+                    <Col md="auto">
+                        <div className="search">
+                            <Form className="d-flex" controlId="">
+                                <Form.Control 
+                                    type="search" 
+                                    placeholder="Search" 
+                                    className="me-2"
+                                />
+                                <Button>
+                                    <FontAwesomeIcon icon={faSearch} />
+                                </Button>
+                            </Form>
                         </div>
                     </Col>
                     <Col md='auto'>

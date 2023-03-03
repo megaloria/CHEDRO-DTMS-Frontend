@@ -21,7 +21,8 @@ import {
     // faPaperclip,
     faCircleArrowRight,
     faRightToBracket,
-    faShare
+    faShare,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
@@ -34,6 +35,7 @@ function Documents() {
             {
                 tracking: 1,
                 documenttype: 'Curriculum',
+                category: 'Ordinary',
                 receivedfrom: 'Roel Cristobal',
                 description: 'Lorem ipsum dolor',
                 // attach: 'sample file',
@@ -43,6 +45,7 @@ function Documents() {
             {
                 tracking: 2,
                 documenttype: 'CAV',
+                category: 'Confidential',
                 receivedfrom: 'Roel Cristobal',
                 description: 'Lorem ipsum dolor',
                 // attach: 'sample file',
@@ -52,6 +55,7 @@ function Documents() {
             {
                 tracking: 3,
                 documenttype: 'CAV',
+                category: 'Urgent',
                 receivedfrom: 'Roel Cristobal',
                 description: 'Lorem ipsum dolor',
                 // attach: 'sample file',
@@ -79,9 +83,9 @@ function Documents() {
     const handleClose = () => {
         setShow(false)
     };
-    const handleShow = () => {
-        setShow(true)
-    };
+    // const handleShow = () => {
+    //     setShow(true)
+    // };
 
     //MODAL EDIT
     const [show2, setShow2] = useState(false);
@@ -89,9 +93,9 @@ function Documents() {
     const handleClose2 = () => {
         setShow2(false)
     };
-    const handleShow2 = () => {
-        setShow2(true)
-    };
+    // const handleShow2 = () => {
+    //     setShow2(true)
+    // };
 
     // DELETE
     const showAlert = () => {
@@ -123,11 +127,18 @@ function Documents() {
                         <h1>Documents</h1>
                     </Col>
                     <Col md="auto">
-                    <div className="search">
-                            <Form className="mb-3" controlId="">
-                                <Form.Control type="search" placeholder="Search" />
+                        <div className="search">
+                            <Form className="d-flex" controlId="">
+                                <Form.Control 
+                                    type="search" 
+                                    placeholder="Search" 
+                                    className="me-2"
+                                />
+                                <Button>
+                                    <FontAwesomeIcon icon={faSearch} />
+                                </Button>
                             </Form>
-                    </div>
+                        </div>
                     </Col>
                     <Col md="auto">
                         <Button variant="primary" as={Link} to='receive'>
@@ -174,20 +185,20 @@ function Documents() {
                                         </td> */}  
                                         
                                         <td>{
-                                                row.status === 'Acknowledge' && (
+                                                row.status === 'Acknowledge' & (
                                                     <>
                                                     <Badge bg="info" >
                                                     {row.status}
                                                     </Badge>
                                                     </>
-                                                ) || row.status === 'Forwarded to RD' && (
+                                                ) || row.status === 'Forwarded to RD' & (
                                                     <>
                                                     <Badge bg="warning" >
                                                     {row.status}
                                                     </Badge>
                                                     </>
                                                 )
-                                                || row.status === 'Received' && (
+                                                || row.status === 'Received' & (
                                                     <>
                                                     <Badge bg="primary">
                                                     {row.status}

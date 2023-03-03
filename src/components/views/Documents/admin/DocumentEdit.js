@@ -1,49 +1,46 @@
-import React, { useEffect, useState }  from 'react';
+// import React, { useEffect, useState }  from 'react';
 import {
     Button, 
     Form, 
     Row, 
     Col
 } from 'react-bootstrap';
-import {
-    Link
-} from 'react-router-dom';
 
 function DocumentEdit() {
-    const [data, setData] = useState([]);
+    // const [data, setData] = useState([]);
 
-    useEffect(() => {
-        setData([
-            {
-                id: 1,
-                description: 'Regional Director'
-            },
-            {
-                id: 2,
-                description: 'Chief Administrative Officer'
-            },
-            {
-                id: 3,
-                description: 'Secretary'
-            },
-            {
-                id: 4,
-                description: 'Assistant'
-            },
-        ]);
-    }, []);
+    // useEffect(() => {
+    //     setData([
+    //         {
+    //             id: 1,
+    //             description: 'Regional Director'
+    //         },
+    //         {
+    //             id: 2,
+    //             description: 'Chief Administrative Officer'
+    //         },
+    //         {
+    //             id: 3,
+    //             description: 'Secretary'
+    //         },
+    //         {
+    //             id: 4,
+    //             description: 'Assistant'
+    //         },
+    //     ]);
+    // }, []);
 
-    //VALIDATION ON ADDING RECORD
-    const [validated, setValidated] = useState(false);
+    // VALIDATION ON ADDING RECORD
+    // const [validated, setValidated] = useState(false);
 
-    const handleSubmit = event => {
-        const form = event.currentTarget;
-            if (form.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            setValidated(true);
-    };
+    // const handleSubmit = event => {
+    //     const form = event.currentTarget;
+    //         if (form.checkValidity() === false) {
+    //             event.preventDefault();
+    //             event.stopPropagation();
+    //         }
+    //         setValidated(true);
+    // };
 
     return (
         <div class="container fluid">
@@ -109,8 +106,7 @@ function DocumentEdit() {
                     <Col md="auto" className="p-0">
                         <Button 
                         variant="secondary"
-                        as={Link}
-                        to='../'>
+                        href="/home/documents">
                             Cancel
                         </Button>
                     </Col>

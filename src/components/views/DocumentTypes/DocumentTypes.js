@@ -15,7 +15,8 @@ import {
     faTrash,
     faEdit,
     faAdd,
-    faSpinner
+    faSpinner,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
@@ -39,13 +40,13 @@ function DocumentTypes() {
     const [formInputs, setFormInputs] = useState({ // input inside the modal
         code: '',
         description: '',
-        days: ''
+        days: 0
     });
 
     const [formErrors, setFormErrors] = useState({ // input inside the modal
         code: '',
         description: '',
-        days: ''
+        days: 0
     });
 
     useEffect(() => {
@@ -92,7 +93,7 @@ function DocumentTypes() {
             setFormErrors({
                 code: '',
                 description: '',
-                days: ''
+                days: 0
             });
         }
 
@@ -112,10 +113,13 @@ function DocumentTypes() {
         apiClient.post('/settings/document-types', {
             ...formInputs
         }).then(response => {
-            setData([
+            setData({
                 ...data,
-                response.data.data
-            ]);
+                data: [
+                    ...data.data,
+                    response.data.data
+                ]
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -141,13 +145,16 @@ function DocumentTypes() {
         apiClient.post(`/settings/document-types/${modal.data?.id}`, {
             ...formInputs
         }).then(response => {
-            let newData = data.map(c => {
+            let newData = data.data.map(c => {
                 if (c.id === response.data.data.id) {
                     return {...response.data.data};
                 }
                 return {...c};
             })
-            setData(newData);
+            setData({
+                ...data,
+                data: newData
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -197,7 +204,7 @@ function DocumentTypes() {
         setFormInputs({
             code: '',
             description: '',
-            days: ''
+            days: 0
         });
         setModal({
             show: false,
@@ -219,8 +226,11 @@ function DocumentTypes() {
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return apiClient.delete(`/settings/document-types/${DocumentTypes.id}`).then(response => {
-                    let newData = data.filter(d => d.id !== DocumentTypes.id);
-                    setData(newData);
+                    let newData = data.data.filter(d => d.id !== DocumentTypes.id);
+                    setData({
+                        ...data,
+                        data: newData
+                    });
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -258,10 +268,17 @@ function DocumentTypes() {
                     <Col>
                         <h1>Document Types</h1>
                     </Col>
-                    <Col md='auto'>
-                        <div className='search'>
-                            <Form className='mb-3'>
-                                <Form.Control type='search' placeholder='Search' />
+                    <Col md="auto">
+                        <div className="search">
+                            <Form className="d-flex" controlId="">
+                                <Form.Control 
+                                    type="search" 
+                                    placeholder="Search" 
+                                    className="me-2"
+                                />
+                                <Button>
+                                    <FontAwesomeIcon icon={faSearch} />
+                                </Button>
                             </Form>
                         </div>
                     </Col>
