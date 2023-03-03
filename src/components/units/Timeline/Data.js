@@ -5,7 +5,7 @@ const data = [
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         date: 'March 03, 2023',
         category: {
-            tag: 'RO',
+            tag: 'Action',
             color: '#6dedd4'
         },
         link: {
@@ -13,39 +13,13 @@ const data = [
                 '#',
             text: 'Read more'
         },
-        circleColor: '#e17b77'
+        circleStyle: {
+            borderColor: '#e17b77',
+        },
     },
     {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
         date: 'March 08, 2023',
-        category: {
-            tag: 'RD',
-            color: '#6dedd4'
-        },
-        link: {
-            url:
-                '#',
-            text: 'Read more'
-        },
-        circleColor: 'green'
-    },
-    {
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        date: 'March 14, 2023',
-        category: {
-            tag: 'CAO',
-            color: '#6dedd4'
-        },
-        link: {
-            url:
-                '#',
-            text: 'Read more'
-        },
-        circleColor: 'blue'
-    },
-    {
-        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        date: 'March 20, 2023',
         category: {
             tag: 'ES',
             color: '#6dedd4'
@@ -55,13 +29,16 @@ const data = [
                 '#',
             text: 'Read more'
         },
-        circleColor: 'yellow'
+        circleColor: 'green',
+        circleStyle: {
+            borderColor: 'green',
+        },
     },
     {
         text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-        date: 'March 20, 2023',
+        date: 'March 14, 2023',
         category: {
-            tag: 'Staff',
+            tag: 'CEPS',
             color: '#6dedd4'
         },
         link: {
@@ -69,7 +46,41 @@ const data = [
                 '#',
             text: 'Read more'
         },
-        circleColor: 'green'
+        circleColor: 'blue',
+        circleStyle: {
+            borderColor: 'blue',
+        },
+    },
+    {
+        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        date: 'March 20, 2023',
+        category: {
+            tag: 'RD',
+            color: '#6dedd4'
+        },
+        link: {
+            url:
+                '#',
+            text: 'Read more'
+        },
+        circleColor: 'yellow',
+        circleStyle: {
+            borderColor: 'yellow',
+        },
+    },
+    {
+        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        date: 'March 20, 2023',
+        category: {
+            tag: 'RO',
+            color: '#6dedd4'
+        },
+        link: {
+            url:
+                '#',
+            text: 'Read more'
+        },
+        circleColor: 'green',
     }
 ]
 
