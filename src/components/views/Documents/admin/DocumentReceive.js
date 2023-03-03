@@ -16,6 +16,7 @@ import apiClient from '../../../../helpers/apiClient';
 
 function DocumentReceive() {
     const [documentTypes, setDocumentTypes] = useState([]);
+    const [NGAs, setNGAs] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
     const [provinces, setProvinces] = useState([]);
@@ -29,6 +30,8 @@ function DocumentReceive() {
           const response = await apiClient.get('/settings/heis/provinces');
           setProvinces(response.data.data);
         } else if (value === 'NGAs') {
+            const response = await apiClient.get('/settings/ngas/all');
+            setNGAs(response.data.data);
           // Fetch data for NGAs
         } else if (value === 'Ched Offices') {
           // Fetch data for Ched Offices
@@ -55,9 +58,19 @@ function DocumentReceive() {
             });
     }, []);
 
+    //  //NGAs
+    //  useEffect(() => {
+    //     apiClient.get('/settings/ngas')
+    //         .then(response => {
+    //             setNGAs(response.data.data);
+    //         })
+    //         .catch(error => {
+    //             console.log(error);
+    //         });
+    // }, []);
+
     //Category
     const [category, setCategory] = useState([]);
-
     useEffect(() => {
         apiClient.get('/settings/categories')
             .then(response => {
@@ -122,6 +135,7 @@ function DocumentReceive() {
                         <option value="NGAs">NGAs</option>
                         <option value="Ched Offices">Ched Offices</option>
                     </Form.Select>
+
                     {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
                         <Form.Select value={selectedOption2} onChange={handleChange2}>
                         <option value="">Select a province</option>
@@ -133,7 +147,7 @@ function DocumentReceive() {
                         </Form.Select>
                     )}
 
-                        {(selectedOption === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
+                    {(selectedOption === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
                         <Form.Select>
                         <option value="">Select a municipality</option>
                         {municipalities.map((municipality) => (
@@ -142,7 +156,18 @@ function DocumentReceive() {
                             </option>
                         ))}
                         </Form.Select>
-                    )}      
+                    )}
+
+                    {(selectedOption === 'NGAs' && NGAs.length !==0) &&  (
+                        <Form.Select
+                        aria-label='Default select example'>
+                        <option hidden value=''>Select NGA...</option>
+                        {NGAs.map(item => (
+                            <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
+                        ))}  
+                        </Form.Select>
+                    )}
+                      
                 </Col>
             </Row>
 
