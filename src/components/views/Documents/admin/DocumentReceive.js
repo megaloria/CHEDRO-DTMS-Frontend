@@ -133,7 +133,7 @@ function DocumentReceive() {
                         </Form.Select>
                     )}
 
-                        {(selectedOption2 !== '' && municipalities.length !== 0) &&  (
+                        {(selectedOption === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
                         <Form.Select>
                         <option value="">Select a municipality</option>
                         {municipalities.map((municipality) => (
