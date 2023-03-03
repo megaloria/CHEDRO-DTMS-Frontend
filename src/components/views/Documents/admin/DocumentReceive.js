@@ -101,10 +101,16 @@ function DocumentReceive() {
             </Row>
             <Row className="mb-3"> 
             <Form.Group>
-                <Form.Label>Category</Form.Label>
+                <div>
+                    <Form.Label> Category </Form.Label>
+                </div>
                     {category.map(category => (
-                        <div key={`inline-${category}`} className="mb-3">
-                            <Form.Check
+                        <div 
+                        style={{display:'inline'}}
+                        key={`inline-${category}`} 
+                        className="mb-3">
+                            <Form.Check 
+                                style={{paddingLeft:'10px'}}
                                 inline
                                 name='category'
                                 type='radio'
@@ -112,7 +118,7 @@ function DocumentReceive() {
                                 value={category.id}
                                 key={category.id}
                             />      
-                            {category.description}
+                            {category.description} 
                         </div>
                     ))}
                 </Form.Group>
