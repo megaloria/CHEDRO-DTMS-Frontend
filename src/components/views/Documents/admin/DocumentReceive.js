@@ -17,7 +17,9 @@ import apiClient from '../../../../helpers/apiClient';
 function DocumentReceive() {
     const [documentTypes, setDocumentTypes] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
+    const [selectedOption2, setSelectedOption2] = useState('');
     const [provinces, setProvinces] = useState([]);
+    const [municipalities, setMunicipalities] = useState([]);
 
     const handleChange = async (event) => {
         const value = event.target.value;
@@ -32,6 +34,15 @@ function DocumentReceive() {
           // Fetch data for Ched Offices
         }
       };
+
+      const handleChange2 = async (event) => {
+        const value = event.target.value;
+        setSelectedOption2(value); 
+        {
+          const response = await apiClient.get('/settings/heis/municipalities');
+          setMunicipalities(response.data.data);
+        } 
+      }
 
     //Document Types
     useEffect(() => {
@@ -112,7 +123,7 @@ function DocumentReceive() {
                         <option value="Ched Offices">Ched Offices</option>
                     </Form.Select>
                     {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
-                        <Form.Select>
+                        <Form.Select value={selectedOption2} onChange={handleChange2}>
                         <option value="">Select a province</option>
                         {provinces.map((province) => (
                             <option key={province.province} value={province.province}>
@@ -121,6 +132,17 @@ function DocumentReceive() {
                         ))}
                         </Form.Select>
                     )}
+
+                        {(selectedOption2 !== '' && municipalities.length !== 0) &&  (
+                        <Form.Select>
+                        <option value="">Select a municipality</option>
+                        {municipalities.map((municipality) => (
+                            <option key={municipality.city_municipality} value={municipality.city_municipality}>
+                            {municipality.city_municipality}
+                            </option>
+                        ))}
+                        </Form.Select>
+                    )}      
                 </Col>
             </Row>
 
