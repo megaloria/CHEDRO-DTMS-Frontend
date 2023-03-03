@@ -5,7 +5,7 @@ import {
     Row, 
     Col
 } from 'react-bootstrap';
-import{
+import {
     Link
 } from 'react-router-dom';
 
@@ -110,7 +110,7 @@ function DocumentEdit() {
                         <Button 
                         variant="secondary"
                         as={Link}
-                        to={'../'}>
+                        to='../'>
                             Cancel
                         </Button>
                     </Col>

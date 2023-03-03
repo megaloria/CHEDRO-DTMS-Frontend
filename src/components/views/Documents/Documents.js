@@ -217,7 +217,7 @@ function Documents() {
                                                     <>
                                                         {
                                                             row.status === 'Received' && (
-                                                                <Button variant="link" size='sm'>
+                                                                <Button variant="link" size='sm' as={Link} to=''>
                                                                     <FontAwesomeIcon icon={faShare} className=""/>
                                                                 </Button>
                                                             )

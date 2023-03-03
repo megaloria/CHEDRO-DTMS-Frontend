@@ -15,9 +15,6 @@ import {
     faFile,
     faHashtag
 } from '@fortawesome/free-solid-svg-icons'
-import {
-    Link
-} from 'react-router-dom'
 
 function DocumentView() {
     // const [data, setData] = useState([]);
@@ -61,7 +58,7 @@ function DocumentView() {
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
                         <Breadcrumb>
-                            <Breadcrumb.Item linkAs={Link} linkProps={{ to:'../'}}>Document</Breadcrumb.Item>
+                            <Breadcrumb.Item href="/home/documents">Document</Breadcrumb.Item>
                             <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
