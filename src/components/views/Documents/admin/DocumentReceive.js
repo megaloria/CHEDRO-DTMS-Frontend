@@ -169,6 +169,16 @@ function DocumentReceive() {
                         </Form.Select>
                     )}
 
+                    {(selectedOption === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
+                        <Form.Select>
+                        <option value="">Select a name of institution</option>
+                        {names.map((names) => (
+                            <option key={names.name} value={names.name}>
+                            {names.name}
+                            </option>
+                        ))}
+                        </Form.Select>
+                    )}
                     {(selectedOption === 'NGAs' && NGAs.length !==0) &&  (
                         <Form.Select
                         aria-label='Default select example'>
