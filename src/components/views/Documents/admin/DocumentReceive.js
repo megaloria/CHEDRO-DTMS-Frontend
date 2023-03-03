@@ -167,7 +167,6 @@ function DocumentReceive() {
                         ))}  
                         </Form.Select>
                     )}
-                      
                 </Col>
             </Row>
 
