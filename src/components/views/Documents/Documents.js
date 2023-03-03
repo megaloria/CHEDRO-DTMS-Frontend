@@ -6,7 +6,6 @@ import {
     Table, 
     Row, 
     Col, 
-    Breadcrumb,
     Tab,
     Tabs,
     Badge,
@@ -199,7 +198,7 @@ function Documents() {
                                         </td>
 
                                         <td style={{ whiteSpace: 'nowrap' }}>
-                                            <Button variant="outline-primary" size='sm' href='/Documents/Documents-View' >
+                                            <Button variant="outline-primary" size='sm' as={Link} to='view' >
                                                     <FontAwesomeIcon icon={faCircleArrowRight} className=""/> View
                                                 </Button>
                                                 {
@@ -207,13 +206,13 @@ function Documents() {
                                                     <>
                                                         {
                                                             row.status === 'Received' && (
-                                                                <Button variant="link" size='sm'>
+                                                                <Button variant="link" size='sm' as={Link} to=''>
                                                                     <FontAwesomeIcon icon={faShare} className=""/>
                                                                 </Button>
                                                             )
                                                         }
                                             
-                                                        <Button variant="link" size='sm' href='/Documents/Documents-Edit'>
+                                                        <Button variant="link" size='sm' as={Link} to='edit'>
                                                             <FontAwesomeIcon icon={faEdit} className="text-success"/>
                                                         </Button>
                                                     
