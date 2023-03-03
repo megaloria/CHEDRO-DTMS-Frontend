@@ -9,7 +9,6 @@ import {
 import {
     Link
 } from 'react-router-dom';
-
 import apiClient from '../../../../helpers/apiClient';
 // import './styles.css';
 
@@ -102,16 +101,10 @@ function DocumentReceive() {
             </Row>
             <Row className="mb-3"> 
             <Form.Group>
-                <div>
-                    <Form.Label> Category </Form.Label>
-                </div>
+                <Form.Label>Category</Form.Label>
                     {category.map(category => (
-                        <div 
-                        style={{display:'inline'}}
-                        key={`inline-${category}`} 
-                        className="mb-3">
-                            <Form.Check 
-                                style={{paddingLeft:'10px'}}
+                        <div key={`inline-${category}`} className="mb-3">
+                            <Form.Check
                                 inline
                                 name='category'
                                 type='radio'
@@ -119,7 +112,7 @@ function DocumentReceive() {
                                 value={category.id}
                                 key={category.id}
                             />      
-                            {category.description} 
+                            {category.description}
                         </div>
                     ))}
                 </Form.Group>
