@@ -18,8 +18,10 @@ function DocumentReceive() {
     const [documentTypes, setDocumentTypes] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
+    const [selectedOption3, setSelectedOption3] = useState('');
     const [provinces, setProvinces] = useState([]);
     const [municipalities, setMunicipalities] = useState([]);
+    const [names, setNames] = useState([]);
 
     const handleChange = async (event) => {
         const value = event.target.value;
@@ -41,6 +43,15 @@ function DocumentReceive() {
         {
           const response = await apiClient.get('/settings/heis/municipalities');
           setMunicipalities(response.data.data);
+        } 
+      }
+
+      const handleChange3 = async (event) => {
+        const value = event.target.value;
+        setSelectedOption3(value); 
+        {
+          const response = await apiClient.get('/settings/heis/names');
+          setNames(response.data.data);
         } 
       }
 
@@ -133,8 +144,8 @@ function DocumentReceive() {
                         </Form.Select>
                     )}
 
-                        {(selectedOption === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
-                        <Form.Select>
+                    {(selectedOption === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
+                        <Form.Select value={selectedOption3} onChange={handleChange3}>
                         <option value="">Select a municipality</option>
                         {municipalities.map((municipality) => (
                             <option key={municipality.city_municipality} value={municipality.city_municipality}>
@@ -143,6 +154,16 @@ function DocumentReceive() {
                         ))}
                         </Form.Select>
                     )}      
+                    {(selectedOption === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
+                        <Form.Select>
+                        <option value="">Select the name of institution</option>
+                        {names.map((name) => (
+                            <option key={name.name} value={name.name}>
+                            {name.name}
+                            </option>
+                        ))}
+                        </Form.Select>
+                    )}
                 </Col>
             </Row>
 
