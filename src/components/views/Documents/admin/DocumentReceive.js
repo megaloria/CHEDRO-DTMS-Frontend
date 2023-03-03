@@ -19,8 +19,10 @@ function DocumentReceive() {
     const [NGAs, setNGAs] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
+    const [selectedOption3, setSelectedOption3] = useState('');
     const [provinces, setProvinces] = useState([]);
     const [municipalities, setMunicipalities] = useState([]);
+    const [names, setNames] = useState([]);
 
     const handleChange = async (event) => {
         const value = event.target.value;
@@ -44,6 +46,15 @@ function DocumentReceive() {
         {
           const response = await apiClient.get('/settings/heis/municipalities');
           setMunicipalities(response.data.data);
+        } 
+      }
+
+      const handleChange3 = async (event) => {
+        const value = event.target.value;
+        setSelectedOption3(value); 
+        {
+          const response = await apiClient.get('/settings/heis/names');
+          setNames(response.data.data);
         } 
       }
 
@@ -148,7 +159,7 @@ function DocumentReceive() {
                     )}
 
                     {(selectedOption === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
-                        <Form.Select>
+                        <Form.Select value={selectedOption3} onChange={handleChange3}>
                         <option value="">Select a municipality</option>
                         {municipalities.map((municipality) => (
                             <option key={municipality.city_municipality} value={municipality.city_municipality}>
