@@ -79,15 +79,13 @@ function Sidebar() {
                     <hr style={{ color: 'white', margin: '0 0 0 -1rem' }} />
                     <Nav.Link eventKey='roles' as={Link} to='settings/roles' className='flex2'>
                         <FontAwesomeIcon className='me-2' icon={faUserTie} />
-                            Roles</NavDropdown.Item>
-                    </span>
-
-                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item href="/settings/divisions" eventKey='4.6'> <FontAwesomeIcon className='me-2' icon={faUsersLine}/>
-                            Divisions</NavDropdown.Item>
-                    </span>
-
-                </NavDropdown>
+                        Roles
+                    </Nav.Link>
+                    <Nav.Link eventKey='divisions' as={Link} to='settings/divisions' className='flex2'>
+                        <FontAwesomeIcon className='me-2' icon={faUsersLine} />
+                        Divisions
+                    </Nav.Link>
+                </Nav>
             </Nav>
         </div>
     );
