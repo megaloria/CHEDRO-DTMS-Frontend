@@ -106,21 +106,21 @@ function DocumentReceive() {
                 <Col>
                     <Form.Label>Receive from</Form.Label>
                     <Form.Select value={selectedOption} onChange={handleChange}>
-        <option value="">Select an option</option>
-        <option value="HEIs">HEIs</option>
-        <option value="NGAs">NGAs</option>
-        <option value="Ched Offices">Ched Offices</option>
-      </Form.Select>
-      {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
-        <Form.Select>
-          <option value="">Select a province</option>
-          {provinces.map((province) => (
-            <option key={province.province} value={province.province}>
-              {province.province}
-            </option>
-          ))}
-        </Form.Select>
-      )}
+                        <option value="">Select an option</option>
+                        <option value="HEIs">HEIs</option>
+                        <option value="NGAs">NGAs</option>
+                        <option value="Ched Offices">Ched Offices</option>
+                    </Form.Select>
+                    {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
+                        <Form.Select>
+                        <option value="">Select a province</option>
+                        {provinces.map((province) => (
+                            <option key={province.province} value={province.province}>
+                            {province.province}
+                            </option>
+                        ))}
+                        </Form.Select>
+                    )}
                 </Col>
             </Row>
 
