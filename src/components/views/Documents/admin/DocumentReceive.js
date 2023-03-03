@@ -9,6 +9,7 @@ import {
 import {
     Link
 } from 'react-router-dom';
+
 import apiClient from '../../../../helpers/apiClient';
 
 // import './styles.css';
@@ -142,7 +143,7 @@ function DocumentReceive() {
                                 value={category.id}
                                 key={category.id}
                             />      
-                            {category.description}
+                            {category.description} 
                         </div>
                     ))}
                 </Form.Group>
