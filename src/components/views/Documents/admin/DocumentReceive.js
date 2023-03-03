@@ -35,7 +35,7 @@ function DocumentReceive() {
             const response = await apiClient.get('/settings/ngas/all');
             setNGAs(response.data.data);
           // Fetch data for NGAs
-        } else if (value === 'Ched Offices') {
+        } else if (value === 'CHED Offices') {
           // Fetch data for Ched Offices
         }
       };
@@ -141,15 +141,15 @@ function DocumentReceive() {
                 <Col>
                     <Form.Label>Receive from</Form.Label>
                     <Form.Select value={selectedOption} onChange={handleChange}>
-                        <option value="">Select an option</option>
+                        <option hidden value="">Select an option</option>
                         <option value="HEIs">HEIs</option>
                         <option value="NGAs">NGAs</option>
-                        <option value="Ched Offices">Ched Offices</option>
+                        <option value="CHED Offices">CHED Offices</option>
                     </Form.Select>
 
                     {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
                         <Form.Select value={selectedOption2} onChange={handleChange2}>
-                        <option value="">Select a province</option>
+                        <option hidden value="">Select a province</option>
                         {provinces.map((province) => (
                             <option key={province.province} value={province.province}>
                             {province.province}
@@ -160,7 +160,7 @@ function DocumentReceive() {
 
                     {(selectedOption === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
                         <Form.Select value={selectedOption3} onChange={handleChange3}>
-                        <option value="">Select a municipality</option>
+                        <option hidden value="">Select a municipality</option>
                         {municipalities.map((municipality) => (
                             <option key={municipality.city_municipality} value={municipality.city_municipality}>
                             {municipality.city_municipality}
@@ -171,7 +171,7 @@ function DocumentReceive() {
 
                     {(selectedOption === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
                         <Form.Select>
-                        <option value="">Select a name of institution</option>
+                        <option hidden value="">Select a name of institution</option>
                         {names.map((names) => (
                             <option key={names.name} value={names.name}>
                             {names.name}
