@@ -10,11 +10,12 @@ function ErrorPage() {
 
 			<div style={{ marginTop:'2%' }}>
 				<h1 style={{ fontSize: '90px' }}> <b> Oops!</b> </h1>
-				<h3> Sorry Page Not Found </h3>
+				<h3> Page Not Found </h3>
 				<h5> The link you clicked may be broken or the page may have been removed. </h5>
+				<h5> Try to <a href='' onClick={() => window.location.reload(true)}>refresh</a> the page. </h5>
 			</div> 
 		</div>
-  );
+  ); 
 }
 
 export default ErrorPage;
