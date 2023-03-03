@@ -11,11 +11,29 @@ import {
 } from 'react-router-dom'
 
 import apiClient from '../../../../helpers/apiClient';
+
 // import './styles.css';
 
 function DocumentReceive() {
     const [documentTypes, setDocumentTypes] = useState([]);
+    const [selectedOption, setSelectedOption] = useState('');
+    const [provinces, setProvinces] = useState([]);
 
+    const handleChange = async (event) => {
+        const value = event.target.value;
+        setSelectedOption(value);
+    
+        if (value === 'HEIs') {
+          const response = await apiClient.get('/settings/heis/provinces');
+          setProvinces(response.data.data);
+        } else if (value === 'NGAs') {
+          // Fetch data for NGAs
+        } else if (value === 'Ched Offices') {
+          // Fetch data for Ched Offices
+        }
+      };
+
+    //Document Types
     useEffect(() => {
         apiClient.get('/settings/all-document-types')
             .then(response => {
@@ -40,7 +58,7 @@ function DocumentReceive() {
     }, []);
 
     return (
-        <div class="container fluid">
+        <div className="container fluid">
             <div className="crud bg-body rounded"> 
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
@@ -87,10 +105,22 @@ function DocumentReceive() {
                 
                 <Col>
                     <Form.Label>Receive from</Form.Label>
-                    <Form.Select 
-                     aria-label='Default select example'>
-                    <option value=''> Receive From...</option>
+                    <Form.Select value={selectedOption} onChange={handleChange}>
+                        <option value="">Select an option</option>
+                        <option value="HEIs">HEIs</option>
+                        <option value="NGAs">NGAs</option>
+                        <option value="Ched Offices">Ched Offices</option>
                     </Form.Select>
+                    {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
+                        <Form.Select>
+                        <option value="">Select a province</option>
+                        {provinces.map((province) => (
+                            <option key={province.province} value={province.province}>
+                            {province.province}
+                            </option>
+                        ))}
+                        </Form.Select>
+                    )}
                 </Col>
             </Row>
 
@@ -102,16 +132,10 @@ function DocumentReceive() {
             </Row>
             <Row className="mb-3"> 
             <Form.Group>
-                <div>
-                    <Form.Label> Category </Form.Label>
-                </div>
-                    {category.map(category => (
-                        <div 
-                        style={{display:'inline'}}
-                        key={`inline-${category}`} 
-                        className="mb-3">
-                            <Form.Check 
-                                style={{paddingLeft:'10px'}}
+                <Form.Label>Category</Form.Label>
+                    {category.map((category, index) => (
+                        <div key={index} className="mb-3">
+                            <Form.Check
                                 inline
                                 name='category'
                                 type='radio'
@@ -119,7 +143,7 @@ function DocumentReceive() {
                                 value={category.id}
                                 key={category.id}
                             />      
-                            {category.description} 
+                            {category.description}
                         </div>
                     ))}
                 </Form.Group>
