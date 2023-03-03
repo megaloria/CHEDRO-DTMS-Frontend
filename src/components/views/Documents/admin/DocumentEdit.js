@@ -1,10 +1,13 @@
-// import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState }  from 'react';
 import {
     Button, 
     Form, 
     Row, 
     Col
 } from 'react-bootstrap';
+import {
+    Link
+} from 'react-router-dom';
 
 function DocumentEdit() {
     // const [data, setData] = useState([]);
@@ -106,7 +109,8 @@ function DocumentEdit() {
                     <Col md="auto" className="p-0">
                         <Button 
                         variant="secondary"
-                        href="/home/documents">
+                        as={Link}
+                        to='../'>
                             Cancel
                         </Button>
                     </Col>
