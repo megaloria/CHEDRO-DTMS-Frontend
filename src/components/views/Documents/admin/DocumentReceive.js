@@ -91,10 +91,6 @@ function DocumentReceive() {
             });
     }, []);
 
-    //Disable future dates
-    const current = new Date();
-    const datereceived = `${current.getMonth()+1}/${current.getDate()}/${current.getFullYear()}`;
-
     //display document-type code
     const [selectedOptionDocType, setSelectedOptionDocType] = useState('');
     const [seriesno, setSeriesno] = useState('');
