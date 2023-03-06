@@ -21,6 +21,7 @@ function DocumentReceive() {
     const [provinces, setProvinces] = useState([]);
     const [municipalities, setMunicipalities] = useState([]);
     const [names, setNames] = useState([]);
+    const [trackingNo, setTrackingNo] = useState('');
 
     const handleChange = async (event) => {
         const value = event.target.value;
@@ -67,6 +68,7 @@ function DocumentReceive() {
             });
     }, []);
 
+
     //Category
     const [category, setCategory] = useState([]);
     useEffect(() => {
@@ -81,15 +83,20 @@ function DocumentReceive() {
 
     //display document-type code
     const [selectedOptionDocType, setSelectedOptionDocType] = useState('');
-    const [seriesno, setSeriesno] = useState('');
     
     const handleChangeDocType = async (event) => {
         const value = event.target.value;
         setSelectedOptionDocType(value);
-        {
-            const response = await apiClient.get('/document/all');
-            setSeriesno(response.data.data);
-        }
+        let docType = documentTypes.find(d => d.id === +value)
+        let temp = docType ? docType.code : ''
+
+        apiClient.get(`/document/series/${value}`)
+            .then(response => {
+                setTrackingNo (temp + '-' + response.data.data.toString().padStart(4, '0'));
+            })
+            .catch(error => {
+                console.log(error);
+            });
       }
     return (
         <div className="container fluid">
@@ -109,7 +116,7 @@ function DocumentReceive() {
                     <Form.Select value={selectedOptionDocType} onChange={handleChangeDocType}>
                         <option hidden value=''>Select Document Type...</option>
                             {documentTypes.map(item => (
-                                <option value={item.code}>{item.description}</option>
+                                <option value={item.id}>{item.description}</option>
                             ))}
                     </Form.Select>
                 </Col>
@@ -118,7 +125,7 @@ function DocumentReceive() {
                         <Form.Control 
                             type='text'
                             placeholder='Tracking Number'
-                            value={selectedOptionDocType}
+                            value={trackingNo}
                             disabled
                         />
                 </Col>
@@ -135,7 +142,7 @@ function DocumentReceive() {
                     <Form.Control
                         type="date" 
                         max={moment().format("YYYY-MM-DD")}
-                        value={moment().format("YYYY-MM-DD")}
+                        defaultValue={moment().format("YYYY-MM-DD")}
                     />
                     
                 </Col>
