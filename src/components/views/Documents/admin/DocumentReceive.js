@@ -34,7 +34,7 @@ function DocumentReceive() {
             const response = await apiClient.get('/settings/ngas/all');
             setNGAs(response.data.data);
           // Fetch data for NGAs
-        } else if (value === 'Ched Offices') {
+        } else if (value === 'CHED Offices') {
           // Fetch data for Ched Offices
         }
       };
@@ -162,7 +162,7 @@ function DocumentReceive() {
                         <option hidden value="">Select an option</option>
                         <option value="HEIs">HEIs</option>
                         <option value="NGAs">NGAs</option>
-                        <option value="Ched Offices">Ched Offices</option>
+                        <option value="CHED Offices">CHED Offices</option>
                     </Form.Select>
 
                     {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
