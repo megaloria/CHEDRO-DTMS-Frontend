@@ -9,10 +9,9 @@ import {
 import {
     Link
 } from 'react-router-dom'
-
+import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
-
-// import './styles.css';
+import { render } from '@testing-library/react';
 
 function DocumentReceive() {
     const [documentTypes, setDocumentTypes] = useState([]);
@@ -92,6 +91,22 @@ function DocumentReceive() {
             });
     }, []);
 
+    //Disable future dates
+    const current = new Date();
+    const datereceived = `${current.getMonth()+1}/${current.getDate()}/${current.getFullYear()}`;
+
+    //display document-type code
+    const [selectedOptionDocType, setSelectedOptionDocType] = useState('');
+    const [seriesno, setSeriesno] = useState('');
+    
+    const handleChangeDocType = async (event) => {
+        const value = event.target.value;
+        setSelectedOptionDocType(value);
+        {
+            const response = await apiClient.get('/document/all');
+            setSeriesno(response.data.data);
+        }
+      }
     return (
         <div className="container fluid">
             <div className="crud bg-body rounded"> 
@@ -106,24 +121,22 @@ function DocumentReceive() {
             </div>
             <Row className="mb-3">
                 <Col>
-                <Form.Label>Tracking No.</Form.Label>
-                    <Form.Control 
-                    type="text" 
-                    placeholder="Tracking Number" 
-                    aria-label="Tracking Number"
-                    disabled
-                    readOnly
-                    />
+                    <Form.Label>Document Type</Form.Label>
+                    <Form.Select value={selectedOptionDocType} onChange={handleChangeDocType}>
+                        <option hidden value=''>Select Document Type...</option>
+                            {documentTypes.map(item => (
+                                <option value={item.code}>{item.description}</option>
+                            ))}
+                    </Form.Select>
                 </Col>
                 <Col>
-                    <Form.Label>Document Type</Form.Label>
-                    <Form.Select 
-                        aria-label='Default select example'>
-                        <option value=''>Select Document Type...</option>
-                        {documentTypes.map(item => (
-                            <option key={item.id} value={item.id}>{item.description}</option>
-                        ))}    
-                    </Form.Select>
+                <Form.Label>Tracking No.</Form.Label>
+                        <Form.Control 
+                            type='text'
+                            placeholder='Tracking Number'
+                            value={selectedOptionDocType}
+                            disabled
+                        />
                 </Col>
                 <Col>
                     <Form.Label>Attachment (Optional)</Form.Label>
@@ -135,13 +148,18 @@ function DocumentReceive() {
             <Row className="mb-3">
                 <Col>
                     <Form.Label>Date Received</Form.Label>
-                    <Form.Control type="date" placeholder="Date Received" />
+                    <Form.Control
+                        type="date" 
+                        max={moment().format("YYYY-MM-DD")}
+                        value={moment().format("YYYY-MM-DD")}
+                    />
+                    
                 </Col>
                 
                 <Col>
                     <Form.Label>Receive from</Form.Label>
                     <Form.Select value={selectedOption} onChange={handleChange}>
-                        <option value="">Select an option</option>
+                        <option hidden value="">Select an option</option>
                         <option value="HEIs">HEIs</option>
                         <option value="NGAs">NGAs</option>
                         <option value="Ched Offices">Ched Offices</option>
@@ -149,10 +167,10 @@ function DocumentReceive() {
 
                     {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
                         <Form.Select value={selectedOption2} onChange={handleChange2}>
-                        <option value="">Select a province</option>
+                        <option hidden value="">Select a province</option>
                         {provinces.map((province) => (
                             <option key={province.province} value={province.province}>
-                            {province.province}
+                                {province.province}
                             </option>
                         ))}
                         </Form.Select>
@@ -160,7 +178,7 @@ function DocumentReceive() {
 
                     {(selectedOption === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
                         <Form.Select value={selectedOption3} onChange={handleChange3}>
-                        <option value="">Select a municipality</option>
+                        <option hidden value="">Select a municipality</option>
                         {municipalities.map((municipality) => (
                             <option key={municipality.city_municipality} value={municipality.city_municipality}>
                             {municipality.city_municipality}
@@ -171,7 +189,7 @@ function DocumentReceive() {
 
                     {(selectedOption === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
                         <Form.Select>
-                        <option value="">Select a name of institution</option>
+                        <option hidden value="">Select a name of institution</option>
                         {names.map((names) => (
                             <option key={names.name} value={names.name}>
                             {names.name}
