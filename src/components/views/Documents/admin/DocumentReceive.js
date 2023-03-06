@@ -11,7 +11,6 @@ import {
 } from 'react-router-dom'
 import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
-import { render } from '@testing-library/react';
 
 function DocumentReceive() {
     const [documentTypes, setDocumentTypes] = useState([]);
@@ -67,17 +66,6 @@ function DocumentReceive() {
                 console.log(error);
             });
     }, []);
-
-    //  //NGAs
-    //  useEffect(() => {
-    //     apiClient.get('/settings/ngas')
-    //         .then(response => {
-    //             setNGAs(response.data.data);
-    //         })
-    //         .catch(error => {
-    //             console.log(error);
-    //         });
-    // }, []);
 
     //Category
     const [category, setCategory] = useState([]);
