@@ -297,6 +297,7 @@ function DocumentReceive() {
                                         <Col md={'auto'}> 
                                         <Form.Label>Select assign to:</Form.Label>
                                         <Form.Select>
+                                        <option hidden value=''>Select assign to...</option>
                                                 {users.map(user => (
                                                      <option key={user.id} value={user.id}>
                                                         {` ${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`}
@@ -314,23 +315,29 @@ function DocumentReceive() {
                     
                 </Form.Group>
             </Row>
-            <div>
-                <Row className= "justify-content-end mt-4 mb-3">
+            
+                <Row className= "justify-content-end mt-4 mb-4">
                     <Col md="auto" className="p-0">
                         <Button 
-                        variant="secondary"
+                        variant="outline-danger"
                         as={Link}
                         to='../'>
                             Cancel
                         </Button>
                     </Col>
-                    <Col md="auto">
+                    
+                    <Col md="auto" className="p-0">
                         <Button variant="outline-primary">
+                            Forward
+                        </Button>
+                    </Col>
+                    <Col md="auto" className="p-0">
+                        <Button variant="primary">
                             Received
                         </Button>
                     </Col>
                 </Row>
-            </div>
+            
         </div>
     );
 }
