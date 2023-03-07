@@ -8,7 +8,7 @@ import {
 } from 'react-bootstrap';
 import {
     Link
-} from 'react-router-dom'
+} from 'react-router-dom';
 import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
 
