@@ -19,6 +19,9 @@ function DocumentReceive() {
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
     const [selectedOption3, setSelectedOption3] = useState('');
+    
+    const [selectedOption4, setSelectedOption4] = useState("");
+    const [selectForm, setSelectForm] = useState(null);
     const [provinces, setProvinces] = useState([]);
     const [municipalities, setMunicipalities] = useState([]);
     const [names, setNames] = useState([]);
@@ -59,6 +62,15 @@ function DocumentReceive() {
           const response = await apiClient.get('/settings/heis/names');
           setNames(response.data.data);
         } 
+      }
+
+      function handleOptionChange(event) {
+        setSelectedOption4(event.target.value);
+      }
+
+      function handleAddSelectForm() {
+        setSelectForm(
+        );
       }
 
     //Document Types
@@ -219,6 +231,7 @@ function DocumentReceive() {
                     <Form.Control as="textarea" rows={5} type="text" placeholder="Description" />
                 </Col>
             </Row>
+
             <Row className="mb-3"> 
             <Form.Group>
                 <div> 
@@ -235,13 +248,32 @@ function DocumentReceive() {
                                 id={`inline-${category}-1`}
                                 value={category.id}
                                 key={category.id}
+                                onChange={handleOptionChange}
                             />  
                             {category.description}
                             
                         </div>
                     ))}
                 </Form.Group>
+                    {selectedOption4 && (
+                        <div>
+                        {selectForm ? (
+                            <div>{selectForm}</div>
+                        ) : (
+                            <Row> 
+                                <Col md={3}> 
+                            <Form.Control onClick={handleAddSelectForm}
+                                type='text'
+                                placeholder=''
+                                readOnly
+                            />
+                            </Col>
+                            </Row>
+                        )}
+                        </div>
+                    )}    
             </Row>
+            
             <div>
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col md="auto" className="p-0">
@@ -253,7 +285,7 @@ function DocumentReceive() {
                         </Button>
                     </Col>
                     <Col md="auto">
-                        <Button variant="outline-primary">
+                        <Button variant="primary">
                             Received
                         </Button>
                     </Col>
