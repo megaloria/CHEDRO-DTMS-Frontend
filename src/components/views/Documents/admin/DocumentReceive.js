@@ -15,6 +15,7 @@ import apiClient from '../../../../helpers/apiClient';
 function DocumentReceive() {
     const [documentTypes, setDocumentTypes] = useState([]);
     const [NGAs, setNGAs] = useState([]);
+    const [ChedOffices, setChedOffices] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
     const [selectedOption3, setSelectedOption3] = useState('');
@@ -30,11 +31,14 @@ function DocumentReceive() {
         if (value === 'HEIs') {
           const response = await apiClient.get('/settings/heis/provinces');
           setProvinces(response.data.data);
+          // Fetch data for HEIs
         } else if (value === 'NGAs') {
             const response = await apiClient.get('/settings/ngas/all');
             setNGAs(response.data.data);
           // Fetch data for NGAs
         } else if (value === 'CHED Offices') {
+            const response = await apiClient.get('/settings/ched-offices/all');
+            setChedOffices(response.data.data);
           // Fetch data for Ched Offices
         }
       };
@@ -195,6 +199,15 @@ function DocumentReceive() {
                         {NGAs.map(item => (
                             <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
                         ))}  
+                        </Form.Select>
+                    )}
+                    {(selectedOption === 'CHED Offices' && ChedOffices.length !== 0) && (
+                        <Form.Select
+                            aria-label='Default select example'>
+                            <option hidden value=''>Select Ched Office...</option>
+                            {ChedOffices.map(item => (
+                                <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
+                            ))}
                         </Form.Select>
                     )}
                 </Col>
