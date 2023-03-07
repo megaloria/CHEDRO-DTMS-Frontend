@@ -17,11 +17,11 @@ function DocumentReceive() {
     const [NGAs, setNGAs] = useState([]);
     const [users, setUsers] = useState([]);
     const [ChedOffices, setChedOffices] = useState([]);
-    const [Profiles, setProfiles] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
     const [selectedOption3, setSelectedOption3] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [category, setCategory] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const [municipalities, setMunicipalities] = useState([]);
     const [names, setNames] = useState([]);
@@ -65,36 +65,14 @@ function DocumentReceive() {
       }
 
     useEffect(() => {
-        apiClient.get('/users/all')
+        apiClient.get('/document/receive')
             .then(response => {
                 setUsers(response.data.data.users);
+                setDocumentTypes(response.data.data.documentTypes);
+                setCategory(response.data.data.categories);
             })
             .catch(error => {
                 console.error(error);
-            });
-    }, []);
-
-    //Document Types
-    useEffect(() => {
-        apiClient.get('/settings/document-types/all')
-            .then(response => {
-                setDocumentTypes(response.data.data);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }, []);
-
-
-    //Category
-    const [category, setCategory] = useState([]);
-    useEffect(() => {
-        apiClient.get('/settings/categories')
-            .then(response => {
-                setCategory(response.data.data);
-            })
-            .catch(error => {
-                console.log(error);
             });
     }, []);
 
@@ -133,7 +111,7 @@ function DocumentReceive() {
                     <Form.Select value={selectedOptionDocType} onChange={handleChangeDocType}>
                         <option hidden value=''>Select Document Type...</option>
                             {documentTypes.map(item => (
-                                <option value={item.id}>{item.description}</option>
+                                <option key={item.id} value={item.id}>{item.description}</option>
                             ))}
                     </Form.Select>
                 </Col>
@@ -259,39 +237,19 @@ function DocumentReceive() {
                         {/* Conditional rendering */}
                         {selectedCategory && (
                             <div style={{ marginTop: '10px' }}>
-                                {selectedCategory.is_assignable ? (
+                                {selectedCategory.is_assignable &&(
                                     <Row> 
                                         <Col md={3}> 
                                         <Form.Label>Select assign to:</Form.Label>
                                         <Form.Select>
-                                      
-                                             <option>
                                                 {users.map(user => (
-                                            <option key={user.id} value={user.id}>
-                                                {`${user.first_name} ${user.last_name}`}
+                                                     <option key={user.id} value={user.id}>
+                                                        {` ${user.role.description} - ${user.profile.first_name} ${user.profile.last_name}`}
                                             </option>
                                         ))}
-                                             </option> 
                                         </Form.Select>
                                     </Col>
                                     </Row>
-                                ) : (   
-                                    <Row> 
-                                        <Col md={3}> 
-                                        <Form.Label>Assign to:</Form.Label>
-                                        <Form.Control  
-                                            type='text'
-                                            readOnly>   
-                                        {Profiles.map(item => (
-                                            <option key={item.id} value={item.id}>
-                                                {item.prefix} - {item.first_name} - {item.middle_name} -
-                                                {item.last_name} - {item.suffix}
-                                                </option>
-                                        ))}
-                                        </Form.Control>
-                                        </Col>
-                                        </Row>
-                                        
                                 )}
                             </div>
                         )}
