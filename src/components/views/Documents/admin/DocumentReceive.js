@@ -8,7 +8,7 @@ import {
 } from 'react-bootstrap';
 import {
     Link
-} from 'react-router-dom';
+} from 'react-router-dom'
 import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
 
@@ -231,7 +231,6 @@ function DocumentReceive() {
                     <Form.Control as="textarea" rows={5} type="text" placeholder="Description" />
                 </Col>
             </Row>
-
             <Row className="mb-3"> 
             <Form.Group>
                 <div> 
@@ -280,7 +279,6 @@ function DocumentReceive() {
                     
                 </Form.Group>
             </Row>
-            
             <div>
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col md="auto" className="p-0">
@@ -292,7 +290,7 @@ function DocumentReceive() {
                         </Button>
                     </Col>
                     <Col md="auto">
-                        <Button variant="primary">
+                        <Button variant="outline-primary">
                             Received
                         </Button>
                     </Col>
