@@ -62,9 +62,6 @@ function DocumentReceive() {
         } 
       }
 
-
-    
-
     //Document Types
     useEffect(() => {
         apiClient.get('/settings/document-types/all')
@@ -75,7 +72,6 @@ function DocumentReceive() {
                 console.log(error);
             });
     }, []);
-
 
     //Category
     const [category, setCategory] = useState([]);
