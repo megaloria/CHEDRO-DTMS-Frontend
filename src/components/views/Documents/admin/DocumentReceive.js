@@ -19,6 +19,7 @@ function DocumentReceive() {
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
     const [selectedOption3, setSelectedOption3] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const [provinces, setProvinces] = useState([]);
     const [municipalities, setMunicipalities] = useState([]);
     const [names, setNames] = useState([]);
@@ -60,6 +61,9 @@ function DocumentReceive() {
           setNames(response.data.data);
         } 
       }
+
+
+    
 
     //Document Types
     useEffect(() => {
@@ -224,22 +228,43 @@ function DocumentReceive() {
                 <div> 
                 <Form.Label>Category</Form.Label>
                 </div>
-                    {category.map((category, index) => (
-                        <div 
-                        style={{display:'inline-block', marginRight:'10px'}}
-                        key={index} className="mb-3">
-                            <Form.Check
-                                inline
-                                name='category'
-                                type='radio'
-                                id={`inline-${category}-1`}
-                                value={category.id}
-                                key={category.id}
-                            />  
-                            {category.description}
-                            
-                        </div>
-                    ))}
+                    <div>
+                        {category.map((category, index) => (
+                            <div
+                                style={{ display: 'inline-block', marginRight: '10px' }}
+                                key={index}
+                                className="mb-3" >
+                                <Form.Check
+                                    inline
+                                    name='category'
+                                    type='radio'
+                                    id={`inline-${category.id}-1`}
+                                    value={category.id}
+                                    key={category.id}
+                                    onChange={() => setSelectedCategory(category)}
+                                />
+                                {category.description}
+                            </div>
+                        ))}
+
+                        {/* Conditional rendering */}
+                        {selectedCategory && (
+                            <div style={{ marginTop: '10px' }}>
+                                {selectedCategory.is_assignable ? (
+                                    <select>
+                                        {/* options go here */}
+                                    </select>
+                                ) : (
+                                        <Form.Control
+                                            type='text'
+                                            disabled
+                                        />
+                                )}
+                            </div>
+                        )}
+                    </div>
+                    
+                    
                 </Form.Group>
             </Row>
             <div>
