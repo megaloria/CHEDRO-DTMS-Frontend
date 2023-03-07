@@ -64,9 +64,6 @@ function DocumentReceive() {
         } 
       }
 
-
-    
-
     //Document Types
     useEffect(() => {
         apiClient.get('/settings/document-types/all')
@@ -113,7 +110,7 @@ function DocumentReceive() {
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
                         <Breadcrumb>
-                            <Breadcrumb.Item linkAs={Link} linkProps={{  to: '../' }}>Documents</Breadcrumb.Item>
+                            <Breadcrumb.Item linkAs={Link} linkProps={{ to: '../' }}>Documents</Breadcrumb.Item>
                             <Breadcrumb.Item href="#" active>Received</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
@@ -282,7 +279,7 @@ function DocumentReceive() {
                                         ))}
                                         </Form.Control>
                                         </Col>
-                                        </Row>
+                                    </Row>
                                         
                                 )}
                             </div>
