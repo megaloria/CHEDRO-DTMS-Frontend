@@ -99,7 +99,7 @@ function DocumentReceive() {
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
                         <Breadcrumb>
-                            <Breadcrumb.Item linkAs={Link} linkProps={{  to: '../' }}>Documents</Breadcrumb.Item>
+                            <Breadcrumb.Item linkAs={Link} linkProps={{ to: '../' }}>Documents</Breadcrumb.Item>
                             <Breadcrumb.Item href="#" active>Received</Breadcrumb.Item>
                         </Breadcrumb>
                     </Col>
@@ -207,7 +207,7 @@ function DocumentReceive() {
             <Row className="mb-3">
             <Col>
                     <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" rows={5} type="text" placeholder="Description" />
+                    <Form.Control as="textarea" rows={3} type="text" placeholder="Description" />
                 </Col>
             </Row>
             <Row className="mb-3"> 
