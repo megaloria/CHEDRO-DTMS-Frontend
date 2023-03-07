@@ -15,6 +15,7 @@ import apiClient from '../../../../helpers/apiClient';
 function DocumentReceive() {
     const [documentTypes, setDocumentTypes] = useState([]);
     const [NGAs, setNGAs] = useState([]);
+    const [users, setUsers] = useState([]);
     const [ChedOffices, setChedOffices] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
@@ -62,8 +63,15 @@ function DocumentReceive() {
         } 
       }
 
-
-    
+    useEffect(() => {
+        apiClient.get('/users/all')
+            .then(response => {
+                setUsers(response.data.data.users);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }, []);
 
     //Document Types
     useEffect(() => {
@@ -253,7 +261,11 @@ function DocumentReceive() {
                             <div style={{ marginTop: '10px' }}>
                                 {selectedCategory.is_assignable ? (
                                     <select>
-                                        {/* options go here */}
+                                        {users.map(user => (
+                                            <option key={user.id} value={user.id}>
+                                                {`${user.first_name} ${user.last_name}`}
+                                            </option>
+                                        ))}
                                     </select>
                                 ) : (
                                         <Form.Control
