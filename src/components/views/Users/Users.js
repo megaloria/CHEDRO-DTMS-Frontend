@@ -424,23 +424,6 @@ function Users() {
         );
     }
 
-    
-    // SHOW PASSWORD
-    // const [passwordType, setPasswordType] = ('password');
-    // const [passwordInput, setPasswordInput] = ('');
-
-    // const handlePasswordChange = evnt => {
-    //     setPasswordInput(evnt.target.value);
-    // }
-    // const togglePassword = () => {
-    //     if(passwordType === 'password') {
-    //         setPasswordType('text');
-    //         return;
-    //     }
-    //     setPasswordType('password')
-    // }
-
- 
     return (
         <Container fluid>
             <div className='bg-body rounded'> 
@@ -567,19 +550,6 @@ function Users() {
                                                 placeholder='Enter Password'
                                                 isInvalid={!!formErrors.password}
                                                  />
-                                                {/* <Button
-                                                    className='p-1'
-                                                    id='button-addon'
-                                                    variant='outline-secondary' 
-                                                    onClick={togglePassword}>
-                                                        {
-                                                            passwordType === 'password' ? (
-                                                                <FontAwesomeIcon icon={faEye}/> 
-                                                            ) : (
-                                                                <FontAwesomeIcon icon={faEyeSlash}/>
-                                                            )
-                                                        }
-                                                </Button> */}
                                             <Form.Control.Feedback type='invalid'>
                                                 {formErrors.password}
                                             </Form.Control.Feedback>
