@@ -221,7 +221,7 @@ function DocumentReceive() {
             <Row className="mb-3">
             <Col>
                     <Form.Label>Description</Form.Label>
-                    <Form.Control as="textarea" rows={5} type="text" placeholder="Description" />
+                    <Form.Control as="textarea" rows={3} type="text" placeholder="Description" />
                 </Col>
             </Row>
             <Row className="mb-3"> 
