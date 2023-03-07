@@ -299,7 +299,7 @@ function DocumentReceive() {
                                         <Form.Select>
                                                 {users.map(user => (
                                                      <option key={user.id} value={user.id}>
-                                                        {` ${user.role.description} - ${user.profile.first_name} ${user.profile.last_name}`}
+                                                        {` ${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`}
                                             </option>
                                         ))}
                                                
