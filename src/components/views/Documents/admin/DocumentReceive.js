@@ -16,6 +16,7 @@ function DocumentReceive() {
     const [documentTypes, setDocumentTypes] = useState([]);
     const [NGAs, setNGAs] = useState([]);
     const [ChedOffices, setChedOffices] = useState([]);
+    const [Profiles, setProfiles] = useState([]);
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
     const [selectedOption3, setSelectedOption3] = useState('');
@@ -247,19 +248,39 @@ function DocumentReceive() {
                                 {category.description}
                             </div>
                         ))}
-
+                        
                         {/* Conditional rendering */}
                         {selectedCategory && (
                             <div style={{ marginTop: '10px' }}>
                                 {selectedCategory.is_assignable ? (
-                                    <select>
-                                        {/* options go here */}
-                                    </select>
-                                ) : (
-                                        <Form.Control
+                                    <Row> 
+                                        <Col md={3}> 
+                                        <Form.Label>Select assign to:</Form.Label>
+                                        <Form.Select>
+                                      
+                                             <option>
+                                                {/* options go here */}
+                                             </option> 
+                                        </Form.Select>
+                                    </Col>
+                                    </Row>
+                                ) : (   
+                                    <Row> 
+                                        <Col md={3}> 
+                                        <Form.Label>Assign to:</Form.Label>
+                                        <Form.Control  
                                             type='text'
-                                            disabled
-                                        />
+                                            readOnly>   
+                                        {Profiles.map(item => (
+                                            <option key={item.id} value={item.id}>
+                                                {item.prefix} - {item.first_name} - {item.middle_name} -
+                                                {item.last_name} - {item.suffix}
+                                                </option>
+                                        ))}
+                                        </Form.Control>
+                                        </Col>
+                                        </Row>
+                                        
                                 )}
                             </div>
                         )}
