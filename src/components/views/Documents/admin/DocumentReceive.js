@@ -4,11 +4,16 @@ import {
     Form, 
     Row, 
     Col, 
-    Breadcrumb
+    Breadcrumb,
+    Alert
 } from 'react-bootstrap';
 import {
     Link
 } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+    faSpinner
+} from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
 
@@ -26,42 +31,69 @@ function DocumentReceive() {
     const [municipalities, setMunicipalities] = useState([]);
     const [names, setNames] = useState([]);
     const [trackingNo, setTrackingNo] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(true); 
+    const [isOptionLoading, setIsOptionLoading] = useState(false); 
+    const [isOptionLoading1, setIsOptionLoading1] = useState(false); 
 
     const handleChange = async (event) => {
-        const value = event.target.value;
-        setSelectedOption(value);
-    
-        if (value === 'HEIs') {
-          const response = await apiClient.get('/settings/heis/provinces');
-          setProvinces(response.data.data);
-          // Fetch data for HEIs
-        } else if (value === 'NGAs') {
-            const response = await apiClient.get('/settings/ngas/all');
-            setNGAs(response.data.data);
-          // Fetch data for NGAs
-        } else if (value === 'CHED Offices') {
-            const response = await apiClient.get('/settings/ched-offices/all');
-            setChedOffices(response.data.data);
-          // Fetch data for Ched Offices
+        try {
+            setIsOptionLoading(true);
+            const value = event.target.value;
+            setSelectedOption(value);
+
+            if (value === 'HEIs') {
+                const response = await apiClient.get('/settings/heis/provinces');
+                setProvinces(response.data.data);
+                // Fetch data for HEIs
+            } else if (value === 'NGAs') {
+                const response = await apiClient.get('/settings/ngas/all');
+                setNGAs(response.data.data);
+                // Fetch data for NGAs
+            } else if (value === 'CHED Offices') {
+                const response = await apiClient.get('/settings/ched-offices/all');
+                setChedOffices(response.data.data);
+                // Fetch data for Ched Offices
+            }
+        } catch (error) {
+            setErrorMessage(error);
+        } finally {
+            setIsOptionLoading(false);
         }
-      };
+    };
+        
 
       const handleChange2 = async (event) => {
-        const value = event.target.value;
-        setSelectedOption2(value); 
-        {
-          const response = await apiClient.get('/settings/heis/municipalities');
-          setMunicipalities(response.data.data);
-        } 
+        try{
+            setIsOptionLoading(true);
+            const value = event.target.value;
+            setSelectedOption2(value);
+            {
+                const response = await apiClient.get('/settings/heis/municipalities');
+                setMunicipalities(response.data.data);
+            } 
+        } catch (error) {
+            setErrorMessage(error);
+        } finally {
+            setIsOptionLoading(false);
+        }
+        
       }
 
       const handleChange3 = async (event) => {
-        const value = event.target.value;
-        setSelectedOption3(value); 
+        try {
+            setIsOptionLoading(true);
+            const value = event.target.value;
+            setSelectedOption3(value); 
         {
           const response = await apiClient.get('/settings/heis/names');
           setNames(response.data.data);
-        } 
+        }   
+        } catch (error) {
+            setErrorMessage(error);
+        } finally {
+            setIsOptionLoading(false);
+        }
       }
 
     useEffect(() => {
@@ -72,7 +104,9 @@ function DocumentReceive() {
                 setCategory(response.data.data.categories);
             })
             .catch(error => {
-                console.error(error);
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsLoading(false);
             });
     }, []);
 
@@ -80,6 +114,7 @@ function DocumentReceive() {
     const [selectedOptionDocType, setSelectedOptionDocType] = useState('');
     
     const handleChangeDocType = async (event) => {
+        setIsOptionLoading1(true);
         const value = event.target.value;
         setSelectedOptionDocType(value);
         let docType = documentTypes.find(d => d.id === +value)
@@ -90,9 +125,26 @@ function DocumentReceive() {
                 setTrackingNo (temp + '-' + response.data.data.toString().padStart(4, '0'));
             })
             .catch(error => {
-                console.log(error);
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsOptionLoading1(false);
             });
-      }
+        }
+
+    if (isLoading) {
+        return (
+            <FontAwesomeIcon icon={faSpinner} spin lg />
+        );
+    }
+
+    if (errorMessage) {
+        return (
+            <Alert variant='danger'>
+                {errorMessage}
+            </Alert>
+        );
+    }
+
     return (
         <div className="container fluid">
             <div className="crud bg-body rounded"> 
@@ -107,7 +159,7 @@ function DocumentReceive() {
             </div>
             <Row className="mb-3">
                 <Col>
-                    <Form.Label>Document Type</Form.Label>
+                    <Form.Label>Document Type </Form.Label>
                     <Form.Select value={selectedOptionDocType} onChange={handleChangeDocType}>
                         <option hidden value=''>Select Document Type...</option>
                             {documentTypes.map(item => (
@@ -116,7 +168,7 @@ function DocumentReceive() {
                     </Form.Select>
                 </Col>
                 <Col>
-                <Form.Label>Tracking No.</Form.Label>
+                    <Form.Label>Tracking No. {isOptionLoading1 ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""}</Form.Label>
                         <Form.Control 
                             type='text'
                             placeholder='Tracking Number'
@@ -143,7 +195,7 @@ function DocumentReceive() {
                 </Col>
                 
                 <Col>
-                    <Form.Label>Receive from</Form.Label>
+                    <Form.Label>Receive from {isOptionLoading ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""} </Form.Label>
                     <Form.Select value={selectedOption} onChange={handleChange}>
                         <option hidden value="">Select an option</option>
                         <option value="HEIs">HEIs</option>
@@ -213,9 +265,10 @@ function DocumentReceive() {
             <Row className="mb-3"> 
             <Form.Group>
                 <div> 
-                <Form.Label>Category</Form.Label>
+                        <Form.Label>Category </Form.Label>
                 </div>
                     <div>
+                        
                         {category.map((category, index) => (
                             <div
                                 style={{ display: 'inline-block', marginRight: '10px' }}
@@ -231,15 +284,17 @@ function DocumentReceive() {
                                     onChange={() => setSelectedCategory(category)}
                                 />
                                 {category.description}
+                                
                             </div>
                         ))}
                         
                         {/* Conditional rendering */}
+                       
                         {selectedCategory && (
                             <div style={{ marginTop: '10px' }}>
                                 {selectedCategory.is_assignable &&(
                                     <Row> 
-                                        <Col md={3}> 
+                                        <Col md={'auto'}> 
                                         <Form.Label>Select assign to:</Form.Label>
                                         <Form.Select>
                                                 {users.map(user => (
@@ -247,6 +302,7 @@ function DocumentReceive() {
                                                         {` ${user.role.description} - ${user.profile.first_name} ${user.profile.last_name}`}
                                             </option>
                                         ))}
+                                               
                                         </Form.Select>
                                     </Col>
                                     </Row>
