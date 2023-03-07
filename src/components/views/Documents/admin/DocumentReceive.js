@@ -64,6 +64,9 @@ function DocumentReceive() {
         } 
       }
 
+
+    
+
     //Document Types
     useEffect(() => {
         apiClient.get('/settings/document-types/all')
