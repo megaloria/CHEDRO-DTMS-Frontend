@@ -317,7 +317,7 @@ function DocumentReceive() {
             </Row>
             
                 <Row className= "justify-content-end mt-4 mb-4">
-                    <Col md="auto" className="p-0">
+                    <Col md="auto" className="p-0 me-2">
                         <Button 
                         variant="outline-danger"
                         as={Link}
@@ -326,7 +326,7 @@ function DocumentReceive() {
                         </Button>
                     </Col>
                     
-                    <Col md="auto" className="p-0">
+                    <Col md="auto" className="p-0 me-2">
                         <Button variant="outline-primary">
                             Forward
                         </Button>
