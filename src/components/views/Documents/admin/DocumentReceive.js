@@ -265,13 +265,12 @@ function DocumentReceive() {
             <Row className="mb-3"> 
             <Form.Group>
                 <div> 
-                        <Form.Label>Category </Form.Label>
+                    <Form.Label>Category </Form.Label>
                 </div>
                     <div>
-                        
                         {category.map((category, index) => (
                             <div
-                                style={{ display: 'inline-block', marginRight: '10px' }}
+                                style={{ display: 'inline-block', marginRight: '20px' }}
                                 key={index}
                                 className="mb-3" >
                                 <Form.Check
@@ -282,6 +281,7 @@ function DocumentReceive() {
                                     value={category.id}
                                     key={category.id}
                                     onChange={() => setSelectedCategory(category)}
+                                    style={{ marginRight:'8px' }}
                                 />
                                 {category.description}
                                 
