@@ -26,6 +26,9 @@ function DocumentReceive() {
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
     const [selectedOption3, setSelectedOption3] = useState('');
+    const [selectedOption4, setSelectedOption4] = useState('');
+    const [selectedOption5, setSelectedOption5] = useState('');
+    const [selectedOption6, setSelectedOption6] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [category, setCategory] = useState([]);
     const [provinces, setProvinces] = useState([]);
@@ -224,6 +227,18 @@ const handleChangeDocType = async (event) => {
         }
       }
 
+    const handleChange4 = (event) => {
+        setSelectedOption4(event.target.value);
+    }
+
+    const handleChange5 = (event) => {
+        setSelectedOption5(event.target.value);
+    }
+
+    const handleChange6 = (event) => {
+        setSelectedOption6(event.target.value);
+    }
+
     useEffect(() => {
         apiClient.get('/document/receive')
             .then(response => {
@@ -324,17 +339,17 @@ const handleChangeDocType = async (event) => {
                 <Col>
                     <Form.Label>Receive from {isOptionLoading ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""} </Form.Label>
                     <Form.Select 
-                            name='received_from' 
+                        name='received_from' 
                         value={selectedOption} 
                         onChange={handleChange}
-                            isInvalid={!!formErrors.received_from}>
+                        isInvalid={!!formErrors.received_from}>
                         <option hidden value="">Select an option</option>
                         <option value="HEIs">HEIs</option>
                         <option value="NGAs">NGAs</option>
                         <option value="CHED Offices">CHED Offices</option>
                     </Form.Select>
                     <Form.Control.Feedback type='invalid'>
-                            {formErrors.received_from}
+                        {formErrors.received_from}
                     </Form.Control.Feedback>
 
                     {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
@@ -360,7 +375,7 @@ const handleChangeDocType = async (event) => {
                     )}
 
                     {(selectedOption === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
-                        <Form.Select>
+                        <Form.Select value={selectedOption4} onChange={handleChange4}>
                         <option hidden value="">Select a name of institution</option>
                         {names.map((names) => (
                             <option key={names.name} value={names.name}>
@@ -370,7 +385,7 @@ const handleChangeDocType = async (event) => {
                         </Form.Select>
                     )}
                     {(selectedOption === 'NGAs' && NGAs.length !==0) &&  (
-                        <Form.Select
+                            <Form.Select value={selectedOption5} onChange={handleChange5}
                         aria-label='Default select example'>
                         <option hidden value=''>Select NGA...</option>
                         {NGAs.map(item => (
@@ -379,7 +394,7 @@ const handleChangeDocType = async (event) => {
                         </Form.Select>
                     )}
                     {(selectedOption === 'CHED Offices' && ChedOffices.length !== 0) && (
-                        <Form.Select
+                            <Form.Select value={selectedOption6} onChange={handleChange6}
                             aria-label='Default select example'>
                             <option hidden value=''>Select Ched Office...</option>
                             {ChedOffices.map(item => (
@@ -427,12 +442,12 @@ const handleChangeDocType = async (event) => {
                                     key={category.id}
                                     onChange={() => setSelectedCategory(category)}
                                     style={{ marginRight:'8px' }}
-                                    isInvalid={!!formErrors.category_id}
+                                    // isInvalid={!!formErrors.category_id}
                                 />
                                 {category.description}
-                                <Form.Control.Feedback type='invalid'>
+                                {/* <Form.Control.Feedback type='invalid'>
                                     {formErrors.category_id}
-                                </Form.Control.Feedback>
+                                </Form.Control.Feedback> */}
                             </div>
                         ))}
                         
@@ -446,8 +461,8 @@ const handleChangeDocType = async (event) => {
                                         <Form.Label>Select assign to:</Form.Label>
                                         <Form.Select 
                                             name='assignTo' 
-                                            value={formInputs.assignTo}
-                                            isInvalid={!!formErrors.assignTo}>
+                                           
+                                            >
                                         <option hidden value=''>Select assign to...</option>
                                                 {users.map(user => (
                                                      <option key={user.id} value={user.id}>
