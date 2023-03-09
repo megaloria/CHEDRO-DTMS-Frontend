@@ -44,7 +44,7 @@ function DocumentReceive() {
         document_type_id: '',
         attachment: '',
         date_received: '',
-        recieved_from: '',
+        received_from: '',
         description: '',
         category_id: '',
         assignTo: ''
@@ -54,7 +54,7 @@ function DocumentReceive() {
         document_type_id: '',
         attachment: '',
         date_received: '',
-        recieved_from: '',
+        received_from: '',
         description: '',
         category_id: '',
         assignTo: ''
@@ -77,7 +77,7 @@ function DocumentReceive() {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
             date_received: 'date',
-            recieved_from: 'required|integer|min:1',
+            received_from: 'required',
             description: 'required|string|min:5',
             category_id: 'required|integer|min:1',
             assignTo: 'required|integer|min:1'
@@ -88,7 +88,7 @@ function DocumentReceive() {
                 document_type_id: validation.errors.first('document_type_id'),
                 attachment: validation.errors.first('attachment'),
                 date_received: validation.errors.first('date_received'),
-                recieved_from: validation.errors.first('recieved_from'),
+                received_from: validation.errors.first('received_from'),
                 description: validation.errors.first('description'),
                 category_id: validation.errors.first('category_id'),
                 assignTo: validation.errors.first('assignTo')
@@ -99,7 +99,7 @@ function DocumentReceive() {
                 documents: '',
                 attachment: '',
                 date_received: '',
-                receiveFrom: '',
+                received_from: '',
                 description: '',
                 category_id: '',
                 assignTo: ''
@@ -324,17 +324,17 @@ const handleChangeDocType = async (event) => {
                 <Col>
                     <Form.Label>Receive from {isOptionLoading ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""} </Form.Label>
                     <Form.Select 
-                        name='recieved_from' 
+                            name='received_from' 
                         value={selectedOption} 
                         onChange={handleChange}
-                        isInvalid={!!formErrors.recieved_from}>
+                            isInvalid={!!formErrors.received_from}>
                         <option hidden value="">Select an option</option>
                         <option value="HEIs">HEIs</option>
                         <option value="NGAs">NGAs</option>
                         <option value="CHED Offices">CHED Offices</option>
                     </Form.Select>
                     <Form.Control.Feedback type='invalid'>
-                        {formErrors.recieved_from}
+                            {formErrors.received_from}
                     </Form.Control.Feedback>
 
                     {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
