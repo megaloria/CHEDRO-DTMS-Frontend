@@ -26,9 +26,10 @@ function DocumentReceive() {
     const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
     const [selectedOption3, setSelectedOption3] = useState('');
-    const [selectedOption4, setSelectedOption4] = useState('');
-    const [selectedOption5, setSelectedOption5] = useState('');
-    const [selectedOption6, setSelectedOption6] = useState('');
+    // const [selectedOption4, setSelectedOption4] = useState('');
+    // const [selectedOption5, setSelectedOption5] = useState('');
+    // const [selectedOption6, setSelectedOption6] = useState('');
+    // const [selectedValue, setSelectedValue] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [category, setCategory] = useState([]);
     const [provinces, setProvinces] = useState([]);
@@ -172,6 +173,8 @@ const handleChangeDocType = async (event) => {
             setIsOptionLoading(true);
             const value = event.target.value;
             setSelectedOption(value);
+            // console.log(value);
+            // setSelectedValue(value);
 
             if (value === 'HEIs') {
                 const response = await apiClient.get('/settings/heis/provinces');
@@ -199,6 +202,8 @@ const handleChangeDocType = async (event) => {
             setIsOptionLoading(true);
             const value = event.target.value;
             setSelectedOption2(value);
+            // console.log(value);
+            // setSelectedValue(value);
             {
                 const response = await apiClient.get('/settings/heis/municipalities');
                 setMunicipalities(response.data.data);
@@ -209,13 +214,15 @@ const handleChangeDocType = async (event) => {
             setIsOptionLoading(false);
         }
         
-      }
+      };
 
       const handleChange3 = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
             setSelectedOption3(value); 
+            // console.log(value);
+            // setSelectedValue(value);
         {
           const response = await apiClient.get('/settings/heis/names');
           setNames(response.data.data);
@@ -227,17 +234,26 @@ const handleChangeDocType = async (event) => {
         }
       }
 
-    const handleChange4 = (event) => {
-        setSelectedOption4(event.target.value);
-    }
+    //   const handleChange4 = async (event) => {
+    //         const value = event.target.value;
+    //         setSelectedOption4(value);
+    //         console.log(value);
+    //       setSelectedValue(value);
+    // };
 
-    const handleChange5 = (event) => {
-        setSelectedOption5(event.target.value);
-    }
+    // const handleChange5 = async (event) => {
+    //     const value = event.target.value;
+    //     setSelectedOption5(value);
+    //     console.log(value);
+    //     setSelectedValue(value);
+    // };
 
-    const handleChange6 = (event) => {
-        setSelectedOption6(event.target.value);
-    }
+    // const handleChange6 = async (event) => {
+    //     const value = event.target.value;
+    //     setSelectedOption6(value);
+    //     console.log(value);
+    //     setSelectedValue(value);
+    // };
 
     useEffect(() => {
         apiClient.get('/document/receive')
@@ -282,12 +298,13 @@ const handleChangeDocType = async (event) => {
             </div>
             <Row className="mb-3">
                 <Col>
-                    <Form.Label>Document Type </Form.Label>
-                    <Form.Select 
+                        <Form.Label>Document Type </Form.Label>
+                        <Form.Select
                         name='document_type_id' 
                         value={formInputs.document_type_id} 
                         onChange={handleChangeDocType}
-                        isInvalid={!!formErrors.document_type_id}>
+                        isInvalid={!!formErrors.document_type_id}
+                        disabled={isOptionLoading1}>
                             <option hidden value=''>Select Document Type...</option>
                                 {documentTypes.map(item => (
                                     <option key={item.id} value={item.id}>{item.description}</option>
@@ -342,7 +359,8 @@ const handleChangeDocType = async (event) => {
                         name='received_from' 
                         value={selectedOption} 
                         onChange={handleChange}
-                        isInvalid={!!formErrors.received_from}>
+                        isInvalid={!!formErrors.received_from}
+                        disabled={isOptionLoading}>
                         <option hidden value="">Select an option</option>
                         <option value="HEIs">HEIs</option>
                         <option value="NGAs">NGAs</option>
@@ -353,7 +371,7 @@ const handleChangeDocType = async (event) => {
                     </Form.Control.Feedback>
 
                     {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
-                        <Form.Select value={selectedOption2} onChange={handleChange2}>
+                            <Form.Select value={selectedOption2} onChange={handleChange2} disabled={isOptionLoading}>
                         <option hidden value="">Select a province</option>
                         {provinces.map((province) => (
                             <option key={province.province} value={province.province}>
@@ -364,7 +382,7 @@ const handleChangeDocType = async (event) => {
                     )}
 
                     {(selectedOption === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
-                        <Form.Select value={selectedOption3} onChange={handleChange3}>
+                            <Form.Select value={selectedOption3} onChange={handleChange3}  disabled={isOptionLoading}>
                         <option hidden value="">Select a municipality</option>
                         {municipalities.map((municipality) => (
                             <option key={municipality.city_municipality} value={municipality.city_municipality}>
@@ -375,7 +393,7 @@ const handleChangeDocType = async (event) => {
                     )}
 
                     {(selectedOption === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
-                        <Form.Select value={selectedOption4} onChange={handleChange4}>
+                            <Form.Select disabled={isOptionLoading} >
                         <option hidden value="">Select a name of institution</option>
                         {names.map((names) => (
                             <option key={names.name} value={names.name}>
@@ -385,20 +403,20 @@ const handleChangeDocType = async (event) => {
                         </Form.Select>
                     )}
                     {(selectedOption === 'NGAs' && NGAs.length !==0) &&  (
-                            <Form.Select value={selectedOption5} onChange={handleChange5}
-                        aria-label='Default select example'>
+                            <Form.Select 
+                                aria-label='Default select example' >
                         <option hidden value=''>Select NGA...</option>
                         {NGAs.map(item => (
-                            <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
+                            <option key={item.id} value={item.description}>{item.code} - {item.description}</option>
                         ))}  
                         </Form.Select>
                     )}
                     {(selectedOption === 'CHED Offices' && ChedOffices.length !== 0) && (
-                            <Form.Select value={selectedOption6} onChange={handleChange6}
-                            aria-label='Default select example'>
+                            <Form.Select 
+                                aria-label='Default select example' >
                             <option hidden value=''>Select Ched Office...</option>
                             {ChedOffices.map(item => (
-                                <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
+                                <option key={item.id} value={item.description}>{item.code} - {item.description}</option>
                             ))}
                         </Form.Select>
                     )}
@@ -460,9 +478,7 @@ const handleChangeDocType = async (event) => {
                                         <Col md={'auto'}> 
                                         <Form.Label>Select assign to:</Form.Label>
                                         <Form.Select 
-                                            name='assignTo' 
-                                           
-                                            >
+                                            name='assignTo' >
                                         <option hidden value=''>Select assign to...</option>
                                                 {users.map(user => (
                                                      <option key={user.id} value={user.id}>
