@@ -23,11 +23,11 @@ function DocumentReceive() {
     const [NGAs, setNGAs] = useState([]);
     const [users, setUsers] = useState([]);
     const [ChedOffices, setChedOffices] = useState([]);
-    const [selectedOption, setSelectedOption] = useState('');
+    // const [selectedOption, setSelectedOption] = useState('');
     const [selectedOption2, setSelectedOption2] = useState('');
     const [selectedOption3, setSelectedOption3] = useState('');
-    // const [selectedOption4, setSelectedOption4] = useState('');
-    // const [selectedOption5, setSelectedOption5] = useState('');
+    const [selectedOption4, setSelectedOption4] = useState('');
+    const [selectedOption5, setSelectedOption5] = useState('');
     // const [selectedOption6, setSelectedOption6] = useState('');
     // const [selectedValue, setSelectedValue] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -48,7 +48,12 @@ function DocumentReceive() {
         document_type_id: '',
         attachment: '',
         date_received: '',
-        received_from: '',
+        recieved_from: '',
+        province: '',
+        municipality: '',
+        insti: '',
+        ngas: '',
+        chedoffices: '',
         description: '',
         category_id: '',
         assignTo: ''
@@ -58,7 +63,12 @@ function DocumentReceive() {
         document_type_id: '',
         attachment: '',
         date_received: '',
-        received_from: '',
+        recieved_from: '',
+        province: '',
+        municipality: '',
+        insti: '',
+        ngas: '',
+        chedoffices: '',
         description: '',
         category_id: '',
         assignTo: ''
@@ -81,7 +91,12 @@ function DocumentReceive() {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
             date_received: 'date',
-            received_from: 'required',
+            recieved_from: 'required|string|min:1',
+            province: 'integer|min:1',
+            municipality: 'integer|min:1',
+            insti: 'integer|min:1',
+            ngas: 'integer|min:1',
+            chedoffices: 'integer|min:1',
             description: 'required|string|min:5',
             category_id: 'required|integer|min:1',
             assignTo: 'required|integer|min:1'
@@ -92,7 +107,12 @@ function DocumentReceive() {
                 document_type_id: validation.errors.first('document_type_id'),
                 attachment: validation.errors.first('attachment'),
                 date_received: validation.errors.first('date_received'),
-                received_from: validation.errors.first('received_from'),
+                recieved_from: validation.errors.first('recieved_from'),
+                province: validation.errors.first('province'),
+                municipality: validation.errors.first('municipality'),
+                insti: validation.errors.first('insti'),
+                ngas: validation.errors.first('ngas'),
+                chedoffices: validation.errors.first('chedoffices'),
                 description: validation.errors.first('description'),
                 category_id: validation.errors.first('category_id'),
                 assignTo: validation.errors.first('assignTo')
@@ -100,10 +120,15 @@ function DocumentReceive() {
             return;
         } else {
             setFormErrors({
-                documents: '',
+                document_type_id: '',
                 attachment: '',
                 date_received: '',
-                received_from: '',
+                recieved_from: '',
+                province: '',
+                municipality: '',
+                insti: '',
+                ngas: '',
+                chedoffices: '',
                 description: '',
                 category_id: '',
                 assignTo: ''
@@ -115,7 +140,6 @@ function DocumentReceive() {
     const handleAdd = () => {
         apiClient.post('/document', {
             ...formInputs,
-
         }).then(response => {
             setData({
                 ...data,
@@ -152,7 +176,7 @@ const handleChangeDocType = async (event) => {
     const value = event.target.value;
     setFormInputs({
         ...formInputs,
-        document_type_id:value
+        document_type_id:value,
     });
     let docType = documentTypes.find(d => d.id === +value)
     let temp = docType ? docType.code : ''
@@ -172,7 +196,7 @@ const handleChangeDocType = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
-            setSelectedOption(value);
+            setFormInputs(value);
             // console.log(value);
             // setSelectedValue(value);
 
@@ -225,6 +249,42 @@ const handleChangeDocType = async (event) => {
             // setSelectedValue(value);
         {
           const response = await apiClient.get('/settings/heis/names');
+          setNames(response.data.data);
+        }   
+        } catch (error) {
+            setErrorMessage(error);
+        } finally {
+            setIsOptionLoading(false);
+        }
+      }
+
+      const handleChange4 = async (event) => {
+        try {
+            setIsOptionLoading(true);
+            const value = event.target.value;
+            setSelectedOption4(value);
+            // console.log(value);
+            // setSelectedValue(value);
+        {
+          const response = await apiClient.get('/settings/ngas/all');
+          setNames(response.data.data);
+        }   
+        } catch (error) {
+            setErrorMessage(error);
+        } finally {
+            setIsOptionLoading(false);
+        }
+      }
+
+      const handleChange5 = async (event) => {
+        try {
+            setIsOptionLoading(true);
+            const value = event.target.value;
+            setSelectedOption5(value);
+            // console.log(value);
+            // setSelectedValue(value);
+        {
+          const response = await apiClient.get('/settings/ched-offices/all');
           setNames(response.data.data);
         }   
         } catch (error) {
@@ -298,18 +358,18 @@ const handleChangeDocType = async (event) => {
             </div>
             <Row className="mb-3">
                 <Col>
-                        <Form.Label>Document Type </Form.Label>
-                        <Form.Select
+                    <Form.Label>Document Type </Form.Label>
+                    <Form.Select
                         name='document_type_id' 
                         value={formInputs.document_type_id} 
                         onChange={handleChangeDocType}
                         isInvalid={!!formErrors.document_type_id}
                         disabled={isOptionLoading1}>
                             <option hidden value=''>Select Document Type...</option>
-                                {documentTypes.map(item => (
-                                    <option key={item.id} value={item.id}>{item.description}</option>
-                                ))
-                                }
+                            {documentTypes.map(item => (
+                                <option key={item.id} value={item.id}>{item.description}</option>
+                            ))
+                            }
                     </Form.Select>
                     <Form.Control.Feedback type='invalid'>
                         {formErrors.document_type_id}
@@ -319,9 +379,10 @@ const handleChangeDocType = async (event) => {
                     <Form.Label>Tracking No. {isOptionLoading1 ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""}</Form.Label>
                         <Form.Control 
                             type='text'
-                            name='tracking_no'
+                            name='trackingNo'
                             placeholder='Tracking Number'
                             value={trackingNo}
+                            isInvalid={!!formErrors.trackingNo}
                             disabled
                         />
                 </Col>
@@ -356,68 +417,95 @@ const handleChangeDocType = async (event) => {
                 <Col>
                     <Form.Label>Receive from {isOptionLoading ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""} </Form.Label>
                     <Form.Select 
-                        name='received_from' 
-                        value={selectedOption} 
+                        name='recieved_from' 
+                        value={formInputs.recieved_from} 
                         onChange={handleChange}
-                        isInvalid={!!formErrors.received_from}
+                        isInvalid={!!formErrors.recieved_from}
                         disabled={isOptionLoading}>
-                        <option hidden value="">Select an option</option>
-                        <option value="HEIs">HEIs</option>
-                        <option value="NGAs">NGAs</option>
-                        <option value="CHED Offices">CHED Offices</option>
+                            <option hidden value="">Select an option</option>
+                            <option value="HEIs">HEIs</option>
+                            <option value="NGAs">NGAs</option>
+                            <option value="CHED Offices">CHED Offices</option>
                     </Form.Select>
                     <Form.Control.Feedback type='invalid'>
-                        {formErrors.received_from}
+                        {formErrors.recieved_from}
                     </Form.Control.Feedback>
 
-                    {(selectedOption === 'HEIs' && provinces.length !== 0) &&  (
-                            <Form.Select value={selectedOption2} onChange={handleChange2} disabled={isOptionLoading}>
-                        <option hidden value="">Select a province</option>
-                        {provinces.map((province) => (
-                            <option key={province.province} value={province.province}>
-                                {province.province}
-                            </option>
-                        ))}
-                        </Form.Select>
-                    )}
-
-                    {(selectedOption === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
-                            <Form.Select value={selectedOption3} onChange={handleChange3}  disabled={isOptionLoading}>
-                        <option hidden value="">Select a municipality</option>
-                        {municipalities.map((municipality) => (
-                            <option key={municipality.city_municipality} value={municipality.city_municipality}>
-                            {municipality.city_municipality}
-                            </option>
-                        ))}
-                        </Form.Select>
-                    )}
-
-                    {(selectedOption === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
-                            <Form.Select disabled={isOptionLoading} >
-                        <option hidden value="">Select a name of institution</option>
-                        {names.map((names) => (
-                            <option key={names.name} value={names.name}>
-                            {names.name}
-                            </option>
-                        ))}
-                        </Form.Select>
-                    )}
-                    {(selectedOption === 'NGAs' && NGAs.length !==0) &&  (
-                            <Form.Select 
-                                aria-label='Default select example' >
-                        <option hidden value=''>Select NGA...</option>
-                        {NGAs.map(item => (
-                            <option key={item.id} value={item.description}>{item.code} - {item.description}</option>
-                        ))}  
-                        </Form.Select>
-                    )}
-                    {(selectedOption === 'CHED Offices' && ChedOffices.length !== 0) && (
-                            <Form.Select 
-                                aria-label='Default select example' >
-                            <option hidden value=''>Select Ched Office...</option>
-                            {ChedOffices.map(item => (
-                                <option key={item.id} value={item.description}>{item.code} - {item.description}</option>
+                    {(formInputs === 'HEIs' && provinces.length !== 0) &&  (
+                        <Form.Select 
+                            name= 'province' 
+                            value={formInputs.province}
+                            onChange={handleChange2} 
+                            isInvalid={!!formErrors.province}
+                            disabled={isOptionLoading}
+                            >
+                            <option hidden value="">Select a province</option>
+                            {provinces.map((province) => (
+                                <option key={province.id} value={province.id}>
+                                    {province.province}
+                                </option>
                             ))}
+                        </Form.Select>
+                    )}
+
+                    {(formInputs === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
+                        <Form.Select 
+                            name='municipality' 
+                            value={formInputs.municipality} 
+                            onChange={handleChange3}  
+                            isInvalid={!!formErrors.municipality}
+                            disabled={isOptionLoading}
+                            >
+                            <option hidden value="">Select a municipality</option>
+                            {municipalities.map((municipality) => (
+                                <option key={municipality.city_municipality} value={municipality.id}>
+                                {municipality.city_municipality}
+                                </option>
+                            ))}
+                        </Form.Select>
+                    )}
+
+                    {(formInputs === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
+                        <Form.Select 
+                        name= 'insti' 
+                        value={formInputs.insti}
+                        isInvalid={!!formErrors.insti}
+                        disabled={isOptionLoading} 
+                        >
+                            <option hidden value="">Select a name of institution</option>
+                            {names.map((names) => (
+                                <option key={names.name} value={names.id}>
+                                {names.name}
+                                </option>
+                            ))}
+                        </Form.Select>
+                    )}
+                    {(formInputs === 'NGAs' && NGAs.length !==0) &&  (
+                        <Form.Select 
+                            name='ngas' 
+                            value={formInputs.ngas} 
+                            onChange={handleChange4} 
+                            isInvalid={!!formErrors.ngas}
+                            disabled={isOptionLoading}
+                            >
+                                <option hidden value=''>Select NGA...</option>
+                            {NGAs.map(item => (
+                                <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
+                            ))}  
+                        </Form.Select>
+                    )}
+                    {(formInputs === 'CHED Offices' && ChedOffices.length !== 0) && (
+                            <Form.Select 
+                            name='chedoffices'
+                            value={formInputs.chedoffices} 
+                            onChange={handleChange5} 
+                            isInvalid={!!formErrors.chedoffices}
+                            disabled={isOptionLoading} 
+                            >
+                                <option hidden value=''>Select Ched Office...</option>
+                                {ChedOffices.map(item => (
+                                    <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
+                                ))}
                         </Form.Select>
                     )}
                 </Col>
