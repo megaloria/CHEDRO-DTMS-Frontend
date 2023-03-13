@@ -27,6 +27,7 @@ function CHED() {
     const [data, setData] = useState([]);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [searchTerm, setSearchTerm] = useState('');
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
@@ -243,6 +244,8 @@ function CHED() {
             });
     };
 
+    const filteredData = data.data && data.data.filter(row => row.description.toLowerCase() && row.code.toLowerCase().includes(searchTerm.toLowerCase()));
+
     if (isLoading) {
         return (
             <FontAwesomeIcon icon={faSpinner} spin lg />
@@ -271,6 +274,8 @@ function CHED() {
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
+                                    value={searchTerm} 
+                                    onChange={e => setSearchTerm(e.target.value)}
                                 />
                                 <Button>
                                     <FontAwesomeIcon icon={faSearch} />
@@ -304,7 +309,7 @@ function CHED() {
                         </thead>
                         <tbody>
                             {
-                                data.data.map((row, index) => (
+                                filteredData.map((row, index) => (
                                     <tr key={index}>
                                         <td>{row.id}</td>
                                         <td>{row.code}</td>
