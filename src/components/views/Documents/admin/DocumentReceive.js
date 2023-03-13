@@ -48,7 +48,8 @@ function DocumentReceive() {
         document_type_id: '',
         attachment: '',
         date_received: '',
-        recieved_from: '',
+        receivable_table: '',
+        receivable_id: '',
         province: '',
         municipality: '',
         insti: '',
@@ -63,7 +64,8 @@ function DocumentReceive() {
         document_type_id: '',
         attachment: '',
         date_received: '',
-        recieved_from: '',
+        receivable_table: '',
+        receivable_id: '',
         province: '',
         municipality: '',
         insti: '',
@@ -91,7 +93,9 @@ function DocumentReceive() {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
             date_received: 'date',
-            recieved_from: 'required|string|min:1',
+            receivable_table: 'required|in:HEIs,NGAs,Ched Offices,Others',
+            receivable_id: 'integer|min:1',
+            // receivable_name: '',
             province: 'integer|min:1',
             municipality: 'integer|min:1',
             insti: 'integer|min:1',
@@ -107,7 +111,6 @@ function DocumentReceive() {
                 document_type_id: validation.errors.first('document_type_id'),
                 attachment: validation.errors.first('attachment'),
                 date_received: validation.errors.first('date_received'),
-                recieved_from: validation.errors.first('recieved_from'),
                 province: validation.errors.first('province'),
                 municipality: validation.errors.first('municipality'),
                 insti: validation.errors.first('insti'),
@@ -123,7 +126,8 @@ function DocumentReceive() {
                 document_type_id: '',
                 attachment: '',
                 date_received: '',
-                recieved_from: '',
+                receivable_table: '',
+                receivable_id: '',
                 province: '',
                 municipality: '',
                 insti: '',
@@ -196,10 +200,11 @@ const handleChangeDocType = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
-            setFormInputs(value);
-            // console.log(value);
-            // setSelectedValue(value);
-
+            setFormInputs({
+                ...formInputs,
+                receivable_table:value,
+            });
+            
             if (value === 'HEIs') {
                 const response = await apiClient.get('/settings/heis/provinces');
                 setProvinces(response.data.data);
@@ -225,7 +230,10 @@ const handleChangeDocType = async (event) => {
         try{
             setIsOptionLoading(true);
             const value = event.target.value;
-            setSelectedOption2(value);
+            setFormInputs({
+                ...formInputs,
+                province:value,
+            }); 
             // console.log(value);
             // setSelectedValue(value);
             {
@@ -244,7 +252,10 @@ const handleChangeDocType = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
-            setSelectedOption3(value); 
+            setFormInputs({
+                ...formInputs,
+                municipality:value,
+            }); 
             // console.log(value);
             // setSelectedValue(value);
         {
@@ -262,7 +273,10 @@ const handleChangeDocType = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
-            setSelectedOption4(value);
+            setFormInputs({
+                ...formInputs,
+                ngas:value,
+            });
             // console.log(value);
             // setSelectedValue(value);
         {
@@ -280,7 +294,10 @@ const handleChangeDocType = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
-            setSelectedOption5(value);
+            setFormInputs({
+                ...formInputs,
+                chedoffices:value,
+            });
             // console.log(value);
             // setSelectedValue(value);
         {
@@ -392,6 +409,8 @@ const handleChangeDocType = async (event) => {
                         type="file" 
                         name='attachment' 
                         placeholder="Attachment" 
+                        onChange={handleInputChange}
+                        value={formInputs.attachment} 
                         isInvalid={!!formErrors.attachment}/>
                     <Form.Control.Feedback type='invalid'>
                         {formErrors.attachment}
@@ -407,6 +426,7 @@ const handleChangeDocType = async (event) => {
                         name='date_received'
                         max={moment().format("YYYY-MM-DD")}
                         defaultValue={moment().format("YYYY-MM-DD")}
+                        onChange={handleInputChange}
                         isInvalid={!!formErrors.date_received}
                     />
                     <Form.Control.Feedback type='invalid'>
@@ -417,21 +437,22 @@ const handleChangeDocType = async (event) => {
                 <Col>
                     <Form.Label>Receive from {isOptionLoading ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""} </Form.Label>
                     <Form.Select 
-                        name='recieved_from' 
-                        value={formInputs.recieved_from} 
+                        name='receivable_table' 
+                        value={formInputs.receivable_table} 
                         onChange={handleChange}
-                        isInvalid={!!formErrors.recieved_from}
+                        isInvalid={!!formErrors.receivable_table}
                         disabled={isOptionLoading}>
                             <option hidden value="">Select an option</option>
                             <option value="HEIs">HEIs</option>
                             <option value="NGAs">NGAs</option>
                             <option value="CHED Offices">CHED Offices</option>
+                            <option value="Others">Others</option>
                     </Form.Select>
                     <Form.Control.Feedback type='invalid'>
-                        {formErrors.recieved_from}
+                        {formErrors.receivable_table}
                     </Form.Control.Feedback>
 
-                    {(formInputs === 'HEIs' && provinces.length !== 0) &&  (
+                    {(formInputs.receivable_table === 'HEIs' && provinces.length !== 0) &&  (
                         <Form.Select 
                             name= 'province' 
                             value={formInputs.province}
@@ -448,7 +469,7 @@ const handleChangeDocType = async (event) => {
                         </Form.Select>
                     )}
 
-                    {(formInputs === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
+                    {(formInputs.receivable_table === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
                         <Form.Select 
                             name='municipality' 
                             value={formInputs.municipality} 
@@ -465,7 +486,7 @@ const handleChangeDocType = async (event) => {
                         </Form.Select>
                     )}
 
-                    {(formInputs === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
+                    {(formInputs.receivable_table === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
                         <Form.Select 
                         name= 'insti' 
                         value={formInputs.insti}
@@ -480,7 +501,7 @@ const handleChangeDocType = async (event) => {
                             ))}
                         </Form.Select>
                     )}
-                    {(formInputs === 'NGAs' && NGAs.length !==0) &&  (
+                    {(formInputs.receivable_table === 'NGAs' && NGAs.length !==0) &&  (
                         <Form.Select 
                             name='ngas' 
                             value={formInputs.ngas} 
@@ -494,7 +515,7 @@ const handleChangeDocType = async (event) => {
                             ))}  
                         </Form.Select>
                     )}
-                    {(formInputs === 'CHED Offices' && ChedOffices.length !== 0) && (
+                    {(formInputs.receivable_table === 'CHED Offices' && ChedOffices.length !== 0) && (
                             <Form.Select 
                             name='chedoffices'
                             value={formInputs.chedoffices} 
@@ -530,7 +551,7 @@ const handleChangeDocType = async (event) => {
             </Row>
             <Row className="mb-3"> 
             <Form.Group>
-                <div> 
+                <div>
                     <Form.Label>Category </Form.Label>
                 </div>
                     <div>
