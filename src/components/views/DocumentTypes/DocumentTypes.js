@@ -323,7 +323,7 @@ function DocumentTypes() {
             {
                 data.data.length === 0 ? (
                     <Alert variant='info'>
-                        No info
+                        No data
                     </Alert>
                 ) : (
                     <div className='loading-table-container'>
