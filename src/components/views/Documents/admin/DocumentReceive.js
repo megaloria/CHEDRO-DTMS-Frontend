@@ -41,6 +41,7 @@ function DocumentReceive() {
     const [isOptionLoading, setIsOptionLoading] = useState(false); 
     const [isOptionLoading1, setIsOptionLoading1] = useState(false); 
     const [selectedUsers, setSelectedUsers] = useState([]);
+    const [dateReceived, setDateReceived] = useState(moment().format('YYYY-MM-DD'));
 
     //Add Receive documents
     const [documentTypes, setDocumentTypes] = useState([]);
@@ -50,7 +51,7 @@ function DocumentReceive() {
         document_type_id: '',
         attachment: '',
         date_received: '',
-        receivable_table: '',
+        receivable_type: '',
         receivable_id: '',
         province: '',
         municipality: '',
@@ -66,7 +67,7 @@ function DocumentReceive() {
         document_type_id: '',
         attachment: '',
         date_received: '',
-        receivable_table: '',
+        receivable_type: '',
         receivable_id: '',
         province: '',
         municipality: '',
@@ -97,7 +98,7 @@ function DocumentReceive() {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
             date_received: 'date',
-            receivable_table: 'required|in:HEIs,NGAs,Ched Offices,Others',
+            receivable_type: 'required|in:HEIs,NGAs,CHED Offices,Others',
             receivable_id: 'integer|min:1',
             // receivable_name: '',
             province: 'integer|min:1',
@@ -115,6 +116,8 @@ function DocumentReceive() {
                 document_type_id: validation.errors.first('document_type_id'),
                 attachment: validation.errors.first('attachment'),
                 date_received: validation.errors.first('date_received'),
+                receivable_type: validation.errors.first('receivable_type'),
+                receivable_id: validation.errors.first('receivable_id'),
                 province: validation.errors.first('province'),
                 municipality: validation.errors.first('municipality'),
                 insti: validation.errors.first('insti'),
@@ -130,7 +133,7 @@ function DocumentReceive() {
                 document_type_id: '',
                 attachment: '',
                 date_received: '',
-                receivable_table: '',
+                receivable_type: '',
                 receivable_id: '',
                 province: '',
                 municipality: '',
@@ -175,30 +178,40 @@ function DocumentReceive() {
             ...formInputs,
             [e.target.name]: e.target.value
         });
+        if (e.target.name === 'date_received') {
+            setDateReceived (e.target.value)
+        }
     }
 
-//display document-type code
-const [trackingNo, setTrackingNo] = useState('');
-const handleChangeDocType = async (event) => {
-    setIsOptionLoading1(true);
-    const value = event.target.value;
-    setFormInputs({
-        ...formInputs,
-        document_type_id:value,
-    });
-    let docType = documentTypes.find(d => d.id === +value)
-    let temp = docType ? docType.code : ''
+    const [trackingNo, setTrackingNo] = useState('');
+    const [docType, setDocType] = useState('');
+    
 
-    apiClient.get(`/document/series/${value}`)
-        .then(response => {
-            setTrackingNo (temp + '-' + response.data.data.toString().padStart(4, '0'));
-        })
-        .catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsOptionLoading1(false);
-        });
-    }
+    useEffect (() => {
+        if (docType){
+            setIsOptionLoading1(true);
+            let docTypeFind = documentTypes.find(d => d.id === +docType)
+            let temp = docTypeFind ? docTypeFind.code : ''
+            apiClient.get(`/document/series/${docType}`)
+            .then(response => {
+                setTrackingNo (moment(dateReceived).format('YY')+ '-' + temp + '-' + response.data.data.toString().padStart(4, '0'));
+            })
+            .catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsOptionLoading1(false);
+            });
+        }
+    }, [docType, documentTypes, dateReceived])
+
+    const handleChangeDocType = async (event) => {
+        const value = event.target.value;
+        setFormInputs({
+            ...formInputs,
+            document_type_id:value,
+        }); 
+        setDocType(value)
+        }
 
     const handleChange = async (event) => {
         try {
@@ -206,7 +219,7 @@ const handleChangeDocType = async (event) => {
             const value = event.target.value;
             setFormInputs({
                 ...formInputs,
-                receivable_table:value,
+                receivable_type:value,
             });
             
             if (value === 'HEIs') {
@@ -230,7 +243,7 @@ const handleChangeDocType = async (event) => {
     };
         
 
-      const handleChange2 = async (event) => {
+      const handleChangeProvince = async (event) => {
         try{
             setIsOptionLoading(true);
             const value = event.target.value;
@@ -241,7 +254,7 @@ const handleChangeDocType = async (event) => {
             // console.log(value);
             // setSelectedValue(value);
             {
-                const response = await apiClient.get('/settings/heis/municipalities');
+                const response = await apiClient.get(`/settings/heis/municipalities/${value}`);
                 setMunicipalities(response.data.data);
             } 
         } catch (error) {
@@ -252,7 +265,7 @@ const handleChangeDocType = async (event) => {
         
       };
 
-      const handleChange3 = async (event) => {
+      const handleChangeMunicipality = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
@@ -263,7 +276,7 @@ const handleChangeDocType = async (event) => {
             // console.log(value);
             // setSelectedValue(value);
         {
-          const response = await apiClient.get('/settings/heis/names');
+          const response = await apiClient.get(`/settings/heis/names/${value}`);
           setNames(response.data.data);
         }   
         } catch (error) {
@@ -273,7 +286,22 @@ const handleChangeDocType = async (event) => {
         }
       }
 
-      const handleChange4 = async (event) => {
+      const handleChangeInstitution = async (event) => {
+        try {
+            setIsOptionLoading(true);
+            const value = event.target.value;
+            setFormInputs({
+                ...formInputs,
+                insti:value,
+            });   
+        } catch (error) {
+            setErrorMessage(error);
+        } finally {
+            setIsOptionLoading(false);
+        }
+      }
+
+      const handleChangeNGA = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
@@ -294,7 +322,7 @@ const handleChangeDocType = async (event) => {
         }
       }
 
-      const handleChange5 = async (event) => {
+      const handleChangeCO = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
@@ -315,29 +343,7 @@ const handleChangeDocType = async (event) => {
         }
       }
 
-    //   const handleChange4 = async (event) => {
-    //         const value = event.target.value;
-    //         setSelectedOption4(value);
-    //         console.log(value);
-    //       setSelectedValue(value);
-    // };
-
-    // const handleChange5 = async (event) => {
-    //     const value = event.target.value;
-    //     setSelectedOption5(value);
-    //     console.log(value);
-    //     setSelectedValue(value);
-    // };
-
-    // const handleChange6 = async (event) => {
-    //     const value = event.target.value;
-    //     setSelectedOption6(value);
-    //     console.log(value);
-    //     setSelectedValue(value);
-    // };
-
     useEffect(() => {
-        const currentDate = new Date().toISOString().slice(0, 10);
         
         apiClient.get('/document/receive')
             .then(response => {
@@ -352,7 +358,7 @@ const handleChangeDocType = async (event) => {
             });
             setFormInputs({
                 ...formInputs,
-                date_received:currentDate,
+                date_received: moment().format("YYYY-MM-DD"),
             });
     }, []);
 
@@ -447,10 +453,10 @@ const handleChangeDocType = async (event) => {
                 <Col>
                     <Form.Label>Receive from {isOptionLoading ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""} </Form.Label>
                     <Form.Select 
-                        name='receivable_table' 
-                        value={formInputs.receivable_table} 
+                        name='receivable_type' 
+                        value={formInputs.receivable_type} 
                         onChange={handleChange}
-                        isInvalid={!!formErrors.receivable_table}
+                        isInvalid={!!formErrors.receivable_type}
                         disabled={isOptionLoading}>
                             <option hidden value="">Select an option</option>
                             <option value="HEIs">HEIs</option>
@@ -459,14 +465,14 @@ const handleChangeDocType = async (event) => {
                             <option value="Others">Others</option>
                     </Form.Select>
                     <Form.Control.Feedback type='invalid'>
-                        {formErrors.receivable_table}
+                        {formErrors.receivable_type}
                     </Form.Control.Feedback>
 
-                    {(formInputs.receivable_table === 'HEIs' && provinces.length !== 0) &&  (
+                    {(formInputs.receivable_type === 'HEIs' && provinces.length !== 0) &&  (
                         <Form.Select 
                             name= 'province' 
                             value={formInputs.province}
-                            onChange={handleChange2} 
+                            onChange={handleChangeProvince} 
                             isInvalid={!!formErrors.province}
                             disabled={isOptionLoading}
                             >
@@ -479,11 +485,11 @@ const handleChangeDocType = async (event) => {
                         </Form.Select>
                     )}
 
-                    {(formInputs.receivable_table === 'HEIs' && formInputs.province !== '' && municipalities.length !== 0) &&  (
+                    {(formInputs.receivable_type === 'HEIs' && formInputs.province !== '' && municipalities.length !== 0) &&  (
                         <Form.Select 
                             name='municipality' 
                             value={formInputs.municipality} 
-                            onChange={handleChange3}  
+                            onChange={handleChangeMunicipality}  
                             isInvalid={!!formErrors.municipality}
                             disabled={isOptionLoading}
                             >
@@ -496,10 +502,11 @@ const handleChangeDocType = async (event) => {
                         </Form.Select>
                     )}
 
-                    {(formInputs.receivable_table === 'HEIs' && formInputs.municipality !== '' && names.length !== 0) &&  (
+                    {(formInputs.receivable_type === 'HEIs' && formInputs.municipality !== '' && names.length !== 0) &&  (
                         <Form.Select 
                         name= 'insti' 
                         value={formInputs.insti}
+                        onChange={handleChangeInstitution} 
                         isInvalid={!!formErrors.insti}
                         disabled={isOptionLoading} 
                         >
@@ -511,11 +518,11 @@ const handleChangeDocType = async (event) => {
                             ))}
                         </Form.Select>
                     )}
-                    {(formInputs.receivable_table === 'NGAs' && NGAs.length !==0) &&  (
+                    {(formInputs.receivable_type === 'NGAs' && NGAs.length !==0) &&  (
                         <Form.Select 
                             name='ngas' 
                             value={formInputs.ngas} 
-                            onChange={handleChange4} 
+                            onChange={handleChangeNGA} 
                             isInvalid={!!formErrors.ngas}
                             disabled={isOptionLoading}
                             >
@@ -525,11 +532,11 @@ const handleChangeDocType = async (event) => {
                             ))}  
                         </Form.Select>
                     )}
-                    {(formInputs.receivable_table === 'CHED Offices' && ChedOffices.length !== 0) && (
+                    {(formInputs.receivable_type === 'CHED Offices' && ChedOffices.length !== 0) && (
                             <Form.Select 
                             name='chedoffices'
                             value={formInputs.chedoffices} 
-                            onChange={handleChange5} 
+                            onChange={handleChangeCO} 
                             isInvalid={!!formErrors.chedoffices}
                             disabled={isOptionLoading} 
                             >
