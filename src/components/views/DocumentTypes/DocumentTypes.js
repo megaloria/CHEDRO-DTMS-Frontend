@@ -320,7 +320,13 @@ function DocumentTypes() {
                 </Row>
             </div>
 
-            <div className='loading-table-container'>
+            {
+                data.data.length === 0 ? (
+                    <Alert variant='info'>
+                        No info
+                    </Alert>
+                ) : (
+                    <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                     <div className='spinner-icon'>
                         <FontAwesomeIcon icon={faSpinner} spin size='lg' />
@@ -358,6 +364,11 @@ function DocumentTypes() {
                     </tbody>
                 </Table>
             </div>
+                )
+
+            }
+
+            
             
             <div>
                 {data.data.length > 0 && (
