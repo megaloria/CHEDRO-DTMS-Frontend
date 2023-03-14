@@ -30,6 +30,8 @@ function Roles() {
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
+    const [searchQuery, setSearchQuery] = useState('');
+
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
@@ -49,7 +51,11 @@ function Roles() {
     });
 
     useEffect(() => {
-        apiClient.get(`/settings/ngas`).then(response => {
+        apiClient.get(`/settings/ngas`, {
+            params: {
+                query: ''
+            }
+        }).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -61,7 +67,11 @@ function Roles() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/settings/ngas?page=${pageNumber}`).then(response => {
+        apiClient.get(`/settings/ngas?page=${pageNumber}`, {
+            params: {
+                query: ''
+            }
+        }).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -180,6 +190,27 @@ function Roles() {
         });
     }
 
+    const handleSearchInputChange = e => {
+        setSearchQuery(e.target.value)
+    }
+
+    const handleSearch = e => {
+        e.preventDefault();
+
+        setIsTableLoading(true);
+        apiClient.get(`/settings/ngas`, {
+            params: {
+                query: searchQuery
+            }
+        }).then(response => {
+            setData(response.data.data);//GET ALL function
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    }
+
     const handleShowModal = (data = null) => {
         if (data !== null) {
             setFormInputs({
@@ -268,13 +299,15 @@ function Roles() {
                     </Col>
                     <Col md="auto">
                         <div className="search">
-                            <Form className="d-flex" controlId="">
+                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
                                 <Form.Control 
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
                                 />
-                                <Button>
+                                <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
                             </Form>
@@ -288,7 +321,13 @@ function Roles() {
                 </Row>
             </div>
 
-            <div className='loading-table-container'>
+            {
+                data.data.length === 0 ? (
+                    <Alert variant='info'>
+                        No data
+                    </Alert>
+                ) : (
+                   <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                     <div className='spinner-icon'>
                         <FontAwesomeIcon icon={faSpinner} spin size='lg' />
@@ -338,7 +377,9 @@ function Roles() {
                         </Pagination>
                     )}
                 </div>
-            </div>
+            </div> 
+                )
+            }
 
             <Modal
                 show={modal.show}
