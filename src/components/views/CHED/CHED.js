@@ -27,9 +27,10 @@ function CHED() {
     const [data, setData] = useState([]);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [searchTerm, setSearchTerm] = useState('');
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -50,7 +51,11 @@ function CHED() {
     });
 
     useEffect(() => {
-        apiClient.get('/settings/ched-offices').then(response => { //GET ALL function
+        apiClient.get('/settings/ched-offices', {
+            params: {
+                query: ''
+            }
+        }).then(response => { //GET ALL function
             setData(response.data.data);
         }).catch(error => {
             setErrorMessage(error);
@@ -62,7 +67,11 @@ function CHED() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/settings/ched-offices?page=${pageNumber}`).then(response => {
+        apiClient.get(`/settings/ched-offices?page=${pageNumber}`, {
+            params: {
+                query: ''
+            }
+        }).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -178,7 +187,28 @@ function CHED() {
             ...formInputs,
             [e.target.name]: e.target.value
         });
-    } 
+    }
+
+    const handleSearchInputChange = e => {
+        setSearchQuery(e.target.value);
+    }
+
+    const handleSearch = e => {
+        e.preventDefault();
+
+        setIsTableLoading(true);
+        apiClient.get('/settings/ched-offices', {
+            params: {
+                query: searchQuery
+            }
+        }).then(response => { //GET ALL function
+            setData(response.data.data);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    }
 
     const handleShowModal = (data = null) => {
         if (data !== null) {
@@ -244,7 +274,7 @@ function CHED() {
             });
     };
 
-    const filteredData = data.data && data.data.filter(row => row.description.toLowerCase() && row.code.toLowerCase().includes(searchTerm.toLowerCase()));
+    
 
     if (isLoading) {
         return (
@@ -269,15 +299,15 @@ function CHED() {
                     </Col>
                     <Col md="auto">
                         <div className="search">
-                            <Form className="d-flex" controlId="">
+                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
                                 <Form.Control 
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
-                                    value={searchTerm} 
-                                    onChange={e => setSearchTerm(e.target.value)}
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
                                 />
-                                <Button>
+                                <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
                             </Form>
@@ -291,59 +321,68 @@ function CHED() {
                 </Row>
             </div>
 
-            <div className='loading-table-container'>
-                <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
-                    <div className='spinner-icon'>
-                        <FontAwesomeIcon icon={faSpinner} spin size='lg' />
+            {
+                data.data.length === 0 ? (
+                    <Alert variant='info'>
+                        No data
+                    </Alert>
+                ) : (
+
+                    <div className='loading-table-container'>
+                        <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
+                            <div className='spinner-icon'>
+                                <FontAwesomeIcon icon={faSpinner} spin size='lg' />
+                            </div>
+                        </div>
+                        <Table striped bordered hover size='md' className={isTableLoading ? 'table-loading' : ''}>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    data.data.map((row, index) => (
+                                        <tr key={index}>
+                                            <td>{row.id}</td>
+                                            <td>{row.code}</td>
+                                            <td>{row.description}</td>
+                                            <td>{row.email}</td>
+                                            <td>
+                                                <Button onClick={e => handleShowModal(row)} variant='link'>
+                                                    <FontAwesomeIcon icon={faEdit} className='text-primary' />
+                                                </Button>
+                                                <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                                    <FontAwesomeIcon icon={faTrash} className='text-danger' />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </Table>
+
+                        <div>
+                            {data.data.length > 0 && (
+                                <Pagination style={{ float: 'right' }}>
+                                    <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                    <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                    <Pagination.Item disabled>
+                                        {`${data.current_page} / ${data.last_page}`}
+                                    </Pagination.Item>
+                                    <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                    <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                                </Pagination>
+                            )}
+                        </div>
+
                     </div>
-                </div>
-                <Table striped bordered hover size='md' className={isTableLoading ? 'table-loading' : ''}>
-                        <thead>
-                            <tr>
-                            <th>ID</th>
-                            <th>Code</th>
-                            <th>Description</th>
-                            <th>Email</th>
-                            <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                filteredData.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.id}</td>
-                                        <td>{row.code}</td>
-                                        <td>{row.description}</td>
-                                        <td>{row.email}</td>
-                                        <td>
-                                            <Button onClick={e => handleShowModal(row)} variant='link'>
-                                                <FontAwesomeIcon icon={faEdit} className='text-primary'/>
-                                            </Button>
-                                            <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                                <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))
-                            }
-                        </tbody>
-                    </Table>
-
-                <div>
-                    {data.data.length > 0 && (
-                        <Pagination style={{ float: 'right' }}>
-                            <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
-                            <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
-                            <Pagination.Item disabled>
-                                {`${data.current_page} / ${data.last_page}`}
-                            </Pagination.Item>
-                            <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
-                            <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
-                        </Pagination>
-                    )}
-                </div>  
-
-            </div>
+                )
+            }
 
             <Modal
                 show={modal.show}
