@@ -29,6 +29,7 @@ function Heis() {
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+    const [searchQuery, setSearchQuery] = useState();
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -57,7 +58,12 @@ function Heis() {
     });
 
     useEffect(() => {
-        apiClient.get('/settings/heis').then(response => { //GET ALL function
+        apiClient.get('/settings/heis', {
+            params: {
+                query: ''
+            }
+        
+        }).then(response => { //GET ALL function
             setData(response.data.data);
         }).catch(error => {
             setErrorMessage(error);
@@ -69,7 +75,11 @@ function Heis() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/settings/heis?page=${pageNumber}`).then(response => {
+        apiClient.get(`/settings/heis?page=${pageNumber}`,{
+            params:{
+                query:''
+            }
+        }).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -200,6 +210,27 @@ function Heis() {
         });
     }
 
+    const handleSearchInputChange = e =>{
+        setSearchQuery(e.target.value);
+    }
+
+    const handleSearch = e => {
+        e.preventDefault();
+
+        setIsTableLoading(true);
+        apiClient.get('/settings/heis', {
+            params: {
+                query: searchQuery
+            }
+        }).then(response => { //GET ALL function
+            setData(response.data.data);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    }
+
     const handleShowModal = (data = null) => {
         if (data !== null) {
             setFormInputs({
@@ -278,7 +309,6 @@ function Heis() {
         );
     }
 
-
     if (errorMessage) {
         return (
             <Alert variant='danger'>
@@ -296,13 +326,15 @@ function Heis() {
                     </Col>
                     <Col md="auto">
                         <div className="search">
-                            <Form className="d-flex" controlId="">
+                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
                                 <Form.Control 
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
                                 />
-                                <Button>
+                                <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
                             </Form>
@@ -315,6 +347,12 @@ function Heis() {
                     </Col> 
                 </Row>
             </div>
+
+            { data.data.length === 0 ? (
+                <Alert variant='primary'>
+                    No NGA found.
+                    </Alert>
+                    ) : (
 
             <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
@@ -377,7 +415,12 @@ function Heis() {
                 </div>  
             </div>
 
+
+
+)
+}
             <div className='model_box'>
+
                 <Modal
                     show={modal.show}
                     onHide={handleHideModal}

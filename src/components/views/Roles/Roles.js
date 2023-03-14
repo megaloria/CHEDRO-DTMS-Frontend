@@ -31,8 +31,6 @@ function Roles() {
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
-    const [searchQuery, setSearchQuery] = useState('');
-
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
@@ -52,11 +50,7 @@ function Roles() {
     });
 
     useEffect(() => {
-        apiClient.get('/settings/roles', {
-            params: {
-                query: ''
-            }
-        }).then(response => { //GET ALL function
+        apiClient.get('/settings/roles').then(response => { //GET ALL function
             setData(response.data.data.roles);
             setDivisions(response.data.data.divisions);
         }).catch(error => {
@@ -69,11 +63,7 @@ function Roles() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/settings/roles?page=${pageNumber}`, {
-            params: {
-                query: ''
-            }
-        }).then(response => {
+        apiClient.get(`/settings/roles?page=${pageNumber}`).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -207,7 +197,8 @@ function Roles() {
                 query: searchQuery
             }
         }).then(response => { //GET ALL function
-            setData(response.data.data);
+            setData(response.data.data.roles);
+            setDivisions(response.data.data.divisions);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -308,15 +299,13 @@ function Roles() {
                     </Col>
                     <Col md="auto">
                         <div className="search">
-                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
+                            <Form className="d-flex" controlId="">
                                 <Form.Control 
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
-                                    value={searchQuery}
-                                    onChange={handleSearchInputChange}
                                 />
-                                <Button type='submit'>
+                                <Button>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
                             </Form>
@@ -329,13 +318,6 @@ function Roles() {
                     </Col> 
                 </Row>
             </div>
-
-            {
-                data.data.length === 0 ? (
-                    <Alert variant='info'>
-                        No data
-                    </Alert>
-                ) : (
 
             <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
@@ -374,7 +356,6 @@ function Roles() {
                         }
                     </tbody>
                 </Table>
-
                 <div>
                     {data.data.length > 0 && (
                         <Pagination style={{ float: 'right' }}>
@@ -389,8 +370,6 @@ function Roles() {
                     )}
                 </div>
             </div>
-        )
-     }
 
             <Modal
                 show={modal.show}
