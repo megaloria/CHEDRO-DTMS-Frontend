@@ -25,10 +25,10 @@ function DocumentReceive() {
     const [users, setUsers] = useState([]);
     const [ChedOffices, setChedOffices] = useState([]);
     // const [selectedOption, setSelectedOption] = useState('');
-    const [selectedOption2, setSelectedOption2] = useState('');
-    const [selectedOption3, setSelectedOption3] = useState('');
-    const [selectedOption4, setSelectedOption4] = useState('');
-    const [selectedOption5, setSelectedOption5] = useState('');
+    // const [selectedOption2, setSelectedOption2] = useState('');
+    // const [selectedOption3, setSelectedOption3] = useState('');
+    // const [selectedOption4, setSelectedOption4] = useState('');
+    // const [selectedOption5, setSelectedOption5] = useState('');
     // const [selectedOption6, setSelectedOption6] = useState('');
     // const [selectedValue, setSelectedValue] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -77,16 +77,6 @@ function DocumentReceive() {
         category_id: '',
         assignTo: ''
     });
-
-    useEffect(() => {
-        apiClient.get('/document').then(response => { //GET ALL function
-            setData(response.data.data);
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsLoading(false);
-        });
-    }, []);
 
     //For assigning multiple users 
     //yarn add react-select
@@ -347,6 +337,8 @@ const handleChangeDocType = async (event) => {
     // };
 
     useEffect(() => {
+        const currentDate = new Date().toISOString().slice(0, 10);
+        
         apiClient.get('/document/receive')
             .then(response => {
                 setUsers(response.data.data.users);
@@ -357,6 +349,10 @@ const handleChangeDocType = async (event) => {
                 setErrorMessage(error);
             }).finally(() => {
                 setIsLoading(false);
+            });
+            setFormInputs({
+                ...formInputs,
+                date_received:currentDate,
             });
     }, []);
 
@@ -436,10 +432,10 @@ const handleChangeDocType = async (event) => {
                 <Col>
                     <Form.Label>Date Received</Form.Label>
                     <Form.Control
-                        type="date" 
+                        type='date' 
                         name='date_received'
                         max={moment().format("YYYY-MM-DD")}
-                        defaultValue={moment().format("YYYY-MM-DD")}
+                        value={formInputs.date_received}
                         onChange={handleInputChange}
                         isInvalid={!!formErrors.date_received}
                     />
@@ -483,7 +479,7 @@ const handleChangeDocType = async (event) => {
                         </Form.Select>
                     )}
 
-                    {(formInputs.receivable_table === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
+                    {(formInputs.receivable_table === 'HEIs' && formInputs.province !== '' && municipalities.length !== 0) &&  (
                         <Form.Select 
                             name='municipality' 
                             value={formInputs.municipality} 
@@ -500,7 +496,7 @@ const handleChangeDocType = async (event) => {
                         </Form.Select>
                     )}
 
-                    {(formInputs.receivable_table === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
+                    {(formInputs.receivable_table === 'HEIs' && formInputs.municipality !== '' && names.length !== 0) &&  (
                         <Form.Select 
                         name= 'insti' 
                         value={formInputs.insti}
