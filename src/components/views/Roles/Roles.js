@@ -184,6 +184,28 @@ function Roles() {
         });
     }
 
+    const handleSearchInputChange = e => {
+        setSearchQuery(e.target.value);
+    }
+
+    const handleSearch = e => {
+        e.preventDefault();
+
+        setIsTableLoading(true);
+        apiClient.get('/settings/roles', {
+            params: {
+                query: searchQuery
+            }
+        }).then(response => { //GET ALL function
+            setData(response.data.data.roles);
+            setDivisions(response.data.data.divisions);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    }
+
     const handleShowModal = (data = null) => {
         if (data !== null) {
             setFormInputs({
