@@ -32,6 +32,8 @@ function Users() {
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
+    const [searchQuery, setSearchQuery] = useState('');
+
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
@@ -41,7 +43,11 @@ function Users() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/users?page=${pageNumber}`).then(response => {
+        apiClient.get(`/users?page=${pageNumber}`, {
+            params: {
+                query: ''
+            }
+        }).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -76,7 +82,11 @@ function Users() {
     });
 
     useEffect(() => {
-        apiClient.get('/users').then(response => { //GET ALL function
+        apiClient.get('/users', {
+            params: {
+                query: ''
+            }
+        }).then(response => { //GET ALL function
             setData(response.data.data.users);
             setRoles(response.data.data.roles);
         }).catch(error => {
@@ -215,6 +225,29 @@ function Users() {
         });
     }
 
+    const handleSearchInputChange = e => {
+        setSearchQuery(e.target.value)
+    }
+
+    const handleSearch = e => {
+        e.preventDefault();
+
+        setIsTableLoading(true);
+        apiClient.get('/users', {
+            params: {
+                query: searchQuery
+            }
+        }).then(response => { //GET ALL function
+            setData(response.data.data.users);
+            setRoles(response.data.data.roles);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+
+    }
+
     const handleShowModal = (data = null) => {
         if (data !== null) {
             setFormInputs({
@@ -270,15 +303,15 @@ function Users() {
         reset_password: ''
     });
 
-    useEffect(() => {
-        apiClient.get('/users').then(response => { //GET ALL function
-            setData(response.data.data.users);
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsLoading(false);
-        });
-    }, []);
+    // useEffect(() => {
+    //     apiClient.get('/users').then(response => { //GET ALL function
+    //         setData(response.data.data.users);
+    //     }).catch(error => {
+    //         setErrorMessage(error);
+    //     }).finally(() => {
+    //         setIsLoading(false);
+    //     });
+    // }, []);
 
     const handleSubmitReset = event => {
         event.preventDefault();
@@ -433,13 +466,15 @@ function Users() {
                     </Col>
                     <Col md="auto">
                         <div className="search">
-                            <Form className="d-flex" controlId="">
+                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
                                 <Form.Control 
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
                                 />
-                                <Button>
+                                <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
                             </Form>
@@ -453,7 +488,13 @@ function Users() {
                 </Row>
             </div>
 
-            <div className='loading-table-container'>
+            {
+                data.data.length === 0 ? (
+                    <Alert variant='info'>
+                        No info
+                    </Alert>
+                ) : (
+                     <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                     <div className='spinner-icon'>
                         <FontAwesomeIcon icon={faSpinner} spin size='lg' />
@@ -495,6 +536,10 @@ function Users() {
             </Table>
         </div>
 
+                )
+            }
+
+           
         <div>
                 {data.data.length > 0 && (
                     <Pagination style={{ float: 'right' }}>
