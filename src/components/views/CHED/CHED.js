@@ -323,8 +323,8 @@ function CHED() {
 
             {
                 data.data.length === 0 ? (
-                    <Alert variant='info'>
-                        No data
+                    <Alert variant='primary'>
+                        No CHED office found.
                     </Alert>
                 ) : (
 
