@@ -332,7 +332,13 @@ function Roles() {
                 </Row>
             </div>
 
-            <div className='loading-table-container'>
+            {
+                data.data.length === 0 ? (
+                    <Alert variant='primary'>
+                        No roles found.
+                    </Alert>
+                ) : (
+                <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                     <div className='spinner-icon'>
                         <FontAwesomeIcon icon={faSpinner} spin size='lg' />
@@ -383,6 +389,10 @@ function Roles() {
                     )}
                 </div>
             </div>
+                )
+            }
+
+            
 
             <Modal
                 show={modal.show}
