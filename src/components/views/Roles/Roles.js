@@ -207,7 +207,8 @@ function Roles() {
                 query: searchQuery
             }
         }).then(response => { //GET ALL function
-            setData(response.data.data);
+            setData(response.data.data.roles);
+            setDivisions(response.data.data.divisions);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
