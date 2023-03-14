@@ -345,12 +345,12 @@ function Heis() {
                             <FontAwesomeIcon icon={faAdd} className='addIcon'/> Add
                         </Button>
                     </Col> 
-                </Row>
+                </Row>  
             </div>
 
             { data.data.length === 0 ? (
                 <Alert variant='primary'>
-                    No NGA found.
+                    No HEIs   found.
                     </Alert>
                     ) : (
 
