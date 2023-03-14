@@ -189,6 +189,28 @@ function DocumentTypes() {
         });
     }
 
+    const handleSearchInputChange = e => {
+        setSearchQuery(e.target.value)
+    }
+
+    const handleSearch = e => {
+        e.preventDefault();
+
+        setIsTableLoading(true);
+        apiClient.get('/settings/document-types', {
+            params: {
+                query: searchQuery
+            }
+        }).then(response => { //GET ALL function
+            setData(response.data.data);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+
+    }
+
     const handleShowModal = (data = null) => {
         if (data !== null) {
             setFormInputs({
