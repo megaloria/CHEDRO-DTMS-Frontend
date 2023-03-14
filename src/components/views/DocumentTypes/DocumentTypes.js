@@ -31,7 +31,7 @@ function DocumentTypes() {
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
-    const [searchQuery,, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -366,12 +366,6 @@ function DocumentTypes() {
                         }
                     </tbody>
                 </Table>
-            </div>
-                )
-            }
-
-           
-            
             <div>
                 {data.data.length > 0 && (
                     <Pagination style={{ float: 'right' }}>
@@ -385,6 +379,9 @@ function DocumentTypes() {
                     </Pagination>
                 )}
             </div>  
+            </div>
+                )
+        }
 
             <Modal
                 show={modal.show}
