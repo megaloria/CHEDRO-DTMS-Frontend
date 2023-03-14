@@ -18,6 +18,7 @@ import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
 import Validator from 'validatorjs';
 import Swal from 'sweetalert2';
+import Select from 'react-select';
 
 function DocumentReceive() {
     const [NGAs, setNGAs] = useState([]);
@@ -39,6 +40,7 @@ function DocumentReceive() {
     const [isLoading, setIsLoading] = useState(true); 
     const [isOptionLoading, setIsOptionLoading] = useState(false); 
     const [isOptionLoading1, setIsOptionLoading1] = useState(false); 
+    const [selectedUsers, setSelectedUsers] = useState([]);
 
     //Add Receive documents
     const [documentTypes, setDocumentTypes] = useState([]);
@@ -85,6 +87,18 @@ function DocumentReceive() {
             setIsLoading(false);
         });
     }, []);
+
+    //For assigning multiple users 
+    //yarn add react-select
+    const handleUserSelection = (selectedOptions) => {
+        const userIds = selectedOptions.map(option => option.value);
+        setSelectedUsers(userIds);
+      };
+
+      const options = users.map(user => ({
+        value: user.id,
+        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+      }));
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -586,16 +600,13 @@ const handleChangeDocType = async (event) => {
                                     <Row> 
                                         <Col md={'auto'}> 
                                         <Form.Label>Select assign to:</Form.Label>
-                                        <Form.Select 
-                                            name='assignTo' >
-                                        <option hidden value=''>Select assign to...</option>
-                                                {users.map(user => (
-                                                     <option key={user.id} value={user.id}>
-                                                        {` ${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`}
-                                            </option>
-                                        ))}
-                                               
-                                        </Form.Select>
+                                        <Select 
+                                            isMulti
+                                            name='assignTo' 
+                                            options={options}
+                                            value={options.filter(option => selectedUsers.includes(option.value))}
+                                            onChange={handleUserSelection}
+                                            />
                                     </Col>
                                     </Row>
                                 )}
@@ -618,12 +629,12 @@ const handleChangeDocType = async (event) => {
                     </Col>
                     
                     <Col md="auto" className="p-0 me-2">
-                        <Button variant="outline-primary">
+                        <Button variant="primary">
                             Forward
                         </Button>
                     </Col>
                     <Col md="auto" className="p-0">
-                        <Button type='submit' variant="primary">
+                        <Button type='submit' variant="outline-primary">
                             Received
                         </Button>
                     </Col>
