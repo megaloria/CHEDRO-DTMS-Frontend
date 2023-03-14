@@ -309,7 +309,6 @@ function Heis() {
         );
     }
 
-
     if (errorMessage) {
         return (
             <Alert variant='danger'>
@@ -354,7 +353,7 @@ function Heis() {
                     No NGA found.
                     </Alert>
                     ) : (
-                        
+
             <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                     <div className='spinner-icon'>
