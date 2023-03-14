@@ -22,6 +22,7 @@ import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 import './styles.css';
+import { computeStyles } from '@popperjs/core';
 
 function Roles() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
@@ -30,6 +31,8 @@ function Roles() {
     const [divisions, setDivisions] = useState([]); //division variable
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -50,7 +53,11 @@ function Roles() {
     });
 
     useEffect(() => {
-        apiClient.get('/settings/roles').then(response => { //GET ALL function
+        apiClient.get('/settings/roles', {
+            params: {
+                query: ''
+            }
+        }).then(response => { //GET ALL function
             setData(response.data.data.roles);
             setDivisions(response.data.data.divisions);
         }).catch(error => {
@@ -63,7 +70,11 @@ function Roles() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/settings/roles?page=${pageNumber}`).then(response => {
+        apiClient.get(`/settings/roles?page=${pageNumber}`, {
+            params: {
+                query: ''
+            }
+        }).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -299,13 +310,15 @@ function Roles() {
                     </Col>
                     <Col md="auto">
                         <div className="search">
-                            <Form className="d-flex" controlId="">
+                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
                                 <Form.Control 
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
                                 />
-                                <Button>
+                                <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
                             </Form>
