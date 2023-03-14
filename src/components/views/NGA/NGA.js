@@ -24,11 +24,13 @@ import apiClient from '../../../helpers/apiClient';
 import './styles.css';
 
 function Roles() {
-    const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
+    const [errorMessage, setErrorMessage] = useState(''); //error message variable
+    const [isLoading, setIsLoading] = useState(true); //loading variable
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+
+    const [searchQuery, setSearchQuery] = useState();
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -49,7 +51,12 @@ function Roles() {
     });
 
     useEffect(() => {
-        apiClient.get(`/settings/ngas`).then(response => {
+        apiClient.get(`/settings/ngas`, {
+            params:{
+                query:''
+            }
+        }
+        ).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -61,7 +68,11 @@ function Roles() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/settings/ngas?page=${pageNumber}`).then(response => {
+        apiClient.get(`/settings/ngas?page=${pageNumber}`,{
+            params:{
+                query:''
+            }
+        }).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -179,7 +190,26 @@ function Roles() {
             [e.target.name]: e.target.value
         });
     }
+    const handleSearchInputChange = e => {
+        setSearchQuery(e.target.value);
+    }
 
+    const handleSearch = e => {
+        e.preventDefault();
+
+        setIsTableLoading(true);
+        apiClient.get('/settings/ngas', {
+            params: {
+                query: searchQuery
+            }
+        }).then(response => { //GET ALL function
+            setData(response.data.data);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    }
     const handleShowModal = (data = null) => {
         if (data !== null) {
             setFormInputs({
@@ -268,17 +298,21 @@ function Roles() {
                     </Col>
                     <Col md="auto">
                         <div className="search">
-                            <Form className="d-flex" controlId="">
+                            <Form className="d-flex" controlId=""onSubmit={handleSearch}>
                                 <Form.Control 
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
                                 />
-                                <Button>
+                                <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
                             </Form>
                         </div>
+
+
                     </Col>
                     <Col md='auto'>
                         <Button variant='primary' onClick={e => handleShowModal()}>
@@ -287,6 +321,12 @@ function Roles() {
                     </Col> 
                 </Row>
             </div>
+
+            { data.data.length === 0 ? (
+                <Alert variant='primary'>
+                    No NGA found.
+                    </Alert>
+                    ) : (
 
             <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
@@ -339,6 +379,9 @@ function Roles() {
                     )}
                 </div>
             </div>
+
+    )
+}
 
             <Modal
                 show={modal.show}
