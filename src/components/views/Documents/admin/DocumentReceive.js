@@ -18,6 +18,7 @@ import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
 import Validator from 'validatorjs';
 import Swal from 'sweetalert2';
+import Select from 'react-select';
 
 function DocumentReceive() {
     const [NGAs, setNGAs] = useState([]);
@@ -39,6 +40,7 @@ function DocumentReceive() {
     const [isLoading, setIsLoading] = useState(true); 
     const [isOptionLoading, setIsOptionLoading] = useState(false); 
     const [isOptionLoading1, setIsOptionLoading1] = useState(false); 
+    const [selectedUsers, setSelectedUsers] = useState([]);
 
     //Add Receive documents
     const [documentTypes, setDocumentTypes] = useState([]);
@@ -76,6 +78,18 @@ function DocumentReceive() {
         assignTo: ''
     });
 
+    //For assigning multiple users 
+    //yarn add react-select
+    const handleUserSelection = (selectedOptions) => {
+        const userIds = selectedOptions.map(option => option.value);
+        setSelectedUsers(userIds);
+      };
+
+      const options = users.map(user => ({
+        value: user.id,
+        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+      }));
+
     const handleSubmit = event => {
         event.preventDefault();
 
@@ -101,8 +115,6 @@ function DocumentReceive() {
                 document_type_id: validation.errors.first('document_type_id'),
                 attachment: validation.errors.first('attachment'),
                 date_received: validation.errors.first('date_received'),
-                receivable_table: validation.errors.first('receivable_table'),
-                receivable_id: validation.errors.first('receivable_id'),
                 province: validation.errors.first('province'),
                 municipality: validation.errors.first('municipality'),
                 insti: validation.errors.first('insti'),
@@ -216,8 +228,9 @@ const handleChangeDocType = async (event) => {
             setIsOptionLoading(false);
         }
     };
+        
 
-    const handleChange1 = async (event) => {
+      const handleChange2 = async (event) => {
         try{
             setIsOptionLoading(true);
             const value = event.target.value;
@@ -225,8 +238,10 @@ const handleChangeDocType = async (event) => {
                 ...formInputs,
                 province:value,
             }); 
+            // console.log(value);
+            // setSelectedValue(value);
             {
-                const response = await apiClient.get(`/settings/heis/municipalities/${value}`);
+                const response = await apiClient.get('/settings/heis/municipalities');
                 setMunicipalities(response.data.data);
             } 
         } catch (error) {
@@ -234,10 +249,11 @@ const handleChangeDocType = async (event) => {
         } finally {
             setIsOptionLoading(false);
         }
-      }
+        
+      };
 
-      const handleChange2 = async (event) => {
-        try{
+      const handleChange3 = async (event) => {
+        try {
             setIsOptionLoading(true);
             const value = event.target.value;
             setFormInputs({
@@ -246,25 +262,10 @@ const handleChangeDocType = async (event) => {
             }); 
             // console.log(value);
             // setSelectedValue(value);
-            {
-                const response = await apiClient.get(`/settings/heis/names/${value}`);
-                setNames(response.data.data);
-            } 
-        } catch (error) {
-            setErrorMessage(error);
-        } finally {
-            setIsOptionLoading(false);
-        }
-      }
-
-      const handleChange3 = async (event) => {
-        try {
-            setIsOptionLoading(true);
-            const value = event.target.value;
-            setFormInputs({
-                ...formInputs,
-                insti:value,
-            });  
+        {
+          const response = await apiClient.get('/settings/heis/names');
+          setNames(response.data.data);
+        }   
         } catch (error) {
             setErrorMessage(error);
         } finally {
@@ -313,6 +314,27 @@ const handleChangeDocType = async (event) => {
             setIsOptionLoading(false);
         }
       }
+
+    //   const handleChange4 = async (event) => {
+    //         const value = event.target.value;
+    //         setSelectedOption4(value);
+    //         console.log(value);
+    //       setSelectedValue(value);
+    // };
+
+    // const handleChange5 = async (event) => {
+    //     const value = event.target.value;
+    //     setSelectedOption5(value);
+    //     console.log(value);
+    //     setSelectedValue(value);
+    // };
+
+    // const handleChange6 = async (event) => {
+    //     const value = event.target.value;
+    //     setSelectedOption6(value);
+    //     console.log(value);
+    //     setSelectedValue(value);
+    // };
 
     useEffect(() => {
         const currentDate = new Date().toISOString().slice(0, 10);
@@ -440,16 +462,16 @@ const handleChangeDocType = async (event) => {
                         {formErrors.receivable_table}
                     </Form.Control.Feedback>
 
-                    {(formInputs.receivable_table === 'HEIs' && provinces.length !==0) &&  (
+                    {(formInputs.receivable_table === 'HEIs' && provinces.length !== 0) &&  (
                         <Form.Select 
-                            name='province' 
+                            name= 'province' 
                             value={formInputs.province}
-                            onChange={handleChange1} 
+                            onChange={handleChange2} 
                             isInvalid={!!formErrors.province}
                             disabled={isOptionLoading}
                             >
-                            <option hidden value=''>Select a province</option>
-                            {provinces.map(province => (
+                            <option hidden value="">Select a province</option>
+                            {provinces.map((province) => (
                                 <option key={province.id} value={province.id}>
                                     {province.province}
                                 </option>
@@ -461,12 +483,12 @@ const handleChangeDocType = async (event) => {
                         <Form.Select 
                             name='municipality' 
                             value={formInputs.municipality} 
-                            onChange={handleChange2}  
+                            onChange={handleChange3}  
                             isInvalid={!!formErrors.municipality}
                             disabled={isOptionLoading}
                             >
                             <option hidden value="">Select a municipality</option>
-                            {municipalities.map(municipality => (
+                            {municipalities.map((municipality) => (
                                 <option key={municipality.city_municipality} value={municipality.id}>
                                 {municipality.city_municipality}
                                 </option>
@@ -476,14 +498,13 @@ const handleChangeDocType = async (event) => {
 
                     {(formInputs.receivable_table === 'HEIs' && formInputs.municipality !== '' && names.length !== 0) &&  (
                         <Form.Select 
-                        name= 'insti'
+                        name= 'insti' 
                         value={formInputs.insti}
-                        onChange={handleChange3}
                         isInvalid={!!formErrors.insti}
                         disabled={isOptionLoading} 
                         >
                             <option hidden value="">Select a name of institution</option>
-                            {names.map(names => (
+                            {names.map((names) => (
                                 <option key={names.name} value={names.id}>
                                 {names.name}
                                 </option>
@@ -575,16 +596,13 @@ const handleChangeDocType = async (event) => {
                                     <Row> 
                                         <Col md={'auto'}> 
                                         <Form.Label>Select assign to:</Form.Label>
-                                        <Form.Select 
-                                            name='assignTo' >
-                                        <option hidden value=''>Select assign to...</option>
-                                                {users.map(user => (
-                                                     <option key={user.id} value={user.id}>
-                                                        {` ${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`}
-                                            </option>
-                                        ))}
-                                               
-                                        </Form.Select>
+                                        <Select 
+                                            isMulti
+                                            name='assignTo' 
+                                            options={options}
+                                            value={options.filter(option => selectedUsers.includes(option.value))}
+                                            onChange={handleUserSelection}
+                                            />
                                     </Col>
                                     </Row>
                                 )}
@@ -607,12 +625,12 @@ const handleChangeDocType = async (event) => {
                     </Col>
                     
                     <Col md="auto" className="p-0 me-2">
-                        <Button variant="outline-primary">
+                        <Button variant="primary">
                             Forward
                         </Button>
                     </Col>
                     <Col md="auto" className="p-0">
-                        <Button type='submit' variant="primary">
+                        <Button type='submit' variant="outline-primary">
                             Received
                         </Button>
                     </Col>

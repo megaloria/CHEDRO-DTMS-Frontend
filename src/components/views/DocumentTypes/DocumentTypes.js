@@ -31,8 +31,6 @@ function DocumentTypes() {
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
-    const [searchQuery, setSearchQuery] = useState('');
-
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
@@ -52,11 +50,7 @@ function DocumentTypes() {
     });
 
     useEffect(() => {
-        apiClient.get('/settings/document-types', {
-            params: {
-                query: ''
-            }
-        }).then(response => { //GET ALL function
+        apiClient.get('/settings/document-types').then(response => { //GET ALL function
             setData(response.data.data);
         }).catch(error => {
             setErrorMessage(error);
@@ -189,28 +183,6 @@ function DocumentTypes() {
         });
     }
 
-    const handleSearchInputChange = e => {
-        setSearchQuery(e.target.value)
-    }
-
-    const handleSearch = e => {
-        e.preventDefault();
-
-        setIsTableLoading(true);
-        apiClient.get('/settings/document-types', {
-            params: {
-                query: searchQuery
-            }
-        }).then(response => { //GET ALL function
-            setData(response.data.data);
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsTableLoading(false);
-        });
-
-    }
-
     const handleShowModal = (data = null) => {
         if (data !== null) {
             setFormInputs({
@@ -298,15 +270,13 @@ function DocumentTypes() {
                     </Col>
                     <Col md="auto">
                         <div className="search">
-                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
+                            <Form className="d-flex" controlId="">
                                 <Form.Control 
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
-                                    value={searchQuery}
-                                    onChange={handleSearchInputChange}
                                 />
-                                <Button type='submit'>
+                                <Button>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
                             </Form>
@@ -320,13 +290,7 @@ function DocumentTypes() {
                 </Row>
             </div>
 
-            {
-                data.data.length === 0 ? (
-                    <Alert variant='info'>
-                        No data
-                    </Alert>
-                ) : (
-                    <div className='loading-table-container'>
+            <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                     <div className='spinner-icon'>
                         <FontAwesomeIcon icon={faSpinner} spin size='lg' />
@@ -364,11 +328,6 @@ function DocumentTypes() {
                     </tbody>
                 </Table>
             </div>
-                )
-
-            }
-
-            
             
             <div>
                 {data.data.length > 0 && (
