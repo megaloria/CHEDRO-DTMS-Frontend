@@ -75,16 +75,16 @@ function Header() {
       ...formInputPass,
     }).then(response => {
       let newData = data.data.map(d => {
-        if (d.id === response.data.data.id) {
-          return { ...response.data.data };
-        }
+          if (d.id === response.data.data.id) {
+              return {...response.data.data};
+          }
 
-        return { ...d };
+          return {...d};
       })
       setData({
         ...data,
         data: newData
-      });
+    });
       Swal.fire({
         title: 'Success',
         text: response.data.message,
@@ -116,11 +116,11 @@ function Header() {
   const handleShowmodalReset = (data = null) => {
     if (data !== null) {
       setformInputPass({
-        ...formInputPass,
-        reset_password: data.reset_password,
+          ...formInputPass,
+          reset_password: data.reset_password,
       });
-    }
-
+  }
+  
     setmodalReset({
       show: true,
       data,
