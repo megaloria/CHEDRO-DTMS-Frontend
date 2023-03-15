@@ -26,9 +26,47 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
+import Select from 'react-select';
 
 function Documents() {
     const [data, setData] = useState([]);
+    const [formInputs, setFormInputs] = useState({ // input inside the modal
+        // forward: ''
+    });
+    const [modal, setModal] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [users, setUsers] = useState([]);
+
+
+    const handleShowModal = (data = null) => {
+        if (data !== null) {
+            setFormInputs({
+                ...formInputs,
+                // description: data.description
+            });
+        }
+
+        setModal({
+            show: true,
+            data,
+            isLoading: false
+        });
+    }
+
+    const handleHideModal = () => {
+        setFormInputs({
+            description: ''
+        });
+        setModal({
+            show: false,
+            data: null,
+            isLoading: false
+        });
+    } 
 
     useEffect(() => {
         setData([
@@ -66,36 +104,46 @@ function Documents() {
     }, []);
 
     //VALIDATION ON ADDING
-    const [validated, setValidated] = useState(false);
+    // const [validated, setValidated] = useState(false);
 
-    const handleSubmit = event => {
-        const form = event.currentTarget;
-            if (form.checkValidity() === false) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            setValidated(true);
-    };
+    // const handleSubmit = event => {
+    //     const form = event.currentTarget;
+    //         if (form.checkValidity() === false) {
+    //             event.preventDefault();
+    //             event.stopPropagation();
+    //         }
+    //         setValidated(true);
+    // };
 
      //MODAL ADD
-    const [show, setShow] = useState(false);
-
-    const handleClose = () => {
-        setShow(false)
-    };
+    // const [show, setShow] = useState(false);
+    // const handleClose = () => {
+    //     setShow(false)
+    // };
     // const handleShow = () => {
     //     setShow(true)
     // };
 
     //MODAL EDIT
-    const [show2, setShow2] = useState(false);
+    // const [show2, setShow2] = useState(false);
  
-    const handleClose2 = () => {
-        setShow2(false)
-    };
+    // const handleClose2 = () => {
+    //     setShow2(false)
+    // };
     // const handleShow2 = () => {
     //     setShow2(true)
     // };
+
+     //For assigning multiple users 
+    const handleUserSelection = (selectedOptions) => {
+        const userIds = selectedOptions.map(option => option.value);
+        setSelectedUsers(userIds);
+      };
+
+      const options = users.map(user => ({
+        value: user.id,
+        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+      }));
 
     // DELETE
     const showAlert = () => {
@@ -142,7 +190,7 @@ function Documents() {
                     </Col>
                     <Col md="auto">
                         <Button variant="primary" as={Link} to='receive'>
-                            <FontAwesomeIcon icon={faRightToBracket} rotation={90} className="addIcon" /> Receive
+                            <FontAwesomeIcon icon={faRightToBracket} rotation={90} className="addIcon" /> Received
                         </Button>
                     </Col> 
                 </Row>
@@ -217,8 +265,9 @@ function Documents() {
                                                     <>
                                                         {
                                                             row.status === 'Received' && (
-                                                                <Button variant="link" size='sm' as={Link} to=''>
-                                                                    <FontAwesomeIcon icon={faShare} className=""/>
+                                                               //Forward
+                                                                <Button variant="link" size='sm' onClick={e => handleShowModal()}>
+                                                                    <FontAwesomeIcon icon={faShare} className=""/> 
                                                                 </Button>
                                                             )
                                                         }
@@ -271,152 +320,41 @@ function Documents() {
                 </Tab>
             </Tabs>
 
-            {/* <!--- Model Box ADD ---> */}
-            <div className="model_box">
-                <Modal
-                    show={show}
-                    onHide={handleClose}
-                    backdrop="static"
-                    keyboard={false}
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title>Add</Modal.Title>
-                    </Modal.Header>
-                <Form noValidate validated={validated} onSubmit={handleSubmit}>
-                    <Modal.Body>
-                        <Row>
-                            <Col md={3}>
-                                <Form.Group className="mb-2" controlId="">
-                                    <Form.Label>UII</Form.Label>
-                                    <Form.Control  type="text" placeholder="Enter UII" required/>
-                                    <Form.Control.Feedback type="invalid">Please enter UII.</Form.Control.Feedback>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group className="mb-2" controlId="">
-                                    <Form.Label>Name</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter Name" required/>
-                                    <Form.Control.Feedback type="invalid">Please enter name.</Form.Control.Feedback>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Form.Group className="mb-2" controlId="">
-                                    <Form.Label>Streets/Barangay</Form.Label>
-                                    <Form.Control type="text" placeholder="Streets/Barangay" required/>
-                                    <Form.Control.Feedback type="invalid">Please enter street/barangay.</Form.Control.Feedback>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group className="mb-2" controlId="">
-                                    <Form.Label>City/Municipality</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter City/Municipality" required/>
-                                    <Form.Control.Feedback type="invalid">Please enter city/municipality.</Form.Control.Feedback>
-                                </Form.Group>
-                            </Col>
-                            <Col>
-                                <Form.Group className="mb-2" controlId="">
-                                    <Form.Label>Province</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter Province" required/>
-                                    <Form.Control.Feedback type="invalid">Please enter province.</Form.Control.Feedback>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                                <Form.Group className="mb-2" controlId="">
-                                    <Form.Label>Head of Institution</Form.Label>
-                                    <Form.Control type="text" placeholder="Enter Head of Institution" required/>
-                                    <Form.Control.Feedback type="invalid">Please enter head of institution.</Form.Control.Feedback>
-                                </Form.Group>
-                            </Col>
-                        </Row>
-                    </Modal.Body>
-                        <Modal.Footer>
-                            <Button variant="secondary" onClick={handleClose}>
-                                Cancel
-                            </Button>
-                            <Button type="submit" variant="primary">
-                                Add 
-                            </Button>
-                        </Modal.Footer>
-                </Form>
-                </Modal>
-                {/* Model Box Finish */}
+            <Modal
+                show={modal.show}
+                onHide={handleHideModal}
+                backdrop='static'
+                keyboard={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title> Forward Document </Modal.Title>
+                </Modal.Header>
 
+                <Modal.Body> 
+                <Row> 
+                    <Col md={'auto'}> 
+                    <Form.Label>Select assign to:</Form.Label>
+                    <Select 
+                        isMulti
+                        name='assignTo' 
+                        options={options}
+                        value={options.filter(option => selectedUsers.includes(option.value))}
+                        onChange={handleUserSelection}
+                        />
+                </Col>
+                </Row>
+                </Modal.Body>
 
-                {/* <!--- Model Box EDIT ---> */}
-                <div className="model_box">
-        <Modal
-            show={show2}
-            onHide={handleClose2}
-            backdrop="static"
-            keyboard={false}
-        >
-        <Modal.Header closeButton>
-            <Modal.Title>Edit</Modal.Title>
-        </Modal.Header>
-        <Form>
-            <Modal.Body>
-                <Row>
-                    <Col md={3}>
-                        <Form.Group className="mb-2" controlId="">
-                            <Form.Label>UII</Form.Label>
-                            <Form.Control  type="text" placeholder="Enter UII" required/>
-                        </Form.Group>
-                    </Col>
-                    <Col>
-                        <Form.Group className="mb-2" controlId="">
-                            <Form.Label>Name</Form.Label>
-                            <Form.Control type="text" placeholder="Enter Name" required/>
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Group className="mb-2" controlId="">
-                            <Form.Label>Streets/Barangay</Form.Label>
-                            <Form.Control type="text" placeholder="Streets/Barangay" required/>
-                        </Form.Group>
-                    </Col>
-                    <Col>
-                        <Form.Group className="mb-2" controlId="">
-                            <Form.Label>City/Municipality</Form.Label>
-                            <Form.Control type="text" placeholder="Enter City/Municipality" required/>
-                        </Form.Group>
-                    </Col>
-                    <Col>
-                        <Form.Group className="mb-2" controlId="">
-                            <Form.Label>Province</Form.Label>
-                            <Form.Control type="text" placeholder="Enter Province" required/>
-                        </Form.Group>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col>
-                        <Form.Group className="mb-2" controlId="">
-                            <Form.Label>Head of Institution</Form.Label>
-                            <Form.Control type="text" placeholder="Enter Head of Institution" required/>
-                        </Form.Group>
-                    </Col>
-                </Row>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose2}>
-                    Cancel
-                </Button>
-                <Button variant="primary">
-                    Done 
-                </Button>
-            </Modal.Footer>
-        </Form>
-    </Modal>
-
-   {/* Model Box Finish */}
-                </div>
-            </div>
+                <Modal.Footer>
+                        <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                            Cancel
+                        </Button>
+                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                           Forward
+                        </Button>
+                    </Modal.Footer>
+            </Modal> 
         </div>
+
     );
 }
 
