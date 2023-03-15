@@ -19,7 +19,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
     faEdit,
-    // faPaperclip,
     faCircleArrowRight,
     faRightToBracket,
     faShare,
@@ -32,10 +31,17 @@ import Select from 'react-select';
 import apiClient from '../../../helpers/apiClient';
 
 function Documents() {
+    const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]);
-    const [formInputs, setFormInputs] = useState({ // input inside the modal
-        // forward: ''
-    });
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [documentType, setDocumentType] = useState([]); //document type variable
+    const [category, setCategory] = useState([]); //category variable
+    
+
+    const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
@@ -47,6 +53,10 @@ function Documents() {
     const [isLoading, setIsLoading] = useState(true);
     
 
+    const getCategory = (categoryId) => {
+        let categories = category.find(div => div.id === categoryId);
+        return categories?.description;
+    }
 
     const handleShowModal = (data = null) => {
         if (data !== null) {
@@ -73,72 +83,6 @@ function Documents() {
             isLoading: false
         });
     } 
-
-    useEffect(() => {
-        setData([
-            {
-                tracking: 1,
-                documenttype: 'Curriculum',
-                category: 'Ordinary',
-                receivedfrom: 'Roel Cristobal',
-                description: 'Lorem ipsum dolor',
-                // attach: 'sample file',
-                datereceived: 'February 5, 2023',
-                status: 'Received',
-            },
-            {
-                tracking: 2,
-                documenttype: 'CAV',
-                category: 'Confidential',
-                receivedfrom: 'Roel Cristobal',
-                description: 'Lorem ipsum dolor',
-                // attach: 'sample file',
-                datereceived: 'March 22, 2023',
-                status: 'Forwarded to RD',
-            },
-            {
-                tracking: 3,
-                documenttype: 'CAV',
-                category: 'Urgent',
-                receivedfrom: 'Roel Cristobal',
-                description: 'Lorem ipsum dolor',
-                // attach: 'sample file',
-                datereceived: 'April 23, 2023',
-                status: 'Acknowledge',
-            }
-        ]);
-    }, []);
-
-    //VALIDATION ON ADDING
-    // const [validated, setValidated] = useState(false);
-
-    // const handleSubmit = event => {
-    //     const form = event.currentTarget;
-    //         if (form.checkValidity() === false) {
-    //             event.preventDefault();
-    //             event.stopPropagation();
-    //         }
-    //         setValidated(true);
-    // };
-
-     //MODAL ADD
-    // const [show, setShow] = useState(false);
-    // const handleClose = () => {
-    //     setShow(false)
-    // };
-    // const handleShow = () => {
-    //     setShow(true)
-    // };
-
-    //MODAL EDIT
-    // const [show2, setShow2] = useState(false);
- 
-    // const handleClose2 = () => {
-    //     setShow2(false)
-    // };
-    // const handleShow2 = () => {
-    //     setShow2(true)
-    // };
 
      //Forward: assigning multiple users 
     const handleUserSelection = (selectedOptions) => {
@@ -200,6 +144,21 @@ function Documents() {
           })
     };
 
+    if (isLoading) {
+        return (
+            <FontAwesomeIcon icon={faSpinner} spin lg />
+        );
+    }
+
+
+    if (errorMessage) {
+        return (
+            <Alert variant='danger'>
+                {errorMessage}
+            </Alert>
+        );
+    }
+
     return (
         <div class="container fluid">
             <div className="crud rounded">
@@ -239,6 +198,7 @@ function Documents() {
                         <Table striped bordered hover size="md">
                         <thead>
                             <tr>
+                            <th>ID</th>
                             <th>Tracking No.</th>
                             <th>Document Type</th>
                             <th>Category</th>
@@ -251,13 +211,14 @@ function Documents() {
                         </thead>
                         <tbody>
                             {
-                                data.map((row, index) => (
+                                data.data.map((row, index) => (
                                     <tr key={index}>
-                                        <td>{row.tracking}</td>
-                                        <td>{row.documenttype}</td>
-                                        <td>{row.category}</td>
-                                        <td>{row.receivedfrom}</td>
-                                        <td>{row.datereceived}</td>
+                                        <td>{row.id}</td>
+                                        <td>{row.tracking_no}</td>
+                                        <td>{getDocumentType(row.document_type_id)}</td>
+                                        <td>{getCategory(row.category_id)}</td>
+                                        <td>{row.sender.receivable.description}</td>
+                                        <td>{row.date_received}</td>
                                         <td>{row.description}</td>
                                         {/* <td className="p-0 m-2">
                                             <Button variant="link">
