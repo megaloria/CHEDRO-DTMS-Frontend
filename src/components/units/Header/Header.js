@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Container,
   Nav,
@@ -33,6 +33,14 @@ function Header() {
   console.log(loaderData);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    apiClient.get('/user').then(response => { //GET ALL function
+      setData(response.data.data.users);
+    }).catch(error => {
+      console.log(error);
+    })
+  }, []);
 
   const [modalReset, setmodalReset] = useState({ //modal variables
     show: false,
@@ -213,7 +221,7 @@ function Header() {
               id='collasible-nav-dropdown'
               renderMenuOnMount={true}>
               <NavDropdown.Item href=' '>
-                <Button onClick={e => handleShowmodalReset(loaderData)} variant='link'>
+                <Button onClick={e => handleShowmodalReset(data)} variant='link'>
                   <FontAwesomeIcon icon={faKey} /> Change Password
                 </Button>
               </NavDropdown.Item>
