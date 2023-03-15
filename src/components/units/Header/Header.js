@@ -14,7 +14,7 @@ import {
   faKey,
   faUser
 } from '@fortawesome/free-solid-svg-icons';
-import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 import './styles.css';
@@ -101,10 +101,10 @@ function Header() {
               }
               id='collasible-nav-dropdown'
               renderMenuOnMount={true}>
-              <NavDropdown.Item href=' '>
+              <NavDropdown.Item as={Link} to='change-password'>
                 <FontAwesomeIcon
                   icon={faKey}
-                  fixedWidth /> Change Password
+                  fixedWidth  /> Change Password
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={handleLogout}>

@@ -302,16 +302,6 @@ function Users() {
         reset_password: ''
     });
 
-    // useEffect(() => {
-    //     apiClient.get('/users').then(response => { //GET ALL function
-    //         setData(response.data.data.users);
-    //     }).catch(error => {
-    //         setErrorMessage(error);
-    //     }).finally(() => {
-    //         setIsLoading(false);
-    //     });
-    // }, []);
-
     const handleSubmitReset = event => {
         event.preventDefault();
         let validation = new Validator(formInputPass, {
