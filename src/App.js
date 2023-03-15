@@ -24,6 +24,7 @@ import Category from './components/views/Category/Category';
 import AdminDocReceive from './components/views/Documents/admin/DocumentReceive';
 import AdminDocEdit from './components/views/Documents/admin/DocumentEdit';
 import AdminDocView from './components/views/Documents/admin/DocumentView';
+import ChangePass from './components/views/ChangePassword/ChangePassword';
 
 async function getCurrentUser (isHome = true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
@@ -87,6 +88,10 @@ const router = createBrowserRouter([
       {
         path: 'users',
         element: <Users />
+      },
+      {
+        path: 'change-password',
+        element: <ChangePass />
       },
       {
         path: '/settings',
