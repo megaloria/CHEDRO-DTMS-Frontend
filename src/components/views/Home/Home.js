@@ -19,7 +19,7 @@ export default function Home () {
           <Col md={2} className='p-0' style={{ backgroundColor: '#0c2245' }}>
             <Sidebar />
           </Col>
-          <Col md={10} className='p-3'>
+          <Col md={10} className='p-2'>
             <Outlet />
           </Col>
         </Row>
