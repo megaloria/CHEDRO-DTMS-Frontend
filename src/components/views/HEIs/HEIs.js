@@ -29,6 +29,7 @@ function Heis() {
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+    
     const [searchQuery, setSearchQuery] = useState();
 
     const [modal, setModal] = useState({ //modal variables
@@ -210,7 +211,7 @@ function Heis() {
         });
     }
 
-    const handleSearchInputChange = e =>{
+    const handleSearchInputChange = e => {
         setSearchQuery(e.target.value);
     }
 
@@ -350,7 +351,7 @@ function Heis() {
 
             { data.data.length === 0 ? (
                 <Alert variant='primary'>
-                    No NGA found.
+                    No HEIs found.
                     </Alert>
                     ) : (
 
@@ -414,9 +415,6 @@ function Heis() {
                     )}
                 </div>  
             </div>
-
-
-
 )
 }
             <div className='model_box'>

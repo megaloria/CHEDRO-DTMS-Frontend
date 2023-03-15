@@ -31,6 +31,8 @@ function DocumentTypes() {
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
+    const [searchQuery, setSearchQuery] = useState('');
+
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
@@ -50,7 +52,11 @@ function DocumentTypes() {
     });
 
     useEffect(() => {
-        apiClient.get('/settings/document-types').then(response => { //GET ALL function
+        apiClient.get('/settings/document-types', {
+            params: {
+                query: ''
+            }
+        }).then(response => { //GET ALL function
             setData(response.data.data);
         }).catch(error => {
             setErrorMessage(error);
@@ -62,7 +68,11 @@ function DocumentTypes() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/settings/document-types?page=${pageNumber}`).then(response => {
+        apiClient.get(`/settings/document-types?page=${pageNumber}`, {
+            params: {
+                query: ''
+            }
+        }).then(response => {
             setData(response.data.data);//GET ALL function
         }).catch(error => {
             setErrorMessage(error);
@@ -183,6 +193,27 @@ function DocumentTypes() {
         });
     }
 
+    const handleSearchInputChange = e => {
+        setSearchQuery(e.target.value)
+    }
+
+    const handleSearch = e => {
+        e.preventDefault();
+
+        setIsTableLoading(true);
+        apiClient.get('/settings/document-types', {
+            params: {
+                query: searchQuery
+            }
+        }).then(response => { //GET ALL function
+            setData(response.data.data);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    }
+
     const handleShowModal = (data = null) => {
         if (data !== null) {
             setFormInputs({
@@ -270,13 +301,15 @@ function DocumentTypes() {
                     </Col>
                     <Col md="auto">
                         <div className="search">
-                            <Form className="d-flex" controlId="">
+                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
                                 <Form.Control 
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
                                 />
-                                <Button>
+                                <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
                             </Form>
@@ -290,7 +323,13 @@ function DocumentTypes() {
                 </Row>
             </div>
 
-            <div className='loading-table-container'>
+            {
+                data.data.length === 0 ? (
+                    <Alert variant='primary'>
+                        No Document Types found.
+                    </Alert>
+                ) : (
+                     <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                     <div className='spinner-icon'>
                         <FontAwesomeIcon icon={faSpinner} spin size='lg' />
@@ -327,8 +366,6 @@ function DocumentTypes() {
                         }
                     </tbody>
                 </Table>
-            </div>
-            
             <div>
                 {data.data.length > 0 && (
                     <Pagination style={{ float: 'right' }}>
@@ -342,6 +379,9 @@ function DocumentTypes() {
                     </Pagination>
                 )}
             </div>  
+            </div>
+                )
+        }
 
             <Modal
                 show={modal.show}
