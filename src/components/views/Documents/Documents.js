@@ -46,7 +46,7 @@ function Documents() {
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
-        isLoading: false
+        isLoading: false 
     });
 
     const [formInputs, setFormInputs] = useState({ // input inside the modal
