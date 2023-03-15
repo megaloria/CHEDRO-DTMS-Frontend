@@ -230,10 +230,7 @@ function DocumentReceive() {
                 const response = await apiClient.get('/settings/ched-offices/all');
                 setChedOffices(response.data.data);
                 // Fetch data for Ched Offices
-            } else if (value === 'Others') {
-                const response = await apiClient.get('');
-                setReceivableName(response.data.data);
-            }
+            } 
         } catch (error) {
             setErrorMessage(error);
         } finally {
