@@ -155,7 +155,7 @@ function DocumentReceive() {
     const handleAdd = () => {
 
         const formData = new FormData();
-        console.log(attachment.name)
+       
         if (attachment) {
             formData.append('attachment', attachment, attachment.name);
         }
