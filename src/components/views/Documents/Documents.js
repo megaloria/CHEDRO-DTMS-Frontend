@@ -9,7 +9,8 @@ import {
     Tab,
     Tabs,
     Badge,
-    Pagination
+    Pagination,
+    Alert
 } from 'react-bootstrap';
 import {
     Link
@@ -22,11 +23,13 @@ import {
     faCircleArrowRight,
     faRightToBracket,
     faShare,
-    faSearch
+    faSearch,
+    faSpinner
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
 import Select from 'react-select';
+import apiClient from '../../../helpers/apiClient';
 
 function Documents() {
     const [data, setData] = useState([]);
@@ -38,8 +41,11 @@ function Documents() {
         data: null,
         isLoading: false
     });
-    const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+    
 
 
     const handleShowModal = (data = null) => {
@@ -134,7 +140,7 @@ function Documents() {
     //     setShow2(true)
     // };
 
-     //For assigning multiple users 
+     //Forward: assigning multiple users 
     const handleUserSelection = (selectedOptions) => {
         const userIds = selectedOptions.map(option => option.value);
         setSelectedUsers(userIds);
@@ -144,6 +150,33 @@ function Documents() {
         value: user.id,
         label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
       }));
+    
+      useEffect(() => {
+        apiClient.get('/document')
+            .then(response => {
+                setUsers(response.data.data.users);
+            })
+            .catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsLoading(false);
+            });
+    }, []);
+
+    if (isLoading) {
+        return (
+            <FontAwesomeIcon icon={faSpinner} spin lg />
+        );
+    }
+
+    if (errorMessage) {
+        return (
+            <Alert variant='danger'>
+                {errorMessage}
+            </Alert>
+        );
+    }
+
 
     // DELETE
     const showAlert = () => {
