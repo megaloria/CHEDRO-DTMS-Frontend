@@ -28,7 +28,6 @@ import {
 import Swal from 'sweetalert2';
 import './styles.css';
 import Select from 'react-select';
-import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 
 function Documents() {
@@ -49,34 +48,7 @@ function Documents() {
         isLoading: false 
     });
 
-    const [formInputs, setFormInputs] = useState({ // input inside the modal
-        division: '',
-        description: '',
-        level: 0
-    });
-
-    const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
-        division: '',
-        description: '',
-        level: 0
-    });
-
-    useEffect(() => {
-        apiClient.get('/document').then(response => { //GET ALL function
-            setData(response.data.data.documents);
-            setDocumentType(response.data.data.documentType);
-            setCategory(response.data.data.category);
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsLoading(false);
-        });
-    }, []);
-
-    const getDocumentType = (docTypeId) => {
-        let docType = documentType.find(div => div.id === docTypeId);
-        return docType?.description;
-    }
+    
 
     const getCategory = (categoryId) => {
         let categories = category.find(div => div.id === categoryId);
@@ -109,7 +81,7 @@ function Documents() {
         });
     } 
 
-     //For assigning multiple users 
+     //Forward: assigning multiple users 
     const handleUserSelection = (selectedOptions) => {
         const userIds = selectedOptions.map(option => option.value);
         setSelectedUsers(userIds);
@@ -119,6 +91,33 @@ function Documents() {
         value: user.id,
         label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
       }));
+    
+      useEffect(() => {
+        apiClient.get('/document')
+            .then(response => {
+                setUsers(response.data.data.users);
+            })
+            .catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsLoading(false);
+            });
+    }, []);
+
+    if (isLoading) {
+        return (
+            <FontAwesomeIcon icon={faSpinner} spin lg />
+        );
+    }
+
+    if (errorMessage) {
+        return (
+            <Alert variant='danger'>
+                {errorMessage}
+            </Alert>
+        );
+    }
+
 
     // DELETE
     const showAlert = () => {
