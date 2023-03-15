@@ -490,7 +490,7 @@ function Users() {
             {
                 data.data.length === 0 ? (
                     <Alert variant='primary'>
-                        No users found.
+                        No User found.
                     </Alert>
                 ) : (
                     <div className='loading-table-container'>

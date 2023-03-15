@@ -324,7 +324,7 @@ function Roles() {
 
             { data.data.length === 0 ? (
                 <Alert variant='primary'>
-                    No NGAs found.
+                    No NGA found.
                     </Alert>
                     ) : (
 

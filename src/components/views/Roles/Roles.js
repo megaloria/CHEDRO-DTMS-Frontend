@@ -335,7 +335,7 @@ function Roles() {
             {
                 data.data.length === 0 ? (
                     <Alert variant='primary'>
-                        No roles found.
+                        No Role found.
                     </Alert>
                 ) : (
                 <div className='loading-table-container'>

@@ -326,7 +326,7 @@ function DocumentTypes() {
             {
                 data.data.length === 0 ? (
                     <Alert variant='primary'>
-                        No Document Types found.
+                        No Document Type found.
                     </Alert>
                 ) : (
                      <div className='loading-table-container'>
