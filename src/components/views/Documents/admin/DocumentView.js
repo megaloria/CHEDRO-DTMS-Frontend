@@ -1,4 +1,6 @@
 // import React, { useEffect, useState }  from 'react';
+import Timeline from '../../../units/Timeline/Timeline';
+
 import {
     Button,
     Row, 
@@ -112,6 +114,7 @@ function DocumentView() {
                     sample.docx
                 </Col>
             </Row>
+          <Timeline/>
         </div>
     );
 }
