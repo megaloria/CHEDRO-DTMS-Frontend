@@ -24,18 +24,14 @@ function DocumentReceive() {
     const [NGAs, setNGAs] = useState([]);
     const [users, setUsers] = useState([]);
     const [ChedOffices, setChedOffices] = useState([]);
-    // const [selectedOption, setSelectedOption] = useState('');
-    // const [selectedOption2, setSelectedOption2] = useState('');
-    // const [selectedOption3, setSelectedOption3] = useState('');
-    // const [selectedOption4, setSelectedOption4] = useState('');
-    // const [selectedOption5, setSelectedOption5] = useState('');
-    // const [selectedOption6, setSelectedOption6] = useState('');
-    // const [selectedValue, setSelectedValue] = useState('');
+    const [receivableName, setReceivableName] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [category, setCategory] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const [municipalities, setMunicipalities] = useState([]);
     const [names, setNames] = useState([]);
+    const [trackingNo, setTrackingNo] = useState('');
+    const [docType, setDocType] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true); 
     const [isOptionLoading, setIsOptionLoading] = useState(false); 
@@ -53,6 +49,7 @@ function DocumentReceive() {
         date_received: '',
         receivable_type: '',
         receivable_id: '',
+        receivable_name: '',
         province: '',
         municipality: '',
         insti: '',
@@ -69,6 +66,7 @@ function DocumentReceive() {
         date_received: '',
         receivable_type: '',
         receivable_id: '',
+        receivable_name: '',
         province: '',
         municipality: '',
         insti: '',
@@ -100,7 +98,7 @@ function DocumentReceive() {
             date_received: 'date',
             receivable_type: 'required|in:HEIs,NGAs,CHED Offices,Others',
             receivable_id: 'integer|min:1',
-            // receivable_name: '',
+            receivable_name: 'integer|min:1',
             province: 'integer|min:1',
             municipality: 'integer|min:1',
             insti: 'integer|min:1',
@@ -118,6 +116,7 @@ function DocumentReceive() {
                 date_received: validation.errors.first('date_received'),
                 receivable_type: validation.errors.first('receivable_type'),
                 receivable_id: validation.errors.first('receivable_id'),
+                receivable_name: validation.errors.first('receivable_name'),
                 province: validation.errors.first('province'),
                 municipality: validation.errors.first('municipality'),
                 insti: validation.errors.first('insti'),
@@ -135,6 +134,7 @@ function DocumentReceive() {
                 date_received: '',
                 receivable_type: '',
                 receivable_id: '',
+                receivable_name: '',
                 province: '',
                 municipality: '',
                 insti: '',
@@ -183,10 +183,6 @@ function DocumentReceive() {
         }
     }
 
-    const [trackingNo, setTrackingNo] = useState('');
-    const [docType, setDocType] = useState('');
-    
-
     useEffect (() => {
         if (docType){
             setIsOptionLoading1(true);
@@ -234,6 +230,9 @@ function DocumentReceive() {
                 const response = await apiClient.get('/settings/ched-offices/all');
                 setChedOffices(response.data.data);
                 // Fetch data for Ched Offices
+            } else if (value === 'Others') {
+                const response = await apiClient.get('');
+                setReceivableName(response.data.data);
             }
         } catch (error) {
             setErrorMessage(error);
@@ -546,6 +545,19 @@ function DocumentReceive() {
                                 ))}
                         </Form.Select>
                     )}
+                    {formInputs.receivable_type === 'Others' && (
+                            <Form.Control 
+                            type='text'
+                            name='receivable_name'
+                            value={formInputs.receivable_name} 
+                            onChange={handleInputChange} 
+                            isInvalid={!!formErrors.receivable_name}
+                            disabled={isOptionLoading} 
+                            />
+                    )}
+                        <Form.Control.Feedback type='invalid'>
+                            {formErrors.receivable_name}
+                        </Form.Control.Feedback>
                 </Col>
             </Row>
 
