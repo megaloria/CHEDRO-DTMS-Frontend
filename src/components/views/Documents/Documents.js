@@ -47,10 +47,7 @@ function Documents() {
         data: null,
         isLoading: false
     });
-    const [users, setUsers] = useState([]);
-    const [selectedUsers, setSelectedUsers] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
+
     
 
     const getCategory = (categoryId) => {
