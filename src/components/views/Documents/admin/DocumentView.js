@@ -1,12 +1,12 @@
 // import React, { useEffect, useState }  from 'react';
 import Timeline from '../../../units/Timeline/Timeline';
-
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Row, 
     Col, 
     Breadcrumb, 
-    Badge
+    Badge,
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -21,43 +21,9 @@ import {
     Link, useLoaderData
 } from 'react-router-dom';
 
+
 function DocumentView() {
     const document = useLoaderData();
-    console.log(document)
-    // const [data, setData] = useState([]);
-
-    // useEffect(() => {
-    //     setData([
-    //         {
-    //             id: 1,
-    //             description: 'Regional Director'
-    //         },
-    //         {
-    //             id: 2,
-    //             description: 'Chief Administrative Officer'
-    //         },
-    //         {
-    //             id: 3,
-    //             description: 'Secretary'
-    //         },
-    //         {
-    //             id: 4,
-    //             description: 'Assistant'
-    //         },
-    //     ]);
-    // }, []);
-
-    //VALIDATION ON ADDING RECORD
-    // const [validated, setValidated] = useState(false);
-
-    // const handleSubmit = event => {
-    //     const form = event.currentTarget;
-    //         if (form.checkValidity() === false) {
-    //             event.preventDefault();
-    //             event.stopPropagation();
-    //         }
-    //     setValidated(true);
-    // };
 
     return (
         <div class="container fluid">
@@ -77,46 +43,53 @@ function DocumentView() {
                 </Row>
             </div>
             <Row className="mb-3">
-                <Col>
-                    <FontAwesomeIcon icon={faHashtag} className="text-secondary" style={{marginRight:'20px'}}/>
-                    23-000
-                </Col>
-            </Row>
-            <Row className="mb-3">
-                <Col>
-                    <FontAwesomeIcon icon={faFile} className="text-secondary " variant="link" style={{marginRight:'20px'}}/>
-                    sample file 
-                </Col>
-            </Row>
-            <Row className="mb-3">
-                <Col>
-                    <Badge bg="primary" style={{width: 120}}>received</Badge>
-                </Col> 
-            </Row>
-            <Row className="mb-3">
-                <Col>
-                    <FontAwesomeIcon icon={faUser} className="text-secondary" style={{marginRight:'20px'}}/>
-                    user
-                </Col>
-            </Row>
-            <Row className="mb-3">
-                <Col>
-                    <FontAwesomeIcon icon={faCalendar} className="text-secondary" style={{marginRight:'20px'}}/>
-                    mm/dd/yyy
-                </Col>
-            </Row>
-            <Row className="mb-3">
-                <Col row={5}>
-                    Description
-                </Col>
-            </Row>
-            <Row className="mb-3">
-                <Col >
-                    <FontAwesomeIcon icon={faPaperclip} className="text-secondary" style={{marginRight:'20px'}}/>
-                    sample.docx
-                </Col>
-            </Row>
+                        <Col>
+                            <FontAwesomeIcon icon={faHashtag} className="text-secondary" style={{marginRight:'20px'}}/>
+                            {document.tracking_no}
+                        </Col>
+                    </Row>
+                    <Row className="mb-3">
+                        <Col>
+                            <FontAwesomeIcon icon={faFile} className="text-secondary " variant="link" style={{marginRight:'20px'}}/>
+                            {document.document_type.description}
+                        </Col>
+                    </Row>
+                    <Row className="mb-3">
+                        <Col>
+                            <Badge bg="primary" style={{width: 120}}>received</Badge>
+                        </Col> 
+                    </Row>
+                    <Row className="mb-3">
+                        <Col>
+                            <FontAwesomeIcon icon={faUser} className="text-secondary" style={{marginRight:'20px'}}/>
+                            {document.user.profile.name}
+                        </Col>
+                    </Row>
+                    <Row className="mb-3">
+                        <Col>
+                            <FontAwesomeIcon icon={faCalendar} className="text-secondary" style={{marginRight:'20px'}}/>
+                            {document.date_received}
+                        </Col>
+                    </Row>
+                    <Row className="mb-3">
+                        <Col row={5}>
+                            {document.description}
+                        </Col>
+                    </Row>
+                    <Row className="mb-3">
+                        <Col >
+                            <FontAwesomeIcon icon={faPaperclip} className="text-secondary" style={{marginRight:'20px'}}/>
+                            {document.attachment}
+                        </Col>
+                    </Row>
+                    <Row className="mb-3">
+                        <Col >
+                            <FontAwesomeIcon className="text-secondary" style={{marginRight:'20px'}}/>
+                            {document.category.description}
+                        </Col>
+                    </Row>
           <Timeline/>
+          
         </div>
     );
 }
