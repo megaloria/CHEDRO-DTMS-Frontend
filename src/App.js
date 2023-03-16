@@ -67,21 +67,6 @@ async function getDocument ({ params }) {
   });
 }
 
-//edit
-async function editDocument ({ params }) {
-  let validation = new Validator(params, {
-    documentId: 'required|integer|min:1'
-  });
-  if (validation.fails()) {
-    return redirect('../');
-  }
-  return apiClient.get(`/document/${params.documentId}`).then(response => {
-    return response.data.data
-  }).catch(error => {
-    return redirect('../');
-  });
-}
-
 
 const router = createBrowserRouter([
   {
@@ -110,7 +95,7 @@ const router = createBrowserRouter([
           {
             path: 'edit/:documentId',
             element: <AdminDocEdit />,
-            loader: editDocument
+            loader: getDocument
           },
           {
             path: 'view/:documentId',
