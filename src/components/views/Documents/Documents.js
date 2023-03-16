@@ -28,7 +28,6 @@ import {
 import Swal from 'sweetalert2';
 import './styles.css';
 import Select from 'react-select';
-import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 
 function Documents() {
@@ -41,7 +40,7 @@ function Documents() {
     const [category, setCategory] = useState([]); //category variable
 
 
-    const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+    // const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -49,17 +48,7 @@ function Documents() {
         isLoading: false
     });
 
-    const [formInputs, setFormInputs] = useState({ // input inside the modal
-        division: '',
-        description: '',
-        level: 0
-    });
-
-    const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
-        division: '',
-        description: '',
-        level: 0
-    });
+    const [formInputs, setFormInputs] = useState({});
 
     //For assigning multiple users 
     const handleUserSelection = (selectedOptions) => {
@@ -123,25 +112,38 @@ function Documents() {
 
 
     // DELETE
-    const showAlert = () => {
+    const showDeleteAlert = document => {
         Swal.fire({
-            title: 'Are you sure?',
-            text: "You won't be able to revert this!",
+            title: `Are you sure you want to delete document no."${document.tracking_no}"?`,
+            text: 'You won\'t be able to revert this!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!',
-            reverseButtons: true
-        }).then((result) => {
-            if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.delete(`/document/${document.id}`).then(response => {
+                    let newData = data.data.filter(d => d.id !== document.id);
+                    setData({
+                        ...data,
+                        data: newData
+                    });
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                });
             }
-        })
+        });
     };
 
     if (isLoading) {
@@ -274,7 +276,7 @@ function Documents() {
                                                                     <FontAwesomeIcon icon={faEdit} className="text-success" />
                                                                 </Button>
 
-                                                                <Button onClick={showAlert} variant="link" size='sm' >
+                                                                <Button onClick={e =>showDeleteAlert(row)} variant="link" size='sm' >
                                                                     <FontAwesomeIcon icon={faTrash} className="text-danger" />
                                                                 </Button>
 
