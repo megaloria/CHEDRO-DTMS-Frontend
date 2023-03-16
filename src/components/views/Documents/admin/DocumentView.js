@@ -85,8 +85,9 @@ function DocumentView() {
                     </Row>
                     <Row className="mb-3">
                         <Col>
-                            <FontAwesomeIcon icon={faCalendar} className="text-secondary" style={{marginRight:'20px'}}/>
-                            {moment(document.date_received).format('MMMM DD, YYYY')}
+                            <FontAwesomeIcon icon={faCalendar} className="text-dark" style={{marginRight:'20px'}}/>
+                            {moment(document.date_received).format('MMMM DD, YYYY')} <i>(Received {moment(document.date_received).startOf('minutes').fromNow()})
+                            </i> 
                         </Col>
                     </Row>
                     <Row className="mb-3">

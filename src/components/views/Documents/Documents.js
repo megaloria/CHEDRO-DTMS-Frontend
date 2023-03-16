@@ -277,7 +277,7 @@ function Documents() {
                                 data.data.map((row, index) => (
                                     <tr key={index}>
                                         <td>{row.id}</td>
-                                        <td>{row.tracking_no}</td>
+                                        <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
                                         <td>{getDocumentType(row.document_type_id)}</td>
                                         <td>{getCategory(row.category_id)}</td>
                                         <td>{row.sender.receivable.description}</td>
