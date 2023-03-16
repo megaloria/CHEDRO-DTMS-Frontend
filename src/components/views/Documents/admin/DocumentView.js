@@ -14,7 +14,7 @@ import {
     faShare,
     faPaperclip,
     faCalendar,
-    faUser,
+    faCircleUser,
     faFile,
     faHashtag,
     faQuoteLeft,
@@ -78,7 +78,7 @@ function DocumentView() {
                     </Row>
                     <Row className="mb-3">
                         <Col>
-                            <FontAwesomeIcon icon={faUser} className="text-dark" style={{marginRight:'20px'}}/>
+                            <FontAwesomeIcon icon={faCircleUser} className="text-dark" style={{marginRight:'20px'}}/>
                             {document.user.profile.name}
                         </Col>
                     </Row>
