@@ -6,12 +6,12 @@ import {
     Col
 } from 'react-bootstrap';
 import {
-    Link
+    Link, useLoaderData
 } from 'react-router-dom';
 import moment from 'moment';
 
 function DocumentEdit() {
-
+    const document = useLoaderData();
     
     return (
         <div class="container fluid">
@@ -25,7 +25,7 @@ function DocumentEdit() {
                 <Form.Label>Document Type</Form.Label>
                     <Form.Select 
                         aria-label='Default select example'>
-                        <option value=''>Select Document Type...</option>    
+                        <option value=''>{document.document_type.description}</option>    
                     </Form.Select>
                 </Col>
                 <Col>

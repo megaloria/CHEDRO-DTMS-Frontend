@@ -1,5 +1,6 @@
 // import React, { useEffect, useState }  from 'react';
 import Timeline from '../../../units/Timeline/Timeline';
+import Card from 'react-bootstrap/Card';
 import React from 'react';
 import {
     Button,
@@ -13,9 +14,13 @@ import {
     faShare,
     faPaperclip,
     faCalendar,
-    faUser,
+    faCircleUser,
     faFile,
-    faHashtag
+    faHashtag,
+    faQuoteLeft,
+    faTimeline,
+    faTag,
+    faBuildingUser
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData
@@ -43,26 +48,38 @@ function DocumentView() {
                     </Col>
                 </Row>
             </div>
-            <Row className="mb-3">
-                        <Col>
-                            <FontAwesomeIcon icon={faHashtag} className="text-secondary" style={{marginRight:'20px'}}/>
+
+            <div style={{margin:'0 30px', }}> 
+                    <Card 
+                    bg="light"
+                    border="light" style={{ marginRight:'auto'}}>
+                    {/* <Card.Header> </Card.Header> */}
+                    <Card.Body>
+                    <Card.Title> 
+                    </Card.Title>
+                    {/* <Card.Text> */}
+                    <Row className="mb-3"> 
+                            <Col> 
+                            <FontAwesomeIcon 
+                            icon={faHashtag} className="text-dark" style={{marginRight:'20px'}}/>
                             {document.tracking_no}
-                        </Col>
-                    </Row>
+                            </Col>
+                        </Row>
                     <Row className="mb-3">
                         <Col>
-                            <FontAwesomeIcon icon={faFile} className="text-secondary " variant="link" style={{marginRight:'20px'}}/>
+                            <FontAwesomeIcon icon={faFile} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
                             {document.document_type.description}
                         </Col>
                     </Row>
                     <Row className="mb-3">
                         <Col>
-                            <Badge bg="primary" style={{width: 120}}>received</Badge>
+                            <FontAwesomeIcon icon={faTimeline} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
+                            <Badge bg="primary" style={{width: 120}}>Received</Badge>
                         </Col> 
                     </Row>
                     <Row className="mb-3">
                         <Col>
-                            <FontAwesomeIcon icon={faUser} className="text-secondary" style={{marginRight:'20px'}}/>
+                            <FontAwesomeIcon icon={faCircleUser} className="text-dark" style={{marginRight:'20px'}}/>
                             {document.user.profile.name}
                         </Col>
                     </Row>
@@ -73,22 +90,36 @@ function DocumentView() {
                         </Col>
                     </Row>
                     <Row className="mb-3">
+                        <Col>
+                            <FontAwesomeIcon icon={faBuildingUser} className="text-dark" style={{marginRight:'20px'}}/>
+                            {document.sender.receivable.description}
+                        </Col>
+                    </Row>
+                    <Row className="mb-3">
                         <Col row={5}>
+                            <FontAwesomeIcon icon={faQuoteLeft} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
                             {document.description}
                         </Col>
                     </Row>
                     <Row className="mb-3">
                         <Col >
-                            <FontAwesomeIcon icon={faPaperclip} className="text-secondary" style={{marginRight:'20px'}}/>
+                            <FontAwesomeIcon icon={faPaperclip} className="text-dark" style={{marginRight:'20px'}}/>
                             {document.attachment}
                         </Col>
                     </Row>
                     <Row className="mb-3">
                         <Col >
-                            <FontAwesomeIcon className="text-secondary" style={{marginRight:'20px'}}/>
+                            <FontAwesomeIcon icon={faTag} className="text-dark" style={{marginRight:'20px'}}/>
                             {document.category.description}
                         </Col>
                     </Row>
+                    {/* </Card.Text> */}
+                    </Card.Body>
+                    {/* <Card.Footer>
+                    </Card.Footer> */}
+                </Card>
+            </div>
+           
           <Timeline/>
           
         </div>
