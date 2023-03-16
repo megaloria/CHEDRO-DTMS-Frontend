@@ -45,7 +45,6 @@ function DocumentReceive() {
 
     //Add Receive documents
     const [documentTypes, setDocumentTypes] = useState([]);
-    const [data, setData] = useState([]); //data variable
 
     const [formInputs, setFormInputs] = useState ({
         document_type_id: '',
