@@ -11,41 +11,7 @@ import {
 import moment from 'moment';
 
 function DocumentEdit() {
-    // const [data, setData] = useState([]);
-
-    // useEffect(() => {
-    //     setData([
-    //         {
-    //             id: 1,
-    //             description: 'Regional Director'
-    //         },
-    //         {
-    //             id: 2,
-    //             description: 'Chief Administrative Officer'
-    //         },
-    //         {
-    //             id: 3,
-    //             description: 'Secretary'
-    //         },
-    //         {
-    //             id: 4,
-    //             description: 'Assistant'
-    //         },
-    //     ]);
-    // }, []);
-
-    // VALIDATION ON ADDING RECORD
-    // const [validated, setValidated] = useState(false);
-
-    // const handleSubmit = event => {
-    //     const form = event.currentTarget;
-    //         if (form.checkValidity() === false) {
-    //             event.preventDefault();
-    //             event.stopPropagation();
-    //         }
-    //         setValidated(true);
-    // };
-
+    
     return (
         <div class="container fluid">
             <div className="crud bg-body rounded"> 
