@@ -14,7 +14,7 @@ import {
     faShare,
     faPaperclip,
     faCalendar,
-    faUser,
+    faCircleUser,
     faFile,
     faHashtag,
     faQuoteLeft,
@@ -25,6 +25,7 @@ import {
 import {
     Link, useLoaderData
 } from 'react-router-dom';
+import moment from 'moment';
 
 
 function DocumentView() {
@@ -78,14 +79,15 @@ function DocumentView() {
                     </Row>
                     <Row className="mb-3">
                         <Col>
-                            <FontAwesomeIcon icon={faUser} className="text-dark" style={{marginRight:'20px'}}/>
+                            <FontAwesomeIcon icon={faCircleUser} className="text-dark" style={{marginRight:'20px'}}/>
                             {document.user.profile.name}
                         </Col>
                     </Row>
                     <Row className="mb-3">
                         <Col>
                             <FontAwesomeIcon icon={faCalendar} className="text-dark" style={{marginRight:'20px'}}/>
-                            {document.date_received}
+                            {moment(document.date_received).format('MMMM DD, YYYY')} <i>(Received {moment(document.date_received).startOf('minutes').fromNow()})
+                            </i> 
                         </Col>
                     </Row>
                     <Row className="mb-3">

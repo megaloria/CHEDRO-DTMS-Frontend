@@ -27,6 +27,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
+import moment from 'moment';
 import Select from 'react-select';
 import apiClient from '../../../helpers/apiClient';
 
@@ -276,12 +277,16 @@ function Documents() {
                                 data.data.map((row, index) => (
                                     <tr key={index}>
                                         <td>{row.id}</td>
-                                        <td>{row.tracking_no}</td>
+                                        <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
                                         <td>{getDocumentType(row.document_type_id)}</td>
                                         <td>{getCategory(row.category_id)}</td>
                                         <td>{row.sender.receivable.description}</td>
-                                        <td>{row.date_received}</td>
-                                        <td>{row.description}</td>
+                                        <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
+                                        <td >
+                                            <div className='text-truncate' style={{ width:'200px' }}>
+                                            {row.description}
+                                            </div>
+                                        </td>
                                         {/* <td className="p-0 m-2">
                                     <Button variant="link">
                                         <FontAwesomeIcon icon={faPaperclip} className="text-primary ml-2"/> {row.attach}
