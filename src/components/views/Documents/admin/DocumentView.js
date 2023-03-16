@@ -18,10 +18,12 @@ import {
     faHashtag
 } from '@fortawesome/free-solid-svg-icons'
 import {
-    Link
+    Link, useLoaderData
 } from 'react-router-dom';
 
 function DocumentView() {
+    const document = useLoaderData();
+    console.log(document)
     // const [data, setData] = useState([]);
 
     // useEffect(() => {
