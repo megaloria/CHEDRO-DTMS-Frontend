@@ -38,9 +38,9 @@ function Documents() {
     const [users, setUsers] = useState([]);
     const [documentType, setDocumentType] = useState([]); //document type variable
     const [category, setCategory] = useState([]); //category variable
-
-
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+    
+    const [searchQuery, setSearchQuery] = useState('');
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -62,7 +62,11 @@ function Documents() {
     }));
 
     useEffect(() => {
-        apiClient.get('/document').then(response => { //GET ALL function
+        apiClient.get('/document', {
+            params: {
+                query: ''
+            }
+        }).then(response => { //GET ALL function
             setData(response.data.data.documents);
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
@@ -77,7 +81,11 @@ function Documents() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/document?page=${pageNumber}`).then(response => {
+        apiClient.get(`/document?page=${pageNumber}`, {
+            params: {
+                query: ''
+            }
+        }).then(response => {
             setData(response.data.data.documents);
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
@@ -123,6 +131,29 @@ function Documents() {
         });
     }
 
+    const handleSearchInputChange = e => {
+        setSearchQuery(e.target.value)
+    }
+
+    const handleSearch = e => {
+        e.preventDefault();
+
+        setIsTableLoading(true);
+        apiClient.get('/document', {
+            params: {
+                query: searchQuery
+            }
+        }).then(response => { //GET ALL function
+            setData(response.data.data.documents);
+            setDocumentType(response.data.data.documentType);
+            setCategory(response.data.data.category);
+            setUsers(response.data.data.user);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    }
 
     // DELETE
     const showDeleteAlert = document => {
@@ -183,13 +214,15 @@ function Documents() {
                     </Col>
                     <Col md="auto">
                         <div className="search">
-                            <Form className="d-flex" controlId="">
+                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
                                 <Form.Control
-                                    type="search"
-                                    placeholder="Search"
+                                    type="search" 
+                                    placeholder="Search" 
                                     className="me-2"
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
                                 />
-                                <Button>
+                                <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
                             </Form>
@@ -202,6 +235,7 @@ function Documents() {
                     </Col>
                 </Row>
             </div>
+            
             <Tabs
                 defaultActiveKey="all"
                 id="uncontrolled-tab-example"
@@ -209,10 +243,10 @@ function Documents() {
             >
                 <Tab eventKey="all" title="All">
 
-                    {
+             {
                         data.data.length === 0 ? (
                             <Alert variant='primary'>
-                                No documents found.
+                                No Document found.
                             </Alert>
                         ) : (
                             <div className='loading-table-container'>
