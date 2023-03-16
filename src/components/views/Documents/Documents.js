@@ -212,21 +212,21 @@ function Documents() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {
-                                        data.data.map((row, index) => (
-                                            <tr key={index}>
-                                                <td>{row.id}</td>
-                                                <td>{row.tracking_no}</td>
-                                                <td>{getDocumentType(row.document_type_id)}</td>
-                                                <td>{getCategory(row.category_id)}</td>
-                                                <td>{row.sender.receivable.description}</td>
-                                                <td>{row.date_received}</td>
-                                                <td>{row.description}</td>
-                                                {/* <td className="p-0 m-2">
-                                            <Button variant="link">
-                                                <FontAwesomeIcon icon={faPaperclip} className="text-primary ml-2"/> {row.attach}
-                                            </Button>
-                                         </td> */}
+                            {
+                                data.data.map((row, index) => (
+                                    <tr key={index}>
+                                        <td>{row.id}</td>
+                                        <td>{row.tracking_no}</td>
+                                        <td>{getDocumentType(row.document_type_id)}</td>
+                                        <td>{getCategory(row.category_id)}</td>
+                                        <td>{row.sender.receivable.description}</td>
+                                        <td>{row.date_received}</td>
+                                        <td>{row.description}</td>
+                                        {/* <td className="p-0 m-2">
+                                    <Button variant="link">
+                                        <FontAwesomeIcon icon={faPaperclip} className="text-primary ml-2"/> {row.attach}
+                                    </Button>
+                                    </td> */}
 
                                                 <td>{
                                                     row.status === 'Acknowledge' & (

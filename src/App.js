@@ -53,6 +53,7 @@ async function getCurrentUser (isHome = true) {
   });
 }
 
+//example for document views
 async function getDocument ({ params }) {
   let validation = new Validator(params, {
     documentId: 'required|integer|min:1'
@@ -92,8 +93,9 @@ const router = createBrowserRouter([
             element: <AdminDocReceive />
           },
           {
-            path: 'edit',
-            element: <AdminDocEdit />
+            path: 'edit/documentId',
+            element: <AdminDocEdit />,
+            loader: getDocument
           },
           {
             path: 'view/:documentId',
