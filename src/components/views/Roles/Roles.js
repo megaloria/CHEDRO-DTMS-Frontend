@@ -75,7 +75,8 @@ function Roles() {
                 query: ''
             }
         }).then(response => {
-            setData(response.data.data);//GET ALL function
+            setData(response.data.data.roles);
+            setDivisions(response.data.data.divisions);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
