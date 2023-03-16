@@ -1,15 +1,16 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    Button, 
-    Modal, 
-    Form, 
-    Table, 
-    Row, 
-    Col, 
+    Button,
+    Modal,
+    Form,
+    Table,
+    Row,
+    Col,
     Tab,
     Tabs,
     Badge,
-    Pagination
+    Pagination,
+    Alert
 } from 'react-bootstrap';
 import {
     Link
@@ -18,29 +19,81 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
     faEdit,
-    // faPaperclip,
     faCircleArrowRight,
     faRightToBracket,
     faShare,
-    faSearch
+    faSearch,
+    faSpinner
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
 import Select from 'react-select';
+import Validator from 'validatorjs';
+import apiClient from '../../../helpers/apiClient';
 
 function Documents() {
+    const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]);
-    const [formInputs, setFormInputs] = useState({ // input inside the modal
-        // forward: ''
-    });
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [documentType, setDocumentType] = useState([]); //document type variable
+    const [category, setCategory] = useState([]); //category variable
+
+
+    const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
         isLoading: false
     });
-    const [selectedUsers, setSelectedUsers] = useState([]);
-    const [users, setUsers] = useState([]);
 
+    const [formInputs, setFormInputs] = useState({ // input inside the modal
+        division: '',
+        description: '',
+        level: 0
+    });
+
+    const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
+        division: '',
+        description: '',
+        level: 0
+    });
+
+    //For assigning multiple users 
+    const handleUserSelection = (selectedOptions) => {
+        const userIds = selectedOptions.map(option => option.value);
+        setSelectedUsers(userIds);
+    };
+
+    const options = users.map(user => ({
+        value: user.id,
+        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+    }));
+
+    useEffect(() => {
+        apiClient.get('/document').then(response => { //GET ALL function
+            setData(response.data.data.documents);
+            setDocumentType(response.data.data.documentType);
+            setCategory(response.data.data.category);
+            setUsers(response.data.data.user);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsLoading(false);
+        });
+    }, []);
+
+    const getDocumentType = (docTypeId) => {
+        let docType = documentType.find(div => div.id === docTypeId);
+        return docType?.description;
+    }
+
+    const getCategory = (categoryId) => {
+        let categories = category.find(div => div.id === categoryId);
+        return categories?.description;
+    }
 
     const handleShowModal = (data = null) => {
         if (data !== null) {
@@ -66,84 +119,8 @@ function Documents() {
             data: null,
             isLoading: false
         });
-    } 
+    }
 
-    useEffect(() => {
-        setData([
-            {
-                tracking: 1,
-                documenttype: 'Curriculum',
-                category: 'Ordinary',
-                receivedfrom: 'Roel Cristobal',
-                description: 'Lorem ipsum dolor',
-                // attach: 'sample file',
-                datereceived: 'February 5, 2023',
-                status: 'Received',
-            },
-            {
-                tracking: 2,
-                documenttype: 'CAV',
-                category: 'Confidential',
-                receivedfrom: 'Roel Cristobal',
-                description: 'Lorem ipsum dolor',
-                // attach: 'sample file',
-                datereceived: 'March 22, 2023',
-                status: 'Forwarded to RD',
-            },
-            {
-                tracking: 3,
-                documenttype: 'CAV',
-                category: 'Urgent',
-                receivedfrom: 'Roel Cristobal',
-                description: 'Lorem ipsum dolor',
-                // attach: 'sample file',
-                datereceived: 'April 23, 2023',
-                status: 'Acknowledge',
-            }
-        ]);
-    }, []);
-
-    //VALIDATION ON ADDING
-    // const [validated, setValidated] = useState(false);
-
-    // const handleSubmit = event => {
-    //     const form = event.currentTarget;
-    //         if (form.checkValidity() === false) {
-    //             event.preventDefault();
-    //             event.stopPropagation();
-    //         }
-    //         setValidated(true);
-    // };
-
-     //MODAL ADD
-    // const [show, setShow] = useState(false);
-    // const handleClose = () => {
-    //     setShow(false)
-    // };
-    // const handleShow = () => {
-    //     setShow(true)
-    // };
-
-    //MODAL EDIT
-    // const [show2, setShow2] = useState(false);
- 
-    // const handleClose2 = () => {
-    //     setShow2(false)
-    // };
-    // const handleShow2 = () => {
-    //     setShow2(true)
-    // };
-
-     //For assigning multiple users 
-    const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
-        setSelectedUsers(userIds);
-      };
-
-      const options = users.map(user => ({
-        value: user.id,
-        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-      }));
 
     // DELETE
     const showAlert = () => {
@@ -156,30 +133,45 @@ function Documents() {
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!',
             reverseButtons: true
-          }).then((result) => {
+        }).then((result) => {
             if (result.isConfirmed) {
-              Swal.fire(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-              )
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
             }
-          })
+        })
     };
+
+    if (isLoading) {
+        return (
+            <FontAwesomeIcon icon={faSpinner} spin lg />
+        );
+    }
+
+
+    if (errorMessage) {
+        return (
+            <Alert variant='danger'>
+                {errorMessage}
+            </Alert>
+        );
+    }
 
     return (
         <div class="container fluid">
             <div className="crud rounded">
-                <Row className= "justify-content-end mt-4 mb-3">
+                <Row className="justify-content-end mt-4 mb-3">
                     <Col>
                         <h1>Documents</h1>
                     </Col>
                     <Col md="auto">
                         <div className="search">
                             <Form className="d-flex" controlId="">
-                                <Form.Control 
-                                    type="search" 
-                                    placeholder="Search" 
+                                <Form.Control
+                                    type="search"
+                                    placeholder="Search"
                                     className="me-2"
                                 />
                                 <Button>
@@ -192,124 +184,130 @@ function Documents() {
                         <Button variant="primary" as={Link} to='receive'>
                             <FontAwesomeIcon icon={faRightToBracket} rotation={90} className="addIcon" /> Received
                         </Button>
-                    </Col> 
+                    </Col>
                 </Row>
             </div>
             <Tabs
                 defaultActiveKey="all"
                 id="uncontrolled-tab-example"
                 className="mb-3"
-                >
+            >
                 <Tab eventKey="all" title="All">
-                <div class="row">
-                    <div class="table-responsive " >
-                        <Table striped bordered hover size="md">
-                        <thead>
-                            <tr>
-                            <th>Tracking No.</th>
-                            <th>Document Type</th>
-                            <th>Category</th>
-                            <th>Received From</th>
-                            <th>Date Received</th>
-                            <th>Description</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                data.map((row, index) => (
-                                    <tr key={index}>
-                                        <td>{row.tracking}</td>
-                                        <td>{row.documenttype}</td>
-                                        <td>{row.category}</td>
-                                        <td>{row.receivedfrom}</td>
-                                        <td>{row.datereceived}</td>
-                                        <td>{row.description}</td>
-                                        {/* <td className="p-0 m-2">
+                    <div class="row">
+                        <div class="table-responsive " >
+                            <Table striped bordered hover size="md">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Tracking No.</th>
+                                        <th>Document Type</th>
+                                        <th>Category</th>
+                                        <th>Received From</th>
+                                        <th>Date Received</th>
+                                        <th>Description</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        data.data.map((row, index) => (
+                                            <tr key={index}>
+                                                <td>{row.id}</td>
+                                                <td>{row.tracking_no}</td>
+                                                <td>{getDocumentType(row.document_type_id)}</td>
+                                                <td>{getCategory(row.category_id)}</td>
+                                                <td>{row.sender.receivable.description}</td>
+                                                <td>{row.date_received}</td>
+                                                <td>{row.description}</td>
+                                                {/* <td className="p-0 m-2">
                                             <Button variant="link">
                                                 <FontAwesomeIcon icon={faPaperclip} className="text-primary ml-2"/> {row.attach}
                                             </Button>
-                                        </td> */}  
-                                        
-                                        <td>{
-                                                row.status === 'Acknowledge' & (
-                                                    <>
-                                                    <Badge bg="info" >
-                                                    {row.status}
-                                                    </Badge>
-                                                    </>
-                                                ) || row.status === 'Forwarded to RD' & (
-                                                    <>
-                                                    <Badge bg="warning" >
-                                                    {row.status}
-                                                    </Badge>
-                                                    </>
-                                                )
-                                                || row.status === 'Received' & (
-                                                    <>
-                                                    <Badge bg="primary">
-                                                    {row.status}
-                                                    </Badge>
-                                                    </>
-                                                )
-                                            }
-                                        </td>
+                                        </td> */}
 
-                                        <td style={{ whiteSpace: 'nowrap' }}>
-                                            <Button variant="outline-primary" size='sm' as={Link} to='view' >
-                                                    <FontAwesomeIcon icon={faCircleArrowRight} className=""/> View
-                                                </Button>
-                                                {
-                                                    row.status !== 'Acknowledge' && (
-                                                    <>
-                                                        {
-                                                            row.status === 'Received' && (
-                                                               //Forward
+                                                <td>{
+                                                    row.status === 'Acknowledge' & (
+                                                        <>
+                                                            <Badge bg="info" >
+                                                                {row.status}
+                                                            </Badge>
+                                                        </>
+                                                    ) || row.status === 'Forwarded to RD' & (
+                                                        <>
+                                                            <Badge bg="warning" >
+                                                                {row.status}
+                                                            </Badge>
+                                                        </>
+                                                    )
+                                                    || row.status === 'Received' & (
+                                                        <>
+                                                            <Badge bg="primary">
+                                                                {row.status}
+                                                            </Badge>
+                                                        </>
+                                                    )
+                                                }
+                                                </td>
+
+                                                <td style={{ whiteSpace: 'nowrap' }}>
+                                                    <Button variant="outline-primary" size='sm' as={Link} to='view' >
+                                                        <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
+                                                    </Button>
+                                                    {
+                                                        row.status !== 'Acknowledge' && (
+                                                            <>
+                                                                {
+                                                                    row.status === 'Received' && (
+                                                                        //Forward
+                                                                        <Button variant="link" size='sm' onClick={e => handleShowModal()}>
+                                                                            <FontAwesomeIcon icon={faShare} className="" />
+                                                                        </Button>
+                                                                    )
+                                                                }
+
                                                                 <Button variant="link" size='sm' onClick={e => handleShowModal()}>
-                                                                    <FontAwesomeIcon icon={faShare} className=""/> 
+                                                                    <FontAwesomeIcon icon={faShare} className="" />
                                                                 </Button>
-                                                            )
-                                                        }
-                                            
-                                                        <Button variant="link" size='sm' as={Link} to='edit'>
-                                                            <FontAwesomeIcon icon={faEdit} className="text-success"/>
-                                                        </Button>
-                                                    
-                                                        <Button onClick={showAlert} variant="link" size='sm' >
-                                                            <FontAwesomeIcon icon={faTrash} className="text-danger"/>
-                                                        </Button>
-                                            
-                                                    </>
-                                                ) 
-                                            }
-                                        </td>
-                                    </tr>
-                                    ))
-                                }
+
+                                                                <Button variant="link" size='sm' as={Link} to='edit'>
+                                                                    <FontAwesomeIcon icon={faEdit} className="text-success" />
+                                                                </Button>
+
+                                                                <Button onClick={showAlert} variant="link" size='sm' >
+                                                                    <FontAwesomeIcon icon={faTrash} className="text-danger" />
+                                                                </Button>
+
+                                                            </>
+                                                        )
+                                                    }
+                                                </td>
+                                            </tr>
+                                        ))
+                                    }
                                 </tbody>
                             </Table>
-                        </div>   
+                        </div>
                     </div>
 
                     <div>
-                       
-                            <Pagination style={{ float: 'right' }}>
-                                {/* <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />  */}
-                                <Pagination.First />
-                                {/* <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} /> */}
-                                <Pagination.Prev />
-                                <Pagination.Item disabled>
-                                    {/* {`${data.current_page} / ${data.last_page}`} */}
-                                    /
-                                </Pagination.Item>
-                                {/* <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} /> */}
-                                <Pagination.Next />
-                                {/* <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} /> */}
-                                <Pagination.Last />
-                            </Pagination>
-                      
-                    </div> 
+
+                        <Pagination style={{ float: 'right' }}>
+                            {/* <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />  */}
+                            <Pagination.First />
+                            {/* <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} /> */}
+                            <Pagination.Prev />
+                            <Pagination.Item disabled>
+                                {/* {`${data.current_page} / ${data.last_page}`} */}
+                                /
+                            </Pagination.Item>
+                            {/* <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} /> */}
+                            <Pagination.Next />
+                            {/* <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} /> */}
+                            <Pagination.Last />
+                        </Pagination>
+
+                    </div>
 
                 </Tab>
                 <Tab eventKey="ongoing" title="Ongoing" >
@@ -329,30 +327,30 @@ function Documents() {
                     <Modal.Title> Forward Document </Modal.Title>
                 </Modal.Header>
 
-                <Modal.Body> 
-                <Row> 
-                    <Col md={'auto'}> 
-                    <Form.Label>Select assign to:</Form.Label>
-                    <Select 
-                        isMulti
-                        name='assignTo' 
-                        options={options}
-                        value={options.filter(option => selectedUsers.includes(option.value))}
-                        onChange={handleUserSelection}
-                        />
-                </Col>
-                </Row>
+                <Modal.Body>
+                    <Row>
+                        <Col md={'auto'}>
+                            <Form.Label>Select assign to:</Form.Label>
+                            <Select
+                                isMulti
+                                name='assignTo'
+                                options={options}
+                                value={options.filter(option => selectedUsers.includes(option.value))}
+                                onChange={handleUserSelection}
+                            />
+                        </Col>
+                    </Row>
                 </Modal.Body>
 
                 <Modal.Footer>
-                        <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
-                            Cancel
-                        </Button>
-                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
-                           Forward
-                        </Button>
-                    </Modal.Footer>
-            </Modal> 
+                    <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                        Cancel
+                    </Button>
+                    <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                        Forward
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
 
     );
