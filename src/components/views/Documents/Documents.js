@@ -61,11 +61,23 @@ function Documents() {
         level: 0
     });
 
+    //For assigning multiple users 
+    const handleUserSelection = (selectedOptions) => {
+        const userIds = selectedOptions.map(option => option.value);
+        setSelectedUsers(userIds);
+    };
+
+    const options = users.map(user => ({
+        value: user.id,
+        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+    }));
+
     useEffect(() => {
         apiClient.get('/document').then(response => { //GET ALL function
             setData(response.data.data.documents);
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
+            setUsers(response.data.data.user);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -109,16 +121,6 @@ function Documents() {
         });
     }
 
-    //For assigning multiple users 
-    const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
-        setSelectedUsers(userIds);
-    };
-
-    const options = users.map(user => ({
-        value: user.id,
-        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-    }));
 
     // DELETE
     const showAlert = () => {
@@ -263,6 +265,10 @@ function Documents() {
                                                                         </Button>
                                                                     )
                                                                 }
+
+                                                                <Button variant="link" size='sm' onClick={e => handleShowModal()}>
+                                                                    <FontAwesomeIcon icon={faShare} className="" />
+                                                                </Button>
 
                                                                 <Button variant="link" size='sm' as={Link} to='edit'>
                                                                     <FontAwesomeIcon icon={faEdit} className="text-success" />
