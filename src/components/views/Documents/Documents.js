@@ -40,7 +40,7 @@ function Documents() {
     const [category, setCategory] = useState([]); //category variable
 
 
-    // const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+    const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -74,6 +74,21 @@ function Documents() {
         });
     }, []);
 
+    const handlePageChange = (pageNumber) => {
+        setIsTableLoading(true);
+
+        apiClient.get(`/document?page=${pageNumber}`).then(response => {
+            setData(response.data.data.documents);
+            setDocumentType(response.data.data.documentType);
+            setCategory(response.data.data.category);
+            setUsers(response.data.data.user);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    };
+
     const getDocumentType = (docTypeId) => {
         let docType = documentType.find(div => div.id === docTypeId);
         return docType?.description;
@@ -100,9 +115,7 @@ function Documents() {
     }
 
     const handleHideModal = () => {
-        setFormInputs({
-            description: ''
-        });
+     
         setModal({
             show: false,
             data: null,
@@ -195,9 +208,22 @@ function Documents() {
                 className="mb-3"
             >
                 <Tab eventKey="all" title="All">
+
+                    {
+                        data.data.length === 0 ? (
+                            <Alert variant='primary'>
+                                No documents found.
+                            </Alert>
+                        ) : (
+                            <div className='loading-table-container'>
+                        <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
+                            <div className='spinner-icon'>
+                                <FontAwesomeIcon icon={faSpinner} spin size='lg' />
+                            </div>
+                        </div>
                     <div class="row">
                         <div class="table-responsive " >
-                            <Table striped bordered hover size="md">
+                                <Table striped bordered hover size="md" className={isTableLoading ? 'table-loading' : ''}>
                                 <thead>
                                     <tr>
                                         <th>ID</th>
@@ -294,23 +320,24 @@ function Documents() {
 
                     <div>
 
-                        <Pagination style={{ float: 'right' }}>
-                            {/* <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />  */}
-                            <Pagination.First />
-                            {/* <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} /> */}
-                            <Pagination.Prev />
-                            <Pagination.Item disabled>
-                                {/* {`${data.current_page} / ${data.last_page}`} */}
-                                /
-                            </Pagination.Item>
-                            {/* <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} /> */}
-                            <Pagination.Next />
-                            {/* <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} /> */}
-                            <Pagination.Last />
-                        </Pagination>
+                        {data.data.length > 0 && (
+                            <Pagination style={{ float: 'right' }}>
+                                <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                <Pagination.Item disabled>
+                                    {`${data.current_page} / ${data.last_page}`}
+                                </Pagination.Item>
+                                <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                            </Pagination>
+                        )}
 
                     </div>
+                    </div>
 
+                         )
+                    } 
+                    
                 </Tab>
                 <Tab eventKey="ongoing" title="Ongoing" >
                 </Tab>
