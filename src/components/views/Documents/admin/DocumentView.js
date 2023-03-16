@@ -20,6 +20,7 @@ import {
 import {
     Link, useLoaderData
 } from 'react-router-dom';
+import moment from 'moment';
 
 
 function DocumentView() {
@@ -68,7 +69,7 @@ function DocumentView() {
                     <Row className="mb-3">
                         <Col>
                             <FontAwesomeIcon icon={faCalendar} className="text-secondary" style={{marginRight:'20px'}}/>
-                            {document.date_received}
+                            {moment(document.date_received).format('MMMM DD, YYYY')}
                         </Col>
                     </Row>
                     <Row className="mb-3">
