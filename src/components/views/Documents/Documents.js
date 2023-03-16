@@ -224,7 +224,7 @@ function Documents() {
                                             <Button variant="link">
                                                 <FontAwesomeIcon icon={faPaperclip} className="text-primary ml-2"/> {row.attach}
                                             </Button>
-                                        </td> */}
+                                         </td> */}
 
                                                 <td>{
                                                     row.status === 'Acknowledge' & (
@@ -251,7 +251,7 @@ function Documents() {
                                                 </td>
 
                                                 <td style={{ whiteSpace: 'nowrap' }}>
-                                                    <Button variant="outline-primary" size='sm' as={Link} to='view' >
+                                                    <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
                                                         <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                     </Button>
                                                     {

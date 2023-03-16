@@ -4,9 +4,11 @@ import {
   Navigate,
   Outlet,
   redirect,
-  RouterProvider
+  RouterProvider,
+  useLocation
 } from 'react-router-dom';
 import axios from 'axios';
+import Validator from 'validatorjs';
 import apiClient from './helpers/apiClient';
 
 import ErrorPage from './components/views/ErrorPage/ErrorPage';
@@ -51,6 +53,20 @@ async function getCurrentUser (isHome = true) {
   });
 }
 
+async function getDocument ({ params }) {
+  let validation = new Validator(params, {
+    documentId: 'required|integer|min:1'
+  });
+  if (validation.fails()) {
+    return redirect('../');
+  }
+  return apiClient.get(`/document/${params.documentId}`).then(response => {
+    return response.data.data
+  }).catch(error => {
+    return redirect('../');
+  });
+}
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -80,8 +96,9 @@ const router = createBrowserRouter([
             element: <AdminDocEdit />
           },
           {
-            path: 'view',
-            element: <AdminDocView />
+            path: 'view/:documentId',
+            element: <AdminDocView />,
+            loader: getDocument
           },
         ]
       },
