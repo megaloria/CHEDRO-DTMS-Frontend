@@ -48,7 +48,8 @@ function Users() {
                 query: ''
             }
         }).then(response => {
-            setData(response.data.data);//GET ALL function
+            setData(response.data.data.users);
+            setRoles(response.data.data.roles);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
