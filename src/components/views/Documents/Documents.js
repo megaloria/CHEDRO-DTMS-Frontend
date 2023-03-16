@@ -298,7 +298,7 @@ function Documents() {
                                                                     <FontAwesomeIcon icon={faShare} className="" />
                                                                 </Button>
 
-                                                                <Button variant="link" size='sm' as={Link} to='edit'>
+                                                                <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
                                                                     <FontAwesomeIcon icon={faEdit} className="text-success" />
                                                                 </Button>
 
