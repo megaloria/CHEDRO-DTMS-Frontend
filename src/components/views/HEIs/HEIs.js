@@ -346,7 +346,7 @@ function Heis() {
                             <FontAwesomeIcon icon={faAdd} className='addIcon'/> Add
                         </Button>
                     </Col> 
-                </Row>
+                </Row>  
             </div>
 
             { data.data.length === 0 ? (
