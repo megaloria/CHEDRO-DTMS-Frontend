@@ -37,6 +37,7 @@ function Documents() {
     const [data, setData] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
+    const [dateReceived, setDateReceived] = useState([]);
     const [documentType, setDocumentType] = useState([]); //document type variable
     const [category, setCategory] = useState([]); //category variable
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
@@ -72,6 +73,7 @@ function Documents() {
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
             setUsers(response.data.data.user);
+            setDateReceived(response.data.data.dateReceived);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -91,6 +93,7 @@ function Documents() {
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
             setUsers(response.data.data.user);
+            setDateReceived(response.data.data.dateReceived);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -149,6 +152,7 @@ function Documents() {
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
             setUsers(response.data.data.user);
+            setDateReceived(response.data.data.dateReceived);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
