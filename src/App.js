@@ -7,6 +7,7 @@ import {
   RouterProvider
 } from 'react-router-dom';
 import axios from 'axios';
+import Validator from 'validatorjs';
 import apiClient from './helpers/apiClient';
 
 import ErrorPage from './components/views/ErrorPage/ErrorPage';
@@ -24,6 +25,7 @@ import Category from './components/views/Category/Category';
 import AdminDocReceive from './components/views/Documents/admin/DocumentReceive';
 import AdminDocEdit from './components/views/Documents/admin/DocumentEdit';
 import AdminDocView from './components/views/Documents/admin/DocumentView';
+import ChangePass from './components/views/ChangePassword/ChangePassword';
 
 async function getCurrentUser (isHome = true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
@@ -50,6 +52,22 @@ async function getCurrentUser (isHome = true) {
   });
 }
 
+//example for document views
+async function getDocument ({ params }) {
+  let validation = new Validator(params, {
+    documentId: 'required|integer|min:1'
+  });
+  if (validation.fails()) {
+    return redirect('../');
+  }
+  return apiClient.get(`/document/${params.documentId}`).then(response => {
+    return response.data.data
+  }).catch(error => {
+    return redirect('../');
+  });
+}
+
+
 const router = createBrowserRouter([
   {
     path: '/',
@@ -75,18 +93,24 @@ const router = createBrowserRouter([
             element: <AdminDocReceive />
           },
           {
-            path: 'edit',
-            element: <AdminDocEdit />
+            path: 'edit/:documentId',
+            element: <AdminDocEdit />,
+            loader: getDocument
           },
           {
-            path: 'view',
-            element: <AdminDocView />
+            path: 'view/:documentId',
+            element: <AdminDocView />,
+            loader: getDocument
           },
         ]
       },
       {
         path: 'users',
         element: <Users />
+      },
+      {
+        path: 'change-password',
+        element: <ChangePass />
       },
       {
         path: '/settings',

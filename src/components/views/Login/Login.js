@@ -13,7 +13,7 @@ import apiClient from '../../../helpers/apiClient';
 import { useNavigate } from 'react-router-dom';
 
 import chedLogo from '../../../assets/ched-logo.png'
-import './styles.css'
+import './style.css'
 
 
 function Login() {

@@ -22,7 +22,7 @@ import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 import './styles.css';
-import { computeStyles } from '@popperjs/core';
+
 
 function Roles() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
@@ -75,7 +75,8 @@ function Roles() {
                 query: ''
             }
         }).then(response => {
-            setData(response.data.data);//GET ALL function
+            setData(response.data.data.roles);
+            setDivisions(response.data.data.divisions);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -332,7 +333,13 @@ function Roles() {
                 </Row>
             </div>
 
-            <div className='loading-table-container'>
+            {
+                data.data.length === 0 ? (
+                    <Alert variant='primary'>
+                        No Role found.
+                    </Alert>
+                ) : (
+                <div className='loading-table-container'>
                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                     <div className='spinner-icon'>
                         <FontAwesomeIcon icon={faSpinner} spin size='lg' />
@@ -383,6 +390,10 @@ function Roles() {
                     )}
                 </div>
             </div>
+                )
+            }
+
+            
 
             <Modal
                 show={modal.show}

@@ -8,7 +8,8 @@ import {
     Alert
 } from 'react-bootstrap';
 import {
-    Link
+    Link,
+    useNavigate
 } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -21,37 +22,37 @@ import Swal from 'sweetalert2';
 import Select from 'react-select';
 
 function DocumentReceive() {
+
+    const navigate = useNavigate();
+
     const [NGAs, setNGAs] = useState([]);
     const [users, setUsers] = useState([]);
     const [ChedOffices, setChedOffices] = useState([]);
-    // const [selectedOption, setSelectedOption] = useState('');
-    const [selectedOption2, setSelectedOption2] = useState('');
-    const [selectedOption3, setSelectedOption3] = useState('');
-    const [selectedOption4, setSelectedOption4] = useState('');
-    const [selectedOption5, setSelectedOption5] = useState('');
-    // const [selectedOption6, setSelectedOption6] = useState('');
-    // const [selectedValue, setSelectedValue] = useState('');
     const [selectedCategory, setSelectedCategory] = useState(null);
-    const [category, setCategory] = useState([]);
+    const [categories, setCategories] = useState([]);
     const [provinces, setProvinces] = useState([]);
     const [municipalities, setMunicipalities] = useState([]);
     const [names, setNames] = useState([]);
+    const [trackingNo, setTrackingNo] = useState('');
+    const [docType, setDocType] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true); 
     const [isOptionLoading, setIsOptionLoading] = useState(false); 
     const [isOptionLoading1, setIsOptionLoading1] = useState(false); 
+    const [attachment, setAttachment] = useState(null);
     const [selectedUsers, setSelectedUsers] = useState([]);
+    const [dateReceived, setDateReceived] = useState(moment().format('YYYY-MM-DD'));
 
     //Add Receive documents
     const [documentTypes, setDocumentTypes] = useState([]);
-    const [data, setData] = useState([]); //data variable
 
     const [formInputs, setFormInputs] = useState ({
         document_type_id: '',
         attachment: '',
-        date_received: '',
-        receivable_table: '',
+        date_received: moment().format("YYYY-MM-DD"),
+        receivable_type: '',
         receivable_id: '',
+        receivable_name: '',
         province: '',
         municipality: '',
         insti: '',
@@ -66,8 +67,9 @@ function DocumentReceive() {
         document_type_id: '',
         attachment: '',
         date_received: '',
-        receivable_table: '',
+        receivable_type: '',
         receivable_id: '',
+        receivable_name: '',
         province: '',
         municipality: '',
         insti: '',
@@ -78,27 +80,17 @@ function DocumentReceive() {
         assignTo: ''
     });
 
-    useEffect(() => {
-        apiClient.get('/document').then(response => { //GET ALL function
-            setData(response.data.data);
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsLoading(false);
-        });
-    }, []);
-
     //For assigning multiple users 
     //yarn add react-select
     const handleUserSelection = (selectedOptions) => {
         const userIds = selectedOptions.map(option => option.value);
         setSelectedUsers(userIds);
-      };
+    };
 
-      const options = users.map(user => ({
+    const options = users.map(user => ({
         value: user.id,
         label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-      }));
+    }));
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -107,9 +99,9 @@ function DocumentReceive() {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
             date_received: 'date',
-            receivable_table: 'required|in:HEIs,NGAs,Ched Offices,Others',
+            receivable_type: 'required|in:HEIs,NGAs,CHED Offices,Others',
             receivable_id: 'integer|min:1',
-            // receivable_name: '',
+            receivable_name: 'required_if:receivable_type,Others',
             province: 'integer|min:1',
             municipality: 'integer|min:1',
             insti: 'integer|min:1',
@@ -117,7 +109,7 @@ function DocumentReceive() {
             chedoffices: 'integer|min:1',
             description: 'required|string|min:5',
             category_id: 'required|integer|min:1',
-            assignTo: 'required|integer|min:1'
+            assignTo: 'integer|min:1'
         });
 
         if (validation.fails()){
@@ -125,6 +117,9 @@ function DocumentReceive() {
                 document_type_id: validation.errors.first('document_type_id'),
                 attachment: validation.errors.first('attachment'),
                 date_received: validation.errors.first('date_received'),
+                receivable_type: validation.errors.first('receivable_type'),
+                receivable_id: validation.errors.first('receivable_id'),
+                receivable_name: validation.errors.first('receivable_name'),
                 province: validation.errors.first('province'),
                 municipality: validation.errors.first('municipality'),
                 insti: validation.errors.first('insti'),
@@ -140,8 +135,9 @@ function DocumentReceive() {
                 document_type_id: '',
                 attachment: '',
                 date_received: '',
-                receivable_table: '',
+                receivable_type: '',
                 receivable_id: '',
+                receivable_name: '',
                 province: '',
                 municipality: '',
                 insti: '',
@@ -156,16 +152,30 @@ function DocumentReceive() {
     };
 
     const handleAdd = () => {
-        apiClient.post('/document', {
-            ...formInputs,
+
+        const formData = new FormData();
+       
+        if (attachment) {
+            formData.append('attachment', attachment, attachment.name);
+        }
+        formData.append('document_type_id', formInputs.document_type_id);
+        formData.append('date_received', formInputs.date_received);
+        formData.append('receivable_type', formInputs.receivable_type);
+
+        let receivableId = formInputs.receivable_type === 'HEIs' ? formInputs.insti :
+            formInputs.receivable_type === 'NGAs' ? formInputs.ngas :
+            formInputs.receivable_type === 'CHED Offices' ? formInputs.chedoffices : '';
+        formData.append('receivable_id', receivableId);
+        formData.append('receivable_name', formInputs.receivable_name);
+        formData.append('description', formInputs.description);
+        formData.append('category_id', formInputs.category_id);
+
+        apiClient.post('/document', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
         }).then(response => {
-            setData({
-                ...data,
-                data: [
-                    ...data.data,
-                    response.data.data
-                ]
-            });
+            navigate('../');
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -185,29 +195,37 @@ function DocumentReceive() {
             ...formInputs,
             [e.target.name]: e.target.value
         });
+        if (e.target.name === 'date_received') {
+            setDateReceived (e.target.value)
+        } else if (e.target.name === 'category_id') {
+            setSelectedCategory(categories.find(c => c.id === +e.target.value));
+        }
     }
 
-//display document-type code
-const [trackingNo, setTrackingNo] = useState('');
-const handleChangeDocType = async (event) => {
-    setIsOptionLoading1(true);
-    const value = event.target.value;
-    setFormInputs({
-        ...formInputs,
-        document_type_id:value,
-    });
-    let docType = documentTypes.find(d => d.id === +value)
-    let temp = docType ? docType.code : ''
+    useEffect (() => {
+        if (docType){
+            setIsOptionLoading1(true);
+            let docTypeFind = documentTypes.find(d => d.id === +docType);
+            let temp = docTypeFind ? docTypeFind.code : '';
+            apiClient.get(`/document/series/${docType}`)
+                .then(response => {
+                    setTrackingNo (moment(dateReceived).format('YY')+ '-' + temp + '-' + response.data.data.toString().padStart(4, '0'));
+                })
+                .catch(error => {
+                    setErrorMessage(error);
+                }).finally(() => {
+                    setIsOptionLoading1(false);
+                });
+        }
+    }, [docType, documentTypes, dateReceived])
 
-    apiClient.get(`/document/series/${value}`)
-        .then(response => {
-            setTrackingNo (temp + '-' + response.data.data.toString().padStart(4, '0'));
-        })
-        .catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsOptionLoading1(false);
-        });
+    const handleChangeDocType = async (event) => {
+        const value = event.target.value;
+        setFormInputs({
+            ...formInputs,
+            document_type_id:value,
+        }); 
+        setDocType(value)
     }
 
     const handleChange = async (event) => {
@@ -216,7 +234,7 @@ const handleChangeDocType = async (event) => {
             const value = event.target.value;
             setFormInputs({
                 ...formInputs,
-                receivable_table:value,
+                receivable_type:value,
             });
             
             if (value === 'HEIs') {
@@ -231,7 +249,7 @@ const handleChangeDocType = async (event) => {
                 const response = await apiClient.get('/settings/ched-offices/all');
                 setChedOffices(response.data.data);
                 // Fetch data for Ched Offices
-            }
+            } 
         } catch (error) {
             setErrorMessage(error);
         } finally {
@@ -240,7 +258,7 @@ const handleChangeDocType = async (event) => {
     };
         
 
-      const handleChange2 = async (event) => {
+    const handleChangeProvince = async (event) => {
         try{
             setIsOptionLoading(true);
             const value = event.target.value;
@@ -248,42 +266,48 @@ const handleChangeDocType = async (event) => {
                 ...formInputs,
                 province:value,
             }); 
-            // console.log(value);
-            // setSelectedValue(value);
-            {
-                const response = await apiClient.get('/settings/heis/municipalities');
-                setMunicipalities(response.data.data);
-            } 
+            const response = await apiClient.get(`/settings/heis/municipalities/${value}`);
+            setMunicipalities(response.data.data);
         } catch (error) {
             setErrorMessage(error);
         } finally {
             setIsOptionLoading(false);
         }
-        
-      };
+    };
 
-      const handleChange3 = async (event) => {
+    const handleChangeMunicipality = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
             setFormInputs({
                 ...formInputs,
                 municipality:value,
-            }); 
-            // console.log(value);
-            // setSelectedValue(value);
-        {
-          const response = await apiClient.get('/settings/heis/names');
-          setNames(response.data.data);
-        }   
+            });
+            const response = await apiClient.get(`/settings/heis/names/${value}`);
+            setNames(response.data.data);
         } catch (error) {
             setErrorMessage(error);
         } finally {
             setIsOptionLoading(false);
         }
-      }
+    }
 
-      const handleChange4 = async (event) => {
+    const handleChangeInstitution = async (event) => {
+        try {
+            setIsOptionLoading(true);
+            const value = event.target.value;
+            setFormInputs({
+                ...formInputs,
+                insti:value,
+            });
+        } catch (error) {
+            setErrorMessage(error);
+        } finally {
+            setIsOptionLoading(false);
+        }
+    }
+
+    const handleChangeNGA = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
@@ -291,20 +315,16 @@ const handleChangeDocType = async (event) => {
                 ...formInputs,
                 ngas:value,
             });
-            // console.log(value);
-            // setSelectedValue(value);
-        {
-          const response = await apiClient.get('/settings/ngas/all');
-          setNames(response.data.data);
-        }   
+            const response = await apiClient.get('/settings/ngas/all');
+            setNames(response.data.data);
         } catch (error) {
             setErrorMessage(error);
         } finally {
             setIsOptionLoading(false);
         }
-      }
+    }
 
-      const handleChange5 = async (event) => {
+    const handleChangeCO = async (event) => {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
@@ -323,35 +343,22 @@ const handleChangeDocType = async (event) => {
         } finally {
             setIsOptionLoading(false);
         }
-      }
+    }
 
-    //   const handleChange4 = async (event) => {
-    //         const value = event.target.value;
-    //         setSelectedOption4(value);
-    //         console.log(value);
-    //       setSelectedValue(value);
-    // };
-
-    // const handleChange5 = async (event) => {
-    //     const value = event.target.value;
-    //     setSelectedOption5(value);
-    //     console.log(value);
-    //     setSelectedValue(value);
-    // };
-
-    // const handleChange6 = async (event) => {
-    //     const value = event.target.value;
-    //     setSelectedOption6(value);
-    //     console.log(value);
-    //     setSelectedValue(value);
-    // };
+    const handleFileInputChange = e => {
+        if (e.target.files.length > 0) {
+            setAttachment(e.target.files[0]);
+        } else {
+            setAttachment(null);
+        }
+    }
 
     useEffect(() => {
         apiClient.get('/document/receive')
             .then(response => {
                 setUsers(response.data.data.users);
                 setDocumentTypes(response.data.data.documentTypes);
-                setCategory(response.data.data.categories);
+                setCategories(response.data.data.categories);
             })
             .catch(error => {
                 setErrorMessage(error);
@@ -375,39 +382,40 @@ const handleChangeDocType = async (event) => {
     }
 
     return (
-    <Form onSubmit={handleSubmit}>
-        <div className="container fluid">
-            <div className="crud bg-body rounded"> 
-                <Row className= "justify-content-end mt-4 mb-3">
+        <Form onSubmit={handleSubmit}>
+            <div className="container fluid">
+                <div className="crud bg-body rounded"> 
+                    <Row className= "justify-content-end mt-4 mb-3">
+                        <Col>
+                            <Breadcrumb>
+                                <Breadcrumb.Item linkAs={Link} linkProps={{ to: '../' }}>Documents</Breadcrumb.Item>
+                                <Breadcrumb.Item href="#" active>Received</Breadcrumb.Item>
+                            </Breadcrumb>
+                        </Col>
+                    </Row>
+                </div>
+                <Row className="mb-3">
                     <Col>
-                        <Breadcrumb>
-                            <Breadcrumb.Item linkAs={Link} linkProps={{ to: '../' }}>Documents</Breadcrumb.Item>
-                            <Breadcrumb.Item href="#" active>Received</Breadcrumb.Item>
-                        </Breadcrumb>
+                        <Form.Label>Document Type </Form.Label>
+                        <Form.Select
+                            name='document_type_id' 
+                            value={formInputs.document_type_id} 
+                            onChange={handleChangeDocType}
+                            isInvalid={!!formErrors.document_type_id}
+                            disabled={isOptionLoading1}>
+                                <option hidden value=''>Select Document Type...</option>
+                                {
+                                    documentTypes.map(item => (
+                                        <option key={item.id} value={item.id}>{item.description}</option>
+                                    ))
+                                }
+                        </Form.Select>
+                        <Form.Control.Feedback type='invalid'>
+                            {formErrors.document_type_id}
+                        </Form.Control.Feedback>
                     </Col>
-                </Row>
-            </div>
-            <Row className="mb-3">
-                <Col>
-                    <Form.Label>Document Type </Form.Label>
-                    <Form.Select
-                        name='document_type_id' 
-                        value={formInputs.document_type_id} 
-                        onChange={handleChangeDocType}
-                        isInvalid={!!formErrors.document_type_id}
-                        disabled={isOptionLoading1}>
-                            <option hidden value=''>Select Document Type...</option>
-                            {documentTypes.map(item => (
-                                <option key={item.id} value={item.id}>{item.description}</option>
-                            ))
-                            }
-                    </Form.Select>
-                    <Form.Control.Feedback type='invalid'>
-                        {formErrors.document_type_id}
-                    </Form.Control.Feedback>
-                </Col>
-                <Col>
-                    <Form.Label>Tracking No. {isOptionLoading1 ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""}</Form.Label>
+                    <Col>
+                        <Form.Label>Tracking No. {isOptionLoading1 ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""}</Form.Label>
                         <Form.Control 
                             type='text'
                             name='trackingNo'
@@ -416,231 +424,259 @@ const handleChangeDocType = async (event) => {
                             isInvalid={!!formErrors.trackingNo}
                             disabled
                         />
-                </Col>
-                <Col>
-                    <Form.Label>Attachment (Optional)</Form.Label>
-                    <Form.Control 
-                        type="file" 
-                        name='attachment' 
-                        placeholder="Attachment" 
-                        onChange={handleInputChange}
-                        value={formInputs.attachment} 
-                        isInvalid={!!formErrors.attachment}/>
-                    <Form.Control.Feedback type='invalid'>
-                        {formErrors.attachment}
-                    </Form.Control.Feedback>
-                </Col>
-            </Row>
- 
-            <Row className="mb-3">
-                <Col>
-                    <Form.Label>Date Received</Form.Label>
-                    <Form.Control
-                        type="date" 
-                        name='date_received'
-                        max={moment().format("YYYY-MM-DD")}
-                        defaultValue={moment().format("YYYY-MM-DD")}
-                        onChange={handleInputChange}
-                        isInvalid={!!formErrors.date_received}
-                    />
-                    <Form.Control.Feedback type='invalid'>
-                        {formErrors.date_received}
-                    </Form.Control.Feedback>
-                </Col>
-                
-                <Col>
-                    <Form.Label>Receive from {isOptionLoading ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""} </Form.Label>
-                    <Form.Select 
-                        name='receivable_table' 
-                        value={formInputs.receivable_table} 
-                        onChange={handleChange}
-                        isInvalid={!!formErrors.receivable_table}
-                        disabled={isOptionLoading}>
-                            <option hidden value="">Select an option</option>
-                            <option value="HEIs">HEIs</option>
-                            <option value="NGAs">NGAs</option>
-                            <option value="CHED Offices">CHED Offices</option>
-                            <option value="Others">Others</option>
-                    </Form.Select>
-                    <Form.Control.Feedback type='invalid'>
-                        {formErrors.receivable_table}
-                    </Form.Control.Feedback>
-
-                    {(formInputs.receivable_table === 'HEIs' && provinces.length !== 0) &&  (
-                        <Form.Select 
-                            name= 'province' 
-                            value={formInputs.province}
-                            onChange={handleChange2} 
-                            isInvalid={!!formErrors.province}
-                            disabled={isOptionLoading}
-                            >
-                            <option hidden value="">Select a province</option>
-                            {provinces.map((province) => (
-                                <option key={province.id} value={province.id}>
-                                    {province.province}
-                                </option>
-                            ))}
-                        </Form.Select>
-                    )}
-
-                    {(formInputs.receivable_table === 'HEIs' && selectedOption2 !== '' && municipalities.length !== 0) &&  (
-                        <Form.Select 
-                            name='municipality' 
-                            value={formInputs.municipality} 
-                            onChange={handleChange3}  
-                            isInvalid={!!formErrors.municipality}
-                            disabled={isOptionLoading}
-                            >
-                            <option hidden value="">Select a municipality</option>
-                            {municipalities.map((municipality) => (
-                                <option key={municipality.city_municipality} value={municipality.id}>
-                                {municipality.city_municipality}
-                                </option>
-                            ))}
-                        </Form.Select>
-                    )}
-
-                    {(formInputs.receivable_table === 'HEIs' && selectedOption3 !== '' && names.length !== 0) &&  (
-                        <Form.Select 
-                        name= 'insti' 
-                        value={formInputs.insti}
-                        isInvalid={!!formErrors.insti}
-                        disabled={isOptionLoading} 
-                        >
-                            <option hidden value="">Select a name of institution</option>
-                            {names.map((names) => (
-                                <option key={names.name} value={names.id}>
-                                {names.name}
-                                </option>
-                            ))}
-                        </Form.Select>
-                    )}
-                    {(formInputs.receivable_table === 'NGAs' && NGAs.length !==0) &&  (
-                        <Form.Select 
-                            name='ngas' 
-                            value={formInputs.ngas} 
-                            onChange={handleChange4} 
-                            isInvalid={!!formErrors.ngas}
-                            disabled={isOptionLoading}
-                            >
-                                <option hidden value=''>Select NGA...</option>
-                            {NGAs.map(item => (
-                                <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
-                            ))}  
-                        </Form.Select>
-                    )}
-                    {(formInputs.receivable_table === 'CHED Offices' && ChedOffices.length !== 0) && (
-                            <Form.Select 
-                            name='chedoffices'
-                            value={formInputs.chedoffices} 
-                            onChange={handleChange5} 
-                            isInvalid={!!formErrors.chedoffices}
-                            disabled={isOptionLoading} 
-                            >
-                                <option hidden value=''>Select Ched Office...</option>
-                                {ChedOffices.map(item => (
-                                    <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
-                                ))}
-                        </Form.Select>
-                    )}
-                </Col>
-            </Row>
-
-            <Row className="mb-3">
-                <Col>
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control 
-                        as="textarea" 
-                        rows={3} 
-                        type="text" 
-                        name='description' 
-                        placeholder="Description" 
-                        value={formInputs.description}
-                        onChange={handleInputChange}
-                        isInvalid={!!formErrors.description}/>
-                    <Form.Control.Feedback type='invalid'>
-                        {formErrors.description}
-                    </Form.Control.Feedback>
-                </Col>
-            </Row>
-            <Row className="mb-3"> 
-            <Form.Group>
-                <div>
-                    <Form.Label>Category </Form.Label>
-                </div>
-                    <div>
-                        {category.map((category, index) => (
-                            <div
-                                style={{ display: 'inline-block', marginRight: '20px' }}
-                                key={index}
-                                className="mb-3" >
-                                <Form.Check
-                                    inline
-                                    name='category_id'
-                                    type='radio'
-                                    id={`inline-${category.id}-1`}
-                                    value={category.id}
-                                    key={category.id}
-                                    onChange={() => setSelectedCategory(category)}
-                                    style={{ marginRight:'8px' }}
-                                    // isInvalid={!!formErrors.category_id}
-                                />
-                                {category.description}
-                                {/* <Form.Control.Feedback type='invalid'>
-                                    {formErrors.category_id}
-                                </Form.Control.Feedback> */}
-                            </div>
-                        ))}
-                        
-                        {/* Conditional rendering */}
-                       
-                        {selectedCategory && (
-                            <div style={{ marginTop: '10px' }}>
-                                {selectedCategory.is_assignable &&(
-                                    <Row> 
-                                        <Col md={'auto'}> 
-                                        <Form.Label>Select assign to:</Form.Label>
-                                        <Select 
-                                            isMulti
-                                            name='assignTo' 
-                                            options={options}
-                                            value={options.filter(option => selectedUsers.includes(option.value))}
-                                            onChange={handleUserSelection}
-                                            />
-                                    </Col>
-                                    </Row>
-                                )}
-                            </div>
-                        )}
-                    </div>
-                    
-                    
-                </Form.Group>
-            </Row>
-            
-                <Row className= "justify-content-end mt-4 mb-4">
-                    <Col md="auto" className="p-0 me-2">
-                        <Button 
-                        variant="outline-danger"
-                        as={Link}
-                        to='../'>
-                            Cancel
-                        </Button>
                     </Col>
-                    
-                    <Col md="auto" className="p-0 me-2">
-                        <Button variant="primary">
-                            Forward
-                        </Button>
-                    </Col>
-                    <Col md="auto" className="p-0">
-                        <Button type='submit' variant="outline-primary">
-                            Received
-                        </Button>
+                    <Col>
+                        <Form.Label>Attachment <span className='text-muted text-italic'>(Optional)</span></Form.Label>
+                        <Form.Control 
+                            type="file" 
+                            name='attachment' 
+                            placeholder="Attachment" 
+                            onChange={handleFileInputChange} />
                     </Col>
                 </Row>
-        </div>
-    </Form>
+    
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Label>Date Received</Form.Label>
+                        <Form.Control
+                            type='date' 
+                            name='date_received'
+                            max={moment().format("YYYY-MM-DD")}
+                            value={formInputs.date_received}
+                            onChange={handleInputChange}
+                            isInvalid={!!formErrors.date_received}
+                        />
+                        <Form.Control.Feedback type='invalid'>
+                            {formErrors.date_received}
+                        </Form.Control.Feedback>
+                    </Col>
+                    
+                    <Col>
+                        <Form.Label>Receive from {isOptionLoading ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""} </Form.Label>
+                        <Form.Select 
+                            name='receivable_type' 
+                            value={formInputs.receivable_type} 
+                            onChange={handleChange}
+                            isInvalid={!!formErrors.receivable_type}
+                            disabled={isOptionLoading}>
+                                <option hidden value="">Select an option</option>
+                                <option value="HEIs">HEIs</option>
+                                <option value="NGAs">NGAs</option>
+                                <option value="CHED Offices">CHED Offices</option>
+                                <option value="Others">Others</option>
+                        </Form.Select>
+                        <Form.Control.Feedback type='invalid'>
+                            {formErrors.receivable_type}
+                        </Form.Control.Feedback>
+
+                        {
+                            (formInputs.receivable_type === 'HEIs' && provinces.length !== 0) &&  (
+                                <Form.Select 
+                                    name= 'province' 
+                                    value={formInputs.province}
+                                    onChange={handleChangeProvince} 
+                                    isInvalid={!!formErrors.province}
+                                    disabled={isOptionLoading}
+                                    >
+                                    <option hidden value="">Select a province</option>
+                                    {
+                                        provinces.map((province) => (
+                                            <option key={province.id} value={province.id}>
+                                                {province.province}
+                                            </option>
+                                        ))
+                                    }
+                                </Form.Select>
+                            )
+                        }
+
+                        {
+                            (formInputs.receivable_type === 'HEIs' && formInputs.province !== '' && municipalities.length !== 0) &&  (
+                                <Form.Select 
+                                    name='municipality' 
+                                    value={formInputs.municipality} 
+                                    onChange={handleChangeMunicipality}  
+                                    isInvalid={!!formErrors.municipality}
+                                    disabled={isOptionLoading}
+                                    >
+                                    <option hidden value="">Select a municipality</option>
+                                    {
+                                        municipalities.map((municipality) => (
+                                            <option key={municipality.city_municipality} value={municipality.id}>
+                                                {municipality.city_municipality}
+                                            </option>
+                                        ))
+                                    }
+                                </Form.Select>
+                            )
+                        }
+
+                        {
+                            (formInputs.receivable_type === 'HEIs' && formInputs.municipality !== '' && names.length !== 0) &&  (
+                                <Form.Select 
+                                name= 'insti' 
+                                value={formInputs.insti}
+                                onChange={handleChangeInstitution} 
+                                isInvalid={!!formErrors.insti}
+                                disabled={isOptionLoading} 
+                                >
+                                    <option hidden value="">Select a name of institution</option>
+                                    {
+                                        names.map((names) => (
+                                            <option key={names.name} value={names.id}>
+                                                {names.name}
+                                            </option>
+                                        ))
+                                    }
+                                </Form.Select>
+                            )
+                        }
+                        {
+                            (formInputs.receivable_type === 'NGAs' && NGAs.length !==0) &&  (
+                                <Form.Select 
+                                    name='ngas' 
+                                    value={formInputs.ngas} 
+                                    onChange={handleChangeNGA} 
+                                    isInvalid={!!formErrors.ngas}
+                                    disabled={isOptionLoading}
+                                    >
+                                        <option hidden value=''>Select NGA...</option>
+                                    {
+                                        NGAs.map(item => (
+                                            <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
+                                        ))
+                                    }  
+                                </Form.Select>
+                            )
+                        }
+                        {
+                            (formInputs.receivable_type === 'CHED Offices' && ChedOffices.length !== 0) && (
+                                    <Form.Select 
+                                    name='chedoffices'
+                                    value={formInputs.chedoffices} 
+                                    onChange={handleChangeCO} 
+                                    isInvalid={!!formErrors.chedoffices}
+                                    disabled={isOptionLoading} 
+                                    >
+                                        <option hidden value=''>Select Ched Office...</option>
+                                        {
+                                            ChedOffices.map(item => (
+                                                <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
+                                            ))
+                                        }
+                                </Form.Select>
+                            )
+                        }
+                        {
+                            formInputs.receivable_type === 'Others' && (
+                                    <Form.Control 
+                                    type='text'
+                                    name='receivable_name'
+                                    value={formInputs.receivable_name} 
+                                    onChange={handleInputChange} 
+                                    isInvalid={!!formErrors.receivable_name}
+                                    disabled={isOptionLoading} 
+                                    />
+                            )
+                        }
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.receivable_name}
+                            </Form.Control.Feedback>
+                    </Col>
+                </Row>
+
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control 
+                            as="textarea" 
+                            rows={3} 
+                            type="text" 
+                            name='description' 
+                            placeholder="Description" 
+                            value={formInputs.description}
+                            onChange={handleInputChange}
+                            isInvalid={!!formErrors.description}/>
+                        <Form.Control.Feedback type='invalid'>
+                            {formErrors.description}
+                        </Form.Control.Feedback>
+                    </Col>
+                </Row>
+                <Row className="mb-3"> 
+                <Form.Group>
+                    <div>
+                        <Form.Label>Category </Form.Label>
+                    </div>
+                        <div>
+                            {
+                                categories.map((category, index) => (
+                                    <Form.Check key={category.id} type='radio' id={`inline-${category.id}-1`} inline className={formErrors.category_id ? 'is-invalid' : ''}>
+                                        <Form.Check.Input
+                                            type='radio'
+                                            name='category_id'
+                                            onChange={handleInputChange}
+                                            value={category.id}
+                                            isInvalid={!!formErrors.category_id} />
+                                        <Form.Check.Label>
+                                            {category.description}
+                                        </Form.Check.Label>
+                                    </Form.Check>
+                                ))
+                            }
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.category_id}
+                            </Form.Control.Feedback>
+                            
+                            {/* Conditional rendering */}
+                        
+                            {
+                                selectedCategory && (
+                                    <div style={{ marginTop: '10px' }}>
+                                        {selectedCategory.is_assignable &&(
+                                            <Row> 
+                                                <Col md={'auto'}> 
+                                                    <Form.Label>Select assign to:</Form.Label>
+                                                    <Select 
+                                                        isMulti
+                                                        name='assignTo' 
+                                                        options={options}
+                                                        value={options.filter(option => selectedUsers.includes(option.value))}
+                                                        onChange={handleUserSelection} />
+                                                </Col>
+                                            </Row>
+                                        )}
+                                    </div>
+                                )
+                            }
+                        </div>
+                        
+                        
+                    </Form.Group>
+                </Row>
+                
+                    <Row className= "justify-content-end mt-4 mb-4">
+                        <Col md="auto" className="p-0 me-2">
+                            <Button 
+                            variant="outline-danger"
+                            as={Link}
+                            to='../'>
+                                Cancel
+                            </Button>
+                        </Col>
+                        
+                        <Col md="auto" className="p-0 me-2">
+                            <Button variant="primary">
+                                Forward
+                            </Button>
+                        </Col>
+                        <Col md="auto" className="p-0">
+                            <Button type='submit' variant="outline-primary">
+                                Received
+                            </Button>
+                        </Col>
+                    </Row>
+            </div>
+        </Form>
     );
 }
 
