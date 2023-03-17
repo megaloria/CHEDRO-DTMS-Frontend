@@ -74,7 +74,7 @@ function DocumentView() {
                     <Row className="mb-3">
                         <Col>
                             <FontAwesomeIcon icon={faTimeline} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
-                            <Badge bg="primary" style={{width: 120}}>Received</Badge>
+                            <Badge bg="primary">Received</Badge>
                         </Col> 
                     </Row>
                     <Row className="mb-3">
