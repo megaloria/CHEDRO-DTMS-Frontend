@@ -102,12 +102,14 @@ function DocumentView() {
                             {document.description}
                         </Col>
                     </Row>
-                    <Row className="mb-3">
-                        <Col >
-                            <FontAwesomeIcon icon={faPaperclip} className="text-dark" style={{marginRight:'20px'}}/>
-                            {document.attachment}
-                        </Col>
-                    </Row>
+                    <Row className="mb-3"> 
+                        {document.attachments.file_title ? (
+                            <Col>
+                            <FontAwesomeIcon icon={faPaperclip} className="text-dark" style={{ marginRight: "20px" }} />
+                            {document.attachments.file_title}
+                            </Col>
+                        ) : ''}
+                        </Row>
                     <Row className="mb-3">
                         <Col >
                             <FontAwesomeIcon icon={faTag} className="text-dark" style={{marginRight:'20px'}}/>
