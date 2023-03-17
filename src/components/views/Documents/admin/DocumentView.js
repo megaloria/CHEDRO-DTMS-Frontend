@@ -86,7 +86,7 @@ function DocumentView() {
                     <Row className="mb-3">
                         <Col>
                             <FontAwesomeIcon icon={faCalendar} className="text-dark" style={{marginRight:'20px'}}/>
-                            {moment(document.date_received).format('MMMM DD, YYYY')} <i>(Received {moment(document.date_received).startOf('hour').fromNow()})
+                            {moment(document.date_received).format('MMMM DD, YYYY')} <i>(Encoded {moment(document.created_at).fromNow()})
                             </i> 
                         </Col>
                     </Row>
@@ -102,14 +102,16 @@ function DocumentView() {
                             {document.description}
                         </Col>
                     </Row>
-                    <Row className="mb-3"> 
-                        {document.attachments.file_title ? (
+    
+                        {document.attachments?.file_title ? (
+                            <Row className="mb-3"> 
                             <Col>
                             <FontAwesomeIcon icon={faPaperclip} className="text-dark" style={{ marginRight: "20px" }} />
                             {document.attachments.file_title}
-                            </Col>
-                        ) : ''}
-                        </Row>
+                           </Col>
+                           </Row> 
+                        ) : null}
+                        
                     <Row className="mb-3">
                         <Col >
                             <FontAwesomeIcon icon={faTag} className="text-dark" style={{marginRight:'20px'}}/>
