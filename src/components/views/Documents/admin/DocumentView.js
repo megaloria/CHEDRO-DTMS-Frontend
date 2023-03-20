@@ -88,13 +88,14 @@ function DocumentView() {
                         <Col>
                             <FontAwesomeIcon icon={faCalendar} className="text-dark" style={{marginRight:'20px'}}/>
                             {moment(document.date_received).format('MMMM DD, YYYY')} 
+                            <i> (Received {moment(document.date_received).fromNow()})</i> 
                         </Col>
                     </Row>
                     <Row className="mb-3">
                         <Col>
                             <FontAwesomeIcon icon={faKeyboard} className="text-dark" style={{marginRight:'20px'}}/>
                             {moment(document.created_at).format('MMMM DD, YYYY')} 
-                            <i>(Encoded {moment(document.created_at).fromNow()})</i> 
+                            <i> (Encoded {moment(document.created_at).fromNow()})</i> 
                         </Col>
                     </Row>
                     <Row className="mb-3">
