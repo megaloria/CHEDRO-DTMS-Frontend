@@ -51,7 +51,8 @@ function DocumentEdit() {
         date_received: document.date_received,
         receivable_type: document.sender.receivable_type === 'App\\Models\\Nga' ? 'NGAs' :
             document.sender.receivable_type === 'App\\Models\\ChedOffice' ? 'CHED Offices' :
-                document.sender.receivable_type,
+                document.sender.receivable_type === 'App\\Models\\Hei' ? 'HEIs' :
+                    document.sender.receivable_type,
         receivable_id: document.sender.receivable_id,
         receivable_name: document.sender.receivable_name,
         province: document.sender.receivable.province,
@@ -102,6 +103,19 @@ function DocumentEdit() {
              apiClient.get('/settings/ched-offices/all')
                  .then(response => {
                      setChedOffices(response.data.data);
+                 })
+                 .catch(error => {
+                     setErrorMessage(error);
+                 })
+                 .finally(() => {
+                     setIsOptionLoading(false);
+                 });
+         }
+         else if (formInputs.receivable_type === 'HEIs') {
+             setIsOptionLoading(true);
+             apiClient.get('/settings/heis/provinces')
+                 .then(response => {
+                     setProvinces(response.data.data);
                  })
                  .catch(error => {
                      setErrorMessage(error);
