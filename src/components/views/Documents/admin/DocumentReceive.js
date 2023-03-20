@@ -5,16 +5,13 @@ import {
     Row, 
     Col, 
     Breadcrumb,
-    Alert
+    Alert,
+    Spinner
 } from 'react-bootstrap';
 import {
     Link,
     useNavigate
-} from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-    faSpinner
-} from '@fortawesome/free-solid-svg-icons'
+} from 'react-router-dom';
 import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
 import Validator from 'validatorjs';
@@ -369,7 +366,7 @@ function DocumentReceive() {
 
     if (isLoading) {
         return (
-            <FontAwesomeIcon icon={faSpinner} spin lg />
+            <Spinner animation='border' />
         );
     }
 
@@ -415,7 +412,7 @@ function DocumentReceive() {
                         </Form.Control.Feedback>
                     </Col>
                     <Col>
-                        <Form.Label>Tracking No. {isOptionLoading1 ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""}</Form.Label>
+                        <Form.Label>Tracking No. {isOptionLoading1 ? <Spinner animation='border' size='sm'/> : ""}</Form.Label>
                         <Form.Control 
                             type='text'
                             name='trackingNo'
@@ -452,7 +449,7 @@ function DocumentReceive() {
                     </Col>
                     
                     <Col>
-                        <Form.Label>Receive from {isOptionLoading ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""} </Form.Label>
+                        <Form.Label>Receive from {isOptionLoading ? <Spinner animation='border' size='sm'/> : ""} </Form.Label>
                         <Form.Select 
                             name='receivable_type' 
                             value={formInputs.receivable_type} 

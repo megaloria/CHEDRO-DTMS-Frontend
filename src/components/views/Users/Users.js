@@ -9,14 +9,14 @@ import {
     Row,
     Table,
     InputGroup,
-    Pagination
+    Pagination,
+    Spinner
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faTrash,
     faEdit,
     faAdd,
-    faSpinner,
     faRotate,
     faSearch
 } from '@fortawesome/free-solid-svg-icons';
@@ -435,7 +435,7 @@ function Users() {
 
     if (isLoading) {
         return (
-            <FontAwesomeIcon icon={faSpinner} spin lg />
+            <Spinner animation='border' />
         );
     }
 
@@ -487,7 +487,7 @@ function Users() {
                     <div className='loading-table-container'>
                                     <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                                         <div className='spinner-icon'>
-                                            <FontAwesomeIcon icon={faSpinner} spin size='lg' />
+                                            <Spinner animation='border' />
                                         </div>
                                     </div>
                                 <Table striped bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
