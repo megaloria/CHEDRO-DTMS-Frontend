@@ -574,7 +574,7 @@ function DocumentEdit() {
                                             name='category_id'
                                             onChange={handleInputChange}
                                             value={category.id}
-                                            checked={formInputs.category_id === category.id}
+                                            checked={+formInputs.category_id === category.id}
                                             isInvalid={!!formErrors.category_id} />
                                         <Form.Check.Label>
                                             {category.description}
