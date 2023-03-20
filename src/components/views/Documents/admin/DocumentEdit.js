@@ -57,15 +57,13 @@ function DocumentEdit() {
         receivable_name: document.sender.receivable_name,
         province: document.sender.receivable.province,
         municipality: document.sender.receivable.city_municipality,
-        insti: document.sender.receivable.description,
+        insti: document.sender.receivable.id,
         ngas: document.sender.receivable.description,
         chedoffices: document.sender.receivable.description,
         description: document.description,
         category_id: document.category_id,
         assignTo: ''
     });
-
-    console.log(formInputs.receivable_type);
 
     const [formErrors, setFormErrors] = useState({
         document_type_id: '',
@@ -111,20 +109,31 @@ function DocumentEdit() {
                      setIsOptionLoading(false);
                  });
          }
-         else if (formInputs.receivable_type === 'HEIs') {
-             setIsOptionLoading(true);
-             apiClient.get('/settings/heis/provinces')
-                 .then(response => {
-                     setProvinces(response.data.data);
-                 })
-                 .catch(error => {
-                     setErrorMessage(error);
-                 })
-                 .finally(() => {
-                     setIsOptionLoading(false);
-                 });
-         }
-    }, []);
+        else if (formInputs.receivable_type === 'HEIs') {
+            setIsOptionLoading(true);
+            apiClient.get('/settings/heis/provinces')
+                .then(response => {
+                    setProvinces(response.data.data);
+                })
+                .then(() => {
+                    apiClient.get(`/settings/heis/municipalities/${formInputs.province}`)
+                        .then(response => {
+                            setMunicipalities(response.data.data)
+                        })
+                }).then(() => {
+                    apiClient.get(`/settings/heis/names/${formInputs.municipality}`)
+                        .then(response => {
+                            setNames(response.data.data)
+                        })
+                })
+                .catch(error => {
+                    setErrorMessage(error);
+                })
+                .finally(() => {
+                    setIsOptionLoading(false);
+                });
+        }
+    }, [formInputs.receivable_type, formInputs.province, formInputs.municipality, formInputs.insti]);
 
     //For assigning multiple users 
     //yarn add react-select
@@ -470,9 +479,9 @@ function DocumentEdit() {
                                 >
                                     <option hidden value="">Select a name of institution</option>
                                     {
-                                        names.map((names) => (
-                                            <option key={names.name} value={names.id}>
-                                                {names.name}
+                                        names.map((name) => (
+                                            <option key={name.name} value={name.id}>
+                                                {name.name}
                                             </option>
                                         ))
                                     }
