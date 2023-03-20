@@ -49,7 +49,10 @@ function DocumentEdit() {
         document_type_id: document.document_type_id,
         attachment: document.attachment,
         date_received: document.date_received,
-        receivable_type: document.sender.receivable_type,
+        receivable_type: document.sender.receivable_type === 'App\\Models\\Nga' ? 'NGAs' :
+            document.sender.receivable_type === 'App\\Models\\ChedOffice' ? 'CHED Offices' :
+                document.sender.receivable_type === 'App\\Models\\Hei' ? 'HEIs' :
+                    document.sender.receivable_type,
         receivable_id: document.sender.receivable_id,
         receivable_name: document.sender.receivable_name,
         province: document.sender.receivable.province,
@@ -61,6 +64,8 @@ function DocumentEdit() {
         category_id: document.category_id,
         assignTo: ''
     });
+
+    console.log(formInputs.receivable_type);
 
     const [formErrors, setFormErrors] = useState({
         document_type_id: '',
@@ -78,6 +83,48 @@ function DocumentEdit() {
         category_id: '',
         assignTo: ''
     });
+
+    useEffect(() => {
+    if (formInputs.receivable_type === 'NGAs') {
+      setIsOptionLoading(true);
+      apiClient.get('/settings/ngas/all')
+        .then(response => {
+          setNGAs(response.data.data);
+        })
+        .catch(error => {
+          setErrorMessage(error);
+        })
+        .finally(() => {
+          setIsOptionLoading(false);
+        });
+    }
+       else if (formInputs.receivable_type === 'CHED Offices') {
+             setIsOptionLoading(true);
+             apiClient.get('/settings/ched-offices/all')
+                 .then(response => {
+                     setChedOffices(response.data.data);
+                 })
+                 .catch(error => {
+                     setErrorMessage(error);
+                 })
+                 .finally(() => {
+                     setIsOptionLoading(false);
+                 });
+         }
+         else if (formInputs.receivable_type === 'HEIs') {
+             setIsOptionLoading(true);
+             apiClient.get('/settings/heis/provinces')
+                 .then(response => {
+                     setProvinces(response.data.data);
+                 })
+                 .catch(error => {
+                     setErrorMessage(error);
+                 })
+                 .finally(() => {
+                     setIsOptionLoading(false);
+                 });
+         }
+    }, []);
 
     //For assigning multiple users 
     //yarn add react-select
@@ -436,7 +483,7 @@ function DocumentEdit() {
                             (formInputs.receivable_type === 'NGAs' && NGAs.length !== 0) && (
                                 <Form.Select
                                     name='ngas'
-                                    value={formInputs.ngas}
+                                    value={formInputs.receivable_id}
                                     onChange={handleChangeNGA}
                                     isInvalid={!!formErrors.ngas}
                                     disabled={isOptionLoading}
@@ -454,7 +501,7 @@ function DocumentEdit() {
                             (formInputs.receivable_type === 'CHED Offices' && ChedOffices.length !== 0) && (
                                 <Form.Select
                                     name='chedoffices'
-                                    value={formInputs.chedoffices}
+                                    value={formInputs.receivable_id}
                                     onChange={handleChangeCO}
                                     isInvalid={!!formErrors.chedoffices}
                                     disabled={isOptionLoading}
@@ -518,6 +565,7 @@ function DocumentEdit() {
                                             name='category_id'
                                             onChange={handleInputChange}
                                             value={category.id}
+                                            checked={formInputs.category_id === category.id}
                                             isInvalid={!!formErrors.category_id} />
                                         <Form.Check.Label>
                                             {category.description}

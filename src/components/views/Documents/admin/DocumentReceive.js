@@ -99,8 +99,6 @@ function DocumentReceive() {
             receivable_type: 'required|in:HEIs,NGAs,CHED Offices,Others',
             receivable_id: 'integer|min:1',
             receivable_name: 'required_if:receivable_type,Others',
-            province: 'integer|min:1',
-            municipality: 'integer|min:1',
             insti: 'integer|min:1',
             ngas: 'integer|min:1',
             chedoffices: 'integer|min:1',
@@ -117,8 +115,6 @@ function DocumentReceive() {
                 receivable_type: validation.errors.first('receivable_type'),
                 receivable_id: validation.errors.first('receivable_id'),
                 receivable_name: validation.errors.first('receivable_name'),
-                province: validation.errors.first('province'),
-                municipality: validation.errors.first('municipality'),
                 insti: validation.errors.first('insti'),
                 ngas: validation.errors.first('ngas'),
                 chedoffices: validation.errors.first('chedoffices'),
@@ -259,12 +255,12 @@ function DocumentReceive() {
         try{
             setIsOptionLoading(true);
             const value = event.target.value;
-            setFormInputs({
-                ...formInputs,
-                province:value,
-            }); 
             const response = await apiClient.get(`/settings/heis/municipalities/${value}`);
             setMunicipalities(response.data.data);
+            setFormInputs({
+                ...formInputs,
+                province: value,
+            }); 
         } catch (error) {
             setErrorMessage(error);
         } finally {
@@ -276,12 +272,12 @@ function DocumentReceive() {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
-            setFormInputs({
-                ...formInputs,
-                municipality:value,
-            });
             const response = await apiClient.get(`/settings/heis/names/${value}`);
             setNames(response.data.data);
+            setFormInputs({
+                ...formInputs,
+                municipality: value,
+            });
         } catch (error) {
             setErrorMessage(error);
         } finally {
@@ -499,7 +495,7 @@ function DocumentReceive() {
                                     <option hidden value="">Select a municipality</option>
                                     {
                                         municipalities.map((municipality) => (
-                                            <option key={municipality.city_municipality} value={municipality.id}>
+                                            <option key={municipality.id} value={municipality.id}>
                                                 {municipality.city_municipality}
                                             </option>
                                         ))
@@ -520,7 +516,7 @@ function DocumentReceive() {
                                     <option hidden value="">Select a name of institution</option>
                                     {
                                         names.map((names) => (
-                                            <option key={names.name} value={names.id}>
+                                            <option key={names.id} value={names.id}>
                                                 {names.name}
                                             </option>
                                         ))
@@ -528,6 +524,9 @@ function DocumentReceive() {
                                 </Form.Select>
                             )
                         }
+                        <Form.Control.Feedback type='invalid'>
+                            {formErrors.insti}
+                        </Form.Control.Feedback>
                         {
                             (formInputs.receivable_type === 'NGAs' && NGAs.length !==0) &&  (
                                 <Form.Select 

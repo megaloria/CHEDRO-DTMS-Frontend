@@ -284,7 +284,7 @@ function Documents() {
                                         <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
                                         <td>{getDocumentType(row.document_type_id)}</td>
                                         <td>{getCategory(row.category_id)}</td>
-                                        <td>{row.sender.receivable.description}</td>
+                                        <td>{row.sender.receivable.description || row.sender.receivable.name}</td>
                                         <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
                                         <td >
                                             <div className='text-truncate' style={{ width:'200px' }}>
