@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import Validator from 'validatorjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {FaEye,FaEyeSlash} from 'react-icons/fa';
+
 import {
     faEye,
     faEyeSlash
@@ -12,13 +14,31 @@ import {
     Row,
     Col,
     Card,
-    InputGroup
+    InputGroup,
+    FloatingLabel
 } from 'react-bootstrap';
 
 import './styles.css';
 
 
 function Changepassword() {
+
+
+    
+  const[passwordType, setPasswordType] = useState('password')
+  const[passwordIcon, setPasswordIcon] = useState(<FaEyeSlash/>);
+
+ const handleToggle = () => {
+    if (passwordType === 'password'){
+      setPasswordType ('text');
+      setPasswordIcon (<FaEye/>);
+    } else {
+      setPasswordType ('password');
+      setPasswordIcon (<FaEyeSlash/>);
+    }
+    
+  };
+
 
     const [values, setValues] = useState({
         Currentpassword: '',
@@ -28,20 +48,6 @@ function Changepassword() {
 
 
     });
-
-    ///eye icon function
-    const [passwordType, setPasswordType] = useState("password");
-
-    const togglePassword = () => {
-        if (passwordType === "password") {
-
-            setPasswordType("text")
-            return;
-        }
-        setPasswordType("password")
-
-    }
-    ///end of eye icon function
 
     const [errors, setError] = useState({
 
@@ -105,111 +111,83 @@ function Changepassword() {
                             <Card className='p-3' style={{ borderRadius: '25px', width: '70vh' }}>
                                 <Card.Body>
 
-                                    <Form.Group className="mb-3"
-                                        value={values.Currentpassword}
-                                        controlId='formGridpassword'
-                                        onChange={handleChange}>
 
-                                        <Form.Label>Current Password</Form.Label>
+                <Form.Group 
+                            className='mb-3' 
+                            value={values.currentpassword}
+                            controlId='formGridpassword'
+                            onChange={handleChange}>
+         
+                <FloatingLabel controlId="floatingPassword" label="Current Password">
+                    <Form.Control
+                            type={passwordType} 
+                            placeholder="Password"
+                            name='Currentpassword' 
+                            isInvalid = {!!errors.Currentpassword} />
+                            <span className='icon-span' onClick={handleToggle}>
+                                {passwordIcon}
+                            </span>
 
-                                        <InputGroup>
-                                            <Form.Control
-                                                onChange={handleChange}
-                                                name='Currentpassword'
-                                                type={passwordType}
-                                                isInvalid={!!errors.Currentpassword}
-                                                placeholder="Current password"
-                                                aria-describedby="basic-addon"
-                                                required
-                                            />
+                            <Form.Control.Feedback type='invalid'>
+                            {errors.Currentpassword}
+                            </Form.Control.Feedback> 
 
-                                            <Button style={{ borderRadius: '5px' }} id="button-addon" variant="outline-secondary"
-                                                onClick={togglePassword}>
-                                                {passwordType === "password" ?
-                                                    <FontAwesomeIcon icon={faEye} className='fa-fw' />
-                                                    : <FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />
+                </FloatingLabel>
+                 </Form.Group>
 
-                                                }
+                 
+                <Form.Group 
+                            className='mb-3' 
+                            value={values.Newpassword}
+                            controlId='formGridpassword'
+                            onChange={handleChange}>
+         
+                <FloatingLabel controlId="floatingPassword" label="New password">
+                    <Form.Control
+                            type={passwordType} 
+                            placeholder="Newpassword"
+                            name='Newpassword' 
+                            isInvalid = {!!errors.Newpassword} />
+                            <span className='icon-span' onClick={handleToggle}>
+                                {passwordIcon}
+                            </span>
 
+                            <Form.Control.Feedback type='invalid'>
+                            {errors.Newpassword}
+                            </Form.Control.Feedback> 
 
-                                            </Button>
-                                            <Form.Control.Feedback type='invalid'>
-                                                {errors.Currentpassword}
-                                            </Form.Control.Feedback>
+                </FloatingLabel>
+                </Form.Group>
+                <Form.Group 
+                            className='mb-3' 
+                            value={values.Confirmpassword}
+                            controlId='formGridpassword'
+                            onChange={handleChange}>
+         
+                <FloatingLabel controlId="floatingPassword" label="Confirm password">
+                    <Form.Control
+                            type={passwordType} 
+                            placeholder="Confirmpassword"
+                            name='Confirmpassword' 
+                            isInvalid = {!!errors.Confirmpassword} />
+                            <span className='icon-span' onClick={handleToggle}>
+                                {passwordIcon}
+                            </span>
 
-                                        </InputGroup>
-                                    </Form.Group>
+                            <Form.Control.Feedback type='invalid'>
+                            {errors.Confirmpassword}
+                            </Form.Control.Feedback> 
 
-
-                                    <Form.Group className="mb-3"
-                                        value={values.Newpassword}
-                                        controlId='formGridpassword'
-                                        onChange={handleChange}>
-                                        <Form.Label>New Password</Form.Label>
-
-                                        <InputGroup>
-                                            <Form.Control
-                                                onChange={handleChange}
-                                                name='Newpassword'
-                                                type={passwordType}
-                                                isInvalid={!!errors.Newpassword}
-                                                placeholder="New Password"
-                                                aria-describedby="basic-addon"
-                                                required
-
-                                            />
-
-                                            <Button style={{ borderRadius: '5px' }} id="button-addon" variant="outline-secondary"
-                                                onClick={togglePassword}>
-                                                {passwordType === "password" ?
-                                                    <FontAwesomeIcon icon={faEye} className='fa-fw' />
-                                                    : <FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />
-
-                                                }
-
-                                            </Button>
-
-                                            <Form.Control.Feedback type='invalid'>
-                                                {errors.Newpassword}
-                                            </Form.Control.Feedback>
-
-                                        </InputGroup>
-                                    </Form.Group>
+                </FloatingLabel>
+                </Form.Group>
 
 
-                                    <Form.Group className="mb-3"
-                                        value={values.passwordInput}
-                                        controlId='formGridpassword'
-                                        onChange={handleChange}>
 
-                                        <Form.Label>Confirm Password</Form.Label>
 
-                                        <InputGroup>
-                                            <Form.Control
-                                                onChange={handleChange}
-                                                name='Confirmpassword'
-                                                type={passwordType}
-                                                isInvalid={!!errors.Confirmpassword}
-                                                placeholder="Confirm Password"
-                                                aria-describedby="basic-addon"
-                                                required
-                                            />
-                                            <Button style={{ borderRadius: '5px' }} id="button-addon" variant="outline-secondary"
-                                                onClick={togglePassword}>
-                                                {passwordType === "password" ?
-                                                    <FontAwesomeIcon icon={faEye} className='fa-fw' />
-                                                    : <FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />
 
-                                                }
-                                            </Button>
+                                 
 
-                                            <Form.Control.Feedback type='invalid'>
-                                                {errors.Confirmpassword}
-                                            </Form.Control.Feedback>
 
-                                        </InputGroup>
-
-                                    </Form.Group>
                                     <div className='d-grid gap-2'>
                                         <Button
                                             type='submit'
