@@ -8,13 +8,13 @@ import {
     Modal,
     Row,
     Table,
+    Spinner
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faTrash,
     faEdit,
     faAdd,
-    faSpinner,
     faCheck,
     faTimes,
     faSearch
@@ -225,7 +225,7 @@ function Category() {
 
     if (isLoading) {
         return (
-            <FontAwesomeIcon icon={faSpinner} spin lg />
+            <Spinner animation='border' />
         );
     }
 

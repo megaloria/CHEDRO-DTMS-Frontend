@@ -6,7 +6,6 @@ import {
     faEdit,
     faAdd,
     faSearch,
-    faSpinner
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Button,
@@ -15,7 +14,8 @@ import {
     Table,
     Row,
     Col,
-    Alert
+    Alert,
+    Spinner
 } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
@@ -210,7 +210,7 @@ function Division() {
 
     if (isLoading) {
         return (
-            <FontAwesomeIcon icon={faSpinner} spin lg />
+            <Spinner animation='border' />
         );
     }
 

@@ -10,7 +10,8 @@ import {
     Tabs,
     Badge,
     Pagination,
-    Alert
+    Alert,
+    Spinner
 } from 'react-bootstrap';
 import {
     Link
@@ -22,8 +23,7 @@ import {
     faCircleArrowRight,
     faRightToBracket,
     faShare,
-    faSearch,
-    faSpinner
+    faSearch
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
@@ -197,9 +197,9 @@ function Documents() {
 
     if (isLoading) {
         return (
-            <FontAwesomeIcon icon={faSpinner} spin lg />
+           <Spinner animation='border' />
         );
-    }
+      }
 
 
     if (errorMessage) {
@@ -214,8 +214,8 @@ function Documents() {
         <div class="container fluid">
             <div className="crud rounded">
                 <Row className="justify-content-end mt-4 mb-3">
-                    <Col>
-                        <h1>Documents</h1>
+                    <Col className='title'>
+                        <h1>Documents </h1>
                     </Col>
                     <Col md="auto">
                         <div className="search">
@@ -257,7 +257,7 @@ function Documents() {
                             <div className='loading-table-container'>
                         <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                             <div className='spinner-icon'>
-                                <FontAwesomeIcon icon={faSpinner} spin size='lg' />
+                                <Spinner animation='border' />
                             </div>
                         </div>
                     <div class="row">
@@ -424,7 +424,6 @@ function Documents() {
                 </Modal.Footer>
             </Modal>
         </div>
-
     );
 }
 
