@@ -5,12 +5,15 @@ import {
   Col,
   Container,
   Form,
-  Row
+  Row,
+  FloatingLabel
 } from 'react-bootstrap';
 import Validator from 'validatorjs';
 import Swal from 'sweetalert2';
 import apiClient from '../../../helpers/apiClient';
 import { useNavigate } from 'react-router-dom';
+import {FaEye,FaEyeSlash} from 'react-icons/fa';
+
 
 import chedLogo from '../../../assets/ched-logo.png'
 import './style.css'
@@ -20,6 +23,20 @@ function Login() {
 
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const[passwordType, setPasswordType] = useState('password')
+  const[passwordIcon, setPasswordIcon] = useState(<FaEyeSlash/>);
+
+ const handleToggle = () => {
+    if (passwordType === 'password'){
+      setPasswordType ('text');
+      setPasswordIcon (<FaEye/>);
+    } else {
+      setPasswordType ('password');
+      setPasswordIcon (<FaEyeSlash/>);
+    }
+    
+  };
 
   const [values, setValues] = useState({
     username: '',
@@ -99,35 +116,48 @@ function Login() {
                     <img src={chedLogo} width='150' alt='' />
                   </div>
 
-                  <Form.Group 
-                      className='mb-3' 
-                      value={values.username}
-                      controlId='formGridusername'
-                      onChange={handleChange}>
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control 
-                        placeholder='Username'
-                        name='username' 
-                        isInvalid = {!!errors.username} />
-                        <Form.Control.Feedback type='invalid'>
-                        {errors.username}
-                    </Form.Control.Feedback>  
-                  </Form.Group>
-                  <Form.Group 
-                      className='mb-3' 
-                      value={values.password}
-                      controlId='formGridpassword'
-                      onChange={handleChange}>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control 
-                    type='password'
-                        placeholder='Password'
-                        name='password' 
-                        isInvalid = {!!errors.password} />
-                        <Form.Control.Feedback type='invalid'>
-                        {errors.password}
-                    </Form.Control.Feedback>  
-                  </Form.Group>
+              <Form.Group 
+              className='mb-3' 
+              value={values.username}
+              controlId='formGridusername'
+              onChange={handleChange}>
+
+           <FloatingLabel  size="sm" controlId="floatingusername" label="Username">
+             <Form.Control
+                  type="text" 
+                  placeholder="username"
+                  name='username' 
+                  isInvalid = {!!errors.username} />
+            
+            <Form.Control.Feedback type='invalid'>
+               {errors.username}
+            </Form.Control.Feedback> 
+
+           </FloatingLabel>
+              </Form.Group>
+                  
+              <Form.Group 
+                  className='mb-3' 
+                  value={values.password}
+                  controlId='formGridpassword'
+                  onChange={handleChange}>
+         
+          <FloatingLabel controlId="floatingPassword" label="Password">
+            <Form.Control
+                  type={passwordType} 
+                  placeholder="Password"
+                  name='password' 
+                  isInvalid = {!!errors.password} />
+            <span className='icon-span' onClick={handleToggle}>
+                {passwordIcon}
+            </span>
+            <Form.Control.Feedback type='invalid'>
+              {errors.password}
+            </Form.Control.Feedback> 
+          </FloatingLabel>
+              </Form.Group>
+
+
                   <Form.Group 
                     className= 'mb-3'
                     controlId='rememberPassword'>
