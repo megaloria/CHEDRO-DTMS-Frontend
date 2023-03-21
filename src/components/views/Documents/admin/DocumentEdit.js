@@ -58,8 +58,8 @@ function DocumentEdit() {
         province: document.sender.receivable.province,
         municipality: document.sender.receivable.city_municipality,
         insti: document.sender.receivable.id,
-        ngas: document.sender.receivable.description,
-        chedoffices: document.sender.receivable.description,
+        ngas: document.sender.receivable.id,
+        chedoffices: document.sender.receivable.id,
         description: document.description,
         category_id: document.category_id,
         assignTo: ''
@@ -585,7 +585,7 @@ function DocumentEdit() {
                             (formInputs.receivable_type === 'NGAs' && NGAs.length !== 0) && (
                                 <Form.Select
                                     name='ngas'
-                                    value={formInputs.receivable_id}
+                                    value={formInputs.ngas}
                                     onChange={handleChangeNGA}
                                     isInvalid={!!formErrors.ngas}
                                     disabled={isOptionLoading}
@@ -603,7 +603,7 @@ function DocumentEdit() {
                             (formInputs.receivable_type === 'CHED Offices' && ChedOffices.length !== 0) && (
                                 <Form.Select
                                     name='chedoffices'
-                                    value={formInputs.receivable_id}
+                                    value={formInputs.chedoffices}
                                     onChange={handleChangeCO}
                                     isInvalid={!!formErrors.chedoffices}
                                     disabled={isOptionLoading}
