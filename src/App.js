@@ -27,13 +27,16 @@ import AdminDocEdit from './components/views/Documents/admin/DocumentEdit';
 import AdminDocView from './components/views/Documents/admin/DocumentView';
 import ChangePass from './components/views/ChangePassword/ChangePassword';
 
+let user;
+
 async function getCurrentUser (isHome = true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
     withCredentials: true
   }).then(() => {
     return apiClient.get('/user').then(response => {
       if (isHome) {
-        return response.data.data;
+        user = response.data.data;
+        return user;
       } else {
         return redirect('/');
       }
@@ -78,7 +81,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to='/documents' />
+        element: <Navigate to= {user && user.is_first_login ? '/change-password' : '/documents'} />
       },
       {
         path: '/documents',
