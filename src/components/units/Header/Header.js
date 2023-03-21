@@ -83,22 +83,23 @@ function Header() {
         <Navbar.Collapse id='responsive-navbar-nav'>
           <Nav className='ms-auto'>
             <NavDropdown
-              title={
-                <span>
-                  <FontAwesomeIcon icon={faBell} /> Notifications
+              title={ 
+                <span className='text'>
+                  <FontAwesomeIcon icon={faBell} className="text-dark" /> Notifications
                 </span>
               }
               id='collasible-nav-dropdown'
               renderMenuOnMount={true}>
             </NavDropdown>
-            <NavDropdown
+            <NavDropdown 
               title={
-                <span>
-                  <FontAwesomeIcon icon={faUser} /> {loaderData.profile.name}
+                <span className='text'>
+                  <FontAwesomeIcon icon={faUser} className="text-dark" /> {loaderData.profile.name}
                 </span>
               }
               id='collasible-nav-dropdown'
               renderMenuOnMount={true}>
+
               <NavDropdown.Item as={Link} to='change-password'>
                 <FontAwesomeIcon
                   icon={faKey}
@@ -110,6 +111,7 @@ function Header() {
                   icon={faDoorOpen}
                   fixedWidth /> Logout
               </NavDropdown.Item>
+
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
