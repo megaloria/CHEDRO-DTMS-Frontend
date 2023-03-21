@@ -1,11 +1,14 @@
 import React from 'react';
+import { useState } from 'react';
 import {
   Container,
   Nav,
   Navbar,
   NavDropdown,
   OverlayTrigger,
-  Tooltip
+  Tooltip,
+  Modal,
+  Button
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -26,6 +29,10 @@ function Header() {
 
   const navigate = useNavigate();
   
+  const [showModal, setShowModal] = useState(false);
+
+  const handleClose = () => setShowModal(false);
+  const handleShow = () => setShowModal(true);
   const handleLogout = e => {
 
     apiClient.delete('/user').then(response => {
@@ -58,6 +65,7 @@ function Header() {
   );
 
   return (
+   <>
     <Navbar
       collapseOnSelect
       expand='lg'
@@ -106,7 +114,7 @@ function Header() {
                   fixedWidth  /> Change Password
               </NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item onClick={handleLogout}>
+              <NavDropdown.Item onClick={handleShow}>
                 <FontAwesomeIcon
                   icon={faDoorOpen}
                   fixedWidth /> Logout
@@ -117,6 +125,22 @@ function Header() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
+    
+              <Modal show={showModal} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Confirm Logout</Modal.Title>
+                </Modal.Header>
+                  <Modal.Body>Are you sure you want to log out?</Modal.Body>
+                  <Modal.Footer>
+                    <Button variant="danger" onClick={handleClose}>
+                      Cancel
+                    </Button>
+                    <Button variant="primary" onClick={handleLogout}>
+                      Logout
+                    </Button>
+                  </Modal.Footer>
+              </Modal> 
+  </>
   );
 }
 
