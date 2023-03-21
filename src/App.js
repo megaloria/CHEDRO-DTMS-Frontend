@@ -4,7 +4,8 @@ import {
   Navigate,
   Outlet,
   redirect,
-  RouterProvider
+  RouterProvider,
+  useRouteLoaderData
 } from 'react-router-dom';
 import axios from 'axios';
 import Validator from 'validatorjs';
@@ -27,16 +28,13 @@ import AdminDocEdit from './components/views/Documents/admin/DocumentEdit';
 import AdminDocView from './components/views/Documents/admin/DocumentView';
 import ChangePass from './components/views/ChangePassword/ChangePassword';
 
-let user;
-
 async function getCurrentUser (isHome = true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
     withCredentials: true
   }).then(() => {
     return apiClient.get('/user').then(response => {
       if (isHome) {
-        user = response.data.data;
-        return user;
+        return response.data.data;
       } else {
         return redirect('/');
       }
@@ -81,7 +79,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to= {user && user.is_first_login ? '/change-password' : '/documents'} />
+        element: <Navigate to=  '/documents'/>
       },
       {
         path: '/documents',
@@ -110,10 +108,6 @@ const router = createBrowserRouter([
       {
         path: 'users',
         element: <Users />
-      },
-      {
-        path: 'change-password',
-        element: <ChangePass />
       },
       {
         path: '/settings',
@@ -155,6 +149,11 @@ const router = createBrowserRouter([
     path: '/login',
     element: <Login />,
     loader: () => getCurrentUser(false)
+  },
+  {
+    path: '/change-password',
+    element: <ChangePass />,
+    loader: () => getCurrentUser()
   },
 ]);
 
