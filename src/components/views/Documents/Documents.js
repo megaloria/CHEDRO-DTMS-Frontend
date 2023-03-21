@@ -213,11 +213,14 @@ function Documents() {
     return (
         <div class="container fluid">
             <div className="crud rounded">
-                <Row className="justify-content-end mt-4 mb-3">
+                <Row className="justify-content-end mt-4">
                     <Col className='title'>
                         <h1>Documents </h1>
                     </Col>
-                    <Col md="auto">
+                </Row> 
+
+                <div>
+                    <div className='d-md-flex mb-3 justify-content-end'>
                         <div className="search">
                             <Form className="d-flex" controlId="" onSubmit={handleSearch}>
                                 <Form.Control
@@ -230,15 +233,18 @@ function Documents() {
                                 <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
+                                <div className='ms-2'> 
+                                <Button  variant="primary" as={Link} to='receive' style={{whiteSpace:'nowrap'}}>
+                                    <FontAwesomeIcon icon={faRightToBracket} rotation={90} className="addIcon" /> 
+                                    <span className='d-none d-md-inline-block ms-1'> Receive
+                                    </span> 
+                                </Button>
+                                 </div>
                             </Form>
                         </div>
-                    </Col>
-                    <Col md="auto">
-                        <Button variant="primary" as={Link} to='receive'>
-                            <FontAwesomeIcon icon={faRightToBracket} rotation={90} className="addIcon" /> Received
-                        </Button>
-                    </Col>
-                </Row>
+                        
+                    </div>
+                </div>
             </div>
             
             <Tabs
