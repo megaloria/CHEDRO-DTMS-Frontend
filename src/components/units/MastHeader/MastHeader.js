@@ -1,14 +1,18 @@
 import React from 'react';
 import chedLogo from '../../../assets/ched-logo.png';
+import foi from '../../../assets/foi.png';
+import seal from '../../../assets/seal.png';
 import './styles.css';
 
 function MastHeader () {
     return (
         <div className='Mastheader'>
-            <div className='logo'>
+            
+            <div className='logo' >
                 <a href='#Home'>
                     <img src= {chedLogo} alt='' height={120}/>
                 </a>
+                
             </div>
 
             <div className='header-p'> 
@@ -17,7 +21,15 @@ function MastHeader () {
                 <span className='ched'> COMMISION ON HIGHER EDUCATION </span>
                 <h4 className='office'> REGIONAL OFFICE IV (CALABARZON) </h4>
             </div>
-
+            
+            <div  className='logo' style={{marginInlineStart:'33rem'}}> 
+                <a href='#Home' style={{marginRight:'20px'}}>
+                    <img src= {foi} alt='' height={120}/>
+                </a>
+                <a href='#Home'>
+                    <img src= {seal} alt='' height={120}/>
+                </a>
+            </div>
         </div>
     );
 }
