@@ -25,11 +25,37 @@ import './styles.css';
 function Changepassword() {
     
   const[passwordType, setPasswordType] = useState('password')
+  const[passwordType1, setPasswordType1] = useState('password')
+
   const[passwordIcon, setPasswordIcon] = useState(<FaEyeSlash/>);
+  const[passwordIcon1, setPasswordIcon1] = useState(<FaEyeSlash/>);
+
 
   
 
- const handleToggle = () => {
+ const handleToggleCurrentpassword = () => {
+    if (passwordType1 === 'password'){
+      setPasswordType1 ('text');
+      setPasswordIcon1 (<FaEye/>);
+    } else {
+      setPasswordType1 ('password');
+      setPasswordIcon1 (<FaEyeSlash/>);
+    }
+    
+  };
+  
+ const handleToggleNewpassword = () => {
+    if (passwordType === 'password'){
+      setPasswordType ('text');
+      setPasswordIcon (<FaEye/>);
+    } else {
+      setPasswordType ('password');
+      setPasswordIcon (<FaEyeSlash/>);
+    }
+    
+  };
+  
+ const handleToggleConfPassword = () => {
     if (passwordType === 'password'){
       setPasswordType ('text');
       setPasswordIcon (<FaEye/>);
@@ -120,12 +146,12 @@ function Changepassword() {
          
                 <FloatingLabel controlId="floatingPassword" label="Current Password">
                     <Form.Control
-                            type={passwordType} 
+                            type={passwordType1} 
                             placeholder="Password"
                             name='Currentpassword' 
                             isInvalid = {!!errors.Currentpassword} />
-                            <span className='icon-span' onClick={handleToggle}>
-                                {passwordIcon}
+                            <span className='icon-span' onClick={handleToggleCurrentpassword}>
+                                {passwordIcon1}
                             </span>
 
                             <Form.Control.Feedback type='invalid'>
@@ -148,7 +174,7 @@ function Changepassword() {
                             placeholder="Newpassword"
                             name='Newpassword' 
                             isInvalid = {!!errors.Newpassword} />
-                            <span className='icon-span' onClick={handleToggle}>
+                            <span className='icon-span' onClick={handleToggleNewpassword}>
                                 {passwordIcon}
                             </span>
 
@@ -170,7 +196,7 @@ function Changepassword() {
                             placeholder="Confirmpassword"
                             name='Confirmpassword' 
                             isInvalid = {!!errors.Confirmpassword} />
-                            <span className='icon-span' onClick={handleToggle}>
+                            <span className='icon-span' onClick={handleToggleConfPassword}>
                                 {passwordIcon}
                             </span>
 
