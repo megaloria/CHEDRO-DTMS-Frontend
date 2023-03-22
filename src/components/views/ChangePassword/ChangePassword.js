@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Validator from 'validatorjs';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {FaEye,FaEyeSlash} from 'react-icons/fa';
+import { useRouteLoaderData, useLocation } from 'react-router-dom';
 
 import {
     faEye,
@@ -22,11 +23,11 @@ import './styles.css';
 
 
 function Changepassword() {
-
-
     
   const[passwordType, setPasswordType] = useState('password')
   const[passwordIcon, setPasswordIcon] = useState(<FaEyeSlash/>);
+
+  
 
  const handleToggle = () => {
     if (passwordType === 'password'){
@@ -38,7 +39,6 @@ function Changepassword() {
     }
     
   };
-
 
     const [values, setValues] = useState({
         Currentpassword: '',

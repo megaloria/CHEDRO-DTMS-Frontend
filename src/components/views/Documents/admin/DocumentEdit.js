@@ -49,14 +49,17 @@ function DocumentEdit() {
         document_type_id: document.document_type_id,
         attachment: document.attachment,
         date_received: document.date_received,
-        receivable_type: document.sender.receivable_type,
+        receivable_type: document.sender.receivable_type === 'App\\Models\\Nga' ? 'NGAs' :
+            document.sender.receivable_type === 'App\\Models\\ChedOffice' ? 'CHED Offices' :
+                document.sender.receivable_type === 'App\\Models\\Hei' ? 'HEIs' :
+                    document.sender.receivable_type,
         receivable_id: document.sender.receivable_id,
         receivable_name: document.sender.receivable_name,
         province: document.sender.receivable.province,
         municipality: document.sender.receivable.city_municipality,
-        insti: document.sender.receivable.description,
-        ngas: document.sender.receivable.description,
-        chedoffices: document.sender.receivable.description,
+        insti: document.sender.receivable.id,
+        ngas: document.sender.receivable.id,
+        chedoffices: document.sender.receivable.id,
         description: document.description,
         category_id: document.category_id,
         assignTo: ''
@@ -78,6 +81,59 @@ function DocumentEdit() {
         category_id: '',
         assignTo: ''
     });
+
+    useEffect(() => {
+    if (formInputs.receivable_type === 'NGAs') {
+      setIsOptionLoading(true);
+      apiClient.get('/settings/ngas/all')
+        .then(response => {
+          setNGAs(response.data.data);
+        })
+        .catch(error => {
+          setErrorMessage(error);
+        })
+        .finally(() => {
+          setIsOptionLoading(false);
+        });
+    }
+       else if (formInputs.receivable_type === 'CHED Offices') {
+             setIsOptionLoading(true);
+             apiClient.get('/settings/ched-offices/all')
+                 .then(response => {
+                     setChedOffices(response.data.data);
+                 })
+                 .catch(error => {
+                     setErrorMessage(error);
+                 })
+                 .finally(() => {
+                     setIsOptionLoading(false);
+                 });
+         }
+        else if (formInputs.receivable_type === 'HEIs') {
+            setIsOptionLoading(true);
+            apiClient.get('/settings/heis/provinces')
+                .then(response => {
+                    setProvinces(response.data.data);
+                })
+                .then(() => {
+                    apiClient.get(`/settings/heis/municipalities/${formInputs.province}`)
+                        .then(response => {
+                            setMunicipalities(response.data.data)
+                        })
+                }).then(() => {
+                    apiClient.get(`/settings/heis/names/${formInputs.municipality}`)
+                        .then(response => {
+                            setNames(response.data.data)
+                        })
+                })
+                .catch(error => {
+                    setErrorMessage(error);
+                })
+                .finally(() => {
+                    setIsOptionLoading(false);
+                });
+        }
+    }, [formInputs.receivable_type, formInputs.province, formInputs.municipality, formInputs.insti]);
 
     //For assigning multiple users 
     //yarn add react-select
@@ -157,7 +213,6 @@ function DocumentEdit() {
             setIsOptionLoading(false);
         }
     };
-
 
     const handleChangeProvince = async (event) => {
         try {
@@ -268,6 +323,100 @@ function DocumentEdit() {
             });
     }, []);
 
+    const handleSubmit = event => {
+        event.preventDefault();
+
+        let validation = new Validator(formInputs, {
+            document_type_id: 'required|integer|min:1',
+            attachment: 'file',
+            date_received: 'date',
+            receivable_type: 'required|in:HEIs,NGAs,CHED Offices,Others',
+            receivable_id: 'integer|min:1',
+            receivable_name: 'required_if:receivable_type,Others',
+            insti: 'integer|min:1',
+            ngas: 'integer|min:1',
+            chedoffices: 'integer|min:1',
+            description: 'required|string|min:5',
+            category_id: 'required|integer|min:1',
+            assignTo: 'integer|min:1'
+        });
+
+        if (validation.fails()) {
+            setFormErrors({
+                document_type_id: validation.errors.first('document_type_id'),
+                attachment: validation.errors.first('attachment'),
+                date_received: validation.errors.first('date_received'),
+                receivable_type: validation.errors.first('receivable_type'),
+                receivable_id: validation.errors.first('receivable_id'),
+                receivable_name: validation.errors.first('receivable_name'),
+                insti: validation.errors.first('insti'),
+                ngas: validation.errors.first('ngas'),
+                chedoffices: validation.errors.first('chedoffices'),
+                description: validation.errors.first('description'),
+                category_id: validation.errors.first('category_id'),
+                assignTo: validation.errors.first('assignTo')
+            });
+            return;
+        } else {
+            setFormErrors({
+                document_type_id: '',
+                attachment: '',
+                date_received: '',
+                receivable_type: '',
+                receivable_id: '',
+                receivable_name: '',
+                province: '',
+                municipality: '',
+                insti: '',
+                ngas: '',
+                chedoffices: '',
+                description: '',
+                category_id: '',
+                assignTo: ''
+            });
+        }
+        handleEdit();
+    };
+
+    const handleEdit = () => {
+
+        const formData = new FormData();
+
+        if (attachment) {
+            formData.append('attachment', attachment, attachment.name);
+        }
+        formData.append('document_type_id', formInputs.document_type_id);
+        formData.append('date_received', formInputs.date_received);
+        formData.append('receivable_type', formInputs.receivable_type);
+
+        let receivableId = formInputs.receivable_type === 'HEIs' ? formInputs.insti :
+            formInputs.receivable_type === 'NGAs' ? formInputs.ngas :
+                formInputs.receivable_type === 'CHED Offices' ? formInputs.chedoffices : '';
+        formData.append('receivable_id', receivableId);
+        formData.append('receivable_name', formInputs.receivable_name);
+        formData.append('description', formInputs.description);
+        formData.append('category_id', formInputs.category_id);
+
+        apiClient.post(`/document/${document.id}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            navigate('../');
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        });
+    }
+
     if (isLoading) {
         return (
             <FontAwesomeIcon icon={faSpinner} spin lg />
@@ -283,7 +432,7 @@ function DocumentEdit() {
     }
     
     return (
-        <Form>
+        <Form onSubmit={handleSubmit}>
             <div className="container fluid">
                 <div className="crud bg-body rounded">
                     <Row className="justify-content-end mt-4 mb-3">
@@ -423,9 +572,9 @@ function DocumentEdit() {
                                 >
                                     <option hidden value="">Select a name of institution</option>
                                     {
-                                        names.map((names) => (
-                                            <option key={names.name} value={names.id}>
-                                                {names.name}
+                                        names.map((name) => (
+                                            <option key={name.name} value={name.id}>
+                                                {name.name}
                                             </option>
                                         ))
                                     }
@@ -518,6 +667,7 @@ function DocumentEdit() {
                                             name='category_id'
                                             onChange={handleInputChange}
                                             value={category.id}
+                                            checked={+formInputs.category_id === category.id}
                                             isInvalid={!!formErrors.category_id} />
                                         <Form.Check.Label>
                                             {category.description}
@@ -565,7 +715,7 @@ function DocumentEdit() {
                         </Button>
                     </Col>
                     <Col md="auto">
-                        <Button variant="primary">
+                        <Button variant="primary" type='submit'>
                             Save 
                         </Button>
                     </Col>

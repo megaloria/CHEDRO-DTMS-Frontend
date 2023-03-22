@@ -4,7 +4,8 @@ import {
   Navigate,
   Outlet,
   redirect,
-  RouterProvider
+  RouterProvider,
+  useRouteLoaderData
 } from 'react-router-dom';
 import axios from 'axios';
 import Validator from 'validatorjs';
@@ -78,7 +79,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to='/documents' />
+        element: <Navigate to=  '/documents'/>
       },
       {
         path: '/documents',
@@ -107,10 +108,6 @@ const router = createBrowserRouter([
       {
         path: 'users',
         element: <Users />
-      },
-      {
-        path: 'change-password',
-        element: <ChangePass />
       },
       {
         path: '/settings',
@@ -152,6 +149,11 @@ const router = createBrowserRouter([
     path: '/login',
     element: <Login />,
     loader: () => getCurrentUser(false)
+  },
+  {
+    path: '/change-password',
+    element: <ChangePass />,
+    loader: () => getCurrentUser()
   },
 ]);
 

@@ -10,7 +10,8 @@ import {
     Tabs,
     Badge,
     Pagination,
-    Alert
+    Alert,
+    Spinner
 } from 'react-bootstrap';
 import {
     Link
@@ -22,8 +23,7 @@ import {
     faCircleArrowRight,
     faRightToBracket,
     faShare,
-    faSearch,
-    faSpinner
+    faSearch
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
@@ -197,9 +197,9 @@ function Documents() {
 
     if (isLoading) {
         return (
-            <FontAwesomeIcon icon={faSpinner} spin lg />
+           <Spinner animation='border' />
         );
-    }
+      }
 
 
     if (errorMessage) {
@@ -213,11 +213,14 @@ function Documents() {
     return (
         <div class="container fluid">
             <div className="crud rounded">
-                <Row className="justify-content-end mt-4 mb-3">
-                    <Col>
-                        <h1>Documents</h1>
+                <Row className="justify-content-end mt-4">
+                    <Col className='title'>
+                        <h1>Documents </h1>
                     </Col>
-                    <Col md="auto">
+                </Row> 
+
+                <div>
+                    <div className='d-md-flex mb-3 justify-content-end'>
                         <div className="search">
                             <Form className="d-flex" controlId="" onSubmit={handleSearch}>
                                 <Form.Control
@@ -230,15 +233,18 @@ function Documents() {
                                 <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
+                                <div className='ms-2'> 
+                                <Button  variant="primary" as={Link} to='receive' style={{whiteSpace:'nowrap'}}>
+                                    <FontAwesomeIcon icon={faRightToBracket} rotation={90} className="addIcon" /> 
+                                    <span className='d-none d-md-inline-block ms-1'> Receive
+                                    </span> 
+                                </Button>
+                                 </div>
                             </Form>
                         </div>
-                    </Col>
-                    <Col md="auto">
-                        <Button variant="primary" as={Link} to='receive'>
-                            <FontAwesomeIcon icon={faRightToBracket} rotation={90} className="addIcon" /> Received
-                        </Button>
-                    </Col>
-                </Row>
+                        
+                    </div>
+                </div>
             </div>
             
             <Tabs
@@ -257,7 +263,7 @@ function Documents() {
                             <div className='loading-table-container'>
                         <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                             <div className='spinner-icon'>
-                                <FontAwesomeIcon icon={faSpinner} spin size='lg' />
+                                <Spinner animation='border' />
                             </div>
                         </div>
                     <div class="row">
@@ -284,7 +290,7 @@ function Documents() {
                                         <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
                                         <td>{getDocumentType(row.document_type_id)}</td>
                                         <td>{getCategory(row.category_id)}</td>
-                                        <td>{row.sender.receivable.description}</td>
+                                        <td>{row.sender.receivable.description || row.sender.receivable.name}</td>
                                         <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
                                         <td >
                                             <div className='text-truncate' style={{ width:'200px' }}>
@@ -424,7 +430,6 @@ function Documents() {
                 </Modal.Footer>
             </Modal>
         </div>
-
     );
 }
 
