@@ -22,7 +22,7 @@ function MastHeader () {
                 <h4 className='office'> REGIONAL OFFICE IV (CALABARZON) </h4>
             </div>
             
-            <div  className='logo' style={{marginInlineStart:'32rem'}}> 
+            <div  className='logo' style={{marginInlineStart:'27rem'}}> 
                 <a href='https://www.foi.gov.ph/' style={{marginRight:'20px'}}>
                     <img src= {foi} alt='' height={120}/>
                 </a>

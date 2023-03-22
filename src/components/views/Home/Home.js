@@ -4,12 +4,20 @@ import {
   Container,
   Row
 } from 'react-bootstrap';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useRouteLoaderData, Navigate  } from 'react-router-dom';
 import Header from '../../units/Header/Header';
 import MastHeader from '../../units/MastHeader/MastHeader';
 import Sidebar from '../../units/Sidebar/Sidebar';
 import Footer from '../../units/Footer/Footer';
+
 export default function Home () {
+
+  const loaderData = useRouteLoaderData('user');
+
+  if (loaderData.is_first_login){
+    return <Navigate to='/change-password' />
+  }
+
   return (
     <>
       <Header />
