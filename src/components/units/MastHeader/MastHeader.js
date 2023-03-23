@@ -15,7 +15,7 @@ function MastHeader () {
         <Row className='d-flex'>
             
             <Col className='d-flex ms-5 align-self-center'>
-                <a className=''href='#Home'>
+                <a className=''href='https://chedcalabarzon.com/'>
                     <img src= {chedLogo} alt='' height={120}/>
                 </a>
                 <p className='header-p ms-2'> 
