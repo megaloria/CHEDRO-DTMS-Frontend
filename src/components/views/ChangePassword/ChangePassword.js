@@ -111,8 +111,8 @@ function Changepassword() {
 
         let validation = new Validator(values, {
             password: 'present|required',
-            new_password: 'required|same:Confirmpassword|min:8',
-            Confirmpassword: 'required|same:new_password|min:8'
+            new_password: 'required|same:confirm_password|min:8',
+            confirm_password: 'required|same:new_password|min:8'
         });
 
 
@@ -120,7 +120,7 @@ function Changepassword() {
             setError({
                 password: validation.errors.first('password'),
                 new_password: validation.errors.first('new_password'),
-                Confirmpassword: validation.errors.first('Confirmpassword'),
+                confirm_password: validation.errors.first('confirm_password'),
             });
 
         }
@@ -129,7 +129,7 @@ function Changepassword() {
             setError({
                 password: '',
                 new_password: '',
-                Confirmpassword: ''
+                confirm_password: ''
 
             });
         }
@@ -194,13 +194,13 @@ function Changepassword() {
                             type={passwordType1} 
                             placeholder="Password"
                             name='password' 
-                            isInvalid = {!!errors.Currentpassword} />
+                            isInvalid = {!!errors.password} />
                             <span className='icon-span' onClick={handleToggleCurrentpassword}>
                                 {passwordIcon1}
                             </span>
 
                             <Form.Control.Feedback type='invalid'>
-                            {errors.Currentpassword}
+                            {errors.password}
                             </Form.Control.Feedback> 
 
                 </FloatingLabel>
@@ -224,14 +224,14 @@ function Changepassword() {
                             </span>
 
                             <Form.Control.Feedback type='invalid'>
-                            {errors.Newpassword}
+                            {errors.new_password}
                             </Form.Control.Feedback> 
 
                 </FloatingLabel>
                 </Form.Group>
                 <Form.Group 
                             className='mb-3' 
-                            value={values.Confirmpassword}
+                            value={values.confirm_password}
                             controlId='formGridpassword'
                             onChange={handleChange}>
          
@@ -240,13 +240,13 @@ function Changepassword() {
                             type={passwordType} 
                             placeholder="Confirm Password"
                             name='confirm_password' 
-                            isInvalid = {!!errors.Confirmpassword} />
+                            isInvalid = {!!errors.confirm_password} />
                             <span className='icon-span' onClick={handleToggleConfPassword}>
                                 {passwordIcon}
                             </span>
 
                             <Form.Control.Feedback type='invalid'>
-                            {errors.Confirmpassword}
+                            {errors.confirm_password}
                             </Form.Control.Feedback> 
 
                 </FloatingLabel>
