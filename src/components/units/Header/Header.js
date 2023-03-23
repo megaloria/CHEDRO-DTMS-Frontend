@@ -108,7 +108,7 @@ function Header() {
               id='collasible-nav-dropdown'
               renderMenuOnMount={true}>
 
-              <NavDropdown.Item as={Link} to='change-password'>
+              <NavDropdown.Item as={Link} to='update-password'>
                 <FontAwesomeIcon
                   icon={faKey}
                   fixedWidth  /> Change Password
