@@ -1,15 +1,12 @@
 import { useState } from 'react';
 import Validator from 'validatorjs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {FaEye,FaEyeSlash} from 'react-icons/fa';
-import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { FaEye,FaEyeSlash } from 'react-icons/fa';
+import { 
+    useNavigate, 
+    Link,
+    useLoaderData, } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import apiClient from '../../../helpers/apiClient';
-
-import {
-    faEye,
-    faEyeSlash
-} from '@fortawesome/free-solid-svg-icons'
 import {
     Button,
     Form,
@@ -17,23 +14,19 @@ import {
     Row,
     Col,
     Card,
-    InputGroup,
     FloatingLabel
 } from 'react-bootstrap';
-
 import './styles.css';
 
-
 function Changepassword() {
+
+const loaderData = useLoaderData();
     
-  const[passwordType, setPasswordType] = useState('password')
-  const[passwordType1, setPasswordType1] = useState('password')
-
-  const[passwordIcon, setPasswordIcon] = useState(<FaEyeSlash/>);
-  const[passwordIcon1, setPasswordIcon1] = useState(<FaEyeSlash/>);
-
- const loaderData = useRouteLoaderData('user');
-
+const[passwordType, setPasswordType] = useState('password')
+const[passwordType1, setPasswordType1] = useState('password')
+const[passwordIcon, setPasswordIcon] = useState(<FaEyeSlash/>);
+const[passwordIcon1, setPasswordIcon1] = useState(<FaEyeSlash/>);
+const navigate = useNavigate();
     
  const handleToggleCurrentpassword = () => {
     if (passwordType1 === 'password'){
@@ -43,7 +36,6 @@ function Changepassword() {
       setPasswordType1 ('password');
       setPasswordIcon1 (<FaEyeSlash/>);
     }
-    
   };
   
  const handleToggleNewpassword = () => {
@@ -54,7 +46,6 @@ function Changepassword() {
       setPasswordType ('password');
       setPasswordIcon (<FaEyeSlash/>);
     }
-    
   };
   
  const handleToggleConfPassword = () => {
@@ -65,22 +56,18 @@ function Changepassword() {
       setPasswordType ('password');
       setPasswordIcon (<FaEyeSlash/>);
     }
-    
   };
 
     const [values, setValues] = useState({
         password: '',
         new_password: '',
         confirm_password: ''
-       
     });
 
     const [errors, setError] = useState({
-
         password: '',
         new_password: '',
-        confirm_password: '',
-
+        confirm_password: ''
     });
 
     function handleChange(e) {
@@ -108,13 +95,11 @@ function Changepassword() {
 
     function handleSubmit(e) {
         e.preventDefault();
-
         let validation = new Validator(values, {
             password: 'present|required',
             new_password: 'required|same:confirm_password|min:8',
             confirm_password: 'required|same:new_password|min:8'
         });
-
 
         if (validation.fails()) {
             setError({
@@ -122,7 +107,6 @@ function Changepassword() {
                 new_password: validation.errors.first('new_password'),
                 confirm_password: validation.errors.first('confirm_password'),
             });
-
         }
 
         else {
@@ -130,31 +114,22 @@ function Changepassword() {
                 password: '',
                 new_password: '',
                 confirm_password: ''
-
             });
+            handleChangePass();
         }
-        handleChangePass();
     }
 
     const handleChangePass = () => {
-
-        if (values.password !== values.confirm_password){
-            setError('New password and confirm password must match');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('password', values.password);
-        formData.append('new_password', values.new_password);
-        apiClient.post('/users/change-password', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+        apiClient.post('/users/change-password', {
+            password: values.password,
+            new_password: values.new_password
         }).then(response => {
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
                 icon: 'success'
+            }).then(() => {
+                navigate('/')
             })
         }).catch(error => {
             Swal.fire({
@@ -165,106 +140,88 @@ function Changepassword() {
         });
     }
 
-
-
     return (
-
         <div className='maindiv'>
-
             <Container className='container1'>
-
                 <Row style={{ height: '100%', alignItems: 'center' }}>
-
                     <Col style={{ margin: 'auto' }} md={{ span: 4 }}>
-
                         <Form onSubmit={handleSubmit}>
-
                             <Card className='p-3' style={{ borderRadius: '25px', width: '70vh' }}>
                                 <Card.Body>
+                                    <Form.Group 
+                                        className='mb-3' 
+                                        value={values.password}
+                                        controlId='formGridpassword'
+                                        onChange={handleChange}>
+                                    <FloatingLabel controlId="floatingPassword" label="Current Password">
+                                    <Form.Control
+                                            type={passwordType1} 
+                                            placeholder="Password"
+                                            name='password' 
+                                            isInvalid = {!!errors.password} />
+                                        <span className='icon-span' onClick={handleToggleCurrentpassword}>
+                                            {passwordIcon1}
+                                        </span>
+                                    <Form.Control.Feedback type='invalid'>
+                                        {errors.password}
+                                    </Form.Control.Feedback> 
+                                    </FloatingLabel>
+                                    </Form.Group>
 
+                                    <Form.Group 
+                                        className='mb-3' 
+                                        value={values.new_password}
+                                        controlId='formGridpassword'
+                                        onChange={handleChange}>
+                                    <FloatingLabel controlId="floatingPassword" label="New password">
+                                    <Form.Control
+                                        type={passwordType} 
+                                        placeholder="New Password"
+                                        name='new_password' 
+                                        isInvalid = {!!errors.new_password} />
+                                        <span className='icon-span' onClick={handleToggleNewpassword}>
+                                            {passwordIcon}
+                                        </span>
+                                    <Form.Control.Feedback type='invalid'>
+                                        {errors.new_password}
+                                    </Form.Control.Feedback> 
+                                    </FloatingLabel>
+                                    </Form.Group>
 
-                <Form.Group 
-                            className='mb-3' 
-                            value={values.password}
-                            controlId='formGridpassword'
-                            onChange={handleChange}>
-         
-                <FloatingLabel controlId="floatingPassword" label="Current Password">
-                    <Form.Control
-                            type={passwordType1} 
-                            placeholder="Password"
-                            name='password' 
-                            isInvalid = {!!errors.password} />
-                            <span className='icon-span' onClick={handleToggleCurrentpassword}>
-                                {passwordIcon1}
-                            </span>
-
-                            <Form.Control.Feedback type='invalid'>
-                            {errors.password}
-                            </Form.Control.Feedback> 
-
-                </FloatingLabel>
-                 </Form.Group>
-
-                 
-                <Form.Group 
-                            className='mb-3' 
-                            value={values.new_password}
-                            controlId='formGridpassword'
-                            onChange={handleChange}>
-         
-                <FloatingLabel controlId="floatingPassword" label="New password">
-                    <Form.Control
-                            type={passwordType} 
-                            placeholder="New Password"
-                            name='new_password' 
-                            isInvalid = {!!errors.new_password} />
-                            <span className='icon-span' onClick={handleToggleNewpassword}>
-                                {passwordIcon}
-                            </span>
-
-                            <Form.Control.Feedback type='invalid'>
-                            {errors.new_password}
-                            </Form.Control.Feedback> 
-
-                </FloatingLabel>
-                </Form.Group>
-                <Form.Group 
-                            className='mb-3' 
-                            value={values.confirm_password}
-                            controlId='formGridpassword'
-                            onChange={handleChange}>
-         
-                <FloatingLabel controlId="floatingPassword" label="Confirm password">
-                    <Form.Control
-                            type={passwordType} 
-                            placeholder="Confirm Password"
-                            name='confirm_password' 
-                            isInvalid = {!!errors.confirm_password} />
-                            <span className='icon-span' onClick={handleToggleConfPassword}>
-                                {passwordIcon}
-                            </span>
-
-                            <Form.Control.Feedback type='invalid'>
-                            {errors.confirm_password}
-                            </Form.Control.Feedback> 
-
-                </FloatingLabel>
-                </Form.Group>
-
+                                    <Form.Group 
+                                        className='mb-3' 
+                                        value={values.confirm_password}
+                                        controlId='formGridpassword'
+                                        onChange={handleChange}>
+                                    <FloatingLabel controlId="floatingPassword" label="Confirm password">
+                                    <Form.Control
+                                        type={passwordType} 
+                                        placeholder="Confirm Password"
+                                        name='confirm_password' 
+                                        isInvalid = {!!errors.confirm_password} />
+                                        <span className='icon-span' onClick={handleToggleConfPassword}>
+                                            {passwordIcon}
+                                        </span>
+                                    <Form.Control.Feedback type='invalid'>
+                                        {errors.confirm_password}
+                                    </Form.Control.Feedback> 
+                                    </FloatingLabel>
+                                    </Form.Group>
 
                                     <div className='d-grid gap-2'>
                                         <Button
                                             type='submit'
                                             variant='primary'> Save
                                         </Button>
-
+                                       
+                                        {loaderData.is_first_login ? null : (
                                         <Button
-                                            type=''
+                                            as={Link}
+                                            to='../'
                                             variant='dark'> Cancel
                                         </Button>
+                                    )}
                                     </div>
-
                                 </Card.Body>
                             </Card>
                         </Form>
