@@ -13,9 +13,8 @@ import Swal from 'sweetalert2';
 import apiClient from '../../../helpers/apiClient';
 import { useNavigate } from 'react-router-dom';
 import {FaEye,FaEyeSlash} from 'react-icons/fa';
-
-import chedLogo from '../../../assets/ched-logo.png'
-import './style.css'
+import chedLogo from '../../../assets/ched-logo.png';
+import './style.css';
 
 
 function Login() {
