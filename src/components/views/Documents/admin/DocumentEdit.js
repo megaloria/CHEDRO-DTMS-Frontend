@@ -6,7 +6,8 @@ import {
     Col,
     Card,
     Alert,
-    Breadcrumb
+    Breadcrumb,
+    Spinner
 } from 'react-bootstrap';
 import {
     Link, useLoaderData, useNavigate
@@ -419,7 +420,7 @@ function DocumentEdit() {
 
     if (isLoading) {
         return (
-            <FontAwesomeIcon icon={faSpinner} spin lg />
+            <Spinner animation='border' />
         );
     }
 
@@ -465,7 +466,7 @@ function DocumentEdit() {
                         </Form.Control.Feedback>
                 </Col>
                 <Col>
-                    <Form.Label>Tracking No. {isOptionLoading1 ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""}</Form.Label>
+                    <Form.Label>Tracking No. {isOptionLoading1 ? <Spinner animation='border' size='sm'/> : ""}</Form.Label>
                     <Form.Control 
                             type='text'
                             name='trackingNo'
@@ -518,7 +519,7 @@ function DocumentEdit() {
         
                 
                 <Col>
-                    <Form.Label>Receive from {isOptionLoading ? <FontAwesomeIcon icon={faSpinner} spin lg /> : ""} </Form.Label>
+                    <Form.Label>Receive from {isOptionLoading ? <Spinner animation='border' size='sm'/> : ""} </Form.Label>
                     <Form.Select 
                             name='receivable_type'
                             value={formInputs.receivable_type}
