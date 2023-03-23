@@ -4,7 +4,6 @@ import {
     Form, 
     Row, 
     Col,
-    Card,
     Alert,
     Breadcrumb,
     Spinner
@@ -12,10 +11,6 @@ import {
 import {
     Link, useLoaderData, useNavigate
 } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-    faSpinner
-} from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
 import Validator from 'validatorjs';
@@ -479,7 +474,7 @@ function DocumentEdit() {
                
                 <Col>
                     <Form.Label>Attachment <Form.Text className='text-muted'>
-                        {document.attachments?.file_title ? <a href='#' style={{color:'red'}}>(Remove)</a> : <span> <i>(Optional)</i></span>}
+                        {document.attachments?.file_title ? <a href='/#' style={{color:'red'}}>(Remove)</a> : <span> <i>(Optional)</i></span>}
                     </Form.Text> </Form.Label>
                     {document.attachments?.file_title ?  
                         <Form.Control 
