@@ -32,7 +32,7 @@ function Changepassword() {
   const[passwordIcon, setPasswordIcon] = useState(<FaEyeSlash/>);
   const[passwordIcon1, setPasswordIcon1] = useState(<FaEyeSlash/>);
 
- const loaderData = useRouteLoaderData('user');
+    const navigate = useNavigate();
 
     
  const handleToggleCurrentpassword = () => {
@@ -146,11 +146,13 @@ function Changepassword() {
                 title: 'Success',
                 text: response.data.message,
                 icon: 'success'
+            }).then(() => {
+                navigate('/')
             })
         }).catch(error => {
             Swal.fire({
                 title: 'Error',
-                text: error.message,
+                text: error,
                 icon: 'error'
             });
         });
