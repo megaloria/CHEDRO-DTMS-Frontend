@@ -12,6 +12,10 @@ import {
 import {
     Link, useLoaderData, useNavigate
 } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {
+    faSpinner
+} from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
 import Validator from 'validatorjs';
@@ -474,7 +478,7 @@ function DocumentEdit() {
                 </Col>
                
                 <Col>
-                    <Form.Label>Attachment <span className='text-muted text-italic'>(Optional)</span></Form.Label>
+                    <Form.Label>Attachment <Form.Text className='text-muted text-italic'>(Optional)</Form.Text></Form.Label>
                         {document.attachments?.file_title ?  
                         <Form.Control 
                             type="text"
