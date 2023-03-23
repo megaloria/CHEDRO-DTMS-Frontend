@@ -4,8 +4,7 @@ import {
   Navigate,
   Outlet,
   redirect,
-  RouterProvider,
-  useLoaderData
+  RouterProvider
 } from 'react-router-dom';
 import axios from 'axios';
 import Validator from 'validatorjs';
