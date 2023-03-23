@@ -28,7 +28,9 @@ function MastHeader () {
 
             <Col  className='logo'> 
                 <div className='d-flex justify-content-end me-5'> 
-                <a href='https://www.foi.gov.ph/' style={{marginRight:'20px'}}>
+                <a 
+                className='me-3'
+                href='https://www.foi.gov.ph/'>
                     <span className='d-none d-md-inline-block'> <img src= {foi} alt='' height={120}/></span>
                 </a>
                 <a href='https://www.dbm.gov.ph/index.php/about-us/philippine-transparency-seal'>

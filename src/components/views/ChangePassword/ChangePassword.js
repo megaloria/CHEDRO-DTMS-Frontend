@@ -216,9 +216,10 @@ const navigate = useNavigate();
                                        
                                         {loaderData.is_first_login ? null : (
                                         <Button
+                                            variant="dark"
                                             as={Link}
-                                            to='../'
-                                            variant='dark'> Cancel
+                                            to='../'>
+                                            Cancel
                                         </Button>
                                     )}
                                     </div>
