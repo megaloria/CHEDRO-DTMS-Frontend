@@ -130,26 +130,17 @@ function Changepassword() {
                 password: '',
                 new_password: '',
                 confirm_password: ''
-
+               
             });
+            handleChangePass();
         }
-        handleChangePass();
+     
     }
 
     const handleChangePass = () => {
-
-        if (values.password !== values.confirm_password){
-            setError('New password and confirm password must match');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('password', values.password);
-        formData.append('new_password', values.new_password);
-        apiClient.post('/users/change-password', formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
+        apiClient.post('/users/change-password', {
+            password: values.password,
+            new_password: values.new_password
         }).then(response => {
             Swal.fire({
                 title: 'Success',
@@ -159,7 +150,7 @@ function Changepassword() {
         }).catch(error => {
             Swal.fire({
                 title: 'Error',
-                text: error,
+                text: error.message,
                 icon: 'error'
             });
         });
