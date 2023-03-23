@@ -1,0 +1,9 @@
+.refresh {
+  color: #0d6efd;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.refresh:hover {
+  color: #0a58ca;
+}

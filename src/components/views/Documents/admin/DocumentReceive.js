@@ -80,7 +80,7 @@ function DocumentReceive() {
     //For assigning multiple users 
     //yarn add react-select
     const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
+        let userIds = selectedOptions.map(option => option.value);
         setSelectedUsers(userIds);
     };
 
@@ -104,7 +104,8 @@ function DocumentReceive() {
             chedoffices: 'integer|min:1',
             description: 'required|string|min:5',
             category_id: 'required|integer|min:1',
-            assignTo: 'integer|min:1'
+            assignTo: 'array',
+            'assignTo.*': 'integer|min:1'
         });
 
         if (validation.fails()){
@@ -162,6 +163,9 @@ function DocumentReceive() {
         formData.append('receivable_name', formInputs.receivable_name);
         formData.append('description', formInputs.description);
         formData.append('category_id', formInputs.category_id);
+        for (let i = 0; i < selectedUsers.length; i++) {
+            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        }
 
         apiClient.post('/document', formData, {
             headers: {
@@ -631,7 +635,7 @@ function DocumentReceive() {
                                         {selectedCategory.is_assignable &&(
                                             <Row> 
                                                 <Col md={'auto'}> 
-                                                    <Form.Label>Select assign to:</Form.Label>
+                                                    <Form.Label>Assign to <span className='text-muted'>(Optional)</span>:</Form.Label>
                                                     <Select 
                                                         isMulti
                                                         name='assignTo' 
@@ -653,21 +657,15 @@ function DocumentReceive() {
                     <Row className= "justify-content-end mt-4 mb-4">
                         <Col md="auto" className="p-0 me-2">
                             <Button 
-                            variant="outline-danger"
+                            variant="outline-secondary"
                             as={Link}
                             to='../'>
                                 Cancel
                             </Button>
                         </Col>
-                        
-                        <Col md="auto" className="p-0 me-2">
-                            <Button variant="primary">
-                                Forward
-                            </Button>
-                        </Col>
                         <Col md="auto" className="p-0">
-                            <Button type='submit' variant="outline-primary">
-                                Received
+                            <Button type='submit' variant="primary">
+                                Receive
                             </Button>
                         </Col>
                     </Row>

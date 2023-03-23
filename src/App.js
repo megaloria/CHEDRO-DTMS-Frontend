@@ -4,7 +4,8 @@ import {
   Navigate,
   Outlet,
   redirect,
-  RouterProvider
+  RouterProvider,
+  useLoaderData
 } from 'react-router-dom';
 import axios from 'axios';
 import Validator from 'validatorjs';
@@ -26,6 +27,7 @@ import AdminDocReceive from './components/views/Documents/admin/DocumentReceive'
 import AdminDocEdit from './components/views/Documents/admin/DocumentEdit';
 import AdminDocView from './components/views/Documents/admin/DocumentView';
 import ChangePass from './components/views/ChangePassword/ChangePassword';
+import Header from './components/units/Header/Header';
 
 async function getCurrentUser (isHome = true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
@@ -155,10 +157,20 @@ const router = createBrowserRouter([
   },
   {
     path: '/change-password',
-    element: <ChangePass />,
+    element: <FirstChangePassword />,
     loader: () => getCurrentUser()
   },
 ]);
+
+function FirstChangePassword () {
+  let loaderData = useLoaderData();
+  return (
+    <>
+      <Header user={loaderData} />
+      <ChangePass />
+    </>
+  );
+}
 
 
 
