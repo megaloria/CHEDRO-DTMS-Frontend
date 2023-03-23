@@ -478,22 +478,23 @@ function DocumentEdit() {
                 </Col>
                
                 <Col>
-                        <Form.Label>Attachment <span className='text-muted text-italic'>(Optional)</span></Form.Label>
-                        { document.attachments?.file_title ?  
-                        <Card><p>{document.attachments.file_title}</p></Card>
-                        
-                        : (
-                             <Form.Control 
+                    <Form.Label>Attachment <span className='text-muted text-italic'>(Optional)</span></Form.Label>
+                        {document.attachments?.file_title ?  
+                        <Form.Control 
+                            type="text"
+                            name="attachment"
+                            value={document.attachments.file_title}
+                        />
+                        :
+                        <Form.Control 
                             type="file"
-                            name='attachment'
+                            name="attachment"
                             placeholder="Attachment"
-                            onChange={handleFileInputChange}/>
-                        )
-                
-                        }
-                   
-                             
-                 </Col>
+                            onChange={handleFileInputChange}
+                        />
+                         }
+                </Col>
+
            
 
             </Row>
