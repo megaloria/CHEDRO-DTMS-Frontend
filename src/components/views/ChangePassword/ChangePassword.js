@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import Validator from 'validatorjs';
-import {FaEye,FaEyeSlash} from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
+import { FaEye,FaEyeSlash } from 'react-icons/fa';
+import { 
+    useNavigate, 
+    Link,
+    useLoaderData, } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import apiClient from '../../../helpers/apiClient';
 import {
@@ -13,11 +16,11 @@ import {
     Card,
     FloatingLabel
 } from 'react-bootstrap';
-
 import './styles.css';
 
-
 function Changepassword() {
+
+const loaderData = useLoaderData();
     
 const[passwordType, setPasswordType] = useState('password')
 const[passwordType1, setPasswordType1] = useState('password')
@@ -210,11 +213,14 @@ const navigate = useNavigate();
                                             type='submit'
                                             variant='primary'> Save
                                         </Button>
-
+                                       
+                                        {loaderData.is_first_login ? null : (
                                         <Button
-                                            type=''
+                                            as={Link}
+                                            to='../'
                                             variant='dark'> Cancel
                                         </Button>
+                                    )}
                                     </div>
                                 </Card.Body>
                             </Card>
