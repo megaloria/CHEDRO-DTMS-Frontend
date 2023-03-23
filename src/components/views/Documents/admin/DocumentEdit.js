@@ -4,6 +4,7 @@ import {
     Form, 
     Row, 
     Col,
+    Card,
     Alert,
     Breadcrumb,
     Spinner
@@ -23,7 +24,6 @@ import Select from 'react-select';
 
 function DocumentEdit() {
     const document = useLoaderData();
-
     const navigate = useNavigate();
 
     const [NGAs, setNGAs] = useState([]);
@@ -476,18 +476,31 @@ function DocumentEdit() {
                             disabled
                     />
                 </Col>
+               
                 <Col>
                         <Form.Label>Attachment <span className='text-muted text-italic'>(Optional)</span></Form.Label>
-                    <Form.Control 
+                        { document.attachments?.file_title ?  
+                        <Card><p>{document.attachments.file_title}</p></Card>
+                        
+                        : (
+                             <Form.Control 
                             type="file"
                             name='attachment'
                             placeholder="Attachment"
-                            onChange={handleFileInputChange} />
-                </Col>
+                            onChange={handleFileInputChange}/>
+                        )
+                
+                        }
+                   
+                             
+                 </Col>
+           
+
             </Row>
             
             <Row className="mb-3">
-                <Col>
+
+            <Col>
                     <Form.Label>Date Received</Form.Label>
                     <Form.Control 
                             type='date'
@@ -501,6 +514,9 @@ function DocumentEdit() {
                             {formErrors.date_received}
                         </Form.Control.Feedback>
                 </Col>
+
+
+        
                 
                 <Col>
                     <Form.Label>Receive from {isOptionLoading ? <Spinner animation='border' size='sm'/> : ""} </Form.Label>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Validator from 'validatorjs';
 import { FaEye,FaEyeSlash } from 'react-icons/fa';
 import { 
@@ -216,9 +216,10 @@ const navigate = useNavigate();
                                        
                                         {loaderData.is_first_login ? null : (
                                         <Button
+                                            variant="dark"
                                             as={Link}
-                                            to='../'
-                                            variant='dark'> Cancel
+                                            to='../'>
+                                            Cancel
                                         </Button>
                                     )}
                                     </div>
