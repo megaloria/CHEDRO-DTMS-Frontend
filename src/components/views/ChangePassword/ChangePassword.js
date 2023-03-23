@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import Validator from 'validatorjs';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {FaEye,FaEyeSlash} from 'react-icons/fa';
-import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import apiClient from '../../../helpers/apiClient';
 
-import {
-    faEye,
-    faEyeSlash
-} from '@fortawesome/free-solid-svg-icons'
+// import {
+//     faEye,
+//     faEyeSlash
+// } from '@fortawesome/free-solid-svg-icons'
 import {
     Button,
     Form,
@@ -253,8 +253,10 @@ function Changepassword() {
                                         </Button>
 
                                         <Button
-                                            type=''
-                                            variant='dark'> Cancel
+                                            variant="dark"
+                                            as={Link}
+                                            to='../'>
+                                            Cancel
                                         </Button>
                                     </div>
 
