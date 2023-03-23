@@ -22,13 +22,15 @@ function MastHeader () {
                 <h4 className='office'> REGIONAL OFFICE IV (CALABARZON) </h4>
             </div>
             
-            <div  className='logo' style={{marginInlineStart:'27rem'}}> 
+            <div  className='logo'> 
+            <div className='d-md-flex justify-content-end'>
                 <a href='https://www.foi.gov.ph/' style={{marginRight:'20px'}}>
                     <img src= {foi} alt='' height={120}/>
                 </a>
                 <a href='https://www.dbm.gov.ph/index.php/about-us/philippine-transparency-seal'>
                     <img src= {seal} alt='' height={120}/>
                 </a>
+                </div>
             </div>
         </div>
     );

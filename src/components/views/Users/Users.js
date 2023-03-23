@@ -454,10 +454,13 @@ function Users() {
                     <Col>
                         <h1>Users</h1>
                     </Col>
-                    <Col md="auto">
+                </Row>
+
+                <div> 
+                    <div className='d-md-flex mb-3 justify-content-end'>
                         <div className="search">
                             <Form className="d-flex" controlId="" onSubmit={handleSearch}>
-                                <Form.Control 
+                                <Form.Control
                                     type="search" 
                                     placeholder="Search" 
                                     className="me-2"
@@ -467,15 +470,17 @@ function Users() {
                                 <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
+                                <div className='ms-2'> 
+                                    <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>
+                                        <FontAwesomeIcon icon={faAdd} /> 
+                                        <span className='d-none d-md-inline-block ms-1'> Add
+                                        </span>
+                                    </Button>
+                                </div>
                             </Form>
                         </div>
-                    </Col>
-                    <Col md='auto'>
-                        <Button variant='primary' onClick={e => handleShowModal()}>
-                            <FontAwesomeIcon icon={faAdd} /> Add
-                        </Button>
-                    </Col> 
-                </Row>
+                    </div>
+                </div>
             </div>
 
             {
