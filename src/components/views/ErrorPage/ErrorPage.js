@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button } from 'react-bootstrap';
 import img from '../../../assets/404.png';
 
 function ErrorPage() {
@@ -12,7 +13,7 @@ function ErrorPage() {
 				<h1 style={{ fontSize: '90px' }}> <b> Oops!</b> </h1>
 				<h3> Page Not Found </h3>
 				<h5> The link you clicked may be broken or the page may have been removed. </h5>
-				<h5> Try to <a href='' onClick={() => window.location.reload(true)}>refresh</a> the page. </h5>
+				<h5> Try to <Button variant='link' onClick={() => window.location.reload(true)}>refresh</Button> the page. </h5>
 			</div> 
 		</div>
   ); 
