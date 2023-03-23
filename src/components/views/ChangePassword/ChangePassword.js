@@ -206,14 +206,6 @@ function Changepassword() {
 
                 </FloatingLabel>
                 </Form.Group>
-
-
-
-
-
-                                 
-
-
                                     <div className='d-grid gap-2'>
                                         <Button
                                             type='submit'
