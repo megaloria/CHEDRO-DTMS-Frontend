@@ -14,14 +14,14 @@ import {
     faShare,
     faPaperclip,
     faCalendar,
-    faCircleUser,
     faFile,
     faHashtag,
     faQuoteLeft,
     faTimeline,
     faTag,
     faBuildingUser,
-    faKeyboard
+    faKeyboard,
+    faUserCheck
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData
@@ -51,85 +51,86 @@ function DocumentView() {
             </div>
 
             <div style={{margin:'0 30px', }}> 
-                    <Card 
-                    bg="light"
-                    border="light" style={{ marginRight:'auto'}}>
-                    {/* <Card.Header> </Card.Header> */}
+                <Card 
+                        bg="light"
+                        border="light" style={{ marginRight:'auto'}}>
                     <Card.Body>
-                    <Card.Title> 
-                    </Card.Title>
-                    {/* <Card.Text> */}
-                    <Row className="mb-3"> 
+                
+                        <Row className="mb-3"> 
                             <Col> 
-                            <FontAwesomeIcon 
-                            icon={faHashtag} className="text-dark" style={{marginRight:'20px'}}/>
-                            {document.tracking_no}
+                                <FontAwesomeIcon 
+                                icon={faHashtag} className="text-dark" style={{marginRight:'20px'}}/>
+                                {document.tracking_no}
                             </Col>
                         </Row>
-                    <Row className="mb-3">
-                        <Col>
-                            <FontAwesomeIcon icon={faFile} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
-                            {document.document_type.description}
-                        </Col>
-                    </Row>
-                    <Row className="mb-3">
-                        <Col>
-                            <FontAwesomeIcon icon={faTimeline} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
-                            <Badge bg="primary">Received</Badge>
-                        </Col> 
-                    </Row>
-                    <Row className="mb-3">
-                        <Col>
-                            <FontAwesomeIcon icon={faCircleUser} className="text-dark" style={{marginRight:'20px'}}/>
-                            {document.user.profile.name}
-                        </Col>
-                    </Row>
-                    <Row className="mb-3">
-                        <Col>
-                            <FontAwesomeIcon icon={faCalendar} className="text-dark" style={{marginRight:'20px'}}/>
-                            {moment(document.date_received).format('MMMM DD, YYYY')} 
-                            <i style={{color:'#545454'}}> (Received {moment(document.date_received).fromNow()})</i> 
-                        </Col>
-                    </Row>
-                    <Row className="mb-3">
-                        <Col>
-                            <FontAwesomeIcon icon={faKeyboard} className="text-dark" style={{marginRight:'20px'}}/>
-                            {moment(document.created_at).format('MMMM DD, YYYY')} 
-                            <i style={{color:'#545454'}}> (Encoded {moment(document.created_at).fromNow()})</i> 
-                        </Col>
-                    </Row>
-                    <Row className="mb-3">
-                        <Col>
-                            <FontAwesomeIcon icon={faBuildingUser} className="text-dark" style={{marginRight:'20px'}}/>
-                            {document.sender.receivable.description}
-                        </Col>
-                    </Row>
-                    <Row className="mb-3">
-                        <Col row={5}>
-                            <FontAwesomeIcon icon={faQuoteLeft} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
-                            {document.description}
-                        </Col>
-                    </Row>
-    
+                        
+                        <Row className="mb-3">
+                            <Col>
+                                <FontAwesomeIcon icon={faTimeline} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
+                                <Badge bg="primary">Received</Badge>
+                            </Col> 
+                         </Row>
+
+                        <Row className="mb-3">
+                            <Col>
+                                <FontAwesomeIcon icon={faFile} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
+                                {document.document_type.description}
+                            </Col>
+                        </Row>
+
+                        <Row className="mb-3">
+                                <Col>
+                                    <FontAwesomeIcon icon={faCalendar} className="text-dark" style={{marginRight:'20px'}}/>
+                                    {moment(document.date_received).format('MMMM DD, YYYY')} 
+                                    <i style={{color:'#545454'}}> (Received {moment(document.date_received).fromNow()})</i> 
+                                </Col>
+                        </Row>
+
+                        <Row className="mb-3">
+                            <Col>
+                                <FontAwesomeIcon icon={faKeyboard} className="text-dark" style={{marginRight:'20px'}}/>
+                                {moment(document.created_at).format('MMMM DD, YYYY')} 
+                                <i style={{color:'#545454'}}> (Encoded {moment(document.created_at).fromNow()})</i> 
+                            </Col>
+                        </Row>
+
+                        <Row className="mb-3">
+                            <Col>
+                                <FontAwesomeIcon icon={faBuildingUser} className="text-dark" style={{marginRight:'20px'}}/>
+                                {document.sender.receivable.description}
+                            </Col>
+                        </Row>
+
+                        <Row className="mb-3">
+                            <Col>
+                                <FontAwesomeIcon icon={faUserCheck} className="text-dark" style={{marginRight:'20px'}}/>
+                                {document.user.profile.name}
+                            </Col>
+                        </Row>
+
+                         <Row className="mb-3">
+                            <Col >
+                                <FontAwesomeIcon icon={faTag} className="text-dark" style={{marginRight:'20px'}}/>
+                                {document.category.description}
+                            </Col>
+                        </Row>
+
                         {document.attachments?.file_title ? (
-                            <Row className="mb-3"> 
+                        <Row className="mb-3"> 
                             <Col>
                             <FontAwesomeIcon icon={faPaperclip} className="text-dark" style={{ marginRight: "20px" }} />
                             {document.attachments.file_title}
-                           </Col>
-                           </Row> 
+                            </Col>
+                        </Row> 
                         ) : null}
-                        
-                    <Row className="mb-3">
-                        <Col >
-                            <FontAwesomeIcon icon={faTag} className="text-dark" style={{marginRight:'20px'}}/>
-                            {document.category.description}
-                        </Col>
-                    </Row>
-                    {/* </Card.Text> */}
+
+                        <Row className="mb-3">
+                            <Col row={5}>
+                                <FontAwesomeIcon icon={faQuoteLeft} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
+                                {document.description}
+                            </Col>
+                        </Row>  
                     </Card.Body>
-                    {/* <Card.Footer>
-                    </Card.Footer> */}
                 </Card>
             </div>
            
