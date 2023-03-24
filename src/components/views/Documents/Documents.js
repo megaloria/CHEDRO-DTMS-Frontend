@@ -267,10 +267,10 @@ function Documents() {
                             </div>
                         </div>
                     <div class="row">
-                        <div class="table-responsive " >
-                                <Table striped bordered hover size="md" className={isTableLoading ? 'table-loading' : ''}>
-                                <thead>
-                                    <tr>
+                        <div class="table-responsive">
+                                <Table bordered hover size="md" className={isTableLoading ? 'table-loading' : ''}>
+                                <thead> 
+                                    <tr class="table-primary">
                                         <th>ID</th>
                                         <th>Tracking No.</th>
                                         <th>Document Type</th>
@@ -282,11 +282,11 @@ function Documents() {
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody >
                             {
                                 data.data.map((row, index) => (
                                     <tr key={index}>
-                                        <td>{row.id}</td>
+                                        <td class="table-primary">{row.id}</td>
                                         <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
                                         <td>{getDocumentType(row.document_type_id)}</td>
                                         <td>{getCategory(row.category_id)}</td>
