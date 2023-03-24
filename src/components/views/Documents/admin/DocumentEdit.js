@@ -9,7 +9,7 @@ import {
     Spinner
 } from 'react-bootstrap';
 import {
-    Link, useLoaderData, useNavigate
+    Link, useLoaderData, useNavigate, useLocation
 } from 'react-router-dom';
 import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
@@ -18,6 +18,7 @@ import Swal from 'sweetalert2';
 import Select from 'react-select';
 
 function DocumentEdit() {
+    const location = useLocation();
     const document = useLoaderData();
     const navigate = useNavigate();
 
@@ -173,18 +174,26 @@ function DocumentEdit() {
                         text: response.data.message,
                         icon: 'success'
                     }).then(() => {
-                        window.location.reload();
-                    })
+                        setIsLoading(true);
+                        navigate(`/documents/edit/${document.id}`);
+                    });
                 }).catch(error => {
                     Swal.fire({
                         title: 'Error',
                         text: error,
                         icon: 'error'
+                    }).then(() => {
+                        setIsLoading(true);
+                        navigate(`/documents/edit/${document.id}`);
                     });
-                });
+                })
             }
         });
     };
+
+    useEffect(() => {
+        setIsLoading(false);
+    }, [location]);
 
     const handleInputChange = e => {
         setFormInputs({
@@ -521,7 +530,7 @@ function DocumentEdit() {
                
                 <Col>
                     <Form.Label>Attachment <Form.Text className='text-muted'>
-                        {document.attachments?.file_title ? <a href='#' onClick={d =>showDeleteAlert('row')} style={{color:'red'}}>(Delete)</a> : <span> <i>(Optional)</i></span>}
+                            {document.attachments?.file_title ? <span onClick={d =>showDeleteAlert()} style={{color:'red', textDecoration: 'underline', cursor: 'pointer'}}>(Delete)</span> : <span> <i>(Optional)</i></span>}
                     </Form.Text> </Form.Label>
                     {document.attachments?.file_title ?  
                         <Form.Control 
