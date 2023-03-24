@@ -17,11 +17,7 @@ import apiClient from '../../../../helpers/apiClient';
 import Validator from 'validatorjs';
 import Swal from 'sweetalert2';
 import Select from 'react-select';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-    faXmark,
-    faRightToBracket
-} from '@fortawesome/free-solid-svg-icons'
+
 
 function DocumentReceive() {
 
