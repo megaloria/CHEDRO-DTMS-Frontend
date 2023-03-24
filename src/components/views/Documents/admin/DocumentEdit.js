@@ -148,6 +148,49 @@ function DocumentEdit() {
         label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
     }));
 
+  
+
+    const showDeleteAlert = attachment => {
+        Swal.fire({
+            title: `Are you sure you want to delete attachment titled, "${document.attachments.file_title}"?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.delete(`/document/${document.attachments.id}/attachment`).then(response => {
+                    let newAttachment = [];
+                    if (attachment && attachment.attachments) {
+                        newAttachment = attachment.attachments.filter(
+                            d => d.id !== document.attachments.id
+                        );
+                    }
+                    setAttachment({
+                        ...attachment,
+                        attachments: newAttachment
+                    });
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    }).then(() => {
+                        window.location.reload();
+                    })
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                });
+            }
+        });
+    };
+
     const handleInputChange = e => {
         setFormInputs({
             ...formInputs,
@@ -378,6 +421,7 @@ function DocumentEdit() {
         }
         handleEdit();
     };
+    
 
     const handleEdit = () => {
 
@@ -479,13 +523,14 @@ function DocumentEdit() {
                
                 <Col>
                     <Form.Label>Attachment <Form.Text className='text-muted'>
-                        {document.attachments?.file_title ? <a href='#' style={{color:'red'}}>(Remove)</a> : <span> <i>(Optional)</i></span>}
+                        {document.attachments?.file_title ? <a href='#' onClick={d =>showDeleteAlert('row')} style={{color:'red'}}>(Delete)</a> : <span> <i>(Optional)</i></span>}
                     </Form.Text> </Form.Label>
                     {document.attachments?.file_title ?  
                         <Form.Control 
                             type="text"
                             name="attachment"
                             value={document.attachments.file_title}
+                            disabled
                         />
                             :
                         <Form.Control 
