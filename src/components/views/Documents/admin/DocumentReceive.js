@@ -17,6 +17,11 @@ import apiClient from '../../../../helpers/apiClient';
 import Validator from 'validatorjs';
 import Swal from 'sweetalert2';
 import Select from 'react-select';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faXmark,
+    faRightToBracket
+} from '@fortawesome/free-solid-svg-icons'
 
 function DocumentReceive() {
 
@@ -411,7 +416,9 @@ function DocumentReceive() {
                             {formErrors.document_type_id}
                         </Form.Control.Feedback>
                     </Col>
-                    <Col>
+
+                    <Row className='d-md-none mb-3'> </Row>
+                    <Col >
                         <Form.Label>Tracking No. {isOptionLoading1 ? <Spinner animation='border' size='sm'/> : ""}</Form.Label>
                         <Form.Control 
                             type='text'
@@ -653,21 +660,23 @@ function DocumentReceive() {
                         
                     </Form.Group>
                 </Row>
-                
-                    <Row className= "justify-content-end mt-4 mb-4">
-                        <Col md="auto" className="p-0 me-2">
+                    
+                    <Row>
+                    <div className='d-flex justify-content-end mt-4 mb-4'>
+                        <Col md="auto" className="me-2">
                             <Button 
-                            variant="outline-secondary"
+                            variant="secondary"
                             as={Link}
-                            to='../'>
-                                Cancel
+                            to='../'> 
+                                Cancel 
                             </Button>
                         </Col>
-                        <Col md="auto" className="p-0">
-                            <Button type='submit' variant="primary">
-                                Receive
+                        <Col md="auto">
+                            <Button type='submit' variant="primary"> 
+                            Receive 
                             </Button>
                         </Col>
+                        </div>
                     </Row>
             </div>
         </Form>
