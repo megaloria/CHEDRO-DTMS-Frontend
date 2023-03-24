@@ -12,7 +12,11 @@ import Validator from 'validatorjs';
 import Swal from 'sweetalert2';
 import apiClient from '../../../helpers/apiClient';
 import { useNavigate } from 'react-router-dom';
-import {FaEye,FaEyeSlash} from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faEye,
+  faEyeSlash
+} from '@fortawesome/free-solid-svg-icons';
 import chedLogo from '../../../assets/ched-logo.png';
 import './style.css';
 
@@ -23,15 +27,15 @@ function Login() {
   const navigate = useNavigate();
 
   const[passwordType, setPasswordType] = useState('password')
-  const[passwordIcon, setPasswordIcon] = useState(<FaEyeSlash/>);
+  const[passwordIcon, setPasswordIcon] = useState(<FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />);
 
  const handleToggle = () => {
     if (passwordType === 'password'){
       setPasswordType ('text');
-      setPasswordIcon (<FaEye/>);
+      setPasswordIcon (<FontAwesomeIcon icon={faEye} className='fa-fw' />);
     } else {
       setPasswordType ('password');
-      setPasswordIcon (<FaEyeSlash/>);
+      setPasswordIcon (<FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />);
     }
     
   };

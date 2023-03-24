@@ -559,7 +559,7 @@ function Users() {
                 </Modal.Header>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
-                    <Row className='margin: 40px'>
+                    <Row className='mb-2'>
                         <Col>
                             <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Username</Form.Label>
@@ -574,7 +574,11 @@ function Users() {
                                         {formErrors.username}
                                     </Form.Control.Feedback>
                             </Form.Group>
-                        </Col> {
+                        </Col> 
+
+                        <Row className='d-md-none'> </Row>
+
+                        {
                             !modal.data && (
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
@@ -596,6 +600,9 @@ function Users() {
                                 </Col>
                             )
                         }
+
+                        <Row className='d-md-none'> </Row>
+
                         <Col>
                             <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Role</Form.Label>
@@ -618,6 +625,7 @@ function Users() {
                             </Form.Group>
                         </Col>
                     </Row>
+
                     <Row>
                         <Col>
                             <Form.Group className='mb-2'>
@@ -634,6 +642,9 @@ function Users() {
                                     </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
+
+                        <Row className='d-md-none'> </Row>
+
                         <Col>
                             <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Middle Name</Form.Label>
@@ -649,6 +660,9 @@ function Users() {
                                 </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
+
+                        <Row className='d-md-none'> </Row>
+
                         <Col>
                             <Form.Group className='mb-2' controlId=''>
                                 <Form.Label>Last Name</Form.Label>
@@ -698,6 +712,8 @@ function Users() {
                                     </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
+
+                        <Row className='d-md-none'> </Row>
 
                         <Col >
                             <Form.Group className='mb-2' controlId=''>

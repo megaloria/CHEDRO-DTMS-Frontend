@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import Validator from 'validatorjs';
-import { FaEye,FaEyeSlash } from 'react-icons/fa';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+  faEye,
+  faEyeSlash
+} from '@fortawesome/free-solid-svg-icons';
 import { 
     useNavigate, 
     Link,
@@ -24,37 +28,37 @@ const loaderData = useLoaderData();
     
 const[passwordType, setPasswordType] = useState('password')
 const[passwordType1, setPasswordType1] = useState('password')
-const[passwordIcon, setPasswordIcon] = useState(<FaEyeSlash/>);
-const[passwordIcon1, setPasswordIcon1] = useState(<FaEyeSlash/>);
+const[passwordIcon, setPasswordIcon] = useState(<FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />);
+const[passwordIcon1, setPasswordIcon1] = useState(<FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />);
 const navigate = useNavigate();
     
  const handleToggleCurrentpassword = () => {
     if (passwordType1 === 'password'){
       setPasswordType1 ('text');
-      setPasswordIcon1 (<FaEye/>);
+      setPasswordIcon1 (<FontAwesomeIcon icon={faEye} className='fa-fw' />);
     } else {
       setPasswordType1 ('password');
-      setPasswordIcon1 (<FaEyeSlash/>);
+      setPasswordIcon1 (<FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />);
     }
   };
   
  const handleToggleNewpassword = () => {
     if (passwordType === 'password'){
       setPasswordType ('text');
-      setPasswordIcon (<FaEye/>);
+      setPasswordIcon (<FontAwesomeIcon icon={faEye} className='fa-fw' />);
     } else {
       setPasswordType ('password');
-      setPasswordIcon (<FaEyeSlash/>);
+      setPasswordIcon (<FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />);
     }
   };
   
  const handleToggleConfPassword = () => {
     if (passwordType === 'password'){
       setPasswordType ('text');
-      setPasswordIcon (<FaEye/>);
+      setPasswordIcon (<FontAwesomeIcon icon={faEye} className='fa-fw' />);
     } else {
       setPasswordType ('password');
-      setPasswordIcon (<FaEyeSlash/>);
+      setPasswordIcon (<FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />);
     }
   };
 

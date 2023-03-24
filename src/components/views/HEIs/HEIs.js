@@ -5,6 +5,7 @@ import {
     Form, 
     Table, 
     Row, 
+    Container,
     Col,
     Alert,
     Pagination,
@@ -319,7 +320,7 @@ function Heis() {
     }
 
     return (
-        <div class='container fluid'>
+        <Container fluid>
             <div className='bg-body rounded'> 
                 <Row className= 'justify-content-end mt-4 mb-3'>
                     <Col>
@@ -343,8 +344,8 @@ function Heis() {
                                     </Button>
 
                                     <div className='ms-2'> 
-                                        <Button variant='primary' onClick={e => handleShowModal()}>
-                                            <FontAwesomeIcon icon={faAdd} className='addIcon'/> 
+                                        <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>
+                                            <FontAwesomeIcon icon={faAdd}/> 
                                             <span className='d-none d-md-inline-block ms-1'> Add </span>
                                         </Button>
                                     </div>
@@ -570,7 +571,7 @@ function Heis() {
                     </Form>
                 </Modal>
             </div>
-        </div>
+        </Container>
     );
 }
 

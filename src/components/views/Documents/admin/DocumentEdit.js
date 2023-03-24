@@ -4,7 +4,6 @@ import {
     Form, 
     Row, 
     Col,
-    Card,
     Alert,
     Breadcrumb,
     Spinner
@@ -12,10 +11,6 @@ import {
 import {
     Link, useLoaderData, useNavigate
 } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-    faSpinner
-} from '@fortawesome/free-solid-svg-icons'
 import moment from 'moment';
 import apiClient from '../../../../helpers/apiClient';
 import Validator from 'validatorjs';
@@ -509,6 +504,9 @@ function DocumentEdit() {
                             {formErrors.document_type_id}
                         </Form.Control.Feedback>
                 </Col>
+
+                <Row className='d-md-none mb-3'> </Row>
+
                 <Col>
                     <Form.Label>Tracking No. {isOptionLoading1 ? <Spinner animation='border' size='sm'/> : ""}</Form.Label>
                     <Form.Control 
@@ -771,8 +769,9 @@ function DocumentEdit() {
                 </Row>
 
             <div>
-                <Row className= "justify-content-end mt-4 mb-3">
-                    <Col md="auto" className="p-0">
+                <Row>
+                    <div className='d-flex justify-content-end mt-4 mb-4'>
+                    <Col md="auto" className="me-2">
                         <Button 
                         variant="secondary"
                         as={Link}
@@ -785,6 +784,7 @@ function DocumentEdit() {
                             Save 
                         </Button>
                     </Col>
+                    </div>
                 </Row>  
             </div>
         </div>

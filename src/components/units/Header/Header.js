@@ -23,9 +23,9 @@ import Swal from 'sweetalert2';
 import './styles.css';
 import apiClient from '../../../helpers/apiClient';
 
-function Header() {
+function Header(props) {
 
-  const loaderData = useRouteLoaderData('user');
+  let loaderData = useRouteLoaderData('user') ?? props.user;
 
   const navigate = useNavigate();
   
