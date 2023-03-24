@@ -59,28 +59,28 @@ function DocumentView() {
                         <Row className="mb-3"> 
                             <Col> 
                                 <FontAwesomeIcon 
-                                icon={faHashtag} className="text-dark" style={{marginRight:'20px'}}/>
+                                icon={faHashtag} className='text-dark me-4'/>
                                 {document.tracking_no}
                             </Col>
                         </Row>
                         
                         <Row className="mb-3">
                             <Col>
-                                <FontAwesomeIcon icon={faTimeline} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
+                                <FontAwesomeIcon icon={faTimeline} className='text-dark me-3'/>
                                 <Badge bg="primary">Received</Badge>
                             </Col> 
                          </Row>
 
                         <Row className="mb-3">
                             <Col>
-                                <FontAwesomeIcon icon={faFile} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
+                                <FontAwesomeIcon icon={faFile} className="text-dark" style={{marginRight:'25px'}}/>
                                 {document.document_type.description}
                             </Col>
                         </Row>
 
                         <Row className="mb-3">
                                 <Col>
-                                    <FontAwesomeIcon icon={faCalendar} className="text-dark" style={{marginRight:'20px'}}/>
+                                    <FontAwesomeIcon icon={faCalendar} className='text-dark me-4'/>
                                     {moment(document.date_received).format('MMMM DD, YYYY')} 
                                     <i style={{color:'#545454'}}> (Received {moment(document.date_received).fromNow()})</i> 
                                 </Col>
@@ -96,21 +96,21 @@ function DocumentView() {
 
                         <Row className="mb-3">
                             <Col>
-                                <FontAwesomeIcon icon={faBuildingUser} className="text-dark" style={{marginRight:'20px'}}/>
+                                <FontAwesomeIcon icon={faBuildingUser} className="text-dark" style={{marginRight:'18px'}}/>
                                 {document.sender.receivable.description}
                             </Col>
                         </Row>
 
                         <Row className="mb-3">
                             <Col>
-                                <FontAwesomeIcon icon={faUserCheck} className="text-dark" style={{marginRight:'20px'}}/>
+                                <FontAwesomeIcon icon={faUserCheck} className="text-dark" style={{marginRight:'18px'}}/>
                                 {document.user.profile.name}
                             </Col>
                         </Row>
 
                          <Row className="mb-3">
                             <Col >
-                                <FontAwesomeIcon icon={faTag} className="text-dark" style={{marginRight:'20px'}}/>
+                                <FontAwesomeIcon icon={faTag} className='text-dark me-4'/>
                                 {document.category.description}
                             </Col>
                         </Row>
@@ -118,7 +118,7 @@ function DocumentView() {
                         {document.attachments?.file_title ? (
                         <Row className="mb-3"> 
                             <Col>
-                            <FontAwesomeIcon icon={faPaperclip} className="text-dark" style={{ marginRight: "20px" }} />
+                            <FontAwesomeIcon icon={faPaperclip} className='text-dark me-4'/>
                             {document.attachments.file_title}
                             </Col>
                         </Row> 
@@ -126,7 +126,7 @@ function DocumentView() {
 
                         <Row className="mb-3">
                             <Col row={5}>
-                                <FontAwesomeIcon icon={faQuoteLeft} className="text-dark " variant="link" style={{marginRight:'20px'}}/>
+                                <FontAwesomeIcon icon={faQuoteLeft} className='text-dark me-4'/>
                                 {document.description}
                             </Col>
                         </Row>  
