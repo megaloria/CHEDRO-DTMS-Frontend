@@ -15,7 +15,8 @@ import {
     Row,
     Col,
     Alert,
-    Spinner
+    Spinner,
+    Container
 } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
@@ -227,28 +228,35 @@ function Division() {
             <div className="crud bg-body rounded"> 
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
-                        <h1>Division</h1>
+                        <h1>Divisions</h1>
                     </Col>
-                    <Col md="auto">
-                        <div className="search">
-                            <Form className="d-flex" controlId="">
-                                <Form.Control 
-                                    type="search" 
-                                    placeholder="Search" 
-                                    className="me-2"
-                                />
-                                <Button>
-                                    <FontAwesomeIcon icon={faSearch} />
-                                </Button>
+                </Row> 
+
+                <div> 
+                    <div className='d-md-flex mb-3 justify-content-end'>
+                        <div className='search'> 
+                            <Form className="d-flex" controlId="" onSubmit="">
+                                    <Form.Control 
+                                        type="search" 
+                                        placeholder="Search" 
+                                        className="me-2"
+                                        // value={searchQuery}
+                                        // onChange={handleSearchInputChange}
+                                    />
+                                    <Button type='submit'>
+                                        <FontAwesomeIcon icon={faSearch} />
+                                    </Button>
+
+                                    <div className='ms-2'> 
+                                        <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>
+                                            <FontAwesomeIcon icon={faAdd}/> 
+                                            <span className='d-none d-md-inline-block ms-1'> Add </span>
+                                        </Button>
+                                    </div>
                             </Form>
                         </div>
-                    </Col>
-                    <Col md='auto'>
-                        <Button variant='primary' onClick={e => handleShowModal()}>
-                            <FontAwesomeIcon icon={faAdd} /> Add
-                        </Button>
-                    </Col>  
-                </Row>
+                    </div>
+                </div>    
             </div>
 
             <div className="row">
@@ -324,7 +332,10 @@ function Division() {
                     </Modal.Footer>
                 </Form>
             </Modal>
+        
+       
         </div>
+       
     );
 }
 
