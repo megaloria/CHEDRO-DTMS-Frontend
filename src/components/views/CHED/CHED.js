@@ -339,6 +339,7 @@ function CHED() {
                                 <Spinner animation='border' />
                             </div>
                         </div>
+                        <div class="table-responsive"> 
                         <Table striped bordered hover size='md' className={isTableLoading ? 'table-loading' : ''}>
                             <thead>
                                 <tr>
@@ -370,6 +371,7 @@ function CHED() {
                                 }
                             </tbody>
                         </Table>
+                        </div>
 
                         <div>
                             {data.data.length > 0 && (
