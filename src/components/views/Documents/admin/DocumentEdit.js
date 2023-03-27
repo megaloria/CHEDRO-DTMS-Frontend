@@ -158,7 +158,7 @@ function DocumentEdit() {
             reverseButtons: true,
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return apiClient.delete(`/document/${document.attachments.id}/attachment`).then(response => {
+                return apiClient.delete(`/document/${document.id}/attachment`).then(response => {
                     let newAttachment = [];
                     if (attachment && attachment.attachments) {
                         newAttachment = attachment.attachments.filter(
@@ -283,7 +283,7 @@ function DocumentEdit() {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
-            setFormInputs({
+            setFormInputs({ 
                 ...formInputs,
                 municipality: value,
             });
