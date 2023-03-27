@@ -130,7 +130,14 @@ function DocumentEdit() {
                     setIsOptionLoading(false);
                 });
         }
-    }, [formInputs.receivable_type, formInputs.province, formInputs.municipality, formInputs.insti]);
+
+        setSelectedCategory(categories.find(c => c.id === document.category_id));
+        let userIds = document.logs.filter(l => l.from_id === null && l.to_id);
+        userIds = userIds.map(log => {
+            return log.to_id;
+        });
+        setSelectedUsers(userIds);
+    }, [formInputs.receivable_type, formInputs.province, formInputs.municipality, formInputs.insti, categories, document.category_id]);
 
     //For assigning multiple users 
     //yarn add react-select
@@ -370,6 +377,7 @@ function DocumentEdit() {
         handleEdit();
     };
     
+    console.log(document.sender.name);
 
     const handleEdit = () => {
 
