@@ -34,12 +34,12 @@ function DocumentEdit() {
     const [docType, setDocType] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [isNavigationLoading, setIsNavigationLoading] = useState(true);
     const [isOptionLoading, setIsOptionLoading] = useState(false);
     const [isOptionLoading1, setIsOptionLoading1] = useState(false);
     const [attachment, setAttachment] = useState(null);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [dateReceived, setDateReceived] = useState(moment().format('YYYY-MM-DD'));
-
     const [documentTypes, setDocumentTypes] = useState([]);
 
     const [formInputs, setFormInputs] = useState({
@@ -144,56 +144,7 @@ function DocumentEdit() {
         label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
     }));
 
-  
 
-    const showDeleteAlert = attachment => {
-        Swal.fire({
-            title: `Are you sure you want to delete attachment titled, "${document.attachments.file_title}"?`,
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-            reverseButtons: true,
-            showLoaderOnConfirm: true,
-            preConfirm: () => {
-                return apiClient.delete(`/document/${document.id}/attachment`).then(response => {
-                    let newAttachment = [];
-                    if (attachment && attachment.attachments) {
-                        newAttachment = attachment.attachments.filter(
-                            d => d.id !== document.attachments.id
-                        );
-                    }
-                    setAttachment({
-                        ...attachment,
-                        attachments: newAttachment
-                    });
-                    Swal.fire({
-                        title: 'Success',
-                        text: response.data.message,
-                        icon: 'success'
-                    }).then(() => {
-                        setIsLoading(true);
-                        navigate(`/documents/edit/${document.id}`);
-                    });
-                }).catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error,
-                        icon: 'error'
-                    }).then(() => {
-                        setIsLoading(true);
-                        navigate(`/documents/edit/${document.id}`);
-                    });
-                })
-            }
-        });
-    };
-
-    useEffect(() => {
-        setIsLoading(false);
-    }, [location]);
 
     const handleInputChange = e => {
         setFormInputs({
@@ -214,7 +165,7 @@ function DocumentEdit() {
             let temp = docTypeFind ? docTypeFind.code : '';
             apiClient.get(`/document/series/${docType}`)
                 .then(response => {
-                    setTrackingNo(moment(dateReceived).format('YY') + '-' + temp + '-' + response.data.data.toString().padStart(4, '0'));
+                   setTrackingNo(moment(dateReceived).format('YY') + '-' + temp + '-' + response.data.data.toString().padStart(4, '0'));
                 })
                 .catch(error => {
                     setErrorMessage(error);
@@ -357,20 +308,6 @@ function DocumentEdit() {
         }
     }
 
-    useEffect(() => {
-        apiClient.get('/document/receive')
-            .then(response => {
-                setUsers(response.data.data.users);
-                setDocumentTypes(response.data.data.documentTypes);
-                setCategories(response.data.data.categories);
-            })
-            .catch(error => {
-                setErrorMessage(error);
-            }).finally(() => {
-                setIsLoading(false);
-            });
-    }, []);
-
     const handleSubmit = event => {
         event.preventDefault();
 
@@ -445,7 +382,7 @@ function DocumentEdit() {
         formData.append('receivable_name', formInputs.receivable_name);
         formData.append('description', formInputs.description);
         formData.append('category_id', formInputs.category_id);
-
+        
         apiClient.post(`/document/${document.id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -466,7 +403,25 @@ function DocumentEdit() {
         });
     }
 
-    if (isLoading) {
+    useEffect(() => {
+        apiClient.get('/document/receive')
+            .then(response => {
+                setUsers(response.data.data.users);
+                setDocumentTypes(response.data.data.documentTypes);
+                setCategories(response.data.data.categories);
+            })
+            .catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsLoading(false);
+            });
+    }, []);
+
+    useEffect(() => {
+            setIsNavigationLoading(false);
+    }, [location]);
+
+    if (isLoading || isNavigationLoading) {
         return (
             <Spinner animation='border' />
         );
@@ -479,6 +434,53 @@ function DocumentEdit() {
             </Alert>
         );
     }
+
+    const showDeleteAlert = attachment => {
+        Swal.fire({
+            title: `Are you sure you want to delete attachment titled, "${document.attachments.file_title}"?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.delete(`/document/${document.id}/attachment`).then(response => {
+                    let newAttachment = [];
+                    if (attachment && attachment.attachments) {
+                        newAttachment = attachment.attachments.filter(
+                            d => d.id !== document.attachments.id
+                        );
+                    }
+                    setAttachment({
+                        ...attachment,
+                        attachments: newAttachment
+                    });
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    }).then(() => {
+                        setIsNavigationLoading(true);
+                        navigate(`/documents/edit/${document.id}`);
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    }).then(() => {
+                        setIsNavigationLoading(true);
+                        navigate(`/documents/edit/${document.id}`);
+                    });
+                })
+            }
+        });
+    };
+
+
     
     return (
         <Form onSubmit={handleSubmit}>
