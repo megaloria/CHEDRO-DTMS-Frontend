@@ -33,7 +33,7 @@ function DocumentView() {
     const document = useLoaderData();
 
     return (
-        <div class="container fluid">
+        <div className="container fluid">
             <div className="crud bg-body rounded"> 
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
