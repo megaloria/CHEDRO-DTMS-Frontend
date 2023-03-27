@@ -425,6 +425,9 @@ function DocumentReceive() {
                             disabled
                         />
                     </Col>
+
+                    <Row className='d-md-none mb-3'> </Row>
+
                     <Col>
                         <Form.Label>Attachment <span className='text-muted text-italic'>(Optional)</span></Form.Label>
                         <Form.Control 
@@ -434,6 +437,7 @@ function DocumentReceive() {
                             onChange={handleFileInputChange} />
                     </Col>
                 </Row>
+
     
                 <Row className="mb-3">
                     <Col>
@@ -450,6 +454,8 @@ function DocumentReceive() {
                             {formErrors.date_received}
                         </Form.Control.Feedback>
                     </Col>
+
+                    <Row className='d-md-none mb-3'> </Row>
                     
                     <Col>
                         <Form.Label>Receive from {isOptionLoading ? <Spinner animation='border' size='sm'/> : ""} </Form.Label>
@@ -605,6 +611,7 @@ function DocumentReceive() {
                         </Form.Control.Feedback>
                     </Col>
                 </Row>
+                
                 <Row className="mb-3"> 
                 <Form.Group>
                     <div>
