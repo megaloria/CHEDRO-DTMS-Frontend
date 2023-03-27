@@ -223,7 +223,7 @@ function Division() {
     }
 
     return (
-        <div class="container fluid">
+        <div className="container fluid">
             <div className="crud bg-body rounded"> 
                 <Row className= "justify-content-end mt-4 mb-3">
                     <Col>
@@ -251,8 +251,8 @@ function Division() {
                 </Row>
             </div>
 
-            <div class="row">
-                <div class="table-responsive " >
+            <div className="row">
+                <div className="table-responsive " >
                     <Table striped bordered hover size="md">
                         <thead>
                             <tr>

@@ -207,7 +207,7 @@ function Documents() {
     }
 
     return (
-        <div class="container fluid">
+        <div className="container fluid">
             <div className="crud rounded">
                 <Row className="justify-content-end mt-4">
                     <Col className='title'>
@@ -262,11 +262,11 @@ function Documents() {
                                 <Spinner animation='border' />
                             </div>
                         </div>
-                    <div class="row">
-                        <div class="table-responsive">
+                    <div className="row">
+                        <div className="table-responsive">
                                 <Table bordered hover size="md" className={isTableLoading ? 'table-loading' : ''}>
                                 <thead> 
-                                    <tr class="table-primary">
+                                    <tr className="table-primary">
                                         <th>ID</th>
                                         <th>Tracking No.</th>
                                         <th>Document Type</th>
@@ -282,7 +282,7 @@ function Documents() {
                             {
                                 data.data.map((row, index) => (
                                     <tr key={index}>
-                                        <td class="table-primary">{row.id}</td>
+                                        <td className="table-primary">{row.id}</td>
                                         <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
                                         <td>{getDocumentType(row.document_type_id)}</td>
                                         <td>{getCategory(row.category_id)}</td>
