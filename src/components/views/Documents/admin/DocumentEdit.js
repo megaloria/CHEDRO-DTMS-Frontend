@@ -180,7 +180,7 @@ function DocumentEdit() {
             }
             
         }
-    }, [docType, documentTypes, dateReceived])
+    }, [docType, documentTypes, dateReceived, document.date_received, document.document_type_id, document.series_no])
 
     const handleChangeDocType = async (event) => {
         const value = event.target.value;
