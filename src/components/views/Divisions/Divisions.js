@@ -334,7 +334,7 @@ function Division() {
             </Modal>
         
        
-        </Container>
+        </div>
        
     );
 }
