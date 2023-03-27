@@ -160,18 +160,25 @@ function DocumentEdit() {
 
     useEffect(() => {
         if (docType) {
-            setIsOptionLoading1(true);
-            let docTypeFind = documentTypes.find(d => d.id === +docType);
-            let temp = docTypeFind ? docTypeFind.code : '';
-            apiClient.get(`/document/series/${docType}`)
-                .then(response => {
-                   setTrackingNo(moment(dateReceived).format('YY') + '-' + temp + '-' + response.data.data.toString().padStart(4, '0'));
-                })
-                .catch(error => {
-                    setErrorMessage(error);
-                }).finally(() => {
-                    setIsOptionLoading1(false);
-                });
+            if (!moment(dateReceived).isSame(document.date_received, 'day') || document.document_type_id !== +docType) {
+                setIsOptionLoading1(true);
+                let docTypeFind = documentTypes.find(d => d.id === +docType);
+                let temp = docTypeFind ? docTypeFind.code : '';
+                apiClient.get(`/document/series/${docType}`)
+                    .then(response => {
+                        setTrackingNo(moment(dateReceived).format('YY') + '-' + temp + '-' + response.data.data.toString().padStart(4, '0'));
+                    })
+                    .catch(error => {
+                        setErrorMessage(error);
+                    }).finally(() => {
+                        setIsOptionLoading1(false);
+                    });
+            } else {
+                let docTypeFind = documentTypes.find(d => d.id === +docType);
+                let temp = docTypeFind ? docTypeFind.code : '';
+                setTrackingNo(moment(document.date_received).format('YY') + '-' + temp + '-' + document.series_no.toString().padStart(4, '0'));
+            }
+            
         }
     }, [docType, documentTypes, dateReceived])
 
