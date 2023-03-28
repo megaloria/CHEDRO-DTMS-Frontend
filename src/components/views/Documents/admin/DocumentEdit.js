@@ -758,6 +758,7 @@ function DocumentEdit() {
                                             type='radio'
                                             name='category_id'
                                             onChange={handleInputChange}
+                                            value={category.id}
                                             checked={+formInputs.category_id === category.id}
                                             isInvalid={!!formErrors.category_id} />
                                         <Form.Check.Label>
@@ -778,7 +779,7 @@ function DocumentEdit() {
                                         {selectedCategory.is_assignable &&(
                                             <Row> 
                                                 <Col md={'auto'}> 
-                                                    <Form.Label>Select assign to:</Form.Label>
+                                                    <Form.Label>Assign to <span className='text-muted'>(Optional)</span>:</Form.Label>
                                                     <Select 
                                                         isMulti
                                                         name='assignTo' 
