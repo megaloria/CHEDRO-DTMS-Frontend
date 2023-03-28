@@ -15,8 +15,7 @@ import {
     Row,
     Col,
     Alert,
-    Spinner,
-    Container
+    Spinner
 } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
