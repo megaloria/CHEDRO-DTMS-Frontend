@@ -263,8 +263,7 @@ function Documents() {
                             </div>
                         </div>
                     <div className="row">
-                        <div className="table-responsive">
-                                <Table bordered hover size="md" className={isTableLoading ? 'table-loading' : ''}>
+                                <Table bordered hover responsive size="md" className={isTableLoading ? 'table-loading' : ''}>
                                 <thead> 
                                     <tr className="table-primary">
                                         <th>ID</th>
@@ -360,7 +359,6 @@ function Documents() {
                                     }
                                 </tbody>
                             </Table>
-                        </div>
                     </div>
 
                     <div>
