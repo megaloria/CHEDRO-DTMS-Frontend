@@ -58,8 +58,7 @@ function DocumentEdit() {
         ngas: document.sender.receivable.id,
         chedoffices: document.sender.receivable.id,
         description: document.description,
-        category_id: document.category_id,
-        assignTo: ''
+        category_id: document.category_id
     });
 
     const [formErrors, setFormErrors] = useState({
@@ -75,8 +74,7 @@ function DocumentEdit() {
         ngas: '',
         chedoffices: '',
         description: '',
-        category_id: '',
-        assignTo: ''
+        category_id: ''
     });
 
     useEffect(() => {
@@ -337,7 +335,8 @@ function DocumentEdit() {
             chedoffices: 'integer|min:1',
             description: 'required|string|min:5',
             category_id: 'required|integer|min:1',
-            assignTo: 'integer|min:1'
+            assignTo: 'array',
+            'assignTo.*': 'integer|min:1'
         });
 
         if (validation.fails()) {
@@ -397,6 +396,9 @@ function DocumentEdit() {
         formData.append('receivable_name', formInputs.receivable_name);
         formData.append('description', formInputs.description);
         formData.append('category_id', formInputs.category_id);
+        for (let i = 0; i < selectedUsers.length; i++) {
+            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        }
         
         apiClient.post(`/document/${document.id}`, formData, {
             headers: {
@@ -757,7 +759,7 @@ function DocumentEdit() {
                                             name='category_id'
                                             onChange={handleInputChange}
                                             value={category.id}
-                                            // checked={+formInputs.category_id === category.id}
+                                            checked={+formInputs.category_id === category.id}
                                             isInvalid={!!formErrors.category_id} />
                                         <Form.Check.Label>
                                             {category.description}
@@ -777,7 +779,7 @@ function DocumentEdit() {
                                         {selectedCategory.is_assignable &&(
                                             <Row> 
                                                 <Col md={'auto'}> 
-                                                    <Form.Label>Select assign to:</Form.Label>
+                                                    <Form.Label>Assign to <span className='text-muted'>(Optional)</span>:</Form.Label>
                                                     <Select 
                                                         isMulti
                                                         name='assignTo' 

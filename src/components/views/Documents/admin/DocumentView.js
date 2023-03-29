@@ -21,17 +21,17 @@ import {
     faTag,
     faBuildingUser,
     faKeyboard,
-    faUserCheck
+    faUserCheck,
+    faArrowCircleRight
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData
 } from 'react-router-dom';
 import moment from 'moment';
 
-
 function DocumentView() {
     const document = useLoaderData();
-
+    
     return (
         <div className="container fluid">
             <div className="crud bg-body rounded"> 
@@ -112,6 +112,17 @@ function DocumentView() {
                             <Col >
                                 <FontAwesomeIcon icon={faTag} className='text-dark me-4'/>
                                 {document.category.description}
+                            </Col>
+                        </Row>
+
+                        <Row className="mb-3">
+                            <Col >
+                                <FontAwesomeIcon icon={faArrowCircleRight} className='text-dark me-4'/>
+                                {document.logs.map(documentLog => (
+                                <span key={documentLog.id}>
+                                 <p>{documentLog.to_id}</p>
+                                </span>
+                            ))}
                             </Col>
                         </Row>
 

@@ -495,8 +495,8 @@ function Users() {
                                             <Spinner animation='border' />
                                         </div>
                                     </div>
-                                <Table striped bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
-                                    <thead>
+                                <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
+                                    <thead className="table-primary">
                                         <tr>
                                             <th>ID</th>
                                             <th>Username</th>
@@ -509,7 +509,7 @@ function Users() {
                                         {
                                             data.data.map((row, index) => (
                                                 <tr key={index}>
-                                                    <td>{row.id}</td>
+                                                    <td className="table-primary">{row.id}</td>
                                                     <td>{row.username}</td>
                                                     <td>{getRoleDescription(row.role_id)}</td>
                                                     <td>{row.profile.position_designation}</td>
