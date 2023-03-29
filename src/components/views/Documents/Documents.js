@@ -296,8 +296,8 @@ function Documents() {
                                             </div>
                                         </td>
                                         <td>
-                                            {row.logs.length > 0 && row.logs[0].to_id && row.logs[0].from_id  !== null ? (
-                                                <Badge bg="warning">Forwarded</Badge>
+                                            {row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
+                                                <Badge bg="warning">Assigned</Badge>
                                             ) : (
                                                 <Badge bg="primary">Received</Badge>
                                             )}

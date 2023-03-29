@@ -132,12 +132,12 @@ function DocumentEdit() {
         }
 
         setSelectedCategory(categories.find(c => c.id === document.category_id));
-        let userIds = document.logs.filter(l => l.from_id === null && l.to_id);
+        let userIds = document.assign.filter(l => l.assigned_id);
         userIds = userIds.map(log => {
-            return log.to_id;
+            return log.assigned_id;
         });
         setSelectedUsers(userIds);
-    }, [formInputs.receivable_type, formInputs.province, formInputs.municipality, formInputs.insti, categories, document.category_id, document.logs]);
+    }, [formInputs.receivable_type, formInputs.province, formInputs.municipality, formInputs.insti, categories, document.category_id, document.assign]);
 
     //For assigning multiple users 
     //yarn add react-select
@@ -378,8 +378,6 @@ function DocumentEdit() {
         handleEdit();
     };
     
-    console.log(document.sender.name);
-
     const handleEdit = () => {
 
         const formData = new FormData();

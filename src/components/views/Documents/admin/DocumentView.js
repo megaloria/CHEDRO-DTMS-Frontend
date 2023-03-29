@@ -123,7 +123,7 @@ function DocumentView() {
                         <Row className="mb-3">
                             <Col >
                                 <FontAwesomeIcon icon={faArrowCircleRight} className='text-dark me-4'/>
-                                {document.logs.map(documentLog => (
+                                {document.assign.map(documentLog => (
                                 <span key={documentLog.id}>
                                     {documentLog.to_id}
                                 </span>
