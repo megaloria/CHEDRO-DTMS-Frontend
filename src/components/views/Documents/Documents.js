@@ -10,7 +10,8 @@ import {
     Tabs,
     Pagination,
     Alert,
-    Spinner
+    Spinner,
+    Badge
 } from 'react-bootstrap';
 import {
     Link
@@ -296,9 +297,9 @@ function Documents() {
                                         </td>
                                         <td>
                                             {row.logs.length > 0 && row.logs[0].to_id && row.logs[0].from_id  !== null ? (
-                                                <>Forwarded</>
+                                                <Badge bg="warning">Forwarded</Badge>
                                             ) : (
-                                                <>Received</>
+                                                <Badge bg="primary">Received</Badge>
                                             )}
                                         </td>
 
