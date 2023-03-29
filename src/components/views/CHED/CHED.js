@@ -340,8 +340,8 @@ function CHED() {
                             </div>
                         </div>
                         <div class="table-responsive"> 
-                        <Table striped bordered hover size='md' className={isTableLoading ? 'table-loading' : ''}>
-                            <thead>
+                        <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
+                            <thead className='table-primary'>
                                 <tr>
                                     <th>ID</th>
                                     <th>Code</th>
@@ -354,7 +354,7 @@ function CHED() {
                                 {
                                     data.data.map((row, index) => (
                                         <tr key={index}>
-                                            <td>{row.id}</td>
+                                            <td className='table-primary'>{row.id}</td>
                                             <td>{row.code}</td>
                                             <td>{row.description}</td>
                                             <td>{row.email}</td>

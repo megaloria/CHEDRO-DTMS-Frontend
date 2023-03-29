@@ -273,8 +273,8 @@ function Category() {
                 </div>    
             </div>
 
-            <Table striped bordered hover responsive size='md'>
-                <thead>
+            <Table bordered hover responsive size='md'>
+                <thead className='table-primary'>
                     <tr>
                         <th>ID</th>
                         <th>Description</th>
@@ -286,7 +286,7 @@ function Category() {
                     {
                         data.map((row, index) => (
                             <tr key={index}>
-                                <td>{row.id}</td>
+                                <td className='table-primary'>{row.id}</td>
                                 <td>{row.description}</td>
                                 <td>{row.is_assignable ? <FontAwesomeIcon icon={faCheck} className='text-success' /> : <FontAwesomeIcon icon={faTimes} className='text-danger' /> } </td>
                                 <td>

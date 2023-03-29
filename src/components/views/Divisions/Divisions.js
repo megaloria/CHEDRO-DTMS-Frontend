@@ -260,8 +260,8 @@ function Division() {
 
             <div className="row">
                 <div className="table-responsive " >
-                    <Table striped bordered hover size="md">
-                        <thead>
+                    <Table bordered hover responsive size="md">
+                        <thead className='table-primary'>
                             <tr>
                                 <th>ID</th>
                                 <th>Description</th>
@@ -272,7 +272,7 @@ function Division() {
                             {
                                 data.map((row, index) => (
                                     <tr key={index}>
-                                        <td>{row.id}</td>
+                                        <td className='table-primary'>{row.id}</td>
                                         <td>{row.description}</td>
                                         <td>
                                             <Button onClick={e => handleShowModal(row)} variant='link'>
