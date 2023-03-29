@@ -97,7 +97,7 @@ function DocumentView() {
                         <Row className="mb-3">
                             <Col>
                                 <FontAwesomeIcon icon={faBuildingUser} className="text-dark" style={{marginRight:'18px'}}/>
-                                {document.sender.receivable.description}
+                                {document.sender?.receivable?.title ?? document.sender.name}
                             </Col>
                         </Row>
 
