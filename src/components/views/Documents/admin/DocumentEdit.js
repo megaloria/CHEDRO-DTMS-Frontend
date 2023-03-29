@@ -137,7 +137,7 @@ function DocumentEdit() {
             return log.to_id;
         });
         setSelectedUsers(userIds);
-    }, [formInputs.receivable_type, formInputs.province, formInputs.municipality, formInputs.insti, categories, document.category_id]);
+    }, [formInputs.receivable_type, formInputs.province, formInputs.municipality, formInputs.insti, categories, document.category_id, document.logs]);
 
     //For assigning multiple users 
     //yarn add react-select
