@@ -8,7 +8,6 @@ import {
     Col,
     Tab,
     Tabs,
-    Badge,
     Pagination,
     Alert,
     Spinner
@@ -156,6 +155,8 @@ function Documents() {
         });
     }
 
+    
+
     // DELETE
     const showDeleteAlert = document => {
         Swal.fire({
@@ -279,6 +280,7 @@ function Documents() {
                                 </thead>
                                 <tbody >
                             {
+                              
                                 data.data.map((row, index) => (
                                     <tr key={index}>
                                         <td className="table-primary">{row.id}</td>
@@ -292,73 +294,36 @@ function Documents() {
                                             {row.description}
                                             </div>
                                         </td>
-                                        {/* <td className="p-0 m-2">
-                                    <Button variant="link">
-                                        <FontAwesomeIcon icon={faPaperclip} className="text-primary ml-2"/> {row.attach}
-                                    </Button>
-                                    </td> */}
+                                        <td>
+                                            {row.logs.length > 0 && row.logs[0].to_id && row.logs[0].from_id  !== null ? (
+                                                <>Forwarded</>
+                                            ) : (
+                                                <>Received</>
+                                            )}
+                                        </td>
 
-                                                <td>{
-                                                    row.status === 'Acknowledge' & (
-                                                        <>
-                                                            <Badge bg="info" >
-                                                                {row.status}
-                                                            </Badge>
-                                                        </>
-                                                    ) || row.status === 'Forwarded to RD' & (
-                                                        <>
-                                                            <Badge bg="warning" >
-                                                                {row.status}
-                                                            </Badge>
-                                                        </>
-                                                    )
-                                                    || row.status === 'Received' & (
-                                                        <>
-                                                            <Badge bg="primary">
-                                                                {row.status}
-                                                            </Badge>
-                                                        </>
-                                                    )
-                                                }
-                                                </td>
+                                        <td style={{ whiteSpace: 'nowrap' }}>
+                                            <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
+                                                <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
+                                            </Button>
+                                
+                                            <Button variant="link" size='sm' onClick={e => handleShowModal()}>
+                                                <FontAwesomeIcon icon={faShare} className="" />
+                                            </Button>
 
-                                                <td style={{ whiteSpace: 'nowrap' }}>
-                                                    <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
-                                                        <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
-                                                    </Button>
-                                                    {
-                                                        row.status !== 'Acknowledge' && (
-                                                            <>
-                                                                {
-                                                                    row.status === 'Received' && (
-                                                                        //Forward
-                                                                        <Button variant="link" size='sm' onClick={e => handleShowModal()}>
-                                                                            <FontAwesomeIcon icon={faShare} className="" />
-                                                                        </Button>
-                                                                    )
-                                                                }
+                                            <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
+                                                <FontAwesomeIcon icon={faEdit} className="text-success" />
+                                            </Button>
 
-                                                                <Button variant="link" size='sm' onClick={e => handleShowModal()}>
-                                                                    <FontAwesomeIcon icon={faShare} className="" />
-                                                                </Button>
-
-                                                                <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
-                                                                    <FontAwesomeIcon icon={faEdit} className="text-success" />
-                                                                </Button>
-
-                                                                <Button onClick={e =>showDeleteAlert(row)} variant="link" size='sm' >
-                                                                    <FontAwesomeIcon icon={faTrash} className="text-danger" />
-                                                                </Button>
-
-                                                            </>
-                                                        )
-                                                    }
-                                                </td>
-                                            </tr>
-                                        ))
-                                    }
-                                </tbody>
-                            </Table>
+                                            <Button onClick={e =>showDeleteAlert(row)} variant="link" size='sm' >
+                                                <FontAwesomeIcon icon={faTrash} className="text-danger" />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </Table>
                     </div>
 
                     <div>
