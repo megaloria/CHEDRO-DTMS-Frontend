@@ -49,14 +49,14 @@ function DocumentEdit() {
         receivable_type: document.sender.receivable_type === 'App\\Models\\Nga' ? 'NGAs' :
             document.sender.receivable_type === 'App\\Models\\ChedOffice' ? 'CHED Offices' :
                 document.sender.receivable_type === 'App\\Models\\Hei' ? 'HEIs' :
-                    document.sender.receivable_type,
+                   'Others',
         receivable_id: document.sender.receivable_id,
-        receivable_name: document.sender.receivable_name,
-        province: document.sender.receivable.province,
-        municipality: document.sender.receivable.city_municipality,
-        insti: document.sender.receivable.id,
-        ngas: document.sender.receivable.id,
-        chedoffices: document.sender.receivable.id,
+        receivable_name: document.sender.name,
+        province: document.sender.receivable_type === null ? null : document.sender.receivable.province,
+        municipality: document.sender.receivable_type === null ? null : document.sender.receivable.city_municipality,
+        insti: document.sender.receivable_type === null ? null : document.sender.receivable.id,
+        ngas: document.sender.receivable_type === null ? null : document.sender.receivable.id,
+        chedoffices: document.sender.receivable_type === null ? null : document.sender.receivable.id,
         description: document.description,
         category_id: document.category_id
     });
@@ -67,6 +67,7 @@ function DocumentEdit() {
         date_received: '',
         receivable_type: '',
         receivable_id: '',
+        receivableName: '',
         receivable_name: '',
         province: '',
         municipality: '',
@@ -76,6 +77,7 @@ function DocumentEdit() {
         description: '',
         category_id: ''
     });
+
 
     useEffect(() => {
     if (formInputs.receivable_type === 'NGAs') {
