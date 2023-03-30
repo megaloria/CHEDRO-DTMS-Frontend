@@ -22,7 +22,9 @@ import {
     faBuildingUser,
     faKeyboard,
     faUserCheck,
-    faArrowCircleRight
+    faArrowCircleRight,
+    faArrowDownUpAcrossLine,
+    faArrowRightArrowLeft
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData
@@ -116,14 +118,21 @@ function DocumentView() {
                         </Row>
 
                         <Row className="mb-3">
-                            <Col >
-                                <FontAwesomeIcon icon={faArrowCircleRight} className='text-dark me-4'/>
-                                {document.assign.map(documentLog => (
-                                <span key={documentLog.id}>
-                                 <p>{documentLog.to_id}</p>
-                                </span>
-                            ))}
-                            </Col>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <FontAwesomeIcon icon={faShare} className='text-dark me-4' />
+                                {document.assign && document.assign.length > 0 ? (
+                                    <span>
+                                        {document.assign.map((assign, index) => (
+                                            <span key={assign.assigned_user.profile.id}>
+                                                {assign.assigned_user.profile.name}
+                                                {index !== document.assign.length - 1 ? ', ' : ''}
+                                            </span>
+                                        ))}
+                                    </span>
+                                ) : (
+                                    <p>No assigned user found</p>
+                                )}
+                            </div>
                         </Row>
 
                         {document.attachments?.file_title ? (
