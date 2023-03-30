@@ -16,7 +16,7 @@ function MastHeader () {
             <Container fluid>
                 <Row className='d-flex'>
                 
-                    <Col className='d-flex ms-5 align-self-center'>
+                    <Col className='d-flex ms-3 mt-3 align-self-center'>
                         <a className=''href='https://chedcalabarzon.com/'>
                             <img src= {chedLogo} alt='' height={120}/>
                         </a>
@@ -28,15 +28,13 @@ function MastHeader () {
                         </p> 
                     </Col>
 
-                    <Col  className='logo'> 
-                        <div className='d-flex justify-content-end me-5'> 
-                        <a 
-                        className='me-3'
-                        href='https://www.foi.gov.ph/'>
-                            <span className='d-none d-md-inline-block'> <img src= {foi} alt='' height={120}/></span>
+                    <Col  className='logo mt-3 d-none d-md-inline-block'> 
+                        <div className='d-flex justify-content-end me-3'> 
+                        <a className='me-3'href='https://www.foi.gov.ph/'>
+                            <img src= {foi} alt='' height={120}/>
                         </a>
                         <a href='https://www.dbm.gov.ph/index.php/about-us/philippine-transparency-seal'>
-                        <span className='d-none d-md-inline-block'> <img src= {seal} alt='' height={120}/> </span>
+                            <img src= {seal} alt='' height={120}/> 
                         </a>
                     </div>
                     </Col>
