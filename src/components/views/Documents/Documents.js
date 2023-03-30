@@ -297,12 +297,20 @@ function Documents() {
                                         </td>
                                         <td>
                                             {row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
-                                                <Badge bg="warning">Assigned</Badge>
+                                                <Badge bg="warning">
+                                                Assigned 
+                                                {/* {document.assign && document.assign.length > 0 && document.assign.map((assign, index) => (
+                                                    <span key={index}>
+                                                    {assign.assigned_user && assign.assigned_user.profile ? assign.assigned_user.profile.name : ''}
+                                                    {index !== document.assign.length - 1 ? ', ' : ''}
+                                                    </span>
+                                                ))} */}
+                                                </Badge>
                                             ) : (
                                                 <Badge bg="primary">Received</Badge>
                                             )}
                                         </td>
-
+                                        
                                         <td style={{ whiteSpace: 'nowrap' }}>
                                             <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
