@@ -340,8 +340,8 @@ function DocumentTypes() {
                         <Spinner animation='border' />
                     </div>
                 </div>
-                <Table striped bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''} >
-                    <thead>
+                <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''} >
+                    <thead className='table-primary'>
                         <tr>
                             <th>ID</th>
                             <th>Code</th>
@@ -354,7 +354,7 @@ function DocumentTypes() {
                         {
                             data.data.map((row, index) => (
                                 <tr key={index}>
-                                    <td>{row.id}</td>
+                                    <td className='table-primary'>{row.id}</td>
                                     <td>{row.code}</td>
                                     <td>{row.description}</td>
                                     <td>{row.days}</td>

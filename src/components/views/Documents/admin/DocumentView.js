@@ -69,7 +69,11 @@ function DocumentView() {
                         <Row className="mb-3">
                             <Col>
                                 <FontAwesomeIcon icon={faTimeline} className='text-dark me-3'/>
-                                <Badge bg="primary">Received</Badge>
+                                {document.logs.length > 0 && document.logs[0].to_id && document.logs[0].from_id  !== null ? (
+                                        <Badge bg="warning">Forwarded</Badge>
+                                    ) : (
+                                        <Badge bg="primary">Received</Badge>
+                                    )}
                             </Col> 
                          </Row>
 
@@ -117,6 +121,7 @@ function DocumentView() {
                             </Col>
                         </Row>
 
+                      
                         <Row className="mb-3">
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <FontAwesomeIcon icon={faShare} className='text-dark me-4' />
@@ -134,6 +139,7 @@ function DocumentView() {
                                 )}
                             </div>
                         </Row>
+                  
 
                         {document.attachments?.file_title ? (
                         <Row className="mb-3"> 

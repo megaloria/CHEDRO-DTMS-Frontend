@@ -367,8 +367,8 @@ function Heis() {
                         <Spinner animation='border' />
                     </div>
                 </div>
-                <Table striped bordered hover size='md' className={isTableLoading ? 'table-loading' : ''}>
-                    <thead>
+                <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
+                    <thead className='table-primary'>
                         <tr>
                             <th>ID</th>
                             <th>UII</th>
@@ -385,7 +385,7 @@ function Heis() {
                         {
                             data.data.map((row, index) => (
                                 <tr key={index}>
-                                    <td>{row.id}</td>
+                                    <td className='table-primary'>{row.id}</td>
                                     <td>{row.uii}</td>
                                     <td>{row.name}</td>
                                     <td>{row.street_barangay}</td>

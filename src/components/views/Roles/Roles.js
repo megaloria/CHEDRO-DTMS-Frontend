@@ -349,8 +349,8 @@ function Roles() {
                         <Spinner animation='border' />
                     </div>
                 </div>
-                <Table striped bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
-                    <thead>
+                <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
+                    <thead className='table-primary'>
                         <tr>
                             <th>ID</th>
                             <th>Division</th>
@@ -363,7 +363,7 @@ function Roles() {
                         {
                             data.data.map((row, index) => (
                                 <tr key={index}>
-                                    <td>{row.id}</td>
+                                    <td className='table-primary'>{row.id}</td>
                                     <td>{getDivisionDescription(row.division_id)}</td>
                                     <td>{row.description}</td>
                                     <td>{row.level}</td>
