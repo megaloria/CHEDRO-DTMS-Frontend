@@ -381,7 +381,7 @@ function Documents() {
                                                             <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                         </Button>
 
-                                                        <Button variant="link" size='sm' onClick={e => handleShowModal()}>
+                                                        <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                             <FontAwesomeIcon icon={faShare} className="" />
                                                         </Button>
 
