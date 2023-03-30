@@ -335,34 +335,93 @@ function Documents() {
                     </Table>
                     </div>
 
-                    <div>
-
-                        {data.data.length > 0 && (
-                            <Pagination style={{ float: 'right' }}>
-                                <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
-                                <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
-                                <Pagination.Item disabled>
-                                    {`${data.current_page} / ${data.last_page}`}
-                                </Pagination.Item>
-                                <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
-                                <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
-                            </Pagination>
-                        )}
-
-                    </div>
+                   
                     </div>
 
                          )
                     } 
-                    
                 </Tab>
-                <Tab eventKey="ongoing" title="Ongoing" >
-                </Tab>
+                                <Tab eventKey="ongoing" title="Ongoing">
+                                    <Table bordered hover responsive size="md" className={isTableLoading ? 'table-loading' : ''}>
+                                        <thead>
+                                            <tr className="table-primary">
+                                                <th>ID</th>
+                                                <th>Tracking No.</th>
+                                                <th>Document Type</th>
+                                                <th>Category</th>
+                                                <th>Received From</th>
+                                                <th>Date Received</th>
+                                                <th>Description</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {data.data.filter(row => row.assign.length > 0 && row.assign[0].assigned_id !== null).map((row, index) => (
+                                                <tr key={index}>
+                                                    <td className="table-primary">{row.id}</td>
+                                                    <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
+                                                    <td>{getDocumentType(row.document_type_id)}</td>
+                                                    <td>{getCategory(row.category_id)}</td>
+                                                    <td>{row.sender?.receivable?.title ?? row.sender.name}</td>
+                                                    <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
+                                                    <td>
+                                                        <div className='text-truncate' style={{ width: '200px' }}>
+                                                            {row.description}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
+                                                            <Badge bg="warning">
+                                                                Assigned
+                                                            </Badge>
+                                                        ) : (
+                                                            <Badge bg="primary">Received</Badge>
+                                                        )}
+                                                    </td>
+                                                    <td style={{ whiteSpace: 'nowrap' }}>
+                                                        <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
+                                                            <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
+                                                        </Button>
+
+                                                        <Button variant="link" size='sm' onClick={e => handleShowModal()}>
+                                                            <FontAwesomeIcon icon={faShare} className="" />
+                                                        </Button>
+
+                                                        <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
+                                                            <FontAwesomeIcon icon={faEdit} className="text-success" />
+                                                        </Button>
+
+                                                        <Button onClick={e => showDeleteAlert(row)} variant="link" size='sm' >
+                                                            <FontAwesomeIcon icon={faTrash} className="text-danger" />
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </Table>
+    
+                                </Tab>
+
                 <Tab eventKey="releasing" title="Releasing" >
                 </Tab>
                 <Tab eventKey="done" title="Done">
                 </Tab>
             </Tabs>
+            
+            <div>
+                            {data.data.length > 0 && (
+                                <Pagination style={{ float: 'right' }}>
+                                    <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                    <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                    <Pagination.Item disabled>
+                                        {`${data.current_page} / ${data.last_page}`}
+                                    </Pagination.Item>
+                                    <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                    <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                                </Pagination>
+                            )}
+                        </div>
 
             <Modal
                 show={modal.show}
