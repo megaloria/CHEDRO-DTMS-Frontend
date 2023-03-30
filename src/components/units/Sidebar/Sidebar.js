@@ -49,9 +49,10 @@ function Sidebar() {
                 </Nav.Link>
                 <Nav.Link eventKey='settings' className='flex1' onClick={e => setActiveKey('settings')}>
                     <span style={{ color: 'white', fontSize: '15px' }}>
-                        <FontAwesomeIcon icon={faGear} className='me-2' />Settings
+                        <FontAwesomeIcon icon={faGear} className={`me-2 ${activeKey === 'settings' ? 'gear-rotate' : ''}`} />Settings
                     </span>
                 </Nav.Link>
+
                 <Nav className={`dropdown-menu-container ${activeKey === 'settings' ? 'open' : ''} flex-column`}>
                     <Nav.Link eventKey='heis' as={Link} to='settings/heis' className='flex2'>
                         <FontAwesomeIcon className='me-2' icon={faBuildingColumns} />
