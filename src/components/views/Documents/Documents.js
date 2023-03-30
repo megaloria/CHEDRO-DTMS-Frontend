@@ -11,7 +11,11 @@ import {
     Pagination,
     Alert,
     Spinner,
-    Badge
+    Badge,
+    OverlayTrigger,
+    Popover,
+    ListGroup,
+    ListGroupItem
 } from 'react-bootstrap';
 import {
     Link, useNavigate
@@ -327,19 +331,35 @@ function Documents() {
                                         </td>
                                         <td>
                                             {row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
-                                                <Badge bg="warning">
-                                                Assigned 
-                                                {/* {document.assign && document.assign.length > 0 && document.assign.map((assign, index) => (
-                                                    <span key={index}>
-                                                    {assign.assigned_user && assign.assigned_user.profile ? assign.assigned_user.profile.name : ''}
-                                                    {index !== document.assign.length - 1 ? ', ' : ''}
-                                                    </span>
-                                                ))} */}
+                                                
+                                                 <OverlayTrigger
+                                                 trigger={['click', 'hover']}
+                                                 placement="left"
+                                                 overlay={
+                                                   <Popover>
+                                                     <Popover.Header className='bg-warning text-white'>Assigned to</Popover.Header>
+                                                     <Popover.Body>
+                                                        <ListGroup variant='flush'> 
+                                                  {row.assign.map((assign, index) => (
+                                                            <ListGroupItem variant='warning text-black' key={assign.assigned_user.profile.id}>
+                                                                {assign.assigned_user.profile.name}
+                                                            </ListGroupItem>
+                                                        ))}
+                                                        </ListGroup >
+                                                     
+                                                     </Popover.Body>
+                                                   </Popover>
+                                                 }
+                                               >
+                                                <Badge bg="warning" style={{ cursor:'pointer' }}>
+                                                Assigned
                                                 </Badge>
+                                               </OverlayTrigger>
                                             ) : (
                                                 <Badge bg="primary">Received</Badge>
                                             )}
                                         </td>
+                                        
                                         
                                         <td style={{ whiteSpace: 'nowrap' }}>
                                             <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
