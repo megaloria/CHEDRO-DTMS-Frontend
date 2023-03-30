@@ -317,7 +317,7 @@ function Documents() {
                                                    </Popover>
                                                  }
                                                >
-                                                <Badge bg="warning">
+                                                <Badge bg="warning" style={{ cursor:'pointer' }}>
                                                 Assigned
                                                 </Badge>
                                                </OverlayTrigger>
