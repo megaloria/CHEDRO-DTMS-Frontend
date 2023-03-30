@@ -330,37 +330,65 @@ function Documents() {
                                             </div>
                                         </td>
                                         <td>
-                                            {row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
-                                                
-                                                 <OverlayTrigger
-                                                 trigger={['click', 'hover']}
-                                                 placement="left"
-                                                 overlay={
-                                                   <Popover>
-                                                     <Popover.Header className='bg-warning text-white'>Assigned to</Popover.Header>
-                                                     <Popover.Body>
-                                                        <ListGroup variant='flush'> 
-                                                  {row.assign.map((assign, index) => (
-                                                            <ListGroupItem variant='warning text-black' key={assign.assigned_user.profile.id}>
-                                                                {assign.assigned_user.profile.name}
-                                                            </ListGroupItem>
-                                                        ))}
-                                                        </ListGroup >
-                                                     
-                                                     </Popover.Body>
-                                                   </Popover>
-                                                 }
-                                               >
-                                                <Badge bg="warning" style={{ cursor:'pointer' }}>
-                                                Assigned
-                                                </Badge>
-                                               </OverlayTrigger>
+                                            {(row.assign.length > 0 && row.logs.length > 0 ) && (row.assign[0].assigned_id !== null && row.logs[0].to_id == null) ? (
+                                                <OverlayTrigger
+                                                    trigger={['click', 'hover']}
+                                                    placement="left"
+                                                    overlay={
+                                                        <Popover>
+                                                            <Popover.Header className="bg-warning text-white">
+                                                                Assigned to
+                                                            </Popover.Header>
+                                                            <Popover.Body>
+                                                                <ListGroup variant="flush">
+                                                                    {row.assign.map((assign, index) => (
+                                                                        <ListGroupItem
+                                                                            variant="warning text-black"
+                                                                            key={assign.assigned_user.profile.id}
+                                                                        >
+                                                                            {assign.assigned_user.profile.name}
+                                                                        </ListGroupItem>
+                                                                    ))}
+                                                                </ListGroup>
+                                                            </Popover.Body>
+                                                        </Popover>
+                                                    }
+                                                >
+                                                    <Badge bg="warning" style={{ cursor: 'pointer' }}>Assigned</Badge>
+                                                </OverlayTrigger>
                                             ) : (
-                                                <Badge bg="primary">Received</Badge>
+                                                    row.logs.length > 0 && row.logs[0].to_id && row.assign[0].assigned_id !== null ? (
+                                                    <OverlayTrigger
+                                                        trigger={['click', 'hover']}
+                                                        placement="left"
+                                                        overlay={
+                                                            <Popover>
+                                                                <Popover.Header className="bg-warning text-white">
+                                                                    Forwarded to
+                                                                </Popover.Header>
+                                                                <Popover.Body>
+                                                                    <ListGroup variant="flush">
+                                                                        {row.logs.map((logs, index) => (
+                                                                            <ListGroupItem
+                                                                                variant="warning text-black"
+                                                                                key={logs.user.profile.id}
+                                                                            >
+                                                                                {logs.user.profile.name}
+                                                                            </ListGroupItem>
+                                                                        ))}
+                                                                    </ListGroup>
+                                                                </Popover.Body>
+                                                            </Popover>
+                                                        }
+                                                    >
+                                                        <Badge bg="warning" style={{ cursor: 'pointer' }}>Assigned</Badge>
+                                                    </OverlayTrigger>
+                                                ) : (
+                                                    <Badge bg="primary">Received</Badge>
+                                                )
                                             )}
                                         </td>
-                                        
-                                        
+
                                         <td style={{ whiteSpace: 'nowrap' }}>
                                             <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
