@@ -11,7 +11,9 @@ import {
     Pagination,
     Alert,
     Spinner,
-    Badge
+    Badge,
+    OverlayTrigger,
+    Popover
 } from 'react-bootstrap';
 import {
     Link
@@ -298,10 +300,27 @@ function Documents() {
                                         </td>
                                         <td>
                                             {row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
-                                                <Badge bg="warning">
-                                                Assigned to: {row.assign.map(a => a.assigned_user.profile.name).join(", ")}
                                                 
+                                                 <OverlayTrigger
+                                                 trigger={['click', 'hover']}
+                                                 placement="right"
+                                                 overlay={
+                                                   <Popover>
+                                                     <Popover.Header className='bg-warning text-white'>Assigned to</Popover.Header>
+                                                     <Popover.Body>
+                                                     {row.assign.map((assign, index) => (
+                                                            <div key={assign.assigned_user.profile.id}>
+                                                                {assign.assigned_user.profile.name}
+                                                            </div>
+                                                        ))}
+                                                     </Popover.Body>
+                                                   </Popover>
+                                                 }
+                                               >
+                                                <Badge bg="warning">
+                                                Assigned
                                                 </Badge>
+                                               </OverlayTrigger>
                                             ) : (
                                                 <Badge bg="primary">Received</Badge>
                                             )}
