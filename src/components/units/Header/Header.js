@@ -132,7 +132,7 @@ function Header(props) {
                 </Modal.Header>
                   <Modal.Body>Are you sure you want to log out?</Modal.Body>
                   <Modal.Footer>
-                    <Button variant="danger" onClick={handleClose}>
+                    <Button variant="secondary" onClick={handleClose}>
                       Cancel
                     </Button>
                     <Button variant="primary" onClick={handleLogout}>
