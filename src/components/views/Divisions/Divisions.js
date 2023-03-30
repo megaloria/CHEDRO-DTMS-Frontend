@@ -4,8 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faTrash,
     faEdit,
-    faAdd,
-    faSearch,
+    faAdd
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Button,
@@ -235,7 +234,7 @@ function Division() {
                     <div className='d-md-flex mb-3 justify-content-end'>
                         <div className='search'> 
                             <Form className="d-flex" controlId="" onSubmit="">
-                                    <Form.Control 
+                                    {/* <Form.Control 
                                         type="search" 
                                         placeholder="Search" 
                                         className="me-2"
@@ -244,7 +243,7 @@ function Division() {
                                     />
                                     <Button type='submit'>
                                         <FontAwesomeIcon icon={faSearch} />
-                                    </Button>
+                                    </Button> */}
 
                                     <div className='ms-2'> 
                                         <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>

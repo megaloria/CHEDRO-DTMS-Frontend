@@ -16,8 +16,7 @@ import {
     faEdit,
     faAdd,
     faCheck,
-    faTimes,
-    faSearch
+    faTimes
 } from '@fortawesome/free-solid-svg-icons';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
@@ -250,7 +249,7 @@ function Category() {
                     <div className='d-md-flex mb-3 justify-content-end'>
                         <div className='search'> 
                             <Form className="d-flex" controlId="">
-                                    <Form.Control 
+                                    {/* <Form.Control 
                                         type="search" 
                                         placeholder="Search" 
                                         className="me-2"
@@ -259,7 +258,7 @@ function Category() {
                                     />
                                     <Button type='submit'>
                                         <FontAwesomeIcon icon={faSearch} />
-                                    </Button>
+                                    </Button> */}
 
                                     <div className='ms-2'> 
                                         <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>

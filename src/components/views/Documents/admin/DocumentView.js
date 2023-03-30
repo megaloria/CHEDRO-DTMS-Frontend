@@ -21,10 +21,7 @@ import {
     faTag,
     faBuildingUser,
     faKeyboard,
-    faUserCheck,
-    // faArrowCircleRight,
-    // faArrowDownUpAcrossLine,
-    // faArrowRightArrowLeft
+    faUserCheck
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData
