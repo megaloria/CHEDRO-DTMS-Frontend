@@ -107,7 +107,7 @@ function Login() {
   }
 
   return (    
-    <div className='maindiv' style={{backgroundColor:'#0C2245'}}>
+    <div className='maindiv' style={{backgroundColor:'#0C2245', height:'100vh'}}>
       <Container className='container1'>
         <Row style={{ height: '100%', alignItems: 'center' }}>
           <Col style={{ margin: 'auto' }}md={{ span: 4 }}>

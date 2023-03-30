@@ -146,11 +146,11 @@ const navigate = useNavigate();
 
     return (
         <div className='maindiv'>
-            <Container className='container1'>
-                <Row style={{ height: '100%', alignItems: 'center' }}>
-                    <Col style={{ margin: 'auto' }} md={{ span: 4 }}>
+            <Container className='container1' >
+                <Row className='justify-content-center mt-4 mb-4'>
+                    <Col xs={12} sm={10} md={8} lg={6}>
                         <Form onSubmit={handleSubmit}>
-                            <Card className='p-3' style={{ borderRadius: '25px', width: '70vh' }}>
+                            <Card className='p-3' style={{ borderRadius: '25px'}}>
                                 <Card.Body>
                                     <Form.Group 
                                         className='mb-3' 
@@ -220,7 +220,7 @@ const navigate = useNavigate();
                                        
                                         {loaderData.is_first_login ? null : (
                                         <Button
-                                            variant="dark"
+                                            variant="secondary"
                                             as={Link}
                                             to='../'>
                                             Cancel
