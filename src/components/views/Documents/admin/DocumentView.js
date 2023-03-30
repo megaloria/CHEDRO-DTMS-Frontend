@@ -69,8 +69,8 @@ function DocumentView() {
                         <Row className="mb-3">
                             <Col>
                                 <FontAwesomeIcon icon={faTimeline} className='text-dark me-3'/>
-                                {document.logs.length > 0 && document.logs[0].to_id && document.logs[0].from_id  !== null ? (
-                                        <Badge bg="warning">Forwarded</Badge>
+                                {document.assign.length > 0 && document.assign[0].assigned_id !== null ? (
+                                        <Badge bg="warning">Assigned</Badge>
                                     ) : (
                                         <Badge bg="primary">Received</Badge>
                                     )}
