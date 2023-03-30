@@ -665,20 +665,27 @@ function DocumentReceive() {
                 </Row>
                     
                     <Row>
-                    <div className='d-flex justify-content-end mt-4 mb-4'>
-                        <Col md="auto" className="me-2">
-                            <Button 
-                            variant="secondary"
-                            as={Link}
-                            to='../'> 
-                                Cancel 
-                            </Button>
-                        </Col>
-                        <Col md="auto">
-                            <Button type='submit' variant="primary"> 
-                            Receive 
-                            </Button>
-                        </Col>
+                        <div className='d-flex justify-content-end mt-4 mb-4'>
+                            <Col md="auto" className="me-2">
+                                <Button 
+                                variant="secondary"
+                                as={Link}
+                                to='../'> 
+                                    Cancel 
+                                </Button>
+                            </Col>
+                            
+                            <Col md="auto" className="me-2">
+                                <Button type='submit' variant="outline-primary"> 
+                                Receive 
+                                </Button>
+                            </Col>
+
+                            <Col md="auto">
+                                <Button type='submit' variant="primary"> 
+                                Forward 
+                                </Button>
+                            </Col>
                         </div>
                     </Row>
             </div>
