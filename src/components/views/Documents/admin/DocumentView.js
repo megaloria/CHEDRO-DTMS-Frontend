@@ -122,7 +122,6 @@ function DocumentView() {
                                 ) : ( null
                                    
                                 )}
-                            
                         {/* <Row className="mb-3">
                             <Col>
                                 <FontAwesomeIcon icon={faUserCheck} className="text-dark" style={{marginRight:'18px'}}/>
