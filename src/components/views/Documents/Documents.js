@@ -13,7 +13,9 @@ import {
     Spinner,
     Badge,
     OverlayTrigger,
-    Popover
+    Popover,
+    ListGroup,
+    ListGroupItem
 } from 'react-bootstrap';
 import {
     Link
@@ -303,16 +305,19 @@ function Documents() {
                                                 
                                                  <OverlayTrigger
                                                  trigger={['click', 'hover']}
-                                                 placement="right"
+                                                 placement="left"
                                                  overlay={
                                                    <Popover>
                                                      <Popover.Header className='bg-warning text-white'>Assigned to</Popover.Header>
                                                      <Popover.Body>
-                                                     {row.assign.map((assign, index) => (
-                                                            <div key={assign.assigned_user.profile.id}>
+                                                        <ListGroup variant='flush'> 
+                                                  {row.assign.map((assign, index) => (
+                                                            <ListGroupItem variant='warning text-black' key={assign.assigned_user.profile.id}>
                                                                 {assign.assigned_user.profile.name}
-                                                            </div>
+                                                            </ListGroupItem>
                                                         ))}
+                                                        </ListGroup >
+                                                     
                                                      </Popover.Body>
                                                    </Popover>
                                                  }
