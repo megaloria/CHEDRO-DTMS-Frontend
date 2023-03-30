@@ -65,12 +65,6 @@ function Documents() {
             setIsLoading(false);
         });
 
-        // let userIds = data.assign.filter(l => l.assigned_id);
-        // userIds = userIds.map(log => {
-        //     return log.assigned_id;
-        // });
-        // setSelectedUsers(userIds);
-
     }, []);
     
 
@@ -116,6 +110,12 @@ function Documents() {
     }
 
     const handleShowModal = (data = null) => {
+
+        let userIds = data.assign.filter(l => l.assigned_id);
+        userIds = userIds.map(log => {
+            return log.assigned_id;
+        });
+        setSelectedUsers(userIds);
        
         setModal({
             show: true,
@@ -317,7 +317,7 @@ function Documents() {
                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                             </Button>
                                 
-                                            <Button variant="link" size='sm' onClick={e => handleShowModal()}>
+                                            <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                 <FontAwesomeIcon icon={faShare} className="" />
                                             </Button>
 
