@@ -110,7 +110,7 @@ function DocumentView() {
                         {document.assign && document.assign.length > 0 ? (
                         <Row className="mb-3">
                             <Col> 
-                            <FontAwesomeIcon icon={faUserCheck} className='text-dark me-4' />
+                            <FontAwesomeIcon icon={faUserCheck} className='text-dark' style={{marginRight:'18px'}}/>
                                 {document.assign.map((assign, index) => (
                                     <span key={assign.assigned_user.profile.id}>
                                         {assign.assigned_user.profile.name}
