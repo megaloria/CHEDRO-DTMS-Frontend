@@ -49,19 +49,6 @@ function Documents() {
         isLoading: false
     });
 
-    const [formInputs, setFormInputs] = useState({});
-
-    //For assigning multiple users 
-    const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
-        setSelectedUsers(userIds);
-    };
-
-    const options = users.map(user => ({
-        value: user.id,
-        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-    }));
-
     useEffect(() => {
         apiClient.get('/document', {
             params: {
@@ -77,7 +64,15 @@ function Documents() {
         }).finally(() => {
             setIsLoading(false);
         });
+
+        // let userIds = data.assign.filter(l => l.assigned_id);
+        // userIds = userIds.map(log => {
+        //     return log.assigned_id;
+        // });
+        // setSelectedUsers(userIds);
+
     }, []);
+    
 
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
@@ -98,6 +93,18 @@ function Documents() {
         });
     };
 
+    //For assigning multiple users 
+    const handleUserSelection = (selectedOptions) => {
+        const userIds = selectedOptions.map(option => option.value);
+        setSelectedUsers(userIds);
+    };
+
+    const options = users.map(user => ({
+        value: user.id,
+        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+    }));
+
+
     const getDocumentType = (docTypeId) => {
         let docType = documentType.find(div => div.id === docTypeId);
         return docType?.description;
@@ -109,13 +116,7 @@ function Documents() {
     }
 
     const handleShowModal = (data = null) => {
-        if (data !== null) {
-            setFormInputs({
-                ...formInputs,
-                // description: data.description
-            });
-        }
-
+       
         setModal({
             show: true,
             data,
@@ -368,7 +369,7 @@ function Documents() {
                 <Modal.Body>
                     <Row>
                         <Col md={'auto'}>
-                            <Form.Label>Select assign to:</Form.Label>
+                            <Form.Label>Assign to <span className='text-muted'>(Optional)</span>:</Form.Label>
                             <Select
                                 isMulti
                                 name='assignTo'
@@ -389,6 +390,8 @@ function Documents() {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+           
         </div>
     );
 }
