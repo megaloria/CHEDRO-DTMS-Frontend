@@ -22,7 +22,9 @@ import {
     faBuildingUser,
     faKeyboard,
     faUserCheck,
-    faArrowCircleRight
+    faArrowCircleRight,
+    faArrowDownUpAcrossLine,
+    faArrowRightArrowLeft
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData
@@ -67,8 +69,8 @@ function DocumentView() {
                         <Row className="mb-3">
                             <Col>
                                 <FontAwesomeIcon icon={faTimeline} className='text-dark me-3'/>
-                                {document.logs.length > 0 && document.logs[0].to_id && document.logs[0].from_id  !== null ? (
-                                        <Badge bg="warning">Forwarded</Badge>
+                                {document.assign.length > 0 && document.assign[0].assigned_id !== null ? (
+                                        <Badge bg="warning">Assigned</Badge>
                                     ) : (
                                         <Badge bg="primary">Received</Badge>
                                     )}
@@ -121,14 +123,21 @@ function DocumentView() {
 
                       
                         <Row className="mb-3">
-                            <Col >
-                                <FontAwesomeIcon icon={faArrowCircleRight} className='text-dark me-4'/>
-                                {document.assign.map(documentLog => (
-                                <span key={documentLog.id}>
-                                    {documentLog.to_id}
-                                </span>
-                            ))}
-                            </Col>
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <FontAwesomeIcon icon={faShare} className='text-dark me-4' />
+                                {document.assign && document.assign.length > 0 ? (
+                                    <span>
+                                        {document.assign.map((assign, index) => (
+                                            <span key={assign.assigned_user.profile.id}>
+                                                {assign.assigned_user.profile.name}
+                                                {index !== document.assign.length - 1 ? ', ' : ''}
+                                            </span>
+                                        ))}
+                                    </span>
+                                ) : (
+                                    <p>No assigned user found</p>
+                                )}
+                            </div>
                         </Row>
                   
 
