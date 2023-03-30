@@ -14,7 +14,7 @@ import {
     Badge
 } from 'react-bootstrap';
 import {
-    Link
+    Link, useNavigate
 } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -40,6 +40,7 @@ function Documents() {
     const [documentType, setDocumentType] = useState([]); //document type variable
     const [category, setCategory] = useState([]); //category variable
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+    const navigate = useNavigate();
     
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -194,6 +195,34 @@ function Documents() {
         });
     };
 
+    const handleForward = event => {
+
+        const formData = new FormData();
+
+        for (let i = 0; i < selectedUsers.length; i++) {
+            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        }
+
+        apiClient.post(`/document/${modal.data?.id}/forward`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            navigate('../');
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        });
+    };
+
     if (isLoading) {
         return (
            <Spinner animation='border' />
@@ -330,15 +359,28 @@ function Documents() {
                                             </Button>
                                         </td>
                                     </tr>
+                                    
                                 ))
                             }
                         </tbody>
                     </Table>
                     </div>
-
+                                    <div>
+                                        {data.data.length > 0 && (
+                                            <Pagination style={{ float: 'right' }}>
+                                                <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                                <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                                <Pagination.Item disabled>
+                                                    {`${data.current_page} / ${data.last_page}`}
+                                                </Pagination.Item>
+                                                <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                                <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                                            </Pagination>
+                                        )}
+                                    </div>    
                    
                     </div>
-
+                
                          )
                     } 
                 </Tab>
@@ -401,6 +443,20 @@ function Documents() {
                                             ))}
                                         </tbody>
                                     </Table>
+
+                    <div>
+                        {data.data.length > 0 && (
+                            <Pagination style={{ float: 'right' }}>
+                                <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                <Pagination.Item disabled>
+                                    {`${data.current_page} / ${data.last_page}`}
+                                </Pagination.Item>
+                                <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                            </Pagination>
+                        )}
+                    </div>   
     
                                 </Tab>
 
@@ -410,19 +466,7 @@ function Documents() {
                 </Tab>
             </Tabs>
             
-            <div>
-                            {data.data.length > 0 && (
-                                <Pagination style={{ float: 'right' }}>
-                                    <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
-                                    <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
-                                    <Pagination.Item disabled>
-                                        {`${data.current_page} / ${data.last_page}`}
-                                    </Pagination.Item>
-                                    <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
-                                    <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
-                                </Pagination>
-                            )}
-                        </div>
+           
 
             <Modal
                 show={modal.show}
@@ -452,7 +496,7 @@ function Documents() {
                     <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                         Cancel
                     </Button>
-                    <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={modal.isLoading}>
                         Forward
                     </Button>
                 </Modal.Footer>
