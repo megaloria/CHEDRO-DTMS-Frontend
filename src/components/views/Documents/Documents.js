@@ -87,6 +87,7 @@ function Documents() {
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
             setUsers(response.data.data.user);
+            setOngoingData(response.data.data.ongoing)
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -157,6 +158,7 @@ function Documents() {
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
             setUsers(response.data.data.user);
+            setOngoingData(response.data.data.ongoing);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
