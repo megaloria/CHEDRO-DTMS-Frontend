@@ -39,6 +39,7 @@ function Documents() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]);
+    const [ongoingData, setOngoingData] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
     const [documentType, setDocumentType] = useState([]); //document type variable
@@ -64,6 +65,7 @@ function Documents() {
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
             setUsers(response.data.data.user);
+            setOngoingData(response.data.data.ongoing)
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -449,7 +451,7 @@ function Documents() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {data.data.filter(row => row.assign.length > 0 && row.assign[0].assigned_id !== null).map((row, index) => (
+                                            {  ongoingData.data.map((row, index) => (
                                                 <tr key={index}>
                                                     <td className="table-primary">{row.id}</td>
                                                     <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
@@ -463,12 +465,62 @@ function Documents() {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        {row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
-                                                            <Badge bg="warning">
-                                                                Assigned
-                                                            </Badge>
+                                                        {row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs.length > 0 && row.logs[0].to_id !== null ? (
+                                                            <OverlayTrigger
+                                                                trigger={['click', 'hover']}
+                                                                placement="left"
+                                                                overlay={
+                                                                    <Popover>
+                                                                        <Popover.Header className="bg-warning text-white">
+                                                                            Forwarded to
+                                                                        </Popover.Header>
+                                                                        <Popover.Body>
+                                                                            <ListGroup variant="flush">
+                                                                                {row.assign.map((assign, index) => (
+                                                                                    <ListGroupItem
+                                                                                        variant="warning text-black"
+                                                                                        key={assign.assigned_user.profile.id}
+                                                                                    >
+                                                                                        {assign.assigned_user.profile.name}
+                                                                                    </ListGroupItem>
+                                                                                ))}
+                                                                            </ListGroup>
+                                                                        </Popover.Body>
+                                                                    </Popover>
+                                                                }
+                                                            >
+                                                                <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded</Badge>
+                                                            </OverlayTrigger>
                                                         ) : (
-                                                            <Badge bg="primary">Received</Badge>
+                                                            row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
+                                                                <OverlayTrigger
+                                                                    trigger={['click', 'hover']}
+                                                                    placement="left"
+                                                                    overlay={
+                                                                        <Popover>
+                                                                            <Popover.Header className="bg-primary text-white">
+                                                                                Assigned to
+                                                                            </Popover.Header>
+                                                                            <Popover.Body>
+                                                                                <ListGroup variant="flush">
+                                                                                    {row.assign.map((assign, index) => (
+                                                                                        <ListGroupItem
+                                                                                            variant="primary text-black"
+                                                                                            key={assign.assigned_user.profile.id}
+                                                                                        >
+                                                                                            {assign.assigned_user.profile.name}
+                                                                                        </ListGroupItem>
+                                                                                    ))}
+                                                                                </ListGroup>
+                                                                            </Popover.Body>
+                                                                        </Popover>
+                                                                    }
+                                                                >
+                                                                    <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
+                                                                </OverlayTrigger>
+                                                            ) : (
+                                                                <Badge bg="primary">Received</Badge>
+                                                            )
                                                         )}
                                                     </td>
                                                     <td style={{ whiteSpace: 'nowrap' }}>
@@ -494,15 +546,15 @@ function Documents() {
                                     </Table>
 
                     <div>
-                        {data.data.length > 0 && (
+                        {   ongoingData.data.length > 0 && (
                             <Pagination style={{ float: 'right' }}>
-                                <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
-                                <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                <Pagination.First onClick={e => handlePageChange(1)} disabled={ongoingData.current_page === 1} />
+                                <Pagination.Prev onClick={e => handlePageChange(ongoingData.current_page - 1)} disabled={ongoingData.current_page === 1} />
                                 <Pagination.Item disabled>
-                                    {`${data.current_page} / ${data.last_page}`}
+                                    {`${ongoingData.current_page} / ${ongoingData.last_page}`}
                                 </Pagination.Item>
-                                <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
-                                <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                                <Pagination.Next onClick={e => handlePageChange(ongoingData.current_page + 1)} disabled={ongoingData.current_page === ongoingData.last_page} />
+                                <Pagination.Last onClick={e => handlePageChange(ongoingData.last_page)} disabled={ongoingData.current_page === ongoingData.last_page} />
                             </Pagination>
                         )}
                     </div>   
