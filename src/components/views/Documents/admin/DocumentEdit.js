@@ -749,7 +749,7 @@ function DocumentEdit() {
             <Form.Group>
                 <div> 
                             <Form.Label>
-                                Category {document.logs.to_id !==null ? <span className='text-muted'>(Already Forwarded):</span> : ''}
+                                Category {document.logs && document.logs.length > 0 && document.logs[0].to_id !== null ? <span className='text-muted'>(Already Forwarded):</span> : ''}
                             </Form.Label>
 
                 </div>
@@ -764,7 +764,7 @@ function DocumentEdit() {
                                             value={category.id}
                                             checked={+formInputs.category_id === category.id}
                                             isInvalid={!!formErrors.category_id}
-                                            disabled={document.logs.to_id !== null} />
+                                            disabled={document.logs && document.logs.length > 0 && document.logs[0].to_id !== null} />
                                         <Form.Check.Label>
                                             {category.description}
                                         </Form.Check.Label>
@@ -797,7 +797,7 @@ function DocumentEdit() {
                                                         options={options}
                                                         value={options.filter(option => selectedUsers.includes(option.value))}
                                                         onChange={handleUserSelection}
-                                                        isDisabled={document.logs.to_id !== null}
+                                                        isDisabled={document.logs && document.logs.length > 0 && document.logs[0].to_id !== null}
                                                     />
 
                                                 </Col>
