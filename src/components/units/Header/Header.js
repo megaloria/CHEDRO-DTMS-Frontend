@@ -93,7 +93,7 @@ function Header(props) {
             <NavDropdown
               title={ 
                 <span className='text'>
-                  <FontAwesomeIcon icon={faBell} className="text-dark" /> Notifications
+                  <FontAwesomeIcon icon={faBell} className="bell-icon" /> Notifications
                 </span>
               }
               id='collasible-nav-dropdown'
@@ -102,7 +102,7 @@ function Header(props) {
             <NavDropdown 
               title={
                 <span className='text'>
-                  <FontAwesomeIcon icon={faUser} className="text-dark" /> {loaderData.profile.name}
+                  <FontAwesomeIcon icon={faUser} className="user-icon" /> {loaderData.profile.name}
                 </span>
               }
               id='collasible-nav-dropdown'
