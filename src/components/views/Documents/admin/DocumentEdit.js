@@ -748,19 +748,23 @@ function DocumentEdit() {
             <Row className="mb-3"> 
             <Form.Group>
                 <div> 
-                <Form.Label>Category</Form.Label>
+                            <Form.Label>
+                                Category {document.logs.to_id !==null ? <span className='text-muted'>(Already Forwarded):</span> : ''}
+                            </Form.Label>
+
                 </div>
                 <div>
                             {
                                 categories.map((category, index) => (
-                                    <Form.Check key={category.id} type='radio' id={`inline-${category.id}-1`} inline className={formErrors.category_id ? 'is-invalid' : ''}>
+                                    <Form.Check key={category.id} type='radio' id={`inline-${category.id}-1`} inline className={formErrors.category_id ? 'is-invalid' : ''} >
                                         <Form.Check.Input
                                             type='radio'
                                             name='category_id'
                                             onChange={handleInputChange}
                                             value={category.id}
                                             checked={+formInputs.category_id === category.id}
-                                            isInvalid={!!formErrors.category_id} />
+                                            isInvalid={!!formErrors.category_id}
+                                            disabled={document.logs.to_id !== null} />
                                         <Form.Check.Label>
                                             {category.description}
                                         </Form.Check.Label>
@@ -779,13 +783,23 @@ function DocumentEdit() {
                                         {selectedCategory.is_assignable &&(
                                             <Row> 
                                                 <Col md={'auto'}> 
-                                                    <Form.Label>Assign to <span className='text-muted'>(Optional)</span>:</Form.Label>
-                                                    <Select 
+                                                    <Form.Label>
+                                                        {document.logs.to_id !== null ? (
+                                                            <><span className='text-muted'>Assigned To</span> :</>
+                                                        ) : (
+                                                            <>Assign to <span className='text-muted'>(Optional)</span>:</>
+                                                        )}
+                                                    </Form.Label>
+
+                                                    <Select
                                                         isMulti
-                                                        name='assignTo' 
+                                                        name="assignTo"
                                                         options={options}
                                                         value={options.filter(option => selectedUsers.includes(option.value))}
-                                                        onChange={handleUserSelection} />
+                                                        onChange={handleUserSelection}
+                                                        isDisabled={document.logs.to_id !== null}
+                                                    />
+
                                                 </Col>
                                             </Row>
                                         )}
