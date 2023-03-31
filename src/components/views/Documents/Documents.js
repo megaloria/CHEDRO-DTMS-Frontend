@@ -341,12 +341,12 @@ function Documents() {
                                                             </Popover.Header>
                                                             <Popover.Body>
                                                                 <ListGroup variant="flush">
-                                                                    {row.logs.map((logs, index) => (
+                                                                    {row.assign.map((assign, index) => (
                                                                         <ListGroupItem
                                                                             variant="warning text-black"
-                                                                            key={logs.user.profile.id}
+                                                                            key={assign.assigned_user.profile.id}
                                                                         >
-                                                                            {logs.user.profile.name}
+                                                                            {assign.assigned_user.profile.name}
                                                                         </ListGroupItem>
                                                                     ))}
                                                                 </ListGroup>
