@@ -87,6 +87,21 @@ function Documents() {
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
             setUsers(response.data.data.user);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+        });
+    };
+
+    const handlePageChange1 = (pageNumber) => {
+        setIsTableLoading(true);
+
+        apiClient.get(`/document?page=${pageNumber}`, {
+            params: {
+                query: ''
+            }
+        }).then(response => {
             setOngoingData(response.data.data.ongoing)
         }).catch(error => {
             setErrorMessage(error);
@@ -555,13 +570,13 @@ function Documents() {
                     <div>
                         {   ongoingData.data.length > 0 && (
                             <Pagination style={{ float: 'right' }}>
-                                <Pagination.First onClick={e => handlePageChange(1)} disabled={ongoingData.current_page === 1} />
-                                <Pagination.Prev onClick={e => handlePageChange(ongoingData.current_page - 1)} disabled={ongoingData.current_page === 1} />
+                                <Pagination.First onClick={e => handlePageChange1(1)} disabled={ongoingData.current_page === 1} />
+                                <Pagination.Prev onClick={e => handlePageChange1(ongoingData.current_page - 1)} disabled={ongoingData.current_page === 1} />
                                 <Pagination.Item disabled>
                                     {`${ongoingData.current_page} / ${ongoingData.last_page}`}
                                 </Pagination.Item>
-                                <Pagination.Next onClick={e => handlePageChange(ongoingData.current_page + 1)} disabled={ongoingData.current_page === ongoingData.last_page} />
-                                <Pagination.Last onClick={e => handlePageChange(ongoingData.last_page)} disabled={ongoingData.current_page === ongoingData.last_page} />
+                                <Pagination.Next onClick={e => handlePageChange1(ongoingData.current_page + 1)} disabled={ongoingData.current_page === ongoingData.last_page} />
+                                <Pagination.Last onClick={e => handlePageChange1(ongoingData.last_page)} disabled={ongoingData.current_page === ongoingData.last_page} />
                             </Pagination>
                         )}
                     </div>   
