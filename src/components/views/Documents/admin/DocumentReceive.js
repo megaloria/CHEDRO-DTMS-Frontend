@@ -682,9 +682,12 @@ function DocumentReceive() {
                             </Col>
 
                             <Col md="auto">
-                                <Button type='submit' variant="primary"> 
-                                Forward 
-                                </Button>
+                            {selectedCategory && 
+                                (!selectedCategory.is_assignable || selectedUsers.length > 0) &&
+                                    <Button type='submit' variant="primary"> 
+                                    Forward 
+                                    </Button>
+                            }
                             </Col>
                         </div>
                     </Row>
