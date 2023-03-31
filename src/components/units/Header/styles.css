@@ -38,7 +38,7 @@
     transform: scale(1);
   }
 }
-/* 
+
 .user-icon {
   transition: transform 0.2s ease-in-out;
 }
@@ -59,4 +59,4 @@
   100% {
     transform: scale(1);
   }
-} */
+}
