@@ -53,7 +53,7 @@ function Documents() {
         data: null,
         isLoading: false
     });
-
+    
     useEffect(() => {
         apiClient.get('/document', {
             params: {
@@ -92,10 +92,16 @@ function Documents() {
         });
     };
 
+    const [isValid, setIsValid] = useState(true);
+
     //For assigning multiple users 
     const handleUserSelection = (selectedOptions) => {
         const userIds = selectedOptions.map(option => option.value);
         setSelectedUsers(userIds);
+        // Update the form validity
+        setIsValid(selectedOptions.length > 0);
+
+        
     };
 
     const options = users.map(user => ({
@@ -103,7 +109,8 @@ function Documents() {
         label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
     }));
 
-
+    const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
+   
     const getDocumentType = (docTypeId) => {
         let docType = documentType.find(div => div.id === docTypeId);
         return docType?.description;
@@ -130,6 +137,8 @@ function Documents() {
     }
 
     const handleHideModal = () => {
+
+        setIsValid(true);
      
         setModal({
             show: false,
@@ -219,11 +228,7 @@ function Documents() {
                 icon: 'success'
             })
         }).catch(error => {
-            Swal.fire({
-                title: 'Error',
-                text: error,
-                icon: 'error'
-            });
+            setIsValid(false);
         });
     };
 
@@ -529,14 +534,16 @@ function Documents() {
                 <Modal.Body>
                     <Row>
                         <Col md={'auto'}>
-                            <Form.Label>Assign to:</Form.Label>
+                            <Form.Label>Forward to:</Form.Label>
                             <Select
                                 isMulti
                                 name='assignTo'
                                 options={options}
-                                value={options.filter(option => selectedUsers.includes(option.value))}
+                                value={selectedOptions}
                                 onChange={handleUserSelection}
+                                Required
                             />
+                            {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
                         </Col>
                     </Row>
                 </Modal.Body>
@@ -545,7 +552,7 @@ function Documents() {
                     <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                         Cancel
                     </Button>
-                    <Button type='submit' variant='primary' onClick={handleForward} disabled={modal.isLoading}>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
                         Forward
                     </Button>
                 </Modal.Footer>
