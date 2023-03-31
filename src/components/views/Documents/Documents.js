@@ -426,11 +426,13 @@ function Documents() {
                                             <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
                                                 <FontAwesomeIcon icon={faEdit} className="text-success" />
                                             </Button>
-                                            {row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs.length > 0 && row.logs[0].to_id !== null && (
-                                            <Button onClick={e =>showDeleteAlert(row)} variant="link" size='sm' >
+                                            {!row.logs || row.logs.length !== null ? (
+                                            <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
                                                 <FontAwesomeIcon icon={faTrash} className="text-danger" />
                                             </Button>
-                                            )}
+                                            ) : null}
+
+                                            
                                         </td>
                                     </tr>
                                     
