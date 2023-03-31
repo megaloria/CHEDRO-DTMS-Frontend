@@ -16,6 +16,6 @@
   90% { transform: translateY(-10px); }
 }
 
-h1 {
+.Oops {
   animation: bounce 1.6s ease-out;
 }
