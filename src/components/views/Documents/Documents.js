@@ -330,23 +330,23 @@ function Documents() {
                                             </div>
                                         </td>
                                         <td>
-                                            {(row.assign.length > 0 && row.logs.length > 0 ) && (row.assign[0].assigned_id !== null && row.logs[0].to_id == null) ? (
+                                            {row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs.length > 0 && row.logs[0].to_id !== null ? (
                                                 <OverlayTrigger
                                                     trigger={['click', 'hover']}
                                                     placement="left"
                                                     overlay={
                                                         <Popover>
                                                             <Popover.Header className="bg-warning text-white">
-                                                                Assigned to
+                                                                Forwarded to
                                                             </Popover.Header>
                                                             <Popover.Body>
                                                                 <ListGroup variant="flush">
-                                                                    {row.assign.map((assign, index) => (
+                                                                    {row.logs.map((logs, index) => (
                                                                         <ListGroupItem
                                                                             variant="warning text-black"
-                                                                            key={assign.assigned_user.profile.id}
+                                                                            key={logs.user.profile.id}
                                                                         >
-                                                                            {assign.assigned_user.profile.name}
+                                                                            {logs.user.profile.name}
                                                                         </ListGroupItem>
                                                                     ))}
                                                                 </ListGroup>
@@ -354,26 +354,26 @@ function Documents() {
                                                         </Popover>
                                                     }
                                                 >
-                                                    <Badge bg="warning" style={{ cursor: 'pointer' }}>Assigned</Badge>
+                                                    <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded</Badge>
                                                 </OverlayTrigger>
                                             ) : (
-                                                    row.logs.length > 0 && row.logs[0].to_id && row.assign[0].assigned_id !== null ? (
+                                                row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
                                                     <OverlayTrigger
                                                         trigger={['click', 'hover']}
                                                         placement="left"
                                                         overlay={
                                                             <Popover>
-                                                                <Popover.Header className="bg-warning text-white">
-                                                                    Forwarded to
+                                                                <Popover.Header className="bg-primary text-white">
+                                                                    Assigned to
                                                                 </Popover.Header>
                                                                 <Popover.Body>
                                                                     <ListGroup variant="flush">
-                                                                        {row.logs.map((logs, index) => (
+                                                                        {row.assign.map((assign, index) => (
                                                                             <ListGroupItem
-                                                                                variant="warning text-black"
-                                                                                key={logs.user.profile.id}
+                                                                                variant="primary text-black"
+                                                                                key={assign.assigned_user.profile.id}
                                                                             >
-                                                                                {logs.user.profile.name}
+                                                                                {assign.assigned_user.profile.name}
                                                                             </ListGroupItem>
                                                                         ))}
                                                                     </ListGroup>
@@ -381,12 +381,13 @@ function Documents() {
                                                             </Popover>
                                                         }
                                                     >
-                                                        <Badge bg="warning" style={{ cursor: 'pointer' }}>Assigned</Badge>
+                                                        <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
                                                     </OverlayTrigger>
                                                 ) : (
                                                     <Badge bg="primary">Received</Badge>
                                                 )
                                             )}
+
                                         </td>
 
                                         <td style={{ whiteSpace: 'nowrap' }}>
@@ -528,7 +529,7 @@ function Documents() {
                 <Modal.Body>
                     <Row>
                         <Col md={'auto'}>
-                            <Form.Label>Assign to <span className='text-muted'>(Optional)</span>:</Form.Label>
+                            <Form.Label>Assign to:</Form.Label>
                             <Select
                                 isMulti
                                 name='assignTo'
