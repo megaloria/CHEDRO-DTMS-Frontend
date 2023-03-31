@@ -188,6 +188,100 @@ function DocumentReceive() {
         });
     }
 
+    const handleForward = (event) => {
+        event.preventDefault();
+
+        let validation = new Validator(formInputs, {
+            document_type_id: 'required|integer|min:1',
+            attachment: 'file',
+            date_received: 'date',
+            receivable_type: 'required|in:HEIs,NGAs,CHED Offices,Others',
+            receivable_id: 'integer|min:1',
+            receivable_name: 'required_if:receivable_type,Others',
+            insti: 'integer|min:1',
+            ngas: 'integer|min:1',
+            chedoffices: 'integer|min:1',
+            description: 'required|string|min:5',
+            category_id: 'required|integer|min:1',
+            assignTo: 'array',
+            'assignTo.*': 'integer|min:1'
+        });
+
+        if (validation.fails()) {
+            setFormErrors({
+                document_type_id: validation.errors.first('document_type_id'),
+                attachment: validation.errors.first('attachment'),
+                date_received: validation.errors.first('date_received'),
+                receivable_type: validation.errors.first('receivable_type'),
+                receivable_id: validation.errors.first('receivable_id'),
+                receivable_name: validation.errors.first('receivable_name'),
+                insti: validation.errors.first('insti'),
+                ngas: validation.errors.first('ngas'),
+                chedoffices: validation.errors.first('chedoffices'),
+                description: validation.errors.first('description'),
+                category_id: validation.errors.first('category_id'),
+                assignTo: validation.errors.first('assignTo')
+            });
+            return;
+        } else {
+            setFormErrors({
+                document_type_id: '',
+                attachment: '',
+                date_received: '',
+                receivable_type: '',
+                receivable_id: '',
+                receivable_name: '',
+                province: '',
+                municipality: '',
+                insti: '',
+                ngas: '',
+                chedoffices: '',
+                description: '',
+                category_id: '',
+                assignTo: ''
+            });
+        }
+
+        const formData = new FormData();
+
+        if (attachment) {
+            formData.append('attachment', attachment, attachment.name);
+        }
+        formData.append('document_type_id', formInputs.document_type_id);
+        formData.append('date_received', formInputs.date_received);
+        formData.append('receivable_type', formInputs.receivable_type);
+
+        let receivableId = formInputs.receivable_type === 'HEIs' ? formInputs.insti :
+            formInputs.receivable_type === 'NGAs' ? formInputs.ngas :
+                formInputs.receivable_type === 'CHED Offices' ? formInputs.chedoffices : '';
+        formData.append('receivable_id', receivableId);
+        formData.append('receivable_name', formInputs.receivable_name);
+        formData.append('description', formInputs.description);
+        formData.append('category_id', formInputs.category_id);
+        for (let i = 0; i < selectedUsers.length; i++) {
+            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        }
+
+        apiClient.post(`/document/forward`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            navigate('../');
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        });
+    };
+
     const handleInputChange = e => {
         setFormInputs({
             ...formInputs,
@@ -684,7 +778,7 @@ function DocumentReceive() {
                             <Col md="auto">
                             {selectedCategory && 
                                 (!selectedCategory.is_assignable || selectedUsers.length > 0) &&
-                                    <Button type='submit' variant="primary"> 
+                                    <Button onClick={handleForward} variant="primary"> 
                                     Forward 
                                     </Button>
                             }
