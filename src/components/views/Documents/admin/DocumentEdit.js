@@ -431,11 +431,8 @@ function DocumentEdit() {
                 setErrorMessage(error);
             }).finally(() => {
                 setIsLoading(false);
+                setIsNavigationLoading(false);
             });
-    }, []);
-
-    useEffect(() => {
-            setIsNavigationLoading(false);
     }, [location]);
 
     if (isLoading || isNavigationLoading) {
