@@ -1,7 +1,6 @@
-// import React, { useEffect, useState }  from 'react';
+import React, { useEffect,  useState }  from 'react';
 import Timeline from '../../../units/Timeline/Timeline';
 import Card from 'react-bootstrap/Card';
-import React from 'react';
 import {
     Button,
     Row, 
@@ -11,7 +10,11 @@ import {
     OverlayTrigger,
     Popover,
     ListGroup,
-    ListGroupItem
+    ListGroupItem,
+    Modal,
+    Form,
+    Alert,
+    Spinner
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -28,12 +31,120 @@ import {
     faUserCheck
 } from '@fortawesome/free-solid-svg-icons'
 import {
-    Link, useLoaderData
+    Link, useLoaderData, useNavigate
 } from 'react-router-dom';
 import moment from 'moment';
+import Select from 'react-select';
+import apiClient from '../../../../helpers/apiClient';
+import Swal from 'sweetalert2';
 
 function DocumentView() {
     const document = useLoaderData();
+    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [users, setUsers] = useState([]);
+    const [errorMessage, setErrorMessage] = useState(''); //error message variable
+    const [isLoading, setIsLoading] = useState(true); //loading variable
+    const navigate = useNavigate();
+
+    const [modal, setModal] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    useEffect(() => {
+        apiClient.get('/document', {
+            params: {
+                query: ''
+            }
+        }).then(response => { //GET ALL function
+            setUsers(response.data.data.user);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsLoading(false);
+        });
+
+    }, []);
+
+    const handleForward = event => {
+
+        const formData = new FormData();
+
+        for (let i = 0; i < selectedUsers.length; i++) {
+            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        }
+
+        apiClient.post(`/document/${modal.data?.id}/forward`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }).then(response => {
+            navigate('../');
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            setIsValid(false);
+        });
+    };
+
+    const options = users.map(user => ({
+        value: user.id,
+        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+    }));
+
+    const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
+
+    const handleShowModal = (data = null) => {
+        let userIds = data.assign.filter(l => l.assigned_id);
+        userIds = userIds.map(log => {
+            return log.assigned_id;
+        });
+        setSelectedUsers(userIds);
+
+        setModal({
+            show: true,
+            data,
+            isLoading: false
+        });
+    }
+
+    const [isValid, setIsValid] = useState(true);
+
+    //For assigning multiple users 
+    const handleUserSelection = (selectedOptions) => {
+        const userIds = selectedOptions.map(option => option.value);
+        setSelectedUsers(userIds);
+        // Update the form validity
+        setIsValid(selectedOptions.length > 0);
+
+        
+    };
+
+    const handleHideModal = () => {
+        setIsValid(true);
+        setModal({
+            show: false,
+            data: null,
+            isLoading: false
+        });
+    }
+    if (isLoading) {
+        return (
+           <Spinner animation='border' />
+        );
+      }
+
+    if (errorMessage) {
+        return (
+            <Alert variant='danger'>
+                {errorMessage}
+            </Alert>
+        );
+    }
     
     return (
         <div className="container fluid">
@@ -46,7 +157,7 @@ function DocumentView() {
                         </Breadcrumb>
                     </Col>
                     <Col md="auto">
-                        <Button>
+                        <Button onClick={e => handleShowModal(document)}>
                             <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
                         </Button>
                     </Col>
@@ -210,6 +321,42 @@ function DocumentView() {
            
           <Timeline/>
           
+          <Modal
+                show={modal.show}
+                onHide={handleHideModal}
+                backdrop='static'
+                keyboard={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title> Forward Document </Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Row>
+                        <Col md={'auto'}>
+                            <Form.Label>Forward to:</Form.Label>
+                            <Select
+                                isMulti
+                                name='assignTo'
+                                options={options}
+                                value={selectedOptions}
+                                onChange={handleUserSelection}
+                                Required
+                            />
+                            {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
+                        </Col>
+                    </Row>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                        Cancel
+                    </Button>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
+                        Forward
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
         </div>
     );
 }
