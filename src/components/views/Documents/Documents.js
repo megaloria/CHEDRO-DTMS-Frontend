@@ -514,7 +514,7 @@ function Documents() {
                                                                     </Popover>
                                                                 }
                                                             >
-                                                                <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded</Badge>
+                                                                <Badge bg="warning" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>Forwarded</Badge>
                                                             </OverlayTrigger>
                                                         ) : (
                                                             row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
@@ -541,10 +541,10 @@ function Documents() {
                                                                         </Popover>
                                                                     }
                                                                 >
-                                                                    <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
+                                                                    <Badge bg="primary" style={{ cursor: 'pointer', alignItems: 'center', justifyContent: 'center' }}>Received</Badge>
                                                                 </OverlayTrigger>
                                                             ) : (
-                                                                <Badge bg="primary">Received</Badge>
+                                                                <Badge bg="primary" style={{ alignItems: 'center', justifyContent: 'center' }}>Received</Badge>
                                                             )
                                                         )}
                                                     </td>
