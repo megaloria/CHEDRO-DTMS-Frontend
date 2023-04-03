@@ -71,7 +71,6 @@ function Documents() {
         }).finally(() => {
             setIsLoading(false);
         });
-
     }, []);
 
 
@@ -109,7 +108,6 @@ function Documents() {
             setIsTableLoading(false);
         });
     };
-
     const [isValid, setIsValid] = useState(true);
 
     //For assigning multiple users 
@@ -118,10 +116,8 @@ function Documents() {
         setSelectedUsers(userIds);
         // Update the form validity
         setIsValid(selectedOptions.length > 0);
-
-
     };
-
+    
     const options = users.map(user => ({
         value: user.id,
         label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
@@ -431,9 +427,6 @@ function Documents() {
                                                                     <FontAwesomeIcon icon={faTrash} className="text-danger" />
                                                                 </Button>
                                                             ) : null}
-
-
-
                                                         </td>
                                                     </tr>
 
@@ -455,9 +448,7 @@ function Documents() {
                                         </Pagination>
                                     )}
                                 </div>
-
                             </div>
-
                         )
                     }
                 </Tab>
@@ -601,7 +592,6 @@ function Documents() {
                                         )}
                                     </div>
                                 </div>
-
                             </div>
                         )
                     }
