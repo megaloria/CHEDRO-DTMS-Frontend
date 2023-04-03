@@ -31,7 +31,7 @@ import {
     faUserCheck
 } from '@fortawesome/free-solid-svg-icons'
 import {
-    Link, useLoaderData, useNavigate
+    Link, useLoaderData, useNavigate, useLocation
 } from 'react-router-dom';
 import moment from 'moment';
 import Select from 'react-select';
@@ -40,11 +40,13 @@ import Swal from 'sweetalert2';
 
 function DocumentView() {
     const document = useLoaderData();
+    const location = useLocation();
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [isValid, setIsValid] = useState(true);
+    const [isNavigationLoading, setIsNavigationLoading] = useState(true);
     const navigate = useNavigate();
 
     const [modal, setModal] = useState({ //modal variables
@@ -64,9 +66,11 @@ function DocumentView() {
             setErrorMessage(error);
         }).finally(() => {
             setIsLoading(false);
+            setIsNavigationLoading(false);
         });
 
-    }, []);
+    }, [location]);
+
 
     const handleForward = event => {
 
@@ -76,17 +80,20 @@ function DocumentView() {
             formData.append(`assign_to[${i}]`, selectedUsers[i]);
         }
 
-        apiClient.post(`/document/${modal.data?.id}/forward`, formData, {
+        apiClient.post(`/document/${document.id}/forward`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
-            navigate('../');
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
                 icon: 'success'
             })
+            handleHideModal();
+            setIsNavigationLoading(true);
+            navigate(`/documents/view/${document.id}`);
+            
         }).catch(error => {
             setIsValid(false);
         });
@@ -130,7 +137,7 @@ function DocumentView() {
         });
     }
     
-    if (isLoading) {
+    if (isLoading || isNavigationLoading) {
         return (
            <Spinner animation='border' />
         );
@@ -143,7 +150,8 @@ function DocumentView() {
             </Alert>
         );
     }
-    
+
+   
     return (
         <div className="container fluid">
             <div className="crud bg-body rounded"> 
