@@ -231,7 +231,7 @@ function Division() {
                 </Row> 
 
                 <div> 
-                    <div className='d-md-flex mb-3 justify-content-end'>
+                    <div className='d-flex mb-3 justify-content-end'>
                         <div className='search'> 
                             <Form className="d-flex" controlId="" onSubmit="">
                                     {/* <Form.Control 
