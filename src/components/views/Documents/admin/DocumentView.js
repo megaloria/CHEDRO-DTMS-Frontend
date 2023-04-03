@@ -44,6 +44,7 @@ function DocumentView() {
     const [users, setUsers] = useState([]);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [isValid, setIsValid] = useState(true);
     const navigate = useNavigate();
 
     const [modal, setModal] = useState({ //modal variables
@@ -112,16 +113,12 @@ function DocumentView() {
         });
     }
 
-    const [isValid, setIsValid] = useState(true);
-
     //For assigning multiple users 
     const handleUserSelection = (selectedOptions) => {
         const userIds = selectedOptions.map(option => option.value);
         setSelectedUsers(userIds);
         // Update the form validity
         setIsValid(selectedOptions.length > 0);
-
-        
     };
 
     const handleHideModal = () => {
@@ -132,6 +129,7 @@ function DocumentView() {
             isLoading: false
         });
     }
+    
     if (isLoading) {
         return (
            <Spinner animation='border' />
