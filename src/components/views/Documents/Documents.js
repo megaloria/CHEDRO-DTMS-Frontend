@@ -117,7 +117,7 @@ function Documents() {
         // Update the form validity
         setIsValid(selectedOptions.length > 0);
     };
-    
+
     const options = users.map(user => ({
         value: user.id,
         label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
@@ -597,8 +597,20 @@ function Documents() {
                     }
                 </Tab>
                 <Tab eventKey="releasing" title="Releasing" >
+                    {/* {
+                        releasingData.data.length === 0 ? (
+                            <Alert variant='primary'>
+                                No Document found.
+                            </Alert>
+                        ) : ( */}
                 </Tab>
                 <Tab eventKey="done" title="Done">
+                    {/* {
+                        doneData.data.length === 0 ? (
+                            <Alert variant='primary'>
+                                No Document found.
+                            </Alert>
+                        ) : ( */}
                 </Tab>
             </Tabs>
 
