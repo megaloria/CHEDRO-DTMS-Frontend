@@ -87,9 +87,11 @@ function Header(props) {
           </Navbar.Brand>
         </OverlayTrigger>
 
+       
         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
         <Navbar.Collapse id='responsive-navbar-nav'>
-          <Nav className='ms-auto'>
+          
+            <Nav className='ms-auto'>
             <NavDropdown
               title={ 
                 <span className='text'>
@@ -122,9 +124,11 @@ function Header(props) {
 
             </NavDropdown>
           </Nav>
+          
         </Navbar.Collapse>
       </Container>
     </Navbar>
+   
     
               <Modal show={showModal} onHide={handleClose}>
                 <Modal.Header closeButton>
