@@ -38,14 +38,15 @@ import apiClient from '../../../helpers/apiClient';
 function Documents() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
-    const [data, setData] = useState([]);
-    const [ongoingData, setOngoingData] = useState([]);
+    const [data, setData] = useState({ data: [] });
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
     const [documentType, setDocumentType] = useState([]); //document type variable
     const [category, setCategory] = useState([]); //category variable
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
     const navigate = useNavigate();
+
+    const [activeTab, setActiveTab] = useState('all');
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -56,23 +57,44 @@ function Documents() {
     });
 
     useEffect(() => {
-        apiClient.get('/document', {
+        setIsTableLoading(true);
+        if (activeTab === 'all'){
+            apiClient.get('/document', {
             params: {
                 query: ''
             }
-        }).then(response => { //GET ALL function
-            setData(response.data.data.documents);
-            setDocumentType(response.data.data.documentType);
-            setCategory(response.data.data.category);
-            setUsers(response.data.data.user);
-            setOngoingData(response.data.data.ongoing)
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsLoading(false);
-        });
-    }, []);
+            }).then(response => { //GET ALL function
+                setData(response.data.data.documents);
+                setDocumentType(response.data.data.documentType);
+                setCategory(response.data.data.category);
+                setUsers(response.data.data.user);
+            }).catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsTableLoading(false);
+                setIsLoading(false);
+            });
+        } 
+        if (activeTab === 'ongoing') {
+            apiClient.get('/document/ongoing', {
+                params: {
+                    query: ''
+                }
+            }).then(response => { //GET ALL function
+                setData(response.data.data.documents);
+                setDocumentType(response.data.data.documentType);
+                setCategory(response.data.data.category);
+                setUsers(response.data.data.user);
+            }).catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsTableLoading(false);
+                setIsLoading(false);
+            });
+        }
+    }, [activeTab]);
 
+   
 
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
@@ -93,21 +115,6 @@ function Documents() {
         });
     };
 
-    const handlePageChange1 = (pageNumber) => {
-        setIsTableLoading(true);
-
-        apiClient.get(`/document?page=${pageNumber}`, {
-            params: {
-                query: ''
-            }
-        }).then(response => {
-            setOngoingData(response.data.data.ongoing)
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsTableLoading(false);
-        });
-    };
     const [isValid, setIsValid] = useState(true);
 
     //For assigning multiple users 
@@ -169,7 +176,7 @@ function Documents() {
         e.preventDefault();
 
         setIsTableLoading(true);
-        apiClient.get('/document', {
+        apiClient.get(`/document/${activeTab === 'all' ? '' : activeTab}`, {
             params: {
                 query: searchQuery
             }
@@ -178,7 +185,6 @@ function Documents() {
             setDocumentType(response.data.data.documentType);
             setCategory(response.data.data.category);
             setUsers(response.data.data.user);
-            setOngoingData(response.data.data.ongoing);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -186,7 +192,11 @@ function Documents() {
         });
     }
 
+    const handleChangeTab = (key) => {
+        setActiveTab(key);
+    }
 
+   
 
     // DELETE
     const showDeleteAlert = document => {
@@ -300,17 +310,20 @@ function Documents() {
             </div>
 
             <Tabs
-                defaultActiveKey="all"
+                activeKey={activeTab}
                 id="uncontrolled-tab-example"
                 className="mb-3"
+                onSelect={handleChangeTab}
             >
                 <Tab eventKey="all" title="All">
 
                     {
                         data.data.length === 0 ? (
                             <Alert variant='primary'>
-                                No Document found.
+                                No Documents found.
                             </Alert>
+                        ) : isTableLoading ? (
+                            <Spinner animation='border' />
                         ) : (
                             <div className='loading-table-container'>
                                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
@@ -456,11 +469,13 @@ function Documents() {
                 </Tab>
                 <Tab eventKey="ongoing" title="Ongoing">
                     {
-                        ongoingData.data.length === 0 ? (
+                        data.data.length === 0 ? (
                             <Alert variant='primary'>
                                 No Ongoing Documents found.
                             </Alert>
-                        ) : (
+                        ) : isTableLoading ? (
+                                <Spinner animation='border' />
+                            ) : (
                             <div className='loading-table-container'>
                                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                                     <div className='spinner-icon'>
@@ -483,7 +498,7 @@ function Documents() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {ongoingData.data.map((row, index) => (
+                                            {data.data.map((row, index) => (
                                                 <tr key={index}>
                                                     <td className="table-primary">{row.id}</td>
                                                     <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
@@ -581,15 +596,15 @@ function Documents() {
                                     </Table>
 
                                     <div>
-                                        {ongoingData.data.length > 0 && (
+                                        {data.data.length > 0 && (
                                             <Pagination style={{ float: 'right' }}>
-                                                <Pagination.First onClick={e => handlePageChange1(1)} disabled={ongoingData.current_page === 1} />
-                                                <Pagination.Prev onClick={e => handlePageChange1(ongoingData.current_page - 1)} disabled={ongoingData.current_page === 1} />
+                                                    <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                                    <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
                                                 <Pagination.Item disabled>
-                                                    {`${ongoingData.current_page} / ${ongoingData.last_page}`}
+                                                        {`${data.current_page} / ${data.last_page}`}
                                                 </Pagination.Item>
-                                                <Pagination.Next onClick={e => handlePageChange1(ongoingData.current_page + 1)} disabled={ongoingData.current_page === ongoingData.last_page} />
-                                                <Pagination.Last onClick={e => handlePageChange1(ongoingData.last_page)} disabled={ongoingData.current_page === ongoingData.last_page} />
+                                                    <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                                    <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
                                             </Pagination>
                                         )}
                                     </div>
