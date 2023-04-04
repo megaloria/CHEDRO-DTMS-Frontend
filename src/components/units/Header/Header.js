@@ -87,9 +87,11 @@ function Header(props) {
           </Navbar.Brand>
         </OverlayTrigger>
 
+       
         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
         <Navbar.Collapse id='responsive-navbar-nav'>
-          <Nav className='ms-auto'>
+          
+            <Nav className='ms-auto'>
             <NavDropdown
               title={ 
                 <span className='text'>
@@ -111,20 +113,22 @@ function Header(props) {
               <NavDropdown.Item as={Link} to='update-password'>
                 <FontAwesomeIcon
                   icon={faKey}
-                  fixedWidth  /> Change Password
+                  /> Change Password
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={handleShow}>
                 <FontAwesomeIcon
                   icon={faDoorOpen}
-                  fixedWidth /> Logout
+                  /> Logout
               </NavDropdown.Item>
 
             </NavDropdown>
           </Nav>
+          
         </Navbar.Collapse>
       </Container>
     </Navbar>
+   
     
               <Modal show={showModal} onHide={handleClose}>
                 <Modal.Header closeButton>
