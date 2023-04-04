@@ -13,7 +13,9 @@
     margin: auto;
   } 
   
- 
+  input[type=password].form-control.is-invalid {
+    background-position: right calc(0.375em + 0.1875rem + 2rem) center;
+  }
 
   .icon-span {
     position: absolute;
@@ -24,4 +26,5 @@
     height: 100%;
     display: flex;
     align-items: center;
+    height: calc(3.5rem + 2px);
   }
