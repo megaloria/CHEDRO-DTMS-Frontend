@@ -41,8 +41,6 @@ function Documents() {
     const [data, setData] = useState({ data: [] });
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
-    const [documentType, setDocumentType] = useState([]); //document type variable
-    const [category, setCategory] = useState([]); //category variable
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
     const navigate = useNavigate();
 
@@ -65,8 +63,6 @@ function Documents() {
             }
             }).then(response => { //GET ALL function
                 setData(response.data.data.documents);
-                setDocumentType(response.data.data.documentType);
-                setCategory(response.data.data.category);
                 setUsers(response.data.data.user);
             }).catch(error => {
                 setErrorMessage(error);
@@ -82,8 +78,6 @@ function Documents() {
                 }
             }).then(response => { //GET ALL function
                 setData(response.data.data.documents);
-                setDocumentType(response.data.data.documentType);
-                setCategory(response.data.data.category);
                 setUsers(response.data.data.user);
             }).catch(error => {
                 setErrorMessage(error);
@@ -105,8 +99,6 @@ function Documents() {
             }
         }).then(response => {
             setData(response.data.data.documents);
-            setDocumentType(response.data.data.documentType);
-            setCategory(response.data.data.category);
             setUsers(response.data.data.user);
         }).catch(error => {
             setErrorMessage(error);
@@ -131,16 +123,6 @@ function Documents() {
     }));
 
     const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
-
-    const getDocumentType = (docTypeId) => {
-        let docType = documentType.find(div => div.id === docTypeId);
-        return docType?.description;
-    }
-
-    const getCategory = (categoryId) => {
-        let categories = category.find(div => div.id === categoryId);
-        return categories?.description;
-    }
 
     const handleShowModal = (data = null) => {
 
@@ -182,8 +164,6 @@ function Documents() {
             }
         }).then(response => { //GET ALL function
             setData(response.data.data.documents);
-            setDocumentType(response.data.data.documentType);
-            setCategory(response.data.data.category);
             setUsers(response.data.data.user);
         }).catch(error => {
             setErrorMessage(error);
@@ -353,8 +333,8 @@ function Documents() {
                                                     <tr key={index}>
                                                         <td className="table-primary">{row.id}</td>
                                                         <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
-                                                        <td>{getDocumentType(row.document_type_id)}</td>
-                                                        <td>{getCategory(row.category_id)}</td>
+                                                        <td>{row.document_type.description}</td>
+                                                        <td>{row.category.description}</td>
                                                         <td>{row.sender?.receivable?.title ?? row.sender.name}</td>
                                                         <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
                                                         <td >
@@ -500,8 +480,8 @@ function Documents() {
                                                 <tr key={index}>
                                                     <td className="table-primary">{row.id}</td>
                                                     <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
-                                                    <td>{getDocumentType(row.document_type_id)}</td>
-                                                    <td>{getCategory(row.category_id)}</td>
+                                                    <td>{row.document_type.description}</td>
+                                                    <td>{row.category.description}</td>
                                                     <td>{row.sender?.receivable?.title ?? row.sender.name}</td>
                                                     <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
                                                     <td>
@@ -576,7 +556,7 @@ function Documents() {
                                                         <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                             <FontAwesomeIcon icon={faShare} className="" />
                                                         </Button>
-
+                                                        
                                                         <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
                                                             <FontAwesomeIcon icon={faEdit} className="text-success" />
                                                         </Button>

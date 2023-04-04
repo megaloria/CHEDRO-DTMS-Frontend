@@ -20,6 +20,9 @@ import {
     faRotate,
     faSearch
 } from '@fortawesome/free-solid-svg-icons';
+import {
+    useRouteLoaderData
+} from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
@@ -29,6 +32,7 @@ function Users() {
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
     const [roles, setRoles] = useState([]); //user variable
+    let loaderData = useRouteLoaderData('user');
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
@@ -520,9 +524,14 @@ function Users() {
                                                         <Button onClick={e => handleShowmodalReset(row)} variant='link'>
                                                             <FontAwesomeIcon icon={faRotate} className='text-success'/>
                                                         </Button>
-                                                        <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                                            <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                                        </Button>
+                                                        {
+                                                            loaderData.id !== row.id && (
+                                                                <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                                                    <FontAwesomeIcon icon={faTrash} className='text-danger' />
+                                                                </Button>
+                                                            )
+                                                        }
+                                                        
                                                     </td>
                                                 </tr>
                                             ))
