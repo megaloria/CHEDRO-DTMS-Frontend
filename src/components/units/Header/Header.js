@@ -113,13 +113,13 @@ function Header(props) {
               <NavDropdown.Item as={Link} to='update-password'>
                 <FontAwesomeIcon
                   icon={faKey}
-                  fixedWidth  /> Change Password
+                  /> Change Password
               </NavDropdown.Item>
               <NavDropdown.Divider />
               <NavDropdown.Item onClick={handleShow}>
                 <FontAwesomeIcon
                   icon={faDoorOpen}
-                  fixedWidth /> Logout
+                  /> Logout
               </NavDropdown.Item>
 
             </NavDropdown>

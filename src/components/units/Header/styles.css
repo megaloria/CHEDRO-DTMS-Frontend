@@ -65,3 +65,7 @@
   .ms-auto {
   float: right;
 }}
+
+.changepass {
+  width: fit-content;
+}
