@@ -523,7 +523,7 @@ function Users() {
                                                         </Button>
                                                         <Button onClick={e => handleShowmodalReset(row)} variant='link'>
                                                             <FontAwesomeIcon icon={faRotate} className='text-success'/>
-                                                        </Button>
+                                                        </Button> 
                                                         {
                                                             loaderData.id !== row.id && (
                                                                 <Button onClick={e => showDeleteAlert(row)} variant='link'>
