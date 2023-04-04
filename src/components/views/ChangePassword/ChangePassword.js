@@ -101,7 +101,7 @@ const navigate = useNavigate();
         e.preventDefault();
         let validation = new Validator(values, {
             password: 'present|required',
-            new_password: 'required|same:confirm_password|min:8',
+            new_password: 'required|same:confirm_password|min:8|different:password',
             confirm_password: 'required|same:new_password|min:8'
         });
 
@@ -124,7 +124,7 @@ const navigate = useNavigate();
     }
 
     const handleChangePass = () => {
-        apiClient.post('/users/change-password', {
+        apiClient.post('/user/change-password', {
             password: values.password,
             new_password: values.new_password
         }).then(response => {
