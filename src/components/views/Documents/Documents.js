@@ -575,9 +575,11 @@ function Documents() {
                                                             <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                         </Button>
 
-                                                        <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                            <FontAwesomeIcon icon={faShare} className="" />
-                                                        </Button>
+                                                        {row.category_id === 1 || row.category_id === 2 ? (
+                                                            <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                                <FontAwesomeIcon icon={faShare} className="" />
+                                                            </Button>
+                                                        ) : null}
 
                                                         <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
                                                             <FontAwesomeIcon icon={faEdit} className="text-success" />
