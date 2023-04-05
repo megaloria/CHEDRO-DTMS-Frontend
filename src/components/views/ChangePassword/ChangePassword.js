@@ -100,9 +100,9 @@ const navigate = useNavigate();
     function handleSubmit(e) {
         e.preventDefault();
         let validation = new Validator(values, {
-            password: 'present|required',
-            new_password: 'required|same:confirm_password|min:8|different:password',
-            confirm_password: 'required|same:new_password|min:8'
+            password: 'required|string|min:8',
+            new_password: 'required|string|min:8|same:confirm_password|different:password',
+            confirm_password: 'required|string|min:8|same:new_password'
         });
 
         if (validation.fails()) {
@@ -126,7 +126,8 @@ const navigate = useNavigate();
     const handleChangePass = () => {
         apiClient.post('/user/change-password', {
             password: values.password,
-            new_password: values.new_password
+            new_password: values.new_password,
+            confirm_password: values.confirm_password
         }).then(response => {
             Swal.fire({
                 title: 'Success',
