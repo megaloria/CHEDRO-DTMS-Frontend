@@ -275,13 +275,6 @@ function DocumentsUser() {
                                 <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
-                                {/* <div className='ms-2'>
-                                    <Button variant="primary" as={Link} to='receive' style={{ whiteSpace: 'nowrap' }}>
-                                        <FontAwesomeIcon icon={faRightToBracket} rotation={90} className="addIcon" />
-                                        <span className='d-none d-md-inline-block ms-1'> Receive
-                                        </span>
-                                    </Button>
-                                </div> */}
                             </Form>
                         </div>
 
@@ -414,14 +407,6 @@ function DocumentsUser() {
                                                             </Button>
                                                             ) : null}
 
-                                                            <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
-                                                                <FontAwesomeIcon icon={faEdit} className="text-success" />
-                                                            </Button>
-                                                            {!row.logs || row.logs.length === 0 ? (
-                                                                <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
-                                                                    <FontAwesomeIcon icon={faTrash} className="text-danger" />
-                                                                </Button>
-                                                            ) : null}
                                                         </td>
                                                     </tr>
 
