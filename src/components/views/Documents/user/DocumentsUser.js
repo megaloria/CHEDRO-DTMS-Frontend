@@ -401,11 +401,11 @@ function DocumentsUser() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                             </Button>
                                                         
-                                                            {row.category_id === 1 || row.category_id === 2 ? (
+                                                            {/* {row.category_id === 1 || row.category_id === 2 ? (
                                                                 <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                 <FontAwesomeIcon icon={faShare} className="" />
                                                             </Button>
-                                                            ) : null}
+                                                            ) : null} */}
 
                                                         </td>
                                                     </tr>
