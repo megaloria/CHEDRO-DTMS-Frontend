@@ -15,6 +15,7 @@ import ErrorPage from './components/views/ErrorPage/ErrorPage';
 import Login from './components/views/Login/Login';
 import Home from './components/views/Home/Home';
 import Documents from './components/views/Documents/Documents';
+import DocumentsUser from './components/views/Documents/user/DocumentsUser';
 import Users from './components/views/Users/Users';
 import Roles from './components/views/Roles/Roles';
 import HEIs from './components/views/HEIs/HEIs';
@@ -87,7 +88,8 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <Documents />,
+            element: <UserDocuments />,
+            loader: () => getCurrentUser()
           },
           {
             path: 'receive',
@@ -168,6 +170,21 @@ function FirstChangePassword () {
     <>
       <Header user={loaderData} />
       <ChangePass />
+    </>
+  );
+}
+
+function UserDocuments () {
+  let loaderData = useLoaderData();
+  return (
+    <>
+      {
+        loaderData.role.level === 1 ? (
+            <Documents />
+        ) : (
+            <DocumentsUser />
+        )
+      }
     </>
   );
 }
