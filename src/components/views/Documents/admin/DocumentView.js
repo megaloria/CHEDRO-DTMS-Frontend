@@ -27,7 +27,7 @@ import {
     faTimeline,
     faTag,
     faBuildingUser,
-    faKeyboard,
+    faClock,
     faUserCheck
 } from '@fortawesome/free-solid-svg-icons'
 import {
@@ -174,8 +174,15 @@ function DocumentView() {
                 <Card 
                         bg="light"
                         border="light" style={{ marginRight:'auto'}}>
+    
                     <Card.Body>
-                
+                    <Row>
+                            <Col className='float-right offset-md-10'>
+                                <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
+                                <i style={{color:'#545454'}}> {moment(document.created_at).format('MMMM DD, YYYY')} 
+                                 </i> 
+                            </Col> 
+                    </Row>
                         <Row className="mb-3"> 
                             <Col> 
                                 <FontAwesomeIcon 
@@ -262,14 +269,7 @@ function DocumentView() {
                                 </Col>
                         </Row>
 
-                        {/* <Row className="mb-3">
-                            <Col>
-                                <FontAwesomeIcon icon={faKeyboard} className="text-dark" style={{marginRight:'20px'}}/>
-                                {moment(document.created_at).format('MMMM DD, YYYY')} 
-                                <i style={{color:'#545454'}}> (Encoded {moment(document.created_at).fromNow()})</i> 
-                            </Col>
-                        </Row>
-                        */}
+                        
 
                         <Row className="mb-3">
                             <Col>
