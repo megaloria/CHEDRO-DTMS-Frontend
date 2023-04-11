@@ -22,10 +22,8 @@ import {
 } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-    faTrash,
-    faEdit,
+    faThumbsUp,
     faCircleArrowRight,
-    faRightToBracket,
     faShare,
     faSearch
 } from '@fortawesome/free-solid-svg-icons'
@@ -88,7 +86,41 @@ function DocumentsUser() {
         }
     }, [activeTab]);
 
-   
+
+// ACKNOWLEDGE
+    const showAcknowledgeAlert = document => {
+        Swal.fire({
+            title: `Are you sure you want to acknowledge the document no."${document.tracking_no}"?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, acknowledge it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.delete(`/document/${document.id}`).then(response => {
+                    let newData = data.data.filter(d => d.id !== document.id);
+                    setData({
+                        ...data,
+                        data: newData
+                    });
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                });
+            }
+        });
+    };
 
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
@@ -176,42 +208,6 @@ function DocumentsUser() {
         setActiveTab(key);
     }
 
-   
-
-    // DELETE
-    const showDeleteAlert = document => {
-        Swal.fire({
-            title: `Are you sure you want to delete document no."${document.tracking_no}"?`,
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-            reverseButtons: true,
-            showLoaderOnConfirm: true,
-            preConfirm: () => {
-                return apiClient.delete(`/document/${document.id}`).then(response => {
-                    let newData = data.data.filter(d => d.id !== document.id);
-                    setData({
-                        ...data,
-                        data: newData
-                    });
-                    Swal.fire({
-                        title: 'Success',
-                        text: response.data.message,
-                        icon: 'success'
-                    });
-                }).catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error,
-                        icon: 'error'
-                    });
-                });
-            }
-        });
-    };
 
     const handleForward = event => {
 
@@ -397,16 +393,17 @@ function DocumentsUser() {
                                                         </td>
 
                                                         <td style={{ whiteSpace: 'nowrap' }}>
-                                                            <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
-                                                                <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
+                                                            <Button className='me-1' variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
+                                                                <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                             </Button>
-                                                        
-                                                            {/* {row.category_id === 1 || row.category_id === 2 ? (
-                                                                <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                                <FontAwesomeIcon icon={faShare} className="" />
-                                                            </Button>
-                                                            ) : null} */}
 
+                                                            <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
+                                                                <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
+                                                            </Button>
+
+                                                            <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                                <FontAwesomeIcon icon={faShare}/>
+                                                            </Button>
                                                         </td>
                                                     </tr>
 
@@ -536,26 +533,17 @@ function DocumentsUser() {
                                                         )}
                                                     </td>
                                                     <td style={{ whiteSpace: 'nowrap' }}>
-                                                        <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
-                                                            <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
+                                                        <Button className='me-1' variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
+                                                            <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                         </Button>
 
-                                                        {row.category_id === 1 || row.category_id === 2 ? (
-                                                            <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                                <FontAwesomeIcon icon={faShare} className="" />
-                                                            </Button>
-                                                        ) : null}
-
-                                                        <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
-                                                            <FontAwesomeIcon icon={faEdit} className="text-success" />
+                                                        <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`}>
+                                                            <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
                                                         </Button>
 
-                                                        {!row.logs || row.logs.length === 0 ? (
-                                                            <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
-                                                                <FontAwesomeIcon icon={faTrash} className="text-danger" />
-                                                            </Button>
-                                                        ) : null}
-
+                                                        <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                            <FontAwesomeIcon icon={faShare}/>
+                                                        </Button>
                                                     </td>
                                                 </tr>
                                             ))}
@@ -580,7 +568,7 @@ function DocumentsUser() {
                         )
                     }
                 </Tab>
-                <Tab eventKey="releasing" title="Releasing" >
+                <Tab eventKey="approved" title="Approved" >
                     {/* {
                         releasingData.data.length === 0 ? (
                             <Alert variant='primary'>
@@ -588,7 +576,7 @@ function DocumentsUser() {
                             </Alert>
                         ) : ( */}
                 </Tab>
-                <Tab eventKey="done" title="Done">
+                <Tab eventKey="rejected" title="Rejected">
                     {/* {
                         doneData.data.length === 0 ? (
                             <Alert variant='primary'>
