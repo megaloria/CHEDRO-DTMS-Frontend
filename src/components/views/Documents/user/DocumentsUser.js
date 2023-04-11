@@ -88,39 +88,77 @@ function DocumentsUser() {
 
 
 // ACKNOWLEDGE
+    // const showAcknowledgeAlert = document => {
+    //     Swal.fire({
+    //         title: `Are you sure you want to Acknowledge the document no."${document.tracking_no}"?`,
+    //         text: 'You won\'t be able to revert this!',
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'Yes, acknowledge it!',
+    //         reverseButtons: true,
+    //         showLoaderOnConfirm: true,
+    //         preConfirm: () => {
+    //             return apiClient.delete(`/document/${document.id}`).then(response => {
+    //                 let newData = data.data.filter(d => d.id !== document.id);
+    //                 setData({
+    //                     ...data,
+    //                     data: newData
+    //                 });
+    //                 Swal.fire({
+    //                     title: 'Success',
+    //                     text: response.data.message,
+    //                     icon: 'success'
+    //                 });
+    //             }).catch(error => {
+    //                 Swal.fire({
+    //                     title: 'Error',
+    //                     text: error,
+    //                     icon: 'error'
+    //                 });
+    //             });
+    //         }
+    //     });
+    // };
+
+    
     const showAcknowledgeAlert = document => {
         Swal.fire({
-            title: `Are you sure you want to acknowledge the document no."${document.tracking_no}"?`,
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, acknowledge it!',
-            reverseButtons: true,
-            showLoaderOnConfirm: true,
-            preConfirm: () => {
-                return apiClient.delete(`/document/${document.id}`).then(response => {
-                    let newData = data.data.filter(d => d.id !== document.id);
-                    setData({
-                        ...data,
-                        data: newData
-                    });
-                    Swal.fire({
-                        title: 'Success',
-                        text: response.data.message,
-                        icon: 'success'
-                    });
-                }).catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error,
-                        icon: 'error'
-                    });
-                });
-            }
+          title: `Are you sure you want to acknowledge the document no."${document.tracking_no}"?`,
+          text: 'You won\'t be able to revert this!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, acknowledge it!',
+          reverseButtons: true,
+          showLoaderOnConfirm: true,
+          preConfirm: () => {
+            // Send a request to update the document's status to "acknowledged"
+            const AcknowledgeStatus = { ...document, status: 'acknowledged' };
+            return apiClient.post(`/document/${document.id}`, AcknowledgeStatus).then(response => {
+              const newData = data.data.map(d => d.id === document.id ? AcknowledgeStatus : d);
+              setData({
+                ...data,
+                data: newData 
+              });
+              Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+              });
+            }).catch(error => {
+              Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+              });
+            });
+          }
         });
-    };
+      };
+      
 
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
@@ -332,7 +370,9 @@ function DocumentsUser() {
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            {row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs.length > 0 && row.logs[0].to_id !== null ? (
+                                                            {row.status === "Acknowledge" ? (
+                                                            <Badge bg="success">Acknowledge</Badge>
+                                                            ) : row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs.length > 0 && row.logs[0].to_id !== null ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
                                                                     placement="left"
@@ -474,7 +514,9 @@ function DocumentsUser() {
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        {row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs.length > 0 && row.logs[0].to_id !== null ? (
+                                                    {row.status === "Acknowledged" ? (
+                                                    <Badge bg="success"> Acknowledged </Badge>
+                                                    ) : row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs.length > 0 && row.logs[0].to_id !== null ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
                                                                 placement="left"
@@ -541,6 +583,7 @@ function DocumentsUser() {
                                                             <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
                                                         </Button>
 
+                                                        {/* to add condition                     */}
                                                         <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                             <FontAwesomeIcon icon={faShare}/>
                                                         </Button>
