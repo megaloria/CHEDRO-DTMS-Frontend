@@ -356,7 +356,7 @@ function DocumentsUser() {
                                                                             </Popover>
                                                                         }
                                                                     >
-                                                                        <Badge bg="success" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                                                        <Badge bg="warning" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                     </OverlayTrigger>
                                                                 ) : (
                                                                     row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs[0].to_id !== null ? (
