@@ -86,6 +86,8 @@ function DocumentsUser() {
         }
     }, [activeTab]);
 
+
+// ACKNOWLEDGE
     const showAcknowledgeAlert = document => {
         Swal.fire({
             title: `Are you sure you want to acknowledge the document no."${document.tracking_no}"?`,
@@ -94,11 +96,11 @@ function DocumentsUser() {
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: 'Yes, acknowledge it!',
             reverseButtons: true,
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return apiClient.acknowledge(`/document/${document.id}`).then(response => {
+                return apiClient.delete(`/document/${document.id}`).then(response => {
                     let newData = data.data.filter(d => d.id !== document.id);
                     setData({
                         ...data,
