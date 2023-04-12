@@ -336,7 +336,7 @@ function DocumentsUser() {
                                                                         placement="left"
                                                                         overlay={
                                                                             <Popover>
-                                                                                <Popover.Header className="bg-warning text-white">
+                                                                                <Popover.Header className="bg-primary text-white">
                                                                                     Acknowledged by
                                                                                 </Popover.Header>
                                                                                 <Popover.Body>
@@ -344,7 +344,7 @@ function DocumentsUser() {
                                                                                         {row.logs.map((log, index) => (
                                                                                             log.acknowledge_id !== null ? (
                                                                                                 <ListGroupItem
-                                                                                                    variant="warning text-black"
+                                                                                                    variant="primary text-black"
                                                                                                     key={log.user.profile.id}
                                                                                                 >
                                                                                                     {log.user.profile.name}
@@ -356,7 +356,7 @@ function DocumentsUser() {
                                                                             </Popover>
                                                                         }
                                                                     >
-                                                                        <Badge bg="warning" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                                                        <Badge bg="primary" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                     </OverlayTrigger>
                                                                 ) : (
                                                                     row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs[0].to_id !== null ? (
@@ -636,7 +636,7 @@ function DocumentsUser() {
                             <Form.Label>Forward to:</Form.Label>
                             <Select
                                 isMulti
-                                name='assignTo'
+                                name='forwardTo'
                                 options={options}
                                 value={selectedOptions}
                                 onChange={handleUserSelection}
