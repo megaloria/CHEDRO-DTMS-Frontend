@@ -499,8 +499,7 @@ function Documents() {
                                                             }}>
                                                                 <FontAwesomeIcon icon={faShare} className="" />
                                                             </Button>
-                                                            ) : null}
-
+                                                       
                                                             {row.logs.some(log => log.acknowledge_id !== null) ? (
                                                                 null
                                                             ) : <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
