@@ -433,9 +433,12 @@ function DocumentsUser() {
                                                                 <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
                                                             </Button>
 
+                                                            {row.logs.some(log => log.acknowledge_id !== null) ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                 <FontAwesomeIcon icon={faShare}/>
                                                             </Button>
+                                                            ) : null}
+                                                          
                                                         </td>
                                                     </tr>
 
