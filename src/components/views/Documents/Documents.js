@@ -400,7 +400,7 @@ function Documents() {
                                                                             placement="left"
                                                                             overlay={
                                                                                 <Popover>
-                                                                                    <Popover.Header className="bg-primary text-white">
+                                                                                    <Popover.Header className="bg-warning text-white">
                                                                                         Acknowledged by
                                                                                     </Popover.Header>
                                                                                     <Popover.Body>
@@ -408,7 +408,7 @@ function Documents() {
                                                                                             {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
                                                                                                 .filter(name => name !== null)
                                                                                                 .map(name => (
-                                                                                                    <ListGroupItem variant="primary text-black" key={name}>
+                                                                                                    <ListGroupItem variant="warning text-black" key={name}>
                                                                                                         {name}
                                                                                                     </ListGroupItem>
                                                                                                 ))}
@@ -417,7 +417,7 @@ function Documents() {
                                                                                 </Popover>
                                                                             }
                                                                         >
-                                                                            <Badge bg="primary" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                                                            <Badge bg="warning" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                         </OverlayTrigger>
                                                                     ) : row.logs.some(log => log.to_id !== null) ? (
                                                                         <OverlayTrigger
@@ -595,7 +595,7 @@ function Documents() {
                                                                         placement="left"
                                                                         overlay={
                                                                             <Popover>
-                                                                                <Popover.Header className="bg-primary text-white">
+                                                                                <Popover.Header className="bg-warning text-white">
                                                                                     Acknowledged by
                                                                                 </Popover.Header>
                                                                                 <Popover.Body>
@@ -603,7 +603,7 @@ function Documents() {
                                                                                         {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
                                                                                             .filter(name => name !== null)
                                                                                             .map(name => (
-                                                                                                <ListGroupItem variant="primary text-black" key={name}>
+                                                                                                <ListGroupItem variant="warning text-black" key={name}>
                                                                                                     {name}
                                                                                                 </ListGroupItem>
                                                                                             ))}
@@ -612,7 +612,7 @@ function Documents() {
                                                                             </Popover>
                                                                         }
                                                                     >
-                                                                        <Badge bg="primary" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                                                        <Badge bg="warning" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                     </OverlayTrigger>
                                                                 ) : row.logs.some(log => log.to_id !== null) ? (
                                                                     <OverlayTrigger
