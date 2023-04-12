@@ -101,6 +101,7 @@ function DocumentsUser() {
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
+                    navigate('../');
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -570,7 +571,7 @@ function DocumentsUser() {
                                                                 )}
                                                             </>
                                                         ) : null}
-                                                        
+
                                                     </td>
                                                     <td style={{ whiteSpace: 'nowrap' }}>
                                                         <Button className='me-1' variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
