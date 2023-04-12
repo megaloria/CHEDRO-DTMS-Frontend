@@ -445,9 +445,12 @@ function Documents() {
                                                                 <FontAwesomeIcon icon={faShare} className="" />
                                                             </Button>
 
-                                                            <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
+                                                            {row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                                null
+                                                            ) : <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
                                                                 <FontAwesomeIcon icon={faEdit} className="text-success" />
-                                                            </Button>
+                                                            </Button>}
+
                                                             {!row.logs || row.logs.length === 0 ? (
                                                                 <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
                                                                     <FontAwesomeIcon icon={faTrash} className="text-danger" />
