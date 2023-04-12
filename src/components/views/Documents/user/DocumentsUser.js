@@ -429,9 +429,11 @@ function DocumentsUser() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                             </Button>
 
+                                                            {!row.logs.some(log => log.acknowledge_id !== null) ? (
                                                             <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                 <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
                                                             </Button>
+                                                            ) : null}
 
                                                             {row.logs.some(log => log.acknowledge_id !== null) ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
