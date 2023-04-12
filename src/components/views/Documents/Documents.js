@@ -27,7 +27,8 @@ import {
     faCircleArrowRight,
     faRightToBracket,
     faShare,
-    faSearch
+    faSearch,
+    faThumbsUp
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
@@ -194,7 +195,35 @@ function Documents() {
         setActiveTab(key);
     }
 
-   
+   // ACKNOWLEDGE
+   const showAcknowledgeAlert = document => {
+    Swal.fire({
+        title: `Are you sure you want to Acknowledge the document no."${document.tracking_no}"?`,
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, acknowledge it!',
+        reverseButtons: true,
+        showLoaderOnConfirm: true,
+        preConfirm: () => {
+            return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
+                Swal.fire({
+                    title: 'Success',
+                    text: response.data.message,
+                    icon: 'success'
+                });
+            }).catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: error,
+                    icon: 'error'
+                });
+            });
+        }
+    });
+};
 
     // DELETE
     const showDeleteAlert = document => {
@@ -357,7 +386,7 @@ function Documents() {
                                                         <td>{row.sender?.receivable?.title ?? row.sender.name}</td>
                                                         <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
                                                         <td >
-                                                            <div className='text-truncate' style={{ width: '200px' }}>
+                                                            <div className='text-truncate' style={{ width: '180px' }}>
                                                                 {row.description}
                                                             </div>
                                                         </td>
@@ -470,6 +499,7 @@ function Documents() {
                                                             }}>
                                                                 <FontAwesomeIcon icon={faShare} className="" />
                                                             </Button>
+                                                            ) : null}
 
                                                             {row.logs.some(log => log.acknowledge_id !== null) ? (
                                                                 null
@@ -547,7 +577,7 @@ function Documents() {
                                                     <td>{row.sender?.receivable?.title ?? row.sender.name}</td>
                                                     <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
                                                     <td>
-                                                        <div className='text-truncate' style={{ width: '200px' }}>
+                                                        <div className='text-truncate' style={{ width: '180px' }}>
                                                             {row.description}
                                                         </div>
                                                     </td>
