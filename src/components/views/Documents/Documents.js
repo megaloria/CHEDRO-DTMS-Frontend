@@ -593,14 +593,13 @@ function Documents() {
                                                                                 </Popover.Header>
                                                                                 <Popover.Body>
                                                                                     <ListGroup variant="flush">
-                                                                                        {Array.from(new Set(row.logs.map(log => log.user.profile.name))).map(name => (
-                                                                                            <ListGroupItem
-                                                                                                variant="primary text-black"
-                                                                                                key={name}
-                                                                                            >
-                                                                                                {name}
-                                                                                            </ListGroupItem>
-                                                                                        ))}
+                                                                                        {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
+                                                                                            .filter(name => name !== null)
+                                                                                            .map(name => (
+                                                                                                <ListGroupItem variant="primary text-black" key={name}>
+                                                                                                    {name}
+                                                                                                </ListGroupItem>
+                                                                                            ))}
                                                                                     </ListGroup>
                                                                                 </Popover.Body>
                                                                             </Popover>
