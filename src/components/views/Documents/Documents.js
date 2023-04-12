@@ -367,7 +367,7 @@ function Documents() {
                                                         <td>{row.sender?.receivable?.title ?? row.sender.name}</td>
                                                         <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
                                                         <td >
-                                                            <div className='text-truncate' style={{ width: '200px' }}>
+                                                            <div className='text-truncate' style={{ width: '180px' }}>
                                                                 {row.description}
                                                             </div>
                                                         </td>
@@ -525,7 +525,7 @@ function Documents() {
                                                     <td>{row.sender?.receivable?.title ?? row.sender.name}</td>
                                                     <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
                                                     <td>
-                                                        <div className='text-truncate' style={{ width: '200px' }}>
+                                                        <div className='text-truncate' style={{ width: '180px' }}>
                                                             {row.description}
                                                         </div>
                                                     </td>
