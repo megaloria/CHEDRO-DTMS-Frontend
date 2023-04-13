@@ -1,14 +1,15 @@
-import React  from 'react';
-import Data from './Data';
+import React from 'react';
 import TimelineItem from './TimelineItem';
+import './styles.css'
 
-const Timeline = () => Data.length > 0 && (
+const Timeline = ({ data }) =>
+    data.length > 0 && (
         <div className="timeline-container">
-            <div className='timeline-container2'></div>
-            {Data.map((data, idx) => (
+            <div className="timeline-container2"></div>
+            {data.map((data, idx) => (
                 <TimelineItem data={data} key={idx} />
             ))}
-        </div>  
+        </div>
     );
 
 export default Timeline;
