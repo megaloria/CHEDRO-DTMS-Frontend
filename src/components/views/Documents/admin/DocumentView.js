@@ -48,6 +48,7 @@ function DocumentView() {
     const [isValid, setIsValid] = useState(true);
     const [isNavigationLoading, setIsNavigationLoading] = useState(true);
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
+    const [timelineData, setTimelineData] = useState([]);
     const navigate = useNavigate();
 
     const [modal, setModal] = useState({ //modal variables
@@ -69,8 +70,73 @@ function DocumentView() {
             setIsLoading(false);
             setIsNavigationLoading(false);
         });
-
+        
     }, [location]);
+
+    
+
+    useEffect(() => {
+        let newTimelineData = [];
+
+        if (document.logs.length > 0) {
+            newTimelineData = newTimelineData.concat(
+                document.logs.map((logs) => ({
+                    text: <AssignedUsersText key={logs.id} assignedUsers={[logs.user.profile]} />,
+                    date: moment(logs.created_at).format('MMMM DD, YYYY'),
+                    category: {
+                        tag: document.user.profile.position_designation,
+                        color: '#6dedd4',
+                    },
+                    circleStyle: {
+                        borderColor: '#e17b77',
+                    },
+                }))
+            );
+        }
+
+        if (document.assign.length > 0) {
+            newTimelineData = newTimelineData.concat(
+                document.assign.map((assign) => ({
+                    text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
+                    date: moment(assign.created_at).format('MMMM DD, YYYY'),
+                    category: {
+                        tag: document.user.profile.position_designation,
+                        color: '#6dedd4',
+                    },
+                    circleStyle: {
+                        borderColor: '#e17b77',
+                    },
+                }))
+            );
+        }
+
+        setTimelineData(newTimelineData);
+    }, [document.logs, document.assign, document.user.profile.position_designation]);
+
+
+    const AssignedUsersText = ({ assignedUsers }) => (
+        <>
+            Document forwarded to:{" "}
+            {assignedUsers.map((user, index) => (
+                <p key={user.id}>
+                    {user.name}
+                    {index !== assignedUsers.length - 1 ? ", " : ""}
+                </p>
+            ))}
+        </>
+    );
+
+    const UsersText = ({ users }) => (
+        <>
+            Document assigned to:{" "}
+            {users.map((user, index) => (
+                <p key={user.id}>
+                    {user.name}
+                    {index !== users.length - 1 ? ", " : ""}
+                </p>
+            ))}
+        </>
+    );
 
 
     const handleForward = event => {
@@ -367,7 +433,7 @@ function DocumentView() {
                 </Card>
             </div>
            
-          <Timeline/>
+            <Timeline data={timelineData} />
           
           <Modal
                 show={modal.show}
