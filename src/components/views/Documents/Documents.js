@@ -88,6 +88,21 @@ function Documents() {
                 setIsLoading(false);
             });
         }
+        if (activeTab === 'mydocument') {
+            apiClient.get('/document/mydocument', {
+                params: {
+                    query: ''
+                }
+            }).then(response => { //GET ALL function
+                setData(response.data.data.documents);
+                setUsers(response.data.data.user);
+            }).catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsTableLoading(false);
+                setIsLoading(false);
+            });
+        }
     }, [activeTab]);
 
    
@@ -111,6 +126,20 @@ function Documents() {
     };
         if (activeTab === 'ongoing') {
             apiClient.get(`/document/ongoing?page=${pageNumber}`, {
+                params: {
+                    query: ''
+                }
+            }).then(response => {
+                setData(response.data.data.documents);
+                setUsers(response.data.data.user);
+            }).catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsTableLoading(false);
+            });
+        };
+        if (activeTab === 'mydocument') {
+            apiClient.get(`/document/mydocument?page=${pageNumber}`, {
                 params: {
                     query: ''
                 }
@@ -542,6 +571,203 @@ function Documents() {
                         )
                     }
                 </Tab>
+                <Tab eventKey="mydocument" title="My Document" >
+                {
+                        data.data.length === 0 ? (
+                            <Alert variant='primary'>
+                                No Documents found.
+                            </Alert>
+                        ) : isTableLoading ? (
+                            <Spinner animation='border' />
+                        ) : (
+                            <div className='loading-table-container'>
+                                <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
+                                    <div className='spinner-icon'>
+                                        <Spinner animation='border' />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <Table bordered hover responsive size="md" className={isTableLoading ? 'table-loading' : ''}>
+                                        <thead>
+                                            <tr className="table-primary">
+                                                <th>ID</th>
+                                                <th>Tracking No.</th>
+                                                <th>Document Type</th>
+                                                <th>Category</th>
+                                                <th>Received From</th>
+                                                <th>Date Received</th>
+                                                <th>Description</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody >
+                                            {
+
+                                                data.data.map((row, index) => (
+                                                    <tr key={index}>
+                                                        <td className="table-primary">{row.id}</td>
+                                                        <td style={{ whiteSpace: 'nowrap' }}>{row.tracking_no}</td>
+                                                        <td>{row.document_type.description}</td>
+                                                        <td>{row.category.description}</td>
+                                                        <td>{row.sender?.receivable?.title ?? row.sender.name}</td>
+                                                        <td style={{ whiteSpace: 'nowrap' }}>{moment(row.date_received).format('MMM DD, YYYY')}</td>
+                                                        <td >
+                                                            <div className='text-truncate' style={{ width: '200px' }}>
+                                                                {row.description}
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                        {row.logs.length > 0 ? (
+                                                                <>
+                                                                    {row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                                        <OverlayTrigger
+                                                                            trigger={['click', 'hover']}
+                                                                            placement="left"
+                                                                            overlay={
+                                                                                <Popover>
+                                                                                    <Popover.Header className="bg-warning text-white">
+                                                                                        Acknowledged by
+                                                                                    </Popover.Header>
+                                                                                    <Popover.Body>
+                                                                                        <ListGroup variant="flush">
+                                                                                            {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
+                                                                                                .filter(name => name !== null)
+                                                                                                .map(name => (
+                                                                                                    <ListGroupItem variant="warning text-black" key={name}>
+                                                                                                        {name}
+                                                                                                    </ListGroupItem>
+                                                                                                ))}
+                                                                                        </ListGroup>
+                                                                                    </Popover.Body>
+                                                                                </Popover>
+                                                                            }
+                                                                        >
+                                                                            <Badge bg="warning" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                                                        </OverlayTrigger>
+                                                                    ) : row.logs.some(log => log.to_id !== null) ? (
+                                                                        <OverlayTrigger
+                                                                            trigger={['click', 'hover']}
+                                                                            placement="left"
+                                                                            overlay={
+                                                                                <Popover>
+                                                                                    <Popover.Header className="bg-warning text-white">
+                                                                                        Forwarded to
+                                                                                    </Popover.Header>
+                                                                                    <Popover.Body>
+                                                                                        <ListGroup variant="flush">
+                                                                                            {row.logs.map((log, index) => (
+                                                                                                log.to_id !== null ? (
+                                                                                                    <ListGroupItem
+                                                                                                        variant="warning text-black"
+                                                                                                        key={log.user.profile.id}
+                                                                                                    >
+                                                                                                        {log.user.profile.name}
+                                                                                                    </ListGroupItem>
+                                                                                                ) : null
+                                                                                            ))}
+                                                                                        </ListGroup>
+                                                                                    </Popover.Body>
+                                                                                </Popover>
+                                                                            }
+                                                                        >
+                                                                            <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded</Badge>
+                                                                        </OverlayTrigger>
+                                                                    ) : (
+                                                                        <Badge bg="primary">Received</Badge>
+                                                                    )}
+                                                                    </>
+                                                                    ) : row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
+                                                                        <OverlayTrigger
+                                                                            trigger={['click', 'hover']}
+                                                                            placement="left"
+                                                                            overlay={
+                                                                                <Popover>
+                                                                                    <Popover.Header className="bg-primary text-white">
+                                                                                        Assigned to
+                                                                                    </Popover.Header>
+                                                                                    <Popover.Body>
+                                                                                        <ListGroup variant="flush">
+                                                                                            {row.assign.map((assign, index) => (
+                                                                                                <ListGroupItem
+                                                                                                    variant="primary text-black"
+                                                                                                    key={assign.assigned_user.profile.id}
+                                                                                                >
+                                                                                                    {assign.assigned_user.profile.name}
+                                                                                                </ListGroupItem>
+                                                                                            ))}
+                                                                                        </ListGroup>
+                                                                                    </Popover.Body>
+                                                                                </Popover>
+                                                                            }
+                                                                        >
+                                                                            <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
+                                                                        </OverlayTrigger>
+                                                                ) : <Badge bg="primary">Received</Badge> }
+
+
+                                                        </td>
+
+                                                        <td style={{ whiteSpace: 'nowrap' }}>
+                                                            <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
+                                                                <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
+                                                            </Button>
+
+                                                            {row.logs.some(log => log.acknowledge_id === null) && row.logs.some(log => log.to_id !== null) && (row.assign[0].assigned_id === row.user_id)? (
+                                                                <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
+                                                                    <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
+                                                                </Button>
+                                                            ) : null}
+                                                        
+                                                            <Button variant="link" size='sm' onClick={e => {
+                                                                if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
+                                                                    setIsSelectDisabled(false);
+                                                                } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
+                                                                    setIsSelectDisabled(true);
+                                                                } else if (!row.category.is_assignable) {
+                                                                    setIsSelectDisabled(true);
+                                                                }
+                                                                handleShowModal(row);
+                                                            }}>
+                                                                <FontAwesomeIcon icon={faShare} className="" />
+                                                            </Button>
+                                                       
+                                                            {row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                                null
+                                                            ) : <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
+                                                                <FontAwesomeIcon icon={faEdit} className="text-success" />
+                                                            </Button>}
+
+                                                            {!row.logs || row.logs.length === 0 ? (
+                                                                <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
+                                                                    <FontAwesomeIcon icon={faTrash} className="text-danger" />
+                                                                </Button>
+                                                            ) : null}
+                                                        </td>
+                                                    </tr>
+
+                                                ))
+                                            }
+                                        </tbody>
+                                    </Table>
+                                </div>
+                                <div>
+                                    {data.data.length > 0 && (
+                                        <Pagination style={{ float: 'right' }}>
+                                            <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                            <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                            <Pagination.Item disabled>
+                                                {`${data.current_page} / ${data.last_page}`}
+                                            </Pagination.Item>
+                                            <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                            <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                                        </Pagination>
+                                    )}
+                                </div>
+                            </div>
+                        )
+                    }
+                </Tab>
                 <Tab eventKey="ongoing" title="Ongoing">
                     {
                         data.data.length === 0 ? (
@@ -727,6 +953,7 @@ function Documents() {
                         )
                     }
                 </Tab>
+                
                 <Tab eventKey="releasing" title="Releasing" >
                     {/* {
                         releasingData.data.length === 0 ? (
