@@ -516,7 +516,7 @@ function Documents() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                             </Button>
 
-                                                            {row.logs.some(log => log.acknowledge_id === null) && row.logs.some(log => log.to_id !== null) && (row.assign[0].assigned_id === row.user_id)? (
+                                                            {row.logs[0].acknowledge_id === null && row.logs[0].to_id !== null && (row.assign[0].assigned_id === row.user_id) ? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                                 </Button>
@@ -713,7 +713,7 @@ function Documents() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                             </Button>
 
-                                                            {row.logs.some(log => log.acknowledge_id === null) && row.logs.some(log => log.to_id !== null) && (row.assign[0].assigned_id === row.user_id)? (
+                                                            {row.logs[0].acknowledge_id === null && row.logs[0].to_id !== null && (row.assign[0].assigned_id === row.user_id)? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                                 </Button>
@@ -905,6 +905,12 @@ function Documents() {
                                                             <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                         </Button>
 
+                                                        {row.logs[0].acknowledge_id === null && row.logs[0].to_id !== null && (row.assign[0].assigned_id === row.user_id) ? (
+                                                            <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
+                                                                <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
+                                                            </Button>
+                                                        ) : null}
+
                                                         <Button variant="link" size='sm' onClick={e => {
                                                             if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
                                                                 setIsSelectDisabled(false);
@@ -918,16 +924,17 @@ function Documents() {
                                                             <FontAwesomeIcon icon={faShare} className="" />
                                                         </Button>
 
-                                                        <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
+                                                        {row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                            null
+                                                        ) : <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
                                                             <FontAwesomeIcon icon={faEdit} className="text-success" />
-                                                        </Button>
+                                                        </Button>}
 
                                                         {!row.logs || row.logs.length === 0 ? (
                                                             <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
                                                                 <FontAwesomeIcon icon={faTrash} className="text-danger" />
                                                             </Button>
                                                         ) : null}
-
                                                     </td>
                                                 </tr>
                                             ))}

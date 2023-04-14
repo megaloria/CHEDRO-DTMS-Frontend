@@ -123,18 +123,34 @@ function DocumentsUser() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/document?page=${pageNumber}`, {
-            params: {
-                query: ''
-            }
-        }).then(response => {
-            setData(response.data.data.documents);
-            setUsers(response.data.data.user);
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsTableLoading(false);
-        });
+        if (activeTab === 'all') {
+            apiClient.get(`/document?page=${pageNumber}`, {
+                params: {
+                    query: ''
+                }
+            }).then(response => {
+                setData(response.data.data.documents);
+                setUsers(response.data.data.user);
+            }).catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsTableLoading(false);
+            });
+        };
+        if (activeTab === 'ongoing') {
+            apiClient.get(`/document/ongoing?page=${pageNumber}`, {
+                params: {
+                    query: ''
+                }
+            }).then(response => {
+                setData(response.data.data.documents);
+                setUsers(response.data.data.user);
+            }).catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsTableLoading(false);
+            });
+        };
     };
 
     const [isValid, setIsValid] = useState(true);
