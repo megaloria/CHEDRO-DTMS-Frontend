@@ -43,6 +43,7 @@ function DocumentView() {
     const location = useLocation();
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
+    const [url, setUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [isValid, setIsValid] = useState(true);
@@ -73,15 +74,45 @@ function DocumentView() {
         
     }, [location]);
 
-    
+    useEffect(() => {
+        apiClient.get(`/document/${document.id}`, {
+            params: {
+                query: ''
+            }
+        }).then(response => { //GET ALL function
+            setUrl(response.data.data.url);
+        }).catch(error => {
+            setErrorMessage(error);
+        });
+
+    }, [document.id]);
 
     useEffect(() => {
         let newTimelineData = [];
 
+        if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
+            newTimelineData = newTimelineData.concat(
+                document.logs
+                    .filter(log => log.acknowledge_id !== null)
+                    .map(log => ({
+                        text: <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} />,
+                        date: moment(log.created_at).format('MMMM DD, YYYY'),
+                        category: {
+                            tag: log.acknowledge_user.profile.position_designation,
+                            color: '#6dedd4',
+                        },
+                        circleStyle: {
+                            borderColor: '#e17b77',
+                        },
+                    }))
+            );
+        }
+
+
         if (document.logs.length > 0) {
             newTimelineData = newTimelineData.concat(
                 document.logs.map((logs) => ({
-                    text: <AssignedUsersText key={logs.id} assignedUsers={[logs.user.profile]} />,
+                    text: <ForwardedUsersText key={logs.id} users={[logs.user.profile]} />,
                     date: moment(logs.created_at).format('MMMM DD, YYYY'),
                     category: {
                         tag: document.user.profile.position_designation,
@@ -109,18 +140,31 @@ function DocumentView() {
                 }))
             );
         }
+        newTimelineData.sort((a, b) => moment(b.date) - moment(a.date));
 
         setTimelineData(newTimelineData);
     }, [document.logs, document.assign, document.user.profile.position_designation]);
 
 
-    const AssignedUsersText = ({ assignedUsers }) => (
+    const ForwardedUsersText = ({ users }) => (
         <>
             Document forwarded to:{" "}
-            {assignedUsers.map((user, index) => (
+            {users.map((user, index) => (
                 <p key={user.id}>
                     {user.name}
-                    {index !== assignedUsers.length - 1 ? ", " : ""}
+                    {index !== users.length - 1 ? ", " : ""}
+                </p>
+            ))}
+        </>
+    );
+
+    const AcknowledgedUsersText = ({ users }) => (
+        <>
+            Document acknowledged by:{" "}
+            {users.map((user, index) => (
+                <p key={user?.id}>
+                    {user?.name}
+                    {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
         </>
@@ -408,20 +452,21 @@ function DocumentView() {
                         </Row> */}
 
                          <Row className="mb-3">
-                            <Col >
+                            <Col >  
                                 <FontAwesomeIcon icon={faTag} className='text-dark me-4'/>
                                 {document.category.description}
                             </Col>
                         </Row>
 
                         {document.attachments?.file_title ? (
-                        <Row className="mb-3"> 
-                            <Col>
-                            <FontAwesomeIcon icon={faPaperclip} className='text-dark me-4'/>
-                            {document.attachments.file_title}
-                            </Col>
-                        </Row> 
+                            <Row className="mb-3">
+                                <Col>
+                                    <FontAwesomeIcon icon={faPaperclip} className='text-dark me-4' />
+                                    <Link to={url} target="_blank" download>{document.attachments.file_title}</Link>
+                                </Col>
+                            </Row>
                         ) : null}
+
 
                         <Row className="mb-3">
                             <Col row={5}>
