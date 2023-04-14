@@ -522,7 +522,8 @@ function Documents() {
                                                                 </Button>
                                                             ) : null}
                                                         
-                                                            <Button variant="link" size='sm' onClick={e => {
+                                                            {!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                                <Button variant="link" size='sm' onClick={e => {
                                                                 if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
                                                                     setIsSelectDisabled(false);
                                                                 } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
@@ -534,7 +535,8 @@ function Documents() {
                                                             }}>
                                                                 <FontAwesomeIcon icon={faShare} className="" />
                                                             </Button>
-                                                       
+                                                            ) : null}
+                                                            
                                                             {row.logs.some(log => log.acknowledge_id !== null) ? (
                                                                 null
                                                             ) : <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
@@ -719,18 +721,20 @@ function Documents() {
                                                                 </Button>
                                                             ) : null}
                                                         
-                                                            <Button variant="link" size='sm' onClick={e => {
-                                                                if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                                    setIsSelectDisabled(false);
-                                                                } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                                    setIsSelectDisabled(true);
-                                                                } else if (!row.category.is_assignable) {
-                                                                    setIsSelectDisabled(true);
-                                                                }
-                                                                handleShowModal(row);
-                                                            }}>
-                                                                <FontAwesomeIcon icon={faShare} className="" />
-                                                            </Button>
+                                                            {!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                                <Button variant="link" size='sm' onClick={e => {
+                                                                    if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
+                                                                        setIsSelectDisabled(false);
+                                                                    } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
+                                                                        setIsSelectDisabled(true);
+                                                                    } else if (!row.category.is_assignable) {
+                                                                        setIsSelectDisabled(true);
+                                                                    }
+                                                                    handleShowModal(row);
+                                                                }}>
+                                                                    <FontAwesomeIcon icon={faShare} className="" />
+                                                                </Button>
+                                                            ) : null}
                                                        
                                                             {row.logs.some(log => log.acknowledge_id !== null) ? (
                                                                 null
@@ -911,18 +915,20 @@ function Documents() {
                                                             </Button>
                                                         ) : null}
 
-                                                        <Button variant="link" size='sm' onClick={e => {
-                                                            if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                                setIsSelectDisabled(false);
-                                                            } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                                setIsSelectDisabled(true);
-                                                            } else if (!row.category.is_assignable) {
-                                                                setIsSelectDisabled(true);
-                                                            }
-                                                            handleShowModal(row);
-                                                        }}>
-                                                            <FontAwesomeIcon icon={faShare} className="" />
-                                                        </Button>
+                                                        {!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                            <Button variant="link" size='sm' onClick={e => {
+                                                                if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
+                                                                    setIsSelectDisabled(false);
+                                                                } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
+                                                                    setIsSelectDisabled(true);
+                                                                } else if (!row.category.is_assignable) {
+                                                                    setIsSelectDisabled(true);
+                                                                }
+                                                                handleShowModal(row);
+                                                            }}>
+                                                                <FontAwesomeIcon icon={faShare} className="" />
+                                                            </Button>
+                                                        ) : null}
 
                                                         {row.logs.some(log => log.acknowledge_id !== null) ? (
                                                             null
