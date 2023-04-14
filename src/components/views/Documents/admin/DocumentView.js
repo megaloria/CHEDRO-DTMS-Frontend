@@ -47,6 +47,8 @@ function DocumentView() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [isValid, setIsValid] = useState(true);
     const [isNavigationLoading, setIsNavigationLoading] = useState(true);
+    const [isSelectDisabled, setIsSelectDisabled] = useState(false);
+    const [timelineData, setTimelineData] = useState([]);
     const navigate = useNavigate();
 
     const [modal, setModal] = useState({ //modal variables
@@ -68,8 +70,73 @@ function DocumentView() {
             setIsLoading(false);
             setIsNavigationLoading(false);
         });
-
+        
     }, [location]);
+
+    
+
+    useEffect(() => {
+        let newTimelineData = [];
+
+        if (document.logs.length > 0) {
+            newTimelineData = newTimelineData.concat(
+                document.logs.map((logs) => ({
+                    text: <AssignedUsersText key={logs.id} assignedUsers={[logs.user.profile]} />,
+                    date: moment(logs.created_at).format('MMMM DD, YYYY'),
+                    category: {
+                        tag: document.user.profile.position_designation,
+                        color: '#6dedd4',
+                    },
+                    circleStyle: {
+                        borderColor: '#e17b77',
+                    },
+                }))
+            );
+        }
+
+        if (document.assign.length > 0) {
+            newTimelineData = newTimelineData.concat(
+                document.assign.map((assign) => ({
+                    text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
+                    date: moment(assign.created_at).format('MMMM DD, YYYY'),
+                    category: {
+                        tag: document.user.profile.position_designation,
+                        color: '#6dedd4',
+                    },
+                    circleStyle: {
+                        borderColor: '#e17b77',
+                    },
+                }))
+            );
+        }
+
+        setTimelineData(newTimelineData);
+    }, [document.logs, document.assign, document.user.profile.position_designation]);
+
+
+    const AssignedUsersText = ({ assignedUsers }) => (
+        <>
+            Document forwarded to:{" "}
+            {assignedUsers.map((user, index) => (
+                <p key={user.id}>
+                    {user.name}
+                    {index !== assignedUsers.length - 1 ? ", " : ""}
+                </p>
+            ))}
+        </>
+    );
+
+    const UsersText = ({ users }) => (
+        <>
+            Document assigned to:{" "}
+            {users.map((user, index) => (
+                <p key={user.id}>
+                    {user.name}
+                    {index !== users.length - 1 ? ", " : ""}
+                </p>
+            ))}
+        </>
+    );
 
 
     const handleForward = event => {
@@ -91,6 +158,7 @@ function DocumentView() {
                 icon: 'success'
             })
             handleHideModal();
+            setIsSelectDisabled(false);
             setIsNavigationLoading(true);
             navigate(`/documents/view/${document.id}`);
             
@@ -130,6 +198,7 @@ function DocumentView() {
 
     const handleHideModal = () => {
         setIsValid(true);
+        setIsSelectDisabled(false);
         setModal({
             show: false,
             data: null,
@@ -163,7 +232,16 @@ function DocumentView() {
                         </Breadcrumb>
                     </Col>
                     <Col md="auto">
-                        <Button onClick={e => handleShowModal(document)}>
+                        <Button onClick={e => {
+                            if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
+                                setIsSelectDisabled(false);
+                            } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
+                                setIsSelectDisabled(true);
+                            } else if (!document.category.is_assignable) {
+                                setIsSelectDisabled(true);
+                            }
+                            handleShowModal(document);
+                        }}>
                             <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
                         </Button>
                     </Col>
@@ -194,20 +272,79 @@ function DocumentView() {
                         <Row className="mb-3">
                             <Col>
                                 <FontAwesomeIcon icon={faTimeline} className='text-dark me-3'/>
-                                {document.assign.length > 0 && document.assign[0].assigned_id !== null && document.logs.length > 0 && document.logs[0].to_id !== null ? (
+                                {document.logs.length > 0 ? (
+                                    <>
+                                        {document.logs.some(log => log.acknowledge_id !== null) ? (
+                                            <OverlayTrigger
+                                                trigger={['click', 'hover']}
+                                                placement="left"
+                                                overlay={
+                                                    <Popover>
+                                                        <Popover.Header className="bg-warning text-white">
+                                                            Acknowledged by
+                                                        </Popover.Header>
+                                                        <Popover.Body>
+                                                            <ListGroup variant="flush">
+                                                                {Array.from(new Set(document.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
+                                                                    .filter(name => name !== null)
+                                                                    .map(name => (
+                                                                        <ListGroupItem variant="warning text-black" key={name}>
+                                                                            {name}
+                                                                        </ListGroupItem>
+                                                                    ))}
+                                                            </ListGroup>
+                                                        </Popover.Body>
+                                                    </Popover>
+                                                }
+                                            >
+                                                <Badge bg="warning" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                            </OverlayTrigger>
+                                        ) : document.logs.some(log => log.to_id !== null) ? (
+                                            <OverlayTrigger
+                                                trigger={['click', 'hover']}
+                                                placement="left"
+                                                overlay={
+                                                    <Popover>
+                                                        <Popover.Header className="bg-warning text-white">
+                                                            Forwarded to
+                                                        </Popover.Header>
+                                                        <Popover.Body>
+                                                            <ListGroup variant="flush">
+                                                                {document.logs.map((log, index) => (
+                                                                    log.to_id !== null ? (
+                                                                        <ListGroupItem
+                                                                            variant="warning text-black"
+                                                                            key={log.user.profile.id}
+                                                                        >
+                                                                            {log.user.profile.name}
+                                                                        </ListGroupItem>
+                                                                    ) : null
+                                                                ))}
+                                                            </ListGroup>
+                                                        </Popover.Body>
+                                                    </Popover>
+                                                }
+                                            >
+                                                <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded</Badge>
+                                            </OverlayTrigger>
+                                        ) : (
+                                            <Badge bg="primary">Received</Badge>
+                                        )}
+                                    </>
+                                ) : document.assign.length > 0 && document.assign[0].assigned_id !== null ? (
                                     <OverlayTrigger
                                         trigger={['click', 'hover']}
                                         placement="left"
                                         overlay={
                                             <Popover>
-                                                <Popover.Header className="bg-warning text-white">
-                                                    Forwarded to
+                                                <Popover.Header className="bg-primary text-white">
+                                                    Assigned to
                                                 </Popover.Header>
                                                 <Popover.Body>
                                                     <ListGroup variant="flush">
                                                         {document.assign.map((assign, index) => (
                                                             <ListGroupItem
-                                                                variant="warning text-black"
+                                                                variant="primary text-black"
                                                                 key={assign.assigned_user.profile.id}
                                                             >
                                                                 {assign.assigned_user.profile.name}
@@ -218,39 +355,9 @@ function DocumentView() {
                                             </Popover>
                                         }
                                     >
-                                        <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded</Badge>
+                                        <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
                                     </OverlayTrigger>
-                                ) : (
-                                        document.assign.length > 0 && document.assign[0].assigned_id !== null ? (
-                                        <OverlayTrigger
-                                            trigger={['click', 'hover']}
-                                            placement="left"
-                                            overlay={
-                                                <Popover>
-                                                    <Popover.Header className="bg-primary text-white">
-                                                        Assigned to
-                                                    </Popover.Header>
-                                                    <Popover.Body>
-                                                        <ListGroup variant="flush">
-                                                            {document.assign.map((assign, index) => (
-                                                                <ListGroupItem
-                                                                    variant="primary text-black"
-                                                                    key={assign.assigned_user.profile.id}
-                                                                >
-                                                                    {assign.assigned_user.profile.name}
-                                                                </ListGroupItem>
-                                                            ))}
-                                                        </ListGroup>
-                                                    </Popover.Body>
-                                                </Popover>
-                                            }
-                                        >
-                                            <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
-                                        </OverlayTrigger>
-                                    ) : (
-                                        <Badge bg="primary">Received</Badge>
-                                    )
-                                )}
+                                ) : <Badge bg="primary">Received</Badge>}
                             </Col> 
                          </Row>
 
@@ -326,7 +433,7 @@ function DocumentView() {
                 </Card>
             </div>
            
-          <Timeline/>
+            <Timeline data={timelineData} />
           
           <Modal
                 show={modal.show}
@@ -340,7 +447,13 @@ function DocumentView() {
                 <Modal.Body>
                     <Row>
                         <Col md={'auto'}>
-                            <Form.Label>Forward to:</Form.Label>
+                            <Form.Label>
+                                {!isSelectDisabled ? (
+                                    <><span className='text-muted'>Forward to</span> :</>
+                                ) : (
+                                    <>Forward to <span className='text-muted'>(Disabled because the document is confidential)</span>:</>
+                                )}
+                            </Form.Label>
                             <Select
                                 isMulti
                                 name='assignTo'
@@ -348,6 +461,7 @@ function DocumentView() {
                                 value={selectedOptions}
                                 onChange={handleUserSelection}
                                 Required
+                                isDisabled={isSelectDisabled}
                             />
                             {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
                         </Col>
