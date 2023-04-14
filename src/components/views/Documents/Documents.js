@@ -516,7 +516,7 @@ function Documents() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                             </Button>
 
-                                                            {row.logs.some(log => log.acknowledge_id === null) && row.logs.some(log => log.to_id !== null) && (row.assign[0].assigned_id === row.user_id)? (
+                                                            {!row.logs.some(log => log.to_id !== null && log.acknowledge_id === row.user_id)  ? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                                 </Button>
@@ -713,7 +713,7 @@ function Documents() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                             </Button>
 
-                                                            {row.logs.some(log => log.acknowledge_id === null) && row.logs.some(log => log.to_id !== null) && (row.assign[0].assigned_id === row.user_id)? (
+                                                            {row.logs.some(log => log.to_id !== null) && (row.assign[0].assigned_id === row.user_id)? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                                 </Button>
