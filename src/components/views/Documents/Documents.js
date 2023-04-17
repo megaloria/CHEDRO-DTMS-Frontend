@@ -42,6 +42,7 @@ function Documents() {
     const [data, setData] = useState({ data: [] });
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
+    let [options, setOptions] = useState([]);
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
     const navigate = useNavigate();
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
@@ -164,20 +165,28 @@ function Documents() {
         setIsValid(selectedOptions.length > 0);
     };
 
-    const options = users.map(user => ({
-        value: user.id,
-        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-    }));
-
     const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
 
     const handleShowModal = (data = null) => {
 
-        let userIds = data.assign.filter(l => l.assigned_id);
-        userIds = userIds.map(log => {
-            return log.assigned_id;
-        });
-        setSelectedUsers(userIds);
+        options = users.map(user => ({
+            value: user.id,
+            label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+        }));
+
+        if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
+            setSelectedUsers([]);
+            const assigned = data.logs.map(log => log.to_id);
+            const optionsFiltered = options.filter(option => !assigned.includes(option.value));
+            setOptions(optionsFiltered);
+        } else {
+            let userIds = data.assign.filter(l => l.assigned_id);
+            userIds = userIds.map(log => {
+                return log.assigned_id;
+            });
+            setSelectedUsers(userIds);
+            setOptions(options);
+        }
 
         setModal({
             show: true,
