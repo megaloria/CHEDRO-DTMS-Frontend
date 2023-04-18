@@ -43,6 +43,7 @@ function DocumentView() {
     const location = useLocation();
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
+    let [options, setOptions] = useState([]);
     const [url, setUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
@@ -211,19 +212,28 @@ function DocumentView() {
         });
     };
 
-    const options = users.map(user => ({
-        value: user.id,
-        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-    }));
-
     const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
 
     const handleShowModal = (data = null) => {
-        let userIds = data.assign.filter(l => l.assigned_id);
-        userIds = userIds.map(log => {
-            return log.assigned_id;
-        });
-        setSelectedUsers(userIds);
+
+        options = users.map(user => ({
+            value: user.id,
+            label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+        }));
+
+        const assigned = data.logs.map(log => log.to_id);
+        const optionsFiltered = options.filter(option => !assigned.includes(option.value));
+        setOptions(optionsFiltered);
+
+        if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
+            setSelectedUsers([]);
+        } else {
+            let userIds = data.assign.filter(l => l.assigned_id);
+            userIds = userIds.map(log => {
+                return log.assigned_id;
+            });
+            setSelectedUsers(userIds);
+        }
 
         setModal({
             show: true,
@@ -276,18 +286,33 @@ function DocumentView() {
                         </Breadcrumb>
                     </Col>
                     <Col md="auto">
-                        <Button onClick={e => {
-                            if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-                                setIsSelectDisabled(false);
-                            } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
-                                setIsSelectDisabled(true);
-                            } else if (!document.category.is_assignable) {
-                                setIsSelectDisabled(true);
-                            }
-                            handleShowModal(document);
-                        }}>
-                            <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
-                        </Button>
+                        {document.category.is_assignable ? (
+                            <Button onClick={e => {
+                                if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
+                                    setIsSelectDisabled(false);
+                                } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
+                                    setIsSelectDisabled(true);
+                                } else if (!document.category.is_assignable) {
+                                    setIsSelectDisabled(true);
+                                }
+                                handleShowModal(document);
+                            }}>
+                                <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
+                            </Button>
+                        ) : !document.category.is_assignable && document.logs.length === 0 ? (
+                                <Button onClick={e => {
+                                    if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
+                                        setIsSelectDisabled(false);
+                                    } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
+                                        setIsSelectDisabled(true);
+                                    } else if (!document.category.is_assignable) {
+                                        setIsSelectDisabled(true);
+                                    }
+                                    handleShowModal(document);
+                                }}>
+                                    <FontAwesomeIcon icon={faShare} className="text-link" /> Forward
+                                </Button>
+                        ) : null}
                     </Col>
                 </Row>
             </div>
@@ -324,7 +349,7 @@ function DocumentView() {
                                                 placement="left"
                                                 overlay={
                                                     <Popover>
-                                                        <Popover.Header className="bg-warning text-white">
+                                                        <Popover.Header className="bg-primary text-white">
                                                             Acknowledged by
                                                         </Popover.Header>
                                                         <Popover.Body>
@@ -332,7 +357,7 @@ function DocumentView() {
                                                                 {Array.from(new Set(document.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
                                                                     .filter(name => name !== null)
                                                                     .map(name => (
-                                                                        <ListGroupItem variant="warning text-black" key={name}>
+                                                                        <ListGroupItem variant="primary text-black" key={name}>
                                                                             {name}
                                                                         </ListGroupItem>
                                                                     ))}
@@ -341,7 +366,7 @@ function DocumentView() {
                                                     </Popover>
                                                 }
                                             >
-                                                <Badge bg="warning" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                                <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                             </OverlayTrigger>
                                         ) : document.logs.some(log => log.to_id !== null) ? (
                                             <OverlayTrigger
