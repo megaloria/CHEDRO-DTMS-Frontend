@@ -451,7 +451,7 @@ function Documents() {
                                                                                                     </ListGroupItem>
                                                                                                 ))}
                                                                                         </ListGroup>
-                                                                                        
+
                                                                                         {row.logs.some(log => log.to_id !== null && log.acknowledge_id === null) && (
                                                                                             <div>Forwarded To:</div>
                                                                                         )}
@@ -471,7 +471,7 @@ function Documents() {
                                                                                 </Popover>
                                                                             }
                                                                         >
-                                                                            <Badge bg='info' style={{ cursor: 'pointer'}}>Acknowledged</Badge>
+                                                                            <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                         </OverlayTrigger>
                                                                     ) : row.logs.some(log => log.to_id !== null) ? (
                                                                         <OverlayTrigger
