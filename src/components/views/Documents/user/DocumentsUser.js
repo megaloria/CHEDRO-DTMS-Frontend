@@ -362,7 +362,7 @@ function DocumentsUser() {
                                                                         placement="left"
                                                                         overlay={
                                                                             <Popover>
-                                                                                <Popover.Header className="bg-primary text-white">
+                                                                                <Popover.Header className="bg-info text-white">
                                                                                     Acknowledged by
                                                                                 </Popover.Header>
                                                                                 <Popover.Body>
@@ -370,7 +370,7 @@ function DocumentsUser() {
                                                                                         {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
                                                                                             .filter(name => name !== null)
                                                                                             .map(name => (
-                                                                                                <ListGroupItem variant="warning text-black" key={name}>
+                                                                                                <ListGroupItem variant="info text-black" key={name}>
                                                                                                     {name}
                                                                                                 </ListGroupItem>
                                                                                             ))}
@@ -379,7 +379,7 @@ function DocumentsUser() {
                                                                             </Popover>
                                                                         }
                                                                     >
-                                                                        <Badge bg="primary" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                                                        <Badge bg='info' className="custom-badge" style={{ cursor: 'pointer'}}>Acknowledged</Badge>
                                                                     </OverlayTrigger>
                                                                 ) : (
                                                                     row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs[0].to_id !== null ? (
@@ -452,13 +452,13 @@ function DocumentsUser() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                             </Button>
 
-                                                            {!row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                            {!row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
                                                             <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                 <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
                                                             </Button>
                                                             ) : null}
 
-                                                            {row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                            {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                 <FontAwesomeIcon icon={faShare}/>
                                                             </Button>
