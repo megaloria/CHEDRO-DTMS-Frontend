@@ -469,7 +469,7 @@ function DocumentsUser() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                             </Button>
 
-                                                            {!row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
+                                                            {!row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                             <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                 <FontAwesomeIcon icon={faHandPeace} className='text-success'/>
                                                             </Button>
@@ -481,13 +481,13 @@ function DocumentsUser() {
                                                             </Button>
                                                             ) : null}
 
-                                                            {loaderData.role.level === 4 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
+                                                            {loaderData.role.level === 4 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                                 <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
                                                             ): null}
 
-                                                            {loaderData.role.level === 4 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
+                                                            {loaderData.role.level === 4 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                                 <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
