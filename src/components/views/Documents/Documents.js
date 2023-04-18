@@ -471,7 +471,7 @@ function Documents() {
                                                                                 </Popover>
                                                                             }
                                                                         >
-                                                                            <Badge bg='' className="custom-badge" style={{ cursor: 'pointer'}}>Acknowledged</Badge>
+                                                                            <Badge bg='info' style={{ cursor: 'pointer'}}>Acknowledged</Badge>
                                                                         </OverlayTrigger>
                                                                     ) : row.logs.some(log => log.to_id !== null) ? (
                                                                         <OverlayTrigger

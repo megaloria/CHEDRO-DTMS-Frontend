@@ -362,7 +362,7 @@ function DocumentsUser() {
                                                                         placement="left"
                                                                         overlay={
                                                                             <Popover>
-                                                                                <Popover.Header className="bg-primary text-white">
+                                                                                <Popover.Header className="bg-info text-white">
                                                                                     Acknowledged by
                                                                                 </Popover.Header>
                                                                                 <Popover.Body>
@@ -468,13 +468,13 @@ function DocumentsUser() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                             </Button>
 
-                                                            {!row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                            {!row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
                                                             <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                 <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
                                                             </Button>
                                                             ) : null}
 
-                                                            {row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                            {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                 <FontAwesomeIcon icon={faShare}/>
                                                             </Button>
