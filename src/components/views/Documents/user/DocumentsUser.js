@@ -633,14 +633,17 @@ function DocumentsUser() {
                                                             <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                         </Button>
 
-                                                        <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`}>
-                                                            <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
-                                                        </Button>
+                                                        {!row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
+                                                            <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
+                                                                <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
+                                                            </Button>
+                                                            ) : null}
 
-                                                        {/* to add condition                     */}
-                                                        <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                            <FontAwesomeIcon icon={faShare}/>
-                                                        </Button>
+                                                        {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
+                                                            <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                                <FontAwesomeIcon icon={faShare}/>
+                                                            </Button>
+                                                            ) : null}
                                                     </td>
                                                 </tr>
                                             ))}
