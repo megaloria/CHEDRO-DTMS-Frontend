@@ -174,18 +174,18 @@ function Documents() {
             label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
         }));
 
+        const assigned = data.logs.map(log => log.to_id);
+        const optionsFiltered = options.filter(option => !assigned.includes(option.value));
+        setOptions(optionsFiltered);
+
         if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
             setSelectedUsers([]);
-            const assigned = data.logs.map(log => log.to_id);
-            const optionsFiltered = options.filter(option => !assigned.includes(option.value));
-            setOptions(optionsFiltered);
         } else {
             let userIds = data.assign.filter(l => l.assigned_id);
             userIds = userIds.map(log => {
                 return log.assigned_id;
             });
             setSelectedUsers(userIds);
-            setOptions(options);
         }
 
         setModal({
@@ -595,7 +595,7 @@ function Documents() {
                         )
                     }
                 </Tab>
-                <Tab eventKey="mydocument" title="My Document" >
+                <Tab eventKey="mydocument" title="My Documents" >
                 {
                         data.data.length === 0 ? (
                             <Alert variant='primary'>
@@ -667,7 +667,7 @@ function Documents() {
                                                                                 </Popover>
                                                                             }
                                                                         >
-                                                                            <Badge bg="primary" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                                                            <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                         </OverlayTrigger>
                                                                     ) : row.logs.some(log => log.to_id !== null) ? (
                                                                         <OverlayTrigger
@@ -743,7 +743,20 @@ function Documents() {
                                                                 </Button>
                                                             ) : null}
                                                         
-                                                            {!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                            {row.category.is_assignable ? (
+                                                                <Button variant="link" size='sm' onClick={e => {
+                                                                    if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
+                                                                        setIsSelectDisabled(false);
+                                                                    } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
+                                                                        setIsSelectDisabled(true);
+                                                                    } else if (!row.category.is_assignable) {
+                                                                        setIsSelectDisabled(true);
+                                                                    }
+                                                                    handleShowModal(row);
+                                                                }}>
+                                                                    <FontAwesomeIcon icon={faShare} className="" />
+                                                                </Button>
+                                                            ) : !row.category.is_assignable && row.logs.length === 0 ? (
                                                                 <Button variant="link" size='sm' onClick={e => {
                                                                     if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
                                                                         setIsSelectDisabled(false);
@@ -864,8 +877,7 @@ function Documents() {
                                                                             </Popover>
                                                                         }
                                                                     >
-                                                                        <Badge className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
-
+                                                                        <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                     </OverlayTrigger>
                                                                 ) : row.logs.some(log => log.to_id !== null) ? (
                                                                     <OverlayTrigger
@@ -938,7 +950,20 @@ function Documents() {
                                                             </Button>
                                                         ) : null}
 
-                                                        {!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null) ? (
+                                                        {row.category.is_assignable ? (
+                                                            <Button variant="link" size='sm' onClick={e => {
+                                                                if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
+                                                                    setIsSelectDisabled(false);
+                                                                } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
+                                                                    setIsSelectDisabled(true);
+                                                                } else if (!row.category.is_assignable) {
+                                                                    setIsSelectDisabled(true);
+                                                                }
+                                                                handleShowModal(row);
+                                                            }}>
+                                                                <FontAwesomeIcon icon={faShare} className="" />
+                                                            </Button>
+                                                        ) : !row.category.is_assignable && row.logs.length === 0 ? (
                                                             <Button variant="link" size='sm' onClick={e => {
                                                                 if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
                                                                     setIsSelectDisabled(false);
