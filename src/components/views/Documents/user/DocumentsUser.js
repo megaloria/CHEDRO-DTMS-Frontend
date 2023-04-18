@@ -172,19 +172,19 @@ function DocumentsUser() {
             value: user.id,
             label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
         }));
+        
+        const assigned = data.logs.map(log => log.to_id);
+        const optionsFiltered = options.filter(option => !assigned.includes(option.value));
+        setOptions(optionsFiltered);
 
         if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
             setSelectedUsers([]);
-            const assigned = data.logs.map(log => log.to_id);
-            const optionsFiltered = options.filter(option => !assigned.includes(option.value));
-            setOptions(optionsFiltered);
         } else {
             let userIds = data.assign.filter(l => l.assigned_id);
             userIds = userIds.map(log => {
                 return log.assigned_id;
             });
             setSelectedUsers(userIds);
-            setOptions(options);
         }
 
         setModal({
@@ -370,7 +370,7 @@ function DocumentsUser() {
                                                                                         {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
                                                                                             .filter(name => name !== null)
                                                                                             .map(name => (
-                                                                                                <ListGroupItem variant="warning text-black" key={name}>
+                                                                                                <ListGroupItem variant="primary text-black" key={name}>
                                                                                                     {name}
                                                                                                 </ListGroupItem>
                                                                                             ))}
@@ -379,7 +379,7 @@ function DocumentsUser() {
                                                                             </Popover>
                                                                         }
                                                                     >
-                                                                        <Badge bg="primary" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                                                        <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                     </OverlayTrigger>
                                                                 ) : (
                                                                     row.assign.length > 0 && row.assign[0].assigned_id !== null && row.logs[0].to_id !== null ? (
