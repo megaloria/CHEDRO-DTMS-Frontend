@@ -349,7 +349,7 @@ function DocumentView() {
                                                 placement="left"
                                                 overlay={
                                                     <Popover>
-                                                        <Popover.Header className="bg-primary text-white">
+                                                        <Popover.Header className="custom-badge text-white" style={{ cursor: 'pointer' }}>
                                                             Acknowledged by
                                                         </Popover.Header>
                                                         <Popover.Body>
@@ -357,10 +357,26 @@ function DocumentView() {
                                                                 {Array.from(new Set(document.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
                                                                     .filter(name => name !== null)
                                                                     .map(name => (
-                                                                        <ListGroupItem variant="primary text-black" key={name}>
+                                                                        <ListGroupItem className="custom-badge text-white" style={{ cursor: 'pointer' }} key={name}>
                                                                             {name}
                                                                         </ListGroupItem>
                                                                     ))}
+                                                            </ListGroup>
+
+                                                            {document.logs.some(log => log.to_id !== null && log.acknowledge_id === null) && (
+                                                                <div>Forwarded To:</div>
+                                                            )}
+                                                            <ListGroup variant="flush">
+                                                                {document.logs.map((log, index) => (
+                                                                    log.to_id !== null && log.acknowledge_id === null && (
+                                                                        <ListGroupItem
+                                                                            variant="warning text-black"
+                                                                            key={log.user.profile.id}
+                                                                        >
+                                                                            {log.user.profile.name}
+                                                                        </ListGroupItem>
+                                                                    )
+                                                                ))}
                                                             </ListGroup>
                                                         </Popover.Body>
                                                     </Popover>

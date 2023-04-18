@@ -438,7 +438,7 @@ function Documents() {
                                                                             placement="left"
                                                                             overlay={
                                                                                 <Popover>
-                                                                                    <Popover.Header className="bg-info text-white">
+                                                                                    <Popover.Header className="custom-badge text-white" style={{ cursor: 'pointer' }} >
                                                                                         Acknowledged by
                                                                                     </Popover.Header>
                                                                                     <Popover.Body>
@@ -446,16 +446,32 @@ function Documents() {
                                                                                             {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
                                                                                                 .filter(name => name !== null)
                                                                                                 .map(name => (
-                                                                                                    <ListGroupItem variant="info text-black" key={name}>
+                                                                                                    <ListGroupItem className="custom-badge text-white" style={{ cursor: 'pointer' }} key={name}>
                                                                                                         {name}
                                                                                                     </ListGroupItem>
                                                                                                 ))}
+                                                                                        </ListGroup>
+
+                                                                                        {row.logs.some(log => log.to_id !== null && log.acknowledge_id === null) && (
+                                                                                            <div>Forwarded To:</div>
+                                                                                        )}
+                                                                                        <ListGroup variant="flush">
+                                                                                            {row.logs.map((log, index) => (
+                                                                                                log.to_id !== null && log.acknowledge_id === null && (
+                                                                                                    <ListGroupItem
+                                                                                                        variant="warning text-black"
+                                                                                                        key={log.user.profile.id}
+                                                                                                    >
+                                                                                                        {log.user.profile.name}
+                                                                                                    </ListGroupItem>
+                                                                                                )
+                                                                                            ))}
                                                                                         </ListGroup>
                                                                                     </Popover.Body>
                                                                                 </Popover>
                                                                             }
                                                                         >
-                                                                            <Badge bg='info' style={{ cursor: 'pointer'}}>Acknowledged</Badge>
+                                                                            <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                         </OverlayTrigger>
                                                                     ) : row.logs.some(log => log.to_id !== null) ? (
                                                                         <OverlayTrigger
@@ -650,7 +666,7 @@ function Documents() {
                                                                             placement="left"
                                                                             overlay={
                                                                                 <Popover>
-                                                                                    <Popover.Header className="bg-primary text-white">
+                                                                                    <Popover.Header className="custom-badge text-white" style={{ cursor: 'pointer' }} >
                                                                                         Acknowledged by
                                                                                     </Popover.Header>
                                                                                     <Popover.Body>
@@ -658,10 +674,26 @@ function Documents() {
                                                                                             {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
                                                                                                 .filter(name => name !== null)
                                                                                                 .map(name => (
-                                                                                                    <ListGroupItem variant="primary text-black" key={name}>
+                                                                                                    <ListGroupItem className="custom-badge text-white" style={{ cursor: 'pointer' }} key={name}>
                                                                                                         {name}
                                                                                                     </ListGroupItem>
                                                                                                 ))}
+                                                                                        </ListGroup>
+
+                                                                                        {row.logs.some(log => log.to_id !== null && log.acknowledge_id === null) && (
+                                                                                            <div>Forwarded To:</div>
+                                                                                        )}
+                                                                                        <ListGroup variant="flush">
+                                                                                            {row.logs.map((log, index) => (
+                                                                                                log.to_id !== null && log.acknowledge_id === null && (
+                                                                                                    <ListGroupItem
+                                                                                                        variant="warning text-black"
+                                                                                                        key={log.user.profile.id}
+                                                                                                    >
+                                                                                                        {log.user.profile.name}
+                                                                                                    </ListGroupItem>
+                                                                                                )
+                                                                                            ))}
                                                                                         </ListGroup>
                                                                                     </Popover.Body>
                                                                                 </Popover>
@@ -860,7 +892,7 @@ function Documents() {
                                                                         placement="left"
                                                                         overlay={
                                                                             <Popover>
-                                                                                <Popover.Header className="bg-primary text-white">
+                                                                                <Popover.Header className="custom-badge text-white" style={{ cursor: 'pointer' }} >
                                                                                     Acknowledged by
                                                                                 </Popover.Header>
                                                                                 <Popover.Body>
@@ -868,10 +900,26 @@ function Documents() {
                                                                                         {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
                                                                                             .filter(name => name !== null)
                                                                                             .map(name => (
-                                                                                                <ListGroupItem variant="primary text-black" key={name}>
+                                                                                                <ListGroupItem className="custom-badge text-white" style={{ cursor: 'pointer' }} key={name}>
                                                                                                     {name}
                                                                                                 </ListGroupItem>
                                                                                             ))}
+                                                                                    </ListGroup>
+
+                                                                                    {row.logs.some(log => log.to_id !== null && log.acknowledge_id === null) && (
+                                                                                        <div>Forwarded To:</div>
+                                                                                    )}
+                                                                                    <ListGroup variant="flush">
+                                                                                        {row.logs.map((log, index) => (
+                                                                                            log.to_id !== null && log.acknowledge_id === null && (
+                                                                                                <ListGroupItem
+                                                                                                    variant="warning text-black"
+                                                                                                    key={log.user.profile.id}
+                                                                                                >
+                                                                                                    {log.user.profile.name}
+                                                                                                </ListGroupItem>
+                                                                                            )
+                                                                                        ))}
                                                                                     </ListGroup>
                                                                                 </Popover.Body>
                                                                             </Popover>
