@@ -26,9 +26,8 @@ import {
     faCircleArrowRight,
     faShare,
     faSearch,
-    faCheck,
-    faXmark,
-    faQuoteLeft
+    faThumbsDown,
+    faHandPeace
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './../styles.css';
@@ -472,11 +471,11 @@ function DocumentsUser() {
 
                                                             {!row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
                                                             <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                                <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
+                                                                <FontAwesomeIcon icon={faHandPeace} className='text-success'/>
                                                             </Button>
                                                             ) : null}
 
-                                                            {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
+                                                            {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) && (!loaderData.role.level === 4) ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                 <FontAwesomeIcon icon={faShare}/>
                                                             </Button>
@@ -484,19 +483,13 @@ function DocumentsUser() {
 
                                                             {loaderData.role.level === 4 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
                                                                 <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                                    <FontAwesomeIcon icon={faCheck}/>
+                                                                    <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
                                                             ): null}
 
                                                             {loaderData.role.level === 4 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
                                                                 <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                                    <FontAwesomeIcon icon={faXmark}/>
-                                                                </Button>
-                                                            ): null}
-
-                                                            {loaderData.role.level === 4 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
-                                                                <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                                    <FontAwesomeIcon icon={faQuoteLeft}/>
+                                                                    <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
                                                             ): null}
                                                           
