@@ -468,10 +468,10 @@ function DocumentsUser() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                             </Button>
 
-                                                            {!row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
-                                                            <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                                <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
-                                                            </Button>
+                                                            {row.logs.some(log => log.to_id === row.user_id) && row.logs[0].acknowledge_id === null ? (
+                                                                <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
+                                                                    <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
+                                                                </Button>
                                                             ) : null}
 
                                                             {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
@@ -633,11 +633,11 @@ function DocumentsUser() {
                                                             <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                         </Button>
 
-                                                        {!row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
+                                                        {row.logs.some(log => log.to_id === row.user_id) && row.logs[0].acknowledge_id === null ? (
                                                             <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                                <FontAwesomeIcon icon={faThumbsUp} className='text-success'/>
+                                                                <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                             </Button>
-                                                            ) : null}
+                                                        ) : null}
 
                                                         {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>

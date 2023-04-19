@@ -541,7 +541,7 @@ function Documents() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                             </Button>
 
-                                                            {row.logs[0]?.acknowledge_id === null && row.logs[0].to_id !== null && (row.assign[0]?.assigned_id === row.user_id) ? (
+                                                            {row.logs.some(log => log.to_id === row.user_id) && row.logs[0].acknowledge_id === null ? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                                 </Button>
@@ -769,7 +769,7 @@ function Documents() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                             </Button>
 
-                                                            {row.logs[0]?.acknowledge_id === null && row.logs[0].to_id !== null && (row.assign[0]?.assigned_id === row.user_id)? (
+                                                            {row.logs.some(log => log.to_id === row.user_id) && row.logs[0].acknowledge_id === null ? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                                 </Button>
@@ -992,7 +992,7 @@ function Documents() {
                                                             <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                                         </Button>
 
-                                                        {row.logs[0]?.acknowledge_id === null && row.logs[0].to_id !== null && (row.assign[0]?.assigned_id === row.user_id) ? (
+                                                        {row.logs.some(log => log.to_id === row.user_id) && row.logs[0].acknowledge_id === null ? (
                                                             <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                 <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                             </Button>
