@@ -475,10 +475,10 @@ function DocumentsUser() {
                                                                 </Button>
                                                             ) : null}
 
-                                                            {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) && (!loaderData.role.level === 4) ? (
-                                                            <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                                <FontAwesomeIcon icon={faShare}/>
-                                                            </Button>
+                                                            {row.logs.length > 0 ? (
+                                                                    <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                                        <FontAwesomeIcon icon={faShare} />
+                                                                    </Button>
                                                             ) : null}
 
                                                             {loaderData.role.level === 4 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
@@ -652,11 +652,11 @@ function DocumentsUser() {
                                                             </Button>
                                                         ) : null}
 
-                                                        {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
+                                                        {row.logs.length > 0 ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                                <FontAwesomeIcon icon={faShare}/>
+                                                                <FontAwesomeIcon icon={faShare} />
                                                             </Button>
-                                                            ) : null}
+                                                        ) : null}
                                                     </td>
                                                 </tr>
                                             ))}
