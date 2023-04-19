@@ -18,14 +18,16 @@ import {
     ListGroupItem
 } from 'react-bootstrap';
 import {
-    Link, useNavigate
+    Link, useNavigate, useLoaderData
 } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
     faThumbsUp,
     faCircleArrowRight,
     faShare,
-    faSearch
+    faSearch,
+    faThumbsDown,
+    faHandPeace
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './../styles.css';
@@ -42,7 +44,7 @@ function DocumentsUser() {
     let [options, setOptions] = useState([]);
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
     const navigate = useNavigate();
-
+    const loaderData = useLoaderData();
     const [activeTab, setActiveTab] = useState('all');
 
     const [searchQuery, setSearchQuery] = useState('');
@@ -270,7 +272,6 @@ function DocumentsUser() {
             </Alert>
         );
     }
-
     return (
         <div className="container fluid">
             <div className="crud rounded">
@@ -362,7 +363,7 @@ function DocumentsUser() {
                                                                         placement="left"
                                                                         overlay={
                                                                             <Popover>
-                                                                                <Popover.Header className="bg-info text-white">
+                                                                                <Popover.Header className="custom-badge text-white">
                                                                                     Acknowledged by
                                                                                 </Popover.Header>
                                                                                 <Popover.Body>
@@ -370,7 +371,7 @@ function DocumentsUser() {
                                                                                         {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
                                                                                             .filter(name => name !== null)
                                                                                             .map(name => (
-                                                                                                <ListGroupItem variant="primary text-black" key={name}>
+                                                                                                <ListGroupItem className="custom-badge text-white" style={{ cursor: 'pointer' }} key={name}>
                                                                                                     {name}
                                                                                                 </ListGroupItem>
                                                                                             ))}
@@ -474,11 +475,23 @@ function DocumentsUser() {
                                                                 </Button>
                                                             ) : null}
 
-                                                            {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) ? (
+                                                            {row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id !== row.user_id) && (!loaderData.role.level === 4) ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                 <FontAwesomeIcon icon={faShare}/>
                                                             </Button>
                                                             ) : null}
+
+                                                            {loaderData.role.level === 4 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                                    <FontAwesomeIcon icon={faThumbsUp}/>
+                                                                </Button>
+                                                            ): null}
+
+                                                            {loaderData.role.level === 4 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                                    <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
+                                                                </Button>
+                                                            ): null}
                                                           
                                                         </td>
                                                     </tr>
