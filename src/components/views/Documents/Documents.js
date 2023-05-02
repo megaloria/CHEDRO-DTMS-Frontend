@@ -452,17 +452,17 @@ function Documents() {
                                                                                                 ))}
                                                                                         </ListGroup>
 
-                                                                                        {row.logs.some(log => log.to_id !== null && log.acknowledge_id === null) && (
+                                                                                        {row.logs.every(log => log.to_id !== null && log.acknowledge_id === null ) && (
                                                                                             <div>Forwarded To:</div>
                                                                                         )}
                                                                                         <ListGroup variant="flush">
                                                                                             {row.logs.map((log, index) => (
-                                                                                                log.to_id !== null && log.acknowledge_id === null && (
+                                                                                                log.to_id !== null && log.acknowledge_id === null  && (
                                                                                                     <ListGroupItem
                                                                                                         variant="warning text-black"
-                                                                                                        key={log.user.profile.id}
+                                                                                                        key={log?.user?.profile?.id}
                                                                                                     >
-                                                                                                        {log.user.profile.name}
+                                                                                                        {log?.user?.profile?.name}
                                                                                                     </ListGroupItem>
                                                                                                 )
                                                                                             ))}
