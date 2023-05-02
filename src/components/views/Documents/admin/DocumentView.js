@@ -110,19 +110,21 @@ function DocumentView() {
         }
 
 
-        if (document.logs.length > 0) {
+        if (document.logs.length > 0 ) {
             newTimelineData = newTimelineData.concat(
-                document.logs.map((logs) => ({
-                    text: <ForwardedUsersText key={logs.id} users={[logs.user.profile]} />,
-                    date: moment(logs.created_at).format('MMMM DD, YYYY'),
-                    category: {
-                        tag: document.user.profile.position_designation,
-                        color: '#6dedd4',
-                    },
-                    circleStyle: {
-                        borderColor: '#e17b77',
-                    },
-                }))
+                document.logs
+                    .filter(log => log.to_id !== null)
+                    .map((logs) => ({
+                        text: <ForwardedUsersText key={logs.id} users={[logs?.user?.profile]} />,
+                        date: moment(logs.created_at).format('MMMM DD, YYYY'),
+                        category: {
+                            tag: document.user.profile.position_designation,
+                            color: '#6dedd4',
+                        },
+                        circleStyle: {
+                            borderColor: '#e17b77',
+                        },
+                    }))
             );
         }
 
@@ -151,8 +153,8 @@ function DocumentView() {
         <>
             Document forwarded to:{" "}
             {users.map((user, index) => (
-                <p key={user.id}>
-                    {user.name}
+                <p key={user?.id}>
+                    {user?.name}
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
