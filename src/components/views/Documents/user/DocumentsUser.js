@@ -46,6 +46,7 @@ function DocumentsUser() {
     const navigate = useNavigate();
     const loaderData = useLoaderData();
     const [activeTab, setActiveTab] = useState('all');
+    let comment = "";
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -53,6 +54,20 @@ function DocumentsUser() {
         show: false,
         data: null,
         isLoading: false
+    });
+
+    const [modal1, setModal1] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    const [formInputs, setFormInputs] = useState({
+        comment: ''
+    });
+
+    const [formErrors, setFormErrors] = useState({
+        comment: ''
     });
 
     useEffect(() => {
@@ -196,11 +211,25 @@ function DocumentsUser() {
         });
     }
 
+    const handleAction = (data = null) => {
+        setModal1({
+            show: true,
+            data,
+            isLoading: false
+        });
+    }
+
     const handleHideModal = () => {
 
         setIsValid(true);
 
         setModal({
+            show: false,
+            data: null,
+            isLoading: false
+        });
+
+        setModal1({
             show: false,
             data: null,
             isLoading: false
@@ -235,7 +264,7 @@ function DocumentsUser() {
 
 
     const handleForward = event => {
-
+        event.preventDefault();
         const formData = new FormData();
 
         for (let i = 0; i < selectedUsers.length; i++) {
@@ -257,6 +286,28 @@ function DocumentsUser() {
             setIsValid(false);
         });
     };
+
+    // const handleApprove = event => {
+    //     event.preventDefault();
+        
+    //     const formData = new FormData();
+    //     formData.append('comment', comment);
+
+    //     apiClient.post(`/document/${modal.data?.id}/approve`, formData, {
+    //         headers: {
+    //             'Content-Type': 'multipart/form-data'
+    //         }
+    //     }).then(response => {
+    //         navigate('../');
+    //         Swal.fire({
+    //             title: 'Success',
+    //             text: response.data.message,
+    //             icon: 'success'
+    //         })
+    //     }).catch(error => {
+    //         setIsValid(false);
+    //     });
+    // };
 
     if (isLoading) {
         return (
@@ -475,20 +526,20 @@ function DocumentsUser() {
                                                                 </Button>
                                                             ) : null}
 
-                                                            {row.logs.length > 0 && loaderData.role.level !== 2 ? (
+                                                            {row.logs.length > 0  ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                         <FontAwesomeIcon icon={faShare} />
                                                                     </Button>
                                                             ) : null}
 
-                                                            {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                            {(loaderData.role.level === 4 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                <Button variant="link" size='sm' onClick={e => handleAction(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
                                                             ): null}
 
-                                                            {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                            {(loaderData.role.level === 4 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                <Button variant="link" size='sm' onClick={e => handleAction(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
                                                             ): null}
@@ -731,6 +782,43 @@ function DocumentsUser() {
                     </Button>
                     <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
                         Forward
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            <Modal
+                show={modal1.show}
+                onHide={handleHideModal}
+                backdrop='static'
+                keyboard={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title> Approve Document </Modal.Title>
+                </Modal.Header>
+
+                <Modal.Body>
+                    <Row>
+                        <Col mb={'3'}> 
+                            <Form.Label>Comment:</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                type="text"
+                                name='comment'
+                                placeholder="Your comment here."
+                                value={comment}
+                                onChange={handleInputChange}
+                                 />
+                            {(!isValid) && <p style={{ color: 'red' }}>Comment should not be empty.</p>}
+                        </Col>
+                    </Row>
+                </Modal.Body>
+
+                <Modal.Footer>
+                    <Button variant='secondary' onClick={handleHideModal} disabled={modal1.isLoading}>
+                        Cancel
+                    </Button>
+                    <Button type='submit' variant='primary' onClick={handleApprove} disabled={!isValid}>
+                        Approve
                     </Button>
                 </Modal.Footer>
             </Modal>
