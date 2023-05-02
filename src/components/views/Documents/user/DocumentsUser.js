@@ -806,7 +806,7 @@ function DocumentsUser() {
                                 name='comment'
                                 placeholder="Your comment here."
                                 value={comment}
-                                onChange={handleInputChange}
+                                
                                  />
                             {(!isValid) && <p style={{ color: 'red' }}>Comment should not be empty.</p>}
                         </Col>
@@ -817,7 +817,7 @@ function DocumentsUser() {
                     <Button variant='secondary' onClick={handleHideModal} disabled={modal1.isLoading}>
                         Cancel
                     </Button>
-                    <Button type='submit' variant='primary' onClick={handleApprove} disabled={!isValid}>
+                    <Button type='submit' variant='primary'  disabled={!isValid}>
                         Approve
                     </Button>
                 </Modal.Footer>
