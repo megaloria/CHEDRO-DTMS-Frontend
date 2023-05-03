@@ -676,21 +676,17 @@ function Documents() {
                                                                                                 ))}
                                                                                         </ListGroup>
 
-                                                                                        {row.logs.some(log => log.to_id !== null && log.acknowledge_id === null) && (
+                                                                                        {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
                                                                                             <div>Forwarded To:</div>
                                                                                         )}
                                                                                         <ListGroup variant="flush">
-                                                                                            {row.logs.map((log, index) => (
-                                                                                                log.to_id !== null && log.acknowledge_id === null && (
-                                                                                                    <ListGroupItem
-                                                                                                        variant="warning text-black"
-                                                                                                        key={log.user.profile.id}
-                                                                                                    >
-                                                                                                        {log.user.profile.name}
-                                                                                                    </ListGroupItem>
-                                                                                                )
+                                                                                            {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).map((log, index) => (
+                                                                                                <ListGroupItem variant="warning text-black" key={log?.user?.profile?.id}>
+                                                                                                    {log?.user?.profile?.name}
+                                                                                                </ListGroupItem>
                                                                                             ))}
                                                                                         </ListGroup>
+
                                                                                     </Popover.Body>
                                                                                 </Popover>
                                                                             }
@@ -902,21 +898,17 @@ function Documents() {
                                                                                             ))}
                                                                                     </ListGroup>
 
-                                                                                    {row.logs.some(log => log.to_id !== null && log.acknowledge_id === null) && (
+                                                                                    {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
                                                                                         <div>Forwarded To:</div>
                                                                                     )}
                                                                                     <ListGroup variant="flush">
-                                                                                        {row.logs.map((log, index) => (
-                                                                                            log.to_id !== null && log.acknowledge_id === null && (
-                                                                                                <ListGroupItem
-                                                                                                    variant="warning text-black"
-                                                                                                    key={log.user.profile.id}
-                                                                                                >
-                                                                                                    {log.user.profile.name}
-                                                                                                </ListGroupItem>
-                                                                                            )
+                                                                                        {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).map((log, index) => (
+                                                                                            <ListGroupItem variant="warning text-black" key={log?.user?.profile?.id}>
+                                                                                                {log?.user?.profile?.name}
+                                                                                            </ListGroupItem>
                                                                                         ))}
                                                                                     </ListGroup>
+
                                                                                 </Popover.Body>
                                                                             </Popover>
                                                                         }
