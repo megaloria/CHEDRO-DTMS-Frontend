@@ -27,7 +27,7 @@ import {
     faShare,
     faSearch,
     faThumbsDown,
-    faHandPeace
+    faUserCheck
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './../styles.css';
@@ -536,7 +536,7 @@ function DocumentsUser() {
 
                                                             {row.logs.every(log => log.acknowledge_id !== loaderData.id) ? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                                    <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
+                                                                    <FontAwesomeIcon icon={faUserCheck} className='text-success' />
                                                                 </Button>
                                                             ) : null}
 
