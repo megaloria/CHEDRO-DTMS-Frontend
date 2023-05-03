@@ -870,7 +870,7 @@ function DocumentsUser() {
                                 type="text"
                                 name='comment'
                                 placeholder="Your comment here."
-                                value={comment}
+                                // value={comment}
                                 
                                  />
                             {(!isValid) && <p style={{ color: 'red' }}>Comment should not be empty.</p>}
