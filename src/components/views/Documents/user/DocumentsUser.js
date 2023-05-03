@@ -544,7 +544,8 @@ function DocumentsUser() {
                                                                     <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                         <FontAwesomeIcon icon={faShare} />
                                                                     </Button>
-                                                            ) : null}
+                                                            ) : null} 
+                                                            
 
                                                             {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                                 <Button variant="link" size='sm' onClick={handleShow}>
