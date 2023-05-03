@@ -27,7 +27,8 @@ import {
     faShare,
     faSearch,
     faThumbsDown,
-    faUserCheck
+    faUserCheck,
+    faFilePen
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './../styles.css';
@@ -149,6 +150,41 @@ function DocumentsUser() {
             }
         });
     };
+
+    // ACTION
+    const showActionAlert = document => {
+        Swal.fire({
+            title: `Are you sure you want to confirm taking action of the document no."${document.tracking_no}"?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Confirm',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
+                    navigate('../');
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                });
+            }
+        });
+    };
+
+
+
+   
 
 
     const handlePageChange = (pageNumber) => {
@@ -534,11 +570,20 @@ function DocumentsUser() {
                                                                 </Button>
                                                             ) : null}
 
-                                                            {row.logs.length > 0 && !row.logs.every(log => log.acknowledge_id !== loaderData.id)  ? (
-                                                                <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                                    <FontAwesomeIcon icon={faShare} />
-                                                                </Button>
-                                                            ) : null}
+                                                            {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                    <Button variant="link" size='sm' onClick={e => showActionAlert(row)}>
+                                                                        <FontAwesomeIcon icon={faFilePen} className='text-success' />
+                                                                    </Button>
+                                                            ) : null} 
+
+                                                            {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                    <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                                        <FontAwesomeIcon icon={faShare} />
+                                                                    </Button>
+                                                            ) : null} 
+
+                                                          
+                                                            
 
                                                             {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                                 <Button variant="link" size='sm' onClick={handleShow}>
@@ -758,7 +803,7 @@ function DocumentsUser() {
 
                                                         {row.logs.every(log => log.acknowledge_id !== loaderData.id) ? (
                                                             <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                                <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
+                                                                <FontAwesomeIcon icon={faUserCheck} className='text-success' />
                                                             </Button>
                                                         ) : null}
 
