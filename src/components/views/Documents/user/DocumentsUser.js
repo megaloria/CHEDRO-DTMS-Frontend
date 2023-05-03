@@ -27,7 +27,7 @@ import {
     faShare,
     faSearch,
     faThumbsDown,
-    faHandPeace
+    faUserCheck
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './../styles.css';
@@ -48,7 +48,8 @@ function DocumentsUser() {
     const assignRef = useRef([]);
     const logsRef = useRef([]);
     const usersRef = useRef([]);
-    let comment = "";
+    const [showModal, setShowModal] = useState(false);
+    const [showModal1, setShowModal1] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -137,6 +138,19 @@ function DocumentsUser() {
             setSelectedUsers(userIds);
         }
     }, [activeTab]); 
+
+
+    const handleClose = () => setShowModal(false);
+    const handleShow = () => setShowModal(true);
+    const handleApprove = e => {
+        
+  };
+
+    const handleClose1 = () => setShowModal1(false);
+    const handleShow1 = () => setShowModal1(true);
+    const handleReject = e => {
+        
+    };
 
 
 // ACKNOWLEDGE
@@ -530,7 +544,7 @@ function DocumentsUser() {
 
                                                             {row.logs.every(log => log.acknowledge_id !== loaderData.id) ? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                                    <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
+                                                                    <FontAwesomeIcon icon={faUserCheck} className='text-success' />
                                                                 </Button>
                                                             ) : null}
 
@@ -540,14 +554,14 @@ function DocumentsUser() {
                                                                 </Button>
                                                             ) : null}
 
-                                                            {(loaderData.role.level === 4 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={e => handleAction(row)}>
+                                                            {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                <Button variant="link" size='sm' onClick={handleShow}>
                                                                     <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
                                                             ): null}
 
-                                                            {(loaderData.role.level === 4 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={e => handleAction(row)}>
+                                                            {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                <Button variant="link" size='sm' onClick={handleShow1}>
                                                                     <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
                                                             ): null}
@@ -560,6 +574,57 @@ function DocumentsUser() {
                                         </tbody>
                                     </Table>
                                 </div>
+
+                                <Modal show={showModal} onHide={handleClose}>
+                                    <Modal.Header closeButton>
+                                    <Modal.Title>Approve Document</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                    <Form.Label>Add a comment</Form.Label>
+                                        <Form.Control 
+                                            as="textarea" 
+                                            rows={3} 
+                                            Required
+                                            type="text" 
+                                            name='comment' 
+                                            placeholder="Leave a comment here." 
+                            />
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button variant="secondary" onClick={handleClose}>
+                                        Cancel
+                                        </Button>
+                                        <Button variant="primary" onClick={handleApprove}>
+                                        Approve
+                                        </Button>
+                                    </Modal.Footer>
+                                </Modal> 
+
+                                <Modal show={showModal1} onHide={handleClose1}>
+                                    <Modal.Header closeButton>
+                                    <Modal.Title>Reject Document</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                    <Form.Label>Add a comment</Form.Label>
+                                        <Form.Control 
+                                            as="textarea" 
+                                            rows={3} 
+                                            Required
+                                            type="text" 
+                                            name='comment' 
+                                            placeholder="Leave a comment here." 
+                            />
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button variant="secondary" onClick={handleClose1}>
+                                        Cancel
+                                        </Button>
+                                        <Button variant="danger" onClick={handleReject}>
+                                        Reject
+                                        </Button>
+                                    </Modal.Footer>
+                                </Modal> 
+
                                 <div>
                                     {data.data.length > 0 && (
                                         <Pagination style={{ float: 'right' }}>
@@ -813,7 +878,7 @@ function DocumentsUser() {
                                 type="text"
                                 name='comment'
                                 placeholder="Your comment here."
-                                value={comment}
+                                // value={comment}
                                 
                                  />
                             {(!isValid) && <p style={{ color: 'red' }}>Comment should not be empty.</p>}
