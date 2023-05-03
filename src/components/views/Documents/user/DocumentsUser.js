@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     Button,
     Modal,
@@ -40,12 +40,14 @@ function DocumentsUser() {
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState({ data: [] });
     const [selectedUsers, setSelectedUsers] = useState([]);
-    const [users, setUsers] = useState([]);
-    let [options, setOptions] = useState([]);
+    const [options, setOptions] = useState([]);
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
     const navigate = useNavigate();
     const loaderData = useLoaderData();
     const [activeTab, setActiveTab] = useState('all');
+    const assignRef = useRef([]);
+    const logsRef = useRef([]);
+    const usersRef = useRef([]);
     const [showModal, setShowModal] = useState(false);
     const [showModal1, setShowModal1] = useState(false);
 
@@ -73,37 +75,69 @@ function DocumentsUser() {
 
     useEffect(() => {
         setIsTableLoading(true);
-        if (activeTab === 'all'){
-            apiClient.get('/document', {
-            params: {
-                query: ''
-            }
-            }).then(response => { //GET ALL function
-                setData(response.data.data.documents);
-                setUsers(response.data.data.user);
-            }).catch(error => {
-                setErrorMessage(error);
-            }).finally(() => {
-                setIsTableLoading(false);
-                setIsLoading(false);
-            });
-        } 
-        if (activeTab === 'ongoing') {
-            apiClient.get('/document/ongoing', {
+        if (activeTab === "all") {
+            apiClient
+            .get("/document", {
                 params: {
-                    query: ''
-                }
-            }).then(response => { //GET ALL function
+                query: "",
+                },
+            })
+            .then((response) => {
+                // GET ALL function
                 setData(response.data.data.documents);
-                setUsers(response.data.data.user);
-            }).catch(error => {
+            })
+            .catch((error) => {
                 setErrorMessage(error);
-            }).finally(() => {
+            })
+            .finally(() => {
                 setIsTableLoading(false);
                 setIsLoading(false);
             });
         }
-    }, [activeTab]);
+        if (activeTab === "ongoing") {
+            apiClient
+            .get("/document/ongoing", {
+                params: {
+                query: "",
+                },
+            })
+            .then((response) => {
+                // GET ALL function
+                setData(response.data.data.documents);
+            })
+            .catch((error) => {
+                setErrorMessage(error);
+            })
+            .finally(() => {
+                setIsTableLoading(false);
+                setIsLoading(false);
+            });
+        }
+
+        const newOptions = usersRef.current.map((user) => ({
+            value: user.id,
+            label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`,
+        }));
+        const assigned = logsRef.current?.map((log) => log.to_id);
+        const optionsFiltered = newOptions.filter(
+            (option) => !assigned.includes(option.value)
+        );
+        setOptions(optionsFiltered);
+
+        if (
+            logsRef.current?.length > 0 &&
+            logsRef.current[0].to_id !== null &&
+            logsRef.current.some((log) => log.acknowledge_id !== null)
+        ) {
+            setSelectedUsers([]);
+        } else {
+            let userIds = assignRef.current?.filter((l) => l.assigned_id);
+            userIds = userIds?.map((log) => {
+            return log.assigned_id;
+            });
+            setSelectedUsers(userIds);
+        }
+    }, [activeTab]); 
 
 
     const handleClose = () => setShowModal(false);
@@ -162,7 +196,6 @@ function DocumentsUser() {
                 }
             }).then(response => {
                 setData(response.data.data.documents);
-                setUsers(response.data.data.user);
             }).catch(error => {
                 setErrorMessage(error);
             }).finally(() => {
@@ -176,7 +209,6 @@ function DocumentsUser() {
                 }
             }).then(response => {
                 setData(response.data.data.documents);
-                setUsers(response.data.data.user);
             }).catch(error => {
                 setErrorMessage(error);
             }).finally(() => {
@@ -198,25 +230,6 @@ function DocumentsUser() {
     const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
 
     const handleShowModal = (data = null) => {
-
-        options = users.map(user => ({
-            value: user.id,
-            label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-        }));
-        
-        const assigned = data.logs.map(log => log.to_id);
-        const optionsFiltered = options.filter(option => !assigned.includes(option.value));
-        setOptions(optionsFiltered);
-
-        if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
-            setSelectedUsers([]);
-        } else {
-            let userIds = data.assign.filter(l => l.assigned_id);
-            userIds = userIds.map(log => {
-                return log.assigned_id;
-            });
-            setSelectedUsers(userIds);
-        }
 
         setModal({
             show: true,
@@ -264,7 +277,6 @@ function DocumentsUser() {
             }
         }).then(response => { //GET ALL function
             setData(response.data.data.documents);
-            setUsers(response.data.data.user);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -428,7 +440,7 @@ function DocumentsUser() {
                                                                         placement="left"
                                                                         overlay={
                                                                             <Popover>
-                                                                                <Popover.Header className="custom-badge text-white">
+                                                                                <Popover.Header className="custom-badge text-white" style={{ cursor: 'pointer' }} >
                                                                                     Acknowledged by
                                                                                 </Popover.Header>
                                                                                 <Popover.Body>
@@ -442,21 +454,17 @@ function DocumentsUser() {
                                                                                             ))}
                                                                                     </ListGroup>
 
-                                                                                    {row.logs.some(log => log.to_id !== null && log.acknowledge_id === null) && (
+                                                                                    {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
                                                                                         <div>Forwarded To:</div>
                                                                                     )}
                                                                                     <ListGroup variant="flush">
-                                                                                        {row.logs.map((log, index) => (
-                                                                                            log.to_id !== null && log.acknowledge_id === null && (
-                                                                                                <ListGroupItem
-                                                                                                    variant="warning text-black"
-                                                                                                    key={log.user.profile.id}
-                                                                                                >
-                                                                                                    {log.user.profile.name}
-                                                                                                </ListGroupItem>
-                                                                                            )
+                                                                                        {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).map((log, index) => (
+                                                                                            <ListGroupItem variant="warning text-black" key={log?.user?.profile?.id}>
+                                                                                                {log?.user?.profile?.name}
+                                                                                            </ListGroupItem>
                                                                                         ))}
                                                                                     </ListGroup>
+
                                                                                 </Popover.Body>
                                                                             </Popover>
                                                                         }
@@ -540,10 +548,10 @@ function DocumentsUser() {
                                                                 </Button>
                                                             ) : null}
 
-                                                            {row.logs.length > 0  ? (
-                                                                    <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                                                        <FontAwesomeIcon icon={faShare} />
-                                                                    </Button>
+                                                            {row.logs.length > 0 && !row.logs.every(log => log.acknowledge_id !== loaderData.id) && options.length > 0 ? (
+                                                                <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                                    <FontAwesomeIcon icon={faShare} />
+                                                                </Button>
                                                             ) : null}
 
                                                             {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
@@ -767,8 +775,8 @@ function DocumentsUser() {
                                                                 <FontAwesomeIcon icon={faUserCheck} className='text-success' />
                                                             </Button>
                                                         ) : null}
-
-                                                        {row.logs.length > 0 && loaderData.role.level !== 2 ? (
+                                                        {console.log(options)}
+                                                        {row.logs.length > 0 && !row.logs.every(log => log.acknowledge_id !== loaderData.id) && options.length > 0 ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                 <FontAwesomeIcon icon={faShare} />
                                                             </Button>
