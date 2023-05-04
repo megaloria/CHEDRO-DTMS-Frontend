@@ -47,10 +47,10 @@ function DocumentsUser() {
     const navigate = useNavigate();
     const loaderData = useLoaderData();
     const [activeTab, setActiveTab] = useState('all');
-    
-    const [showModal, setShowModal] = useState(false);
-    const [showModal1, setShowModal1] = useState(false);
-    const [showModal2, setShowModal2] = useState(false);
+
+    const [showModalApprove, setShowModalApprove] = useState(false);
+    const [showModalReject, setShowModalReject] = useState(false);
+    const [showModalAction, setShowModalAction] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -108,20 +108,23 @@ function DocumentsUser() {
         }
     }, [activeTab]);
 
-    const handleClose = () => setShowModal(false);
-    const handleShow = () => setShowModal(true);
+    //For Approve Modal
+    const handleCloseApprove = () => setShowModalApprove(false);
+    const handleShowApprove = () => setShowModalApprove(true);
     const handleApprove = e => {
         
   };
 
-    const handleClose1 = () => setShowModal1(false);
-    const handleShow1 = () => setShowModal1(true);
+    //For Reject Modal
+    const handleCloseReject = () => setShowModalReject(false);
+    const handleShowReject = () => setShowModalReject(true);
     const handleReject = e => {
         
     };
 
-    const handleCloseAction = () => setShowModal2(false);
-    const handleShowAction = () => setShowModal2(true);
+    //For Took Action Modal
+    const handleCloseAction = () => setShowModalAction(false);
+    const handleShowAction = () => setShowModalAction(true);
     const handleAction = e => {
         
     };
@@ -239,7 +242,7 @@ function DocumentsUser() {
 
     const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
 
-    const handleShowModal = (data = null) => {
+    const handleShowForward = (data = null) => {
         
         options = users.map(user => ({
             value: user.id,
@@ -407,6 +410,8 @@ function DocumentsUser() {
                 className="mb-3"
                 onSelect={handleChangeTab}
             >
+
+                 {/*ALL TAB*/}
                 <Tab eventKey="all" title="All">
 
                     {
@@ -577,22 +582,22 @@ function DocumentsUser() {
                                                             ) : null} 
 
                                                             {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                    <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                                    <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
                                                                         <FontAwesomeIcon icon={faShare} />
                                                                     </Button>
                                                             ) : null} 
 
-                                                            {/* {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={handleShow}>
+                                                            {loaderData.role.level === 3 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                <Button variant="link" size='sm' onClick={handleShowApprove}>
                                                                     <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
                                                             ): null}
 
-                                                            {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={handleShow1}>
+                                                            {loaderData.role.level === 3 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                <Button variant="link" size='sm' onClick={handleShowReject}>
                                                                     <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
-                                                            ): null} */}
+                                                            ): null}
                                                           
                                                         </td>
                                                     </tr>
@@ -603,7 +608,8 @@ function DocumentsUser() {
                                     </Table>
                                 </div>
 
-                                <Modal show={showModal} onHide={handleClose}>
+                               {/* Approve Document Modal*/}
+                                <Modal show={showModalApprove} onHide={handleCloseApprove}>
                                     <Modal.Header closeButton>
                                     <Modal.Title>Approve Document</Modal.Title>
                                     </Modal.Header>
@@ -619,7 +625,7 @@ function DocumentsUser() {
                             />
                                     </Modal.Body>
                                     <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleClose}>
+                                        <Button variant="secondary" onClick={handleCloseApprove}>
                                         Cancel
                                         </Button>
                                         <Button variant="primary" onClick={handleApprove}>
@@ -627,8 +633,9 @@ function DocumentsUser() {
                                         </Button>
                                     </Modal.Footer>
                                 </Modal> 
-
-                                <Modal show={showModal1} onHide={handleClose1}>
+                                
+                                {/* Reject Document Modal*/}
+                                <Modal show={showModalReject} onHide={handleCloseReject}>
                                     <Modal.Header closeButton>
                                     <Modal.Title>Reject Document</Modal.Title>
                                     </Modal.Header>
@@ -644,7 +651,7 @@ function DocumentsUser() {
                             />
                                     </Modal.Body>
                                     <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleClose1}>
+                                        <Button variant="secondary" onClick={handleCloseReject}>
                                         Cancel
                                         </Button>
                                         <Button variant="danger" onClick={handleReject}>
@@ -652,8 +659,10 @@ function DocumentsUser() {
                                         </Button>
                                     </Modal.Footer>
                                 </Modal> 
+                                
 
-                        <Modal show={showModal2} onHide={handleCloseAction}>
+                                {/* Took Action Document Modal*/}
+                                <Modal show={showModalAction} onHide={handleCloseAction}>
                                     <Modal.Header closeButton>
                                     <Modal.Title>Confirm Taking Action</Modal.Title>
                                     </Modal.Header>
@@ -678,6 +687,7 @@ function DocumentsUser() {
                                     </Modal.Footer>
                                 </Modal> 
 
+                                {/* ALL Tab Pagination*/}            
                                 <div>
                                     {data.data.length > 0 && (
                                         <Pagination style={{ float: 'right' }}>
@@ -695,6 +705,8 @@ function DocumentsUser() {
                         )
                     }
                 </Tab>
+
+                {/* ONGONG TAB*/}
                 <Tab eventKey="ongoing" title="Ongoing">
                     {
                         data.data.length === 0 ? (
@@ -830,7 +842,7 @@ function DocumentsUser() {
                                                         ) : null}
 
                                                         {row.logs.length > 0 && !row.logs.every(log => log.acknowledge_id !== loaderData.id) ? (
-                                                            <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                            <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
                                                                 <FontAwesomeIcon icon={faShare} />
                                                             </Button>
                                                         ) : null}
@@ -858,6 +870,8 @@ function DocumentsUser() {
                         )
                     }
                 </Tab>
+
+                {/*APPROVED TAB*/}
                 <Tab eventKey="approved" title="Approved" >
                     {/* {
                         releasingData.data.length === 0 ? (
@@ -866,6 +880,8 @@ function DocumentsUser() {
                             </Alert>
                         ) : ( */}
                 </Tab>
+
+                 {/*REJECTED TAB*/}
                 <Tab eventKey="rejected" title="Rejected">
                     {/* {
                         doneData.data.length === 0 ? (
@@ -875,80 +891,6 @@ function DocumentsUser() {
                         ) : ( */}
                 </Tab>
             </Tabs>
-
-            <Modal
-                show={modal.show}
-                onHide={handleHideModal}
-                backdrop='static'
-                keyboard={false}>
-                <Modal.Header closeButton>
-                    <Modal.Title> Forward Document </Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <Row>
-                        <Col md={'auto'}>
-                            <Form.Label>Forward to:</Form.Label>
-                            <Select
-                                isMulti
-                                name='forwardTo'
-                                options={options}
-                                value={selectedOptions}
-                                onChange={handleUserSelection}
-                                Required
-                            />
-                            {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
-                        </Col>
-                    </Row>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
-                        Cancel
-                    </Button>
-                    <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
-                        Forward
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
-            <Modal
-                show={modal1.show}
-                onHide={handleHideModal}
-                backdrop='static'
-                keyboard={false}>
-                <Modal.Header closeButton>
-                    <Modal.Title> Approve Document </Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <Row>
-                        <Col mb={'3'}> 
-                            <Form.Label>Comment:</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                type="text"
-                                name='comment'
-                                placeholder="Your comment here."
-                                // value={comment}
-                                
-                                 />
-                            {(!isValid) && <p style={{ color: 'red' }}>Comment should not be empty.</p>}
-                        </Col>
-                    </Row>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant='secondary' onClick={handleHideModal} disabled={modal1.isLoading}>
-                        Cancel
-                    </Button>
-                    <Button type='submit' variant='primary'  disabled={!isValid}>
-                        Approve
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
 
         </div>
     );
