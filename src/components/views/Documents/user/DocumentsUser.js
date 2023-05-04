@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Modal,
@@ -35,6 +35,7 @@ import './../styles.css';
 import moment from 'moment';
 import Select from 'react-select';
 import apiClient from '../../../../helpers/apiClient';
+import Validator from 'validatorjs';
 
 function DocumentsUser() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
@@ -47,19 +48,18 @@ function DocumentsUser() {
     const navigate = useNavigate();
     const loaderData = useLoaderData();
     const [activeTab, setActiveTab] = useState('all');
-    
-    const [showModal, setShowModal] = useState(false);
-    const [showModal1, setShowModal1] = useState(false);
 
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const [modal, setModal] = useState({ //modal variables
+    const [showModalApprove, setShowModalApprove] = useState(false);
+    const [showModalReject, setShowModalReject] = useState(false);
+    const [showModalAction, setShowModalAction] = useState({ //modal variables
         show: false,
         data: null,
         isLoading: false
     });
 
-    const [modal1, setModal1] = useState({ //modal variables
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
         isLoading: false
@@ -131,17 +131,71 @@ function DocumentsUser() {
         
     }, [modal, users])
 
-    const handleClose = () => setShowModal(false);
-    const handleShow = () => setShowModal(true);
+    //For Approve Modal
+    const handleCloseApprove = () => setShowModalApprove(false);
+    const handleShowApprove = () => setShowModalApprove(true);
     const handleApprove = e => {
         
   };
 
-    const handleClose1 = () => setShowModal1(false);
-    const handleShow1 = () => setShowModal1(true);
+    //For Reject Modal
+    const handleCloseReject = () => setShowModalReject(false);
+    const handleShowReject = () => setShowModalReject(true);
     const handleReject = e => {
         
     };
+
+    const handleInputChange = e => {
+        setFormInputs({
+            ...formInputs,
+            [e.target.name]: e.target.value
+        });
+    }
+    //For Took Action Modal
+    const handleCloseAction = () => setShowModalAction({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const handleShowAction = (data) => setShowModalAction({ //modal variables
+        show: true,
+        data,
+        isLoading: false
+    });
+    const handleAction = event => {
+            event.preventDefault();
+
+            let validation = new Validator(formInputs, {
+                comment: 'required|string|min:5',
+               
+            });
+    
+            if (validation.fails()){
+                setFormErrors({
+                    comment: validation.errors.first('comment')
+                });
+                return;
+            } else {
+                setFormErrors({
+                    comment: ''
+                });
+            }
+            
+            apiClient.post(`/document/${showModalAction.data?.id}/action`, formInputs).then(response => {
+                navigate('../');
+                Swal.fire({
+                    title: 'Success',
+                    text: response.data.message,
+                    icon: 'success'
+                })
+            }).catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: error,
+                    icon: 'error'
+                });
+            });
+        };
 
 
 // ACKNOWLEDGE
@@ -174,42 +228,6 @@ function DocumentsUser() {
             }
         });
     };
-
-    // ACTION
-    const showActionAlert = document => {
-        Swal.fire({
-            title: `Are you sure you want to confirm taking action of the document no."${document.tracking_no}"?`,
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirm',
-            reverseButtons: true,
-            showLoaderOnConfirm: true,
-            preConfirm: () => {
-                return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
-                    navigate('../');
-                    Swal.fire({
-                        title: 'Success',
-                        text: response.data.message,
-                        icon: 'success'
-                    });
-                }).catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error,
-                        icon: 'error'
-                    });
-                });
-            }
-        });
-    };
-
-
-
-   
-
 
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
@@ -256,7 +274,7 @@ function DocumentsUser() {
 
     const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
 
-    const handleShowModal = (data = null) => {
+    const handleShowForward = (data = null) => {
         
         setModal({
             show: true,
@@ -265,25 +283,12 @@ function DocumentsUser() {
         });
     }
 
-    const handleAction = (data = null) => {
-        setModal1({
-            show: true,
-            data,
-            isLoading: false
-        });
-    }
 
     const handleHideModal = () => {
 
         setIsValid(true);
 
         setModal({
-            show: false,
-            data: null,
-            isLoading: false
-        });
-
-        setModal1({
             show: false,
             data: null,
             isLoading: false
@@ -413,6 +418,8 @@ function DocumentsUser() {
                 className="mb-3"
                 onSelect={handleChangeTab}
             >
+
+                 {/*ALL TAB*/}
                 <Tab eventKey="all" title="All">
 
                     {
@@ -577,28 +584,25 @@ function DocumentsUser() {
                                                             ) : null}
 
                                                             {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                    <Button variant="link" size='sm' onClick={e => showActionAlert(row)}>
+                                                                    <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
                                                                         <FontAwesomeIcon icon={faFilePen} className='text-success' />
                                                                     </Button>
                                                             ) : null} 
 
                                                             {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) && options.length > 0 ? (
-                                                                    <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                                    <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
                                                                         <FontAwesomeIcon icon={faShare} />
                                                                     </Button>
                                                             ) : null} 
 
-                                                          
-                                                            
-
-                                                            {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={handleShow}>
+                                                            {(loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                <Button variant="link" size='sm' onClick={handleShowApprove}>
                                                                     <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
                                                             ): null}
 
-                                                            {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={handleShow1}>
+                                                            {(loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                <Button variant="link" size='sm' onClick={handleShowReject}>
                                                                     <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
                                                             ): null}
@@ -612,56 +616,7 @@ function DocumentsUser() {
                                     </Table>
                                 </div>
 
-                                <Modal show={showModal} onHide={handleClose}>
-                                    <Modal.Header closeButton>
-                                    <Modal.Title>Approve Document</Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body>
-                                    <Form.Label>Add a comment</Form.Label>
-                                        <Form.Control 
-                                            as="textarea" 
-                                            rows={3} 
-                                            Required
-                                            type="text" 
-                                            name='comment' 
-                                            placeholder="Leave a comment here." 
-                            />
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleClose}>
-                                        Cancel
-                                        </Button>
-                                        <Button variant="primary" onClick={handleApprove}>
-                                        Approve
-                                        </Button>
-                                    </Modal.Footer>
-                                </Modal> 
-
-                                <Modal show={showModal1} onHide={handleClose1}>
-                                    <Modal.Header closeButton>
-                                    <Modal.Title>Reject Document</Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body>
-                                    <Form.Label>Add a comment</Form.Label>
-                                        <Form.Control 
-                                            as="textarea" 
-                                            rows={3} 
-                                            Required
-                                            type="text" 
-                                            name='comment' 
-                                            placeholder="Leave a comment here." 
-                            />
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleClose1}>
-                                        Cancel
-                                        </Button>
-                                        <Button variant="danger" onClick={handleReject}>
-                                        Reject
-                                        </Button>
-                                    </Modal.Footer>
-                                </Modal> 
-
+                                {/* ALL Tab Pagination*/}            
                                 <div>
                                     {data.data.length > 0 && (
                                         <Pagination style={{ float: 'right' }}>
@@ -679,6 +634,8 @@ function DocumentsUser() {
                         )
                     }
                 </Tab>
+
+                {/* ONGONG TAB*/}
                 <Tab eventKey="ongoing" title="Ongoing">
                     {
                         data.data.length === 0 ? (
@@ -806,15 +763,15 @@ function DocumentsUser() {
                                                         <Button className='me-1' variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
                                                             <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                         </Button>
-
-                                                        {row.logs.every(log => log.acknowledge_id !== loaderData.id) ? (
-                                                            <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                                <FontAwesomeIcon icon={faUserCheck} className='text-success' />
-                                                            </Button>
-                                                        ) : null}
+                                                                    
+                                                        {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                    <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
+                                                                        <FontAwesomeIcon icon={faFilePen} className='text-success' />
+                                                                    </Button>
+                                                            ) : null} 
 
                                                         {row.logs.length > 0 && !row.logs.every(log => log.acknowledge_id !== loaderData.id) && options.length > 0 ? (
-                                                            <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                                            <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
                                                                 <FontAwesomeIcon icon={faShare} />
                                                             </Button>
                                                         ) : null}
@@ -842,6 +799,8 @@ function DocumentsUser() {
                         )
                     }
                 </Tab>
+
+                {/*APPROVED TAB*/}
                 <Tab eventKey="approved" title="Approved" >
                     {/* {
                         releasingData.data.length === 0 ? (
@@ -850,6 +809,8 @@ function DocumentsUser() {
                             </Alert>
                         ) : ( */}
                 </Tab>
+
+                 {/*REJECTED TAB*/}
                 <Tab eventKey="rejected" title="Rejected">
                     {/* {
                         doneData.data.length === 0 ? (
@@ -860,80 +821,126 @@ function DocumentsUser() {
                 </Tab>
             </Tabs>
 
-            <Modal
-                show={modal.show}
-                onHide={handleHideModal}
-                backdrop='static'
-                keyboard={false}>
-                <Modal.Header closeButton>
-                    <Modal.Title> Forward Document </Modal.Title>
-                </Modal.Header>
+                         {/* Forward Modal*/}
+                        <Modal
+                            show={modal.show}
+                            onHide={handleHideModal}
+                            backdrop='static'
+                            keyboard={false}>
+                            <Modal.Header closeButton>
+                                <Modal.Title> Forward Document </Modal.Title>
+                            </Modal.Header>
 
-                <Modal.Body>
-                    <Row>
-                        <Col md={'auto'}>
-                            <Form.Label>Forward to:</Form.Label>
-                            <Select
-                                isMulti
-                                name='forwardTo'
-                                options={options}
-                                value={selectedOptions}
-                                onChange={handleUserSelection}
-                                Required
+                            <Modal.Body>
+                                <Row>
+                                    <Col md={'auto'}>
+                                        <Form.Label>Forward to:</Form.Label>
+                                        <Select
+                                            isMulti
+                                            name='forwardTo'
+                                            options={options}
+                                            value={selectedOptions}
+                                            onChange={handleUserSelection}
+                                            Required
+                                        />
+                                        {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
+                                    </Col>
+                                </Row>
+                            </Modal.Body>
+
+                            <Modal.Footer>
+                                <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                                    Cancel
+                                </Button>
+                                <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
+                                    Forward
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+
+                        {/* Approve Document Modal*/}
+                        <Modal show={showModalApprove} onHide={handleCloseApprove}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Approve Document</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <Form.Label>Add a comment</Form.Label>
+                                <Form.Control 
+                                    as="textarea" 
+                                    rows={3} 
+                                    Required
+                                    type="text" 
+                                    name='comment' 
+                                    placeholder="Leave a comment here." 
+                    />
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleCloseApprove}>
+                                Cancel
+                                </Button>
+                                <Button variant="primary" onClick={handleApprove}>
+                                Approve
+                                </Button>
+                            </Modal.Footer>
+                        </Modal> 
+                        
+                        {/* Reject Document Modal*/}
+                        <Modal show={showModalReject} onHide={handleCloseReject}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Reject Document</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <Form.Label>Add a comment</Form.Label>
+                                <Form.Control 
+                                    as="textarea" 
+                                    rows={3} 
+                                    Required
+                                    type="text" 
+                                    name='comment' 
+                                    placeholder="Leave a comment here." 
+                    />
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleCloseReject}>
+                                Cancel
+                                </Button>
+                                <Button variant="danger" onClick={handleReject}>
+                                Reject
+                                </Button>
+                            </Modal.Footer>
+                        </Modal> 
+                        
+
+                        {/* Took Action Document Modal*/}
+                        <Modal show={showModalAction.show} onHide={handleCloseAction}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Confirm Taking Action</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <Form.Label>Add a comment</Form.Label>
+                                <Form.Control 
+                                    as="textarea" 
+                                    rows={3} 
+                                    onChange={handleInputChange}
+                                    type="text" 
+                                    name='comment' 
+                                    value={formInputs.comment}
+                                    placeholder="Leave a comment here."
+                                    isInvalid={!!formErrors.comment}
                             />
-                            {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
-                        </Col>
-                    </Row>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
-                        Cancel
-                    </Button>
-                    <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
-                        Forward
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
-            <Modal
-                show={modal1.show}
-                onHide={handleHideModal}
-                backdrop='static'
-                keyboard={false}>
-                <Modal.Header closeButton>
-                    <Modal.Title> Approve Document </Modal.Title>
-                </Modal.Header>
-
-                <Modal.Body>
-                    <Row>
-                        <Col mb={'3'}> 
-                            <Form.Label>Comment:</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                type="text"
-                                name='comment'
-                                placeholder="Your comment here."
-                                // value={comment}
-                                
-                                 />
-                            {(!isValid) && <p style={{ color: 'red' }}>Comment should not be empty.</p>}
-                        </Col>
-                    </Row>
-                </Modal.Body>
-
-                <Modal.Footer>
-                    <Button variant='secondary' onClick={handleHideModal} disabled={modal1.isLoading}>
-                        Cancel
-                    </Button>
-                    <Button type='submit' variant='primary'  disabled={!isValid}>
-                        Approve
-                    </Button>
-                </Modal.Footer>
-            </Modal>
-
-
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.comment}
+                            </Form.Control.Feedback>
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleCloseAction}>
+                                Cancel
+                                </Button>
+                                <Button type='submit' variant="primary" onClick={handleAction}>
+                                Confirm
+                                </Button>
+                            </Modal.Footer>
+                        </Modal> 
         </div>
     );
 }
