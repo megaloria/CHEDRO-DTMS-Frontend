@@ -50,6 +50,7 @@ function DocumentsUser() {
     
     const [showModal, setShowModal] = useState(false);
     const [showModal1, setShowModal1] = useState(false);
+    const [showModal2, setShowModal2] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -116,6 +117,12 @@ function DocumentsUser() {
     const handleClose1 = () => setShowModal1(false);
     const handleShow1 = () => setShowModal1(true);
     const handleReject = e => {
+        
+    };
+
+    const handleCloseAction = () => setShowModal2(false);
+    const handleShowAction = () => setShowModal2(true);
+    const handleAction = e => {
         
     };
 
@@ -259,13 +266,6 @@ function DocumentsUser() {
         });
     }
 
-    const handleAction = (data = null) => {
-        setModal1({
-            show: true,
-            data,
-            isLoading: false
-        });
-    }
 
     const handleHideModal = () => {
 
@@ -571,7 +571,7 @@ function DocumentsUser() {
                                                             ) : null}
 
                                                             {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                    <Button variant="link" size='sm' onClick={e => showActionAlert(row)}>
+                                                                    <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
                                                                         <FontAwesomeIcon icon={faFilePen} className='text-success' />
                                                                     </Button>
                                                             ) : null} 
@@ -582,10 +582,7 @@ function DocumentsUser() {
                                                                     </Button>
                                                             ) : null} 
 
-                                                          
-                                                            
-
-                                                            {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                            {/* {loaderData.role.level === 4 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                                 <Button variant="link" size='sm' onClick={handleShow}>
                                                                     <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
@@ -595,7 +592,7 @@ function DocumentsUser() {
                                                                 <Button variant="link" size='sm' onClick={handleShow1}>
                                                                     <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
-                                                            ): null}
+                                                            ): null} */}
                                                           
                                                         </td>
                                                     </tr>
@@ -652,6 +649,31 @@ function DocumentsUser() {
                                         </Button>
                                         <Button variant="danger" onClick={handleReject}>
                                         Reject
+                                        </Button>
+                                    </Modal.Footer>
+                                </Modal> 
+
+                        <Modal show={showModal2} onHide={handleCloseAction}>
+                                    <Modal.Header closeButton>
+                                    <Modal.Title>Confirm Taking Action</Modal.Title>
+                                    </Modal.Header>
+                                    <Modal.Body>
+                                    <Form.Label>Add a comment</Form.Label>
+                                        <Form.Control 
+                                            as="textarea" 
+                                            rows={3} 
+                                            Required
+                                            type="text" 
+                                            name='comment' 
+                                            placeholder="Leave a comment here." 
+                            />
+                                    </Modal.Body>
+                                    <Modal.Footer>
+                                        <Button variant="secondary" onClick={handleCloseAction}>
+                                        Cancel
+                                        </Button>
+                                        <Button variant="primary" onClick={handleAction}>
+                                        Confirm
                                         </Button>
                                     </Modal.Footer>
                                 </Modal> 
