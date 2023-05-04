@@ -40,9 +40,9 @@ function DocumentsUser() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState({ data: [] });
-    const [users, setUsers] = useState({ data: [] });
+    const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
-    let [options, setOptions] = useState([]);
+    const [options, setOptions] = useState([]);
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
     const navigate = useNavigate();
     const loaderData = useLoaderData();
@@ -106,6 +106,30 @@ function DocumentsUser() {
             });
         }
     }, [activeTab]);
+
+    useEffect(() => {
+        if (modal.data) {
+            let newOptions = users.map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            }));
+
+            const assigned = modal.data.logs.map(log => log.to_id);
+            const optionsFiltered = newOptions.filter(option => !assigned.includes(option.value));
+            setOptions(optionsFiltered);
+
+            if (modal.data.logs.length > 0 && modal.data.logs[0].to_id !== null && modal.data.logs.some(log => log.acknowledge_id !== null)) {
+                setSelectedUsers([]);
+            } else {
+                let userIds = modal.data.assign.filter(l => l.assigned_id);
+                userIds = userIds.map(log => {
+                    return log.assigned_id;
+                });
+                setSelectedUsers(userIds);
+            }
+        }
+        
+    }, [modal, users])
 
     const handleClose = () => setShowModal(false);
     const handleShow = () => setShowModal(true);
@@ -234,24 +258,6 @@ function DocumentsUser() {
 
     const handleShowModal = (data = null) => {
         
-        options = users.map(user => ({
-            value: user.id,
-            label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-        }));
-
-        const assigned = data.logs.map(log => log.to_id);
-        const optionsFiltered = options.filter(option => !assigned.includes(option.value));
-        setOptions(optionsFiltered);
-
-        if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
-            setSelectedUsers([]);
-        } else {
-            let userIds = data.assign.filter(l => l.assigned_id);
-            userIds = userIds.map(log => {
-                return log.assigned_id;
-            });
-            setSelectedUsers(userIds);
-        }
         setModal({
             show: true,
             data,
@@ -576,7 +582,7 @@ function DocumentsUser() {
                                                                     </Button>
                                                             ) : null} 
 
-                                                            {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                            {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) && options.length > 0 ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                         <FontAwesomeIcon icon={faShare} />
                                                                     </Button>
@@ -807,7 +813,7 @@ function DocumentsUser() {
                                                             </Button>
                                                         ) : null}
 
-                                                        {row.logs.length > 0 && !row.logs.every(log => log.acknowledge_id !== loaderData.id) ? (
+                                                        {row.logs.length > 0 && !row.logs.every(log => log.acknowledge_id !== loaderData.id) && options.length > 0 ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
                                                                 <FontAwesomeIcon icon={faShare} />
                                                             </Button>
