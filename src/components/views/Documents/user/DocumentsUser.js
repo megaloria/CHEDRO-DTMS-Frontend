@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Button,
     Modal,
@@ -35,6 +35,7 @@ import './../styles.css';
 import moment from 'moment';
 import Select from 'react-select';
 import apiClient from '../../../../helpers/apiClient';
+import Validator from 'validatorjs';
 
 function DocumentsUser() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
@@ -50,17 +51,15 @@ function DocumentsUser() {
 
     const [showModalApprove, setShowModalApprove] = useState(false);
     const [showModalReject, setShowModalReject] = useState(false);
-    const [showModalAction, setShowModalAction] = useState(false);
-
-    const [searchQuery, setSearchQuery] = useState('');
-
-    const [modal, setModal] = useState({ //modal variables
+    const [showModalAction, setShowModalAction] = useState({ //modal variables
         show: false,
         data: null,
         isLoading: false
     });
 
-    const [modal1, setModal1] = useState({ //modal variables
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
         isLoading: false
@@ -129,19 +128,36 @@ function DocumentsUser() {
         });
     }
     //For Took Action Modal
-    const handleCloseAction = () => setShowModalAction(false);
-    const handleShowAction = () => setShowModalAction(true);
+    const handleCloseAction = () => setShowModalAction({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const handleShowAction = (data) => setShowModalAction({ //modal variables
+        show: true,
+        data,
+        isLoading: false
+    });
     const handleAction = event => {
             event.preventDefault();
-            
-            const formData = new FormData();
-            formData.append('comment', formInputs.comment);
+
+            let validation = new Validator(formInputs, {
+                comment: 'required|string|min:5',
+               
+            });
     
-            apiClient.post(`/document/${showModalAction.data?.id}/action`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            }).then(response => {
+            if (validation.fails()){
+                setFormErrors({
+                    comment: validation.errors.first('comment')
+                });
+                return;
+            } else {
+                setFormErrors({
+                    comment: ''
+                });
+            }
+            
+            apiClient.post(`/document/${showModalAction.data?.id}/action`, formInputs).then(response => {
                 navigate('../');
                 Swal.fire({
                     title: 'Success',
@@ -267,12 +283,6 @@ function DocumentsUser() {
         setIsValid(true);
 
         setModal({
-            show: false,
-            data: null,
-            isLoading: false
-        });
-
-        setModal1({
             show: false,
             data: null,
             isLoading: false
@@ -579,13 +589,13 @@ function DocumentsUser() {
                                                                     </Button>
                                                             ) : null} 
 
-                                                            {loaderData.role.level === 3 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                            {(loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                                 <Button variant="link" size='sm' onClick={handleShowApprove}>
                                                                     <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
                                                             ): null}
 
-                                                            {loaderData.role.level === 3 || loaderData.role.level === 2 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                            {(loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                                 <Button variant="link" size='sm' onClick={handleShowReject}>
                                                                     <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
@@ -896,7 +906,7 @@ function DocumentsUser() {
                         
 
                         {/* Took Action Document Modal*/}
-                        <Modal show={showModalAction} onHide={handleCloseAction}>
+                        <Modal show={showModalAction.show} onHide={handleCloseAction}>
                             <Modal.Header closeButton>
                             <Modal.Title>Confirm Taking Action</Modal.Title>
                             </Modal.Header>
@@ -905,13 +915,12 @@ function DocumentsUser() {
                                 <Form.Control 
                                     as="textarea" 
                                     rows={3} 
-                                    Required
                                     onChange={handleInputChange}
                                     type="text" 
                                     name='comment' 
                                     value={formInputs.comment}
                                     placeholder="Leave a comment here."
-                                    isInvalid={!!formErrors.description}
+                                    isInvalid={!!formErrors.comment}
                             />
                             <Form.Control.Feedback type='invalid'>
                                 {formErrors.comment}
@@ -921,7 +930,7 @@ function DocumentsUser() {
                                 <Button variant="secondary" onClick={handleCloseAction}>
                                 Cancel
                                 </Button>
-                                <Button variant="primary" onClick={handleAction}>
+                                <Button type='submit' variant="primary" onClick={handleAction}>
                                 Confirm
                                 </Button>
                             </Modal.Footer>
