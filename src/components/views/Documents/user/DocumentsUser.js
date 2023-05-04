@@ -122,12 +122,40 @@ function DocumentsUser() {
         
     };
 
+    const handleInputChange = e => {
+        setFormInputs({
+            ...formInputs,
+            [e.target.name]: e.target.value
+        });
+    }
     //For Took Action Modal
     const handleCloseAction = () => setShowModalAction(false);
     const handleShowAction = () => setShowModalAction(true);
-    const handleAction = e => {
-        
-    };
+    const handleAction = event => {
+            event.preventDefault();
+            
+            const formData = new FormData();
+            formData.append('comment', formInputs.comment);
+    
+            apiClient.post(`/document/${showModalAction.data?.id}/action`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(response => {
+                navigate('../');
+                Swal.fire({
+                    title: 'Success',
+                    text: response.data.message,
+                    icon: 'success'
+                })
+            }).catch(error => {
+                Swal.fire({
+                    title: 'Error',
+                    text: error,
+                    icon: 'error'
+                });
+            });
+        };
 
 
 // ACKNOWLEDGE
@@ -160,42 +188,6 @@ function DocumentsUser() {
             }
         });
     };
-
-    // ACTION
-    const showActionAlert = document => {
-        Swal.fire({
-            title: `Are you sure you want to confirm taking action of the document no."${document.tracking_no}"?`,
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Confirm',
-            reverseButtons: true,
-            showLoaderOnConfirm: true,
-            preConfirm: () => {
-                return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
-                    navigate('../');
-                    Swal.fire({
-                        title: 'Success',
-                        text: response.data.message,
-                        icon: 'success'
-                    });
-                }).catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error,
-                        icon: 'error'
-                    });
-                });
-            }
-        });
-    };
-
-
-
-   
-
 
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
@@ -914,10 +906,16 @@ function DocumentsUser() {
                                     as="textarea" 
                                     rows={3} 
                                     Required
+                                    onChange={handleInputChange}
                                     type="text" 
                                     name='comment' 
-                                    placeholder="Leave a comment here." 
-                    />
+                                    value={formInputs.comment}
+                                    placeholder="Leave a comment here."
+                                    isInvalid={!!formErrors.description}
+                            />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.comment}
+                            </Form.Control.Feedback>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleCloseAction}>
