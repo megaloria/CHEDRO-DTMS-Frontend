@@ -608,85 +608,6 @@ function DocumentsUser() {
                                     </Table>
                                 </div>
 
-                               {/* Approve Document Modal*/}
-                                <Modal show={showModalApprove} onHide={handleCloseApprove}>
-                                    <Modal.Header closeButton>
-                                    <Modal.Title>Approve Document</Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body>
-                                    <Form.Label>Add a comment</Form.Label>
-                                        <Form.Control 
-                                            as="textarea" 
-                                            rows={3} 
-                                            Required
-                                            type="text" 
-                                            name='comment' 
-                                            placeholder="Leave a comment here." 
-                            />
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleCloseApprove}>
-                                        Cancel
-                                        </Button>
-                                        <Button variant="primary" onClick={handleApprove}>
-                                        Approve
-                                        </Button>
-                                    </Modal.Footer>
-                                </Modal> 
-                                
-                                {/* Reject Document Modal*/}
-                                <Modal show={showModalReject} onHide={handleCloseReject}>
-                                    <Modal.Header closeButton>
-                                    <Modal.Title>Reject Document</Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body>
-                                    <Form.Label>Add a comment</Form.Label>
-                                        <Form.Control 
-                                            as="textarea" 
-                                            rows={3} 
-                                            Required
-                                            type="text" 
-                                            name='comment' 
-                                            placeholder="Leave a comment here." 
-                            />
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleCloseReject}>
-                                        Cancel
-                                        </Button>
-                                        <Button variant="danger" onClick={handleReject}>
-                                        Reject
-                                        </Button>
-                                    </Modal.Footer>
-                                </Modal> 
-                                
-
-                                {/* Took Action Document Modal*/}
-                                <Modal show={showModalAction} onHide={handleCloseAction}>
-                                    <Modal.Header closeButton>
-                                    <Modal.Title>Confirm Taking Action</Modal.Title>
-                                    </Modal.Header>
-                                    <Modal.Body>
-                                    <Form.Label>Add a comment</Form.Label>
-                                        <Form.Control 
-                                            as="textarea" 
-                                            rows={3} 
-                                            Required
-                                            type="text" 
-                                            name='comment' 
-                                            placeholder="Leave a comment here." 
-                            />
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button variant="secondary" onClick={handleCloseAction}>
-                                        Cancel
-                                        </Button>
-                                        <Button variant="primary" onClick={handleAction}>
-                                        Confirm
-                                        </Button>
-                                    </Modal.Footer>
-                                </Modal> 
-
                                 {/* ALL Tab Pagination*/}            
                                 <div>
                                     {data.data.length > 0 && (
@@ -834,12 +755,12 @@ function DocumentsUser() {
                                                         <Button className='me-1' variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
                                                             <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                         </Button>
-
-                                                        {row.logs.every(log => log.acknowledge_id !== loaderData.id) ? (
-                                                            <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                                <FontAwesomeIcon icon={faUserCheck} className='text-success' />
-                                                            </Button>
-                                                        ) : null}
+                                                                    
+                                                        {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                                    <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
+                                                                        <FontAwesomeIcon icon={faFilePen} className='text-success' />
+                                                                    </Button>
+                                                            ) : null} 
 
                                                         {row.logs.length > 0 && !row.logs.every(log => log.acknowledge_id !== loaderData.id) ? (
                                                             <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
@@ -891,6 +812,122 @@ function DocumentsUser() {
                         ) : ( */}
                 </Tab>
             </Tabs>
+
+                         {/* Forward Modal*/}
+                        <Modal
+                            show={modal.show}
+                            onHide={handleHideModal}
+                            backdrop='static'
+                            keyboard={false}>
+                            <Modal.Header closeButton>
+                                <Modal.Title> Forward Document </Modal.Title>
+                            </Modal.Header>
+
+                            <Modal.Body>
+                                <Row>
+                                    <Col md={'auto'}>
+                                        <Form.Label>Forward to:</Form.Label>
+                                        <Select
+                                            isMulti
+                                            name='forwardTo'
+                                            options={options}
+                                            value={selectedOptions}
+                                            onChange={handleUserSelection}
+                                            Required
+                                        />
+                                        {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
+                                    </Col>
+                                </Row>
+                            </Modal.Body>
+
+                            <Modal.Footer>
+                                <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                                    Cancel
+                                </Button>
+                                <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
+                                    Forward
+                                </Button>
+                            </Modal.Footer>
+                        </Modal>
+
+                        {/* Approve Document Modal*/}
+                        <Modal show={showModalApprove} onHide={handleCloseApprove}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Approve Document</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <Form.Label>Add a comment</Form.Label>
+                                <Form.Control 
+                                    as="textarea" 
+                                    rows={3} 
+                                    Required
+                                    type="text" 
+                                    name='comment' 
+                                    placeholder="Leave a comment here." 
+                    />
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleCloseApprove}>
+                                Cancel
+                                </Button>
+                                <Button variant="primary" onClick={handleApprove}>
+                                Approve
+                                </Button>
+                            </Modal.Footer>
+                        </Modal> 
+                        
+                        {/* Reject Document Modal*/}
+                        <Modal show={showModalReject} onHide={handleCloseReject}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Reject Document</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <Form.Label>Add a comment</Form.Label>
+                                <Form.Control 
+                                    as="textarea" 
+                                    rows={3} 
+                                    Required
+                                    type="text" 
+                                    name='comment' 
+                                    placeholder="Leave a comment here." 
+                    />
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleCloseReject}>
+                                Cancel
+                                </Button>
+                                <Button variant="danger" onClick={handleReject}>
+                                Reject
+                                </Button>
+                            </Modal.Footer>
+                        </Modal> 
+                        
+
+                        {/* Took Action Document Modal*/}
+                        <Modal show={showModalAction} onHide={handleCloseAction}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Confirm Taking Action</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                            <Form.Label>Add a comment</Form.Label>
+                                <Form.Control 
+                                    as="textarea" 
+                                    rows={3} 
+                                    Required
+                                    type="text" 
+                                    name='comment' 
+                                    placeholder="Leave a comment here." 
+                    />
+                            </Modal.Body>
+                            <Modal.Footer>
+                                <Button variant="secondary" onClick={handleCloseAction}>
+                                Cancel
+                                </Button>
+                                <Button variant="primary" onClick={handleAction}>
+                                Confirm
+                                </Button>
+                            </Modal.Footer>
+                        </Modal> 
 
         </div>
     );
