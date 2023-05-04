@@ -928,7 +928,6 @@ function DocumentsUser() {
                                 </Button>
                             </Modal.Footer>
                         </Modal> 
-
         </div>
     );
 }
