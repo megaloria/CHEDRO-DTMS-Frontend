@@ -495,7 +495,7 @@ function Documents() {
                                                                                 </Popover>
                                                                             }
                                                                         >
-                                                                            <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded</Badge>
+                                                                            <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
                                                                         </OverlayTrigger>
                                                                     ) : (
                                                                         <Badge bg="primary">Received</Badge>
