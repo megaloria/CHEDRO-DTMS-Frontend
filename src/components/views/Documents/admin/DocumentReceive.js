@@ -35,6 +35,7 @@ function DocumentReceive() {
     const [docType, setDocType] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoading, setIsLoading] = useState(true); 
+    const [options, setOptions] = useState([]);
     const [isOptionLoading, setIsOptionLoading] = useState(false); 
     const [isOptionLoading1, setIsOptionLoading1] = useState(false); 
     const [attachment, setAttachment] = useState(null);
@@ -81,14 +82,32 @@ function DocumentReceive() {
     //For assigning multiple users 
     //yarn add react-select
     const handleUserSelection = (selectedOptions) => {
+        let toDisable = [];
+        for (let i = 0; i < selectedOptions.length; i++) {
+            if (selectedOptions[i].data.id !== selectedOptions[i].data.role.division.role.user.id) {
+                toDisable.push(selectedOptions[i].data.role.division.role.user.id);
+            }
+        }
+
+        let newOptions = options.map(opt => {
+            if (toDisable.includes(opt.value)) {
+                return {
+                    ...opt,
+                    isDisabled: true
+                };
+            }
+
+            return {
+                ...opt,
+                isDisabled: false
+            };
+        });
+        setOptions(newOptions);
+
         let userIds = selectedOptions.map(option => option.value);
+        userIds = userIds.filter(uid => !toDisable.includes(uid));
         setSelectedUsers(userIds);
     };
-
-    const options = users.map(user => ({
-        value: user.id,
-        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-    }));
 
     const handleSubmit = event => {
         event.preventDefault();
@@ -451,6 +470,14 @@ function DocumentReceive() {
                 setUsers(response.data.data.users);
                 setDocumentTypes(response.data.data.documentTypes);
                 setCategories(response.data.data.categories);
+
+                let newOptions = response.data.data.users.map(user => ({
+                    value: user.id,
+                    label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`,
+                    data: user,
+                    isDisabled: false
+                }));
+                setOptions(newOptions);
             })
             .catch(error => {
                 setErrorMessage(error);

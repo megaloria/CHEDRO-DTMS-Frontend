@@ -42,7 +42,7 @@ function Documents() {
     const [data, setData] = useState({ data: [] });
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
-    let [options, setOptions] = useState([]);
+    const [options, setOptions] = useState([]);
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
     const navigate = useNavigate();
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
@@ -50,6 +50,7 @@ function Documents() {
     const [activeTab, setActiveTab] = useState('all');
 
     const [searchQuery, setSearchQuery] = useState('');
+    const [forwardError, setForwardError] = useState('');
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -59,11 +60,11 @@ function Documents() {
 
     useEffect(() => {
         setIsTableLoading(true);
-        if (activeTab === 'all'){
+        if (activeTab === 'all') {
             apiClient.get('/document', {
-            params: {
-                query: ''
-            }
+                params: {
+                    query: ''
+                }
             }).then(response => { //GET ALL function
                 setData(response.data.data.documents);
                 setUsers(response.data.data.user);
@@ -73,7 +74,7 @@ function Documents() {
                 setIsTableLoading(false);
                 setIsLoading(false);
             });
-        } 
+        }
         if (activeTab === 'ongoing') {
             apiClient.get('/document/ongoing', {
                 params: {
@@ -106,25 +107,23 @@ function Documents() {
         }
     }, [activeTab]);
 
-   
-
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
         if (activeTab === 'all') {
-        apiClient.get(`/document?page=${pageNumber}`, {
-            params: {
-                query: ''
-            }
-        }).then(response => {
-            setData(response.data.data.documents);
-            setUsers(response.data.data.user);
-        }).catch(error => {
-            setErrorMessage(error);
-        }).finally(() => {
-            setIsTableLoading(false);
-        });
-    };
+            apiClient.get(`/document?page=${pageNumber}`, {
+                params: {
+                    query: ''
+                }
+            }).then(response => {
+                setData(response.data.data.documents);
+                setUsers(response.data.data.user);
+            }).catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsTableLoading(false);
+            });
+        };
         if (activeTab === 'ongoing') {
             apiClient.get(`/document/ongoing?page=${pageNumber}`, {
                 params: {
@@ -155,37 +154,96 @@ function Documents() {
         };
     };
 
-    const [isValid, setIsValid] = useState(true);
-
     //For assigning multiple users 
-    const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
+    const handleUserSelection = selectedOptions => {
+        let toDisable = [];
+        for (let i = 0; i < selectedOptions.length; i++) {
+            if (selectedOptions[i].data.id !== selectedOptions[i].data.role.division.role.user.id) {
+                toDisable.push(selectedOptions[i].data.role.division.role.user.id);
+            }
+        }
+
+        let newOptions = options.map(opt => {
+            if (toDisable.includes(opt.value)) {
+                return {
+                    ...opt,
+                    isDisabled: true
+                };
+            }
+
+            return {
+                ...opt,
+                isDisabled: false
+            };
+        });
+        setOptions(newOptions);
+
+        let userIds = selectedOptions.map(option => option.value);
+        userIds = userIds.filter(uid => !toDisable.includes(uid));
         setSelectedUsers(userIds);
         // Update the form validity
-        setIsValid(selectedOptions.length > 0);
+        setForwardError(selectedOptions.length > 0 ? '' : 'Please select at least one option');
     };
 
     const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
 
-    const handleShowModal = (data = null) => {
-
-        options = users.map(user => ({
-            value: user.id,
-            label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-        }));
-
-        const assigned = data.logs.map(log => log.to_id);
-        const optionsFiltered = options.filter(option => !assigned.includes(option.value));
-        setOptions(optionsFiltered);
-
-        if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
-            setSelectedUsers([]);
-        } else {
-            let userIds = data.assign.filter(l => l.assigned_id);
-            userIds = userIds.map(log => {
-                return log.assigned_id;
+    const handleShowModal = (data = null, isDisabled) => {
+        if (!isDisabled) {
+            let newOptions = users.map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`,
+                data: user,
+                isFixed: false,
+                isDisabled: false
+            }));
+    
+            let assignedUsers = data.assign.map(da => {
+                return da.assigned_id;
             });
-            setSelectedUsers(userIds);
+            let acknowledged = data.logs.map(dl => dl.acknowledge_id);
+    
+            newOptions = newOptions.map(no => {
+                if (assignedUsers.includes(no.value)) {
+                    return {
+                        ...no,
+                        isFixed: acknowledged.includes(no.value)
+                    };
+                }
+    
+                return {
+                    ...no,
+                    isFixed: false
+                };
+            });
+    
+            let toDisable = [];
+            for (let i = 0; i < assignedUsers.length; i++) {
+                let findOption = newOptions.find(no => no.value === assignedUsers[i]);
+                if (findOption.data.id !== findOption.data.role.division.role.user.id) {
+                    toDisable.push(findOption.data.role.division.role.user.id);
+                }
+            }
+            newOptions = newOptions.map(opt => {
+                if (toDisable.includes(opt.value)) {
+                    return {
+                        ...opt,
+                        isDisabled: true
+                    };
+                }
+    
+                return {
+                    ...opt,
+                    isDisabled: false
+                };
+            });
+            setOptions(newOptions);
+            setSelectedUsers(assignedUsers);
+        } else {
+            let assignedUsers = data.assign.map(da => {
+                return da.assigned_id;
+            });
+            setSelectedUsers([assignedUsers]);
+            setIsSelectDisabled(true);
         }
 
         setModal({
@@ -197,7 +255,7 @@ function Documents() {
 
     const handleHideModal = () => {
 
-        setIsValid(true);
+        setForwardError('');
         setIsSelectDisabled(false);
 
         setModal({
@@ -233,36 +291,36 @@ function Documents() {
         setActiveTab(key);
     }
 
-   // ACKNOWLEDGE
-   const showAcknowledgeAlert = document => {
-    Swal.fire({
-        title: `Are you sure you want to Acknowledge the document no."${document.tracking_no}"?`,
-        text: 'You won\'t be able to revert this!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, acknowledge it!',
-        reverseButtons: true,
-        showLoaderOnConfirm: true,
-        preConfirm: () => {
-            return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
-                navigate('../');
-                Swal.fire({
-                    title: 'Success',
-                    text: response.data.message,
-                    icon: 'success'
+    // ACKNOWLEDGE
+    const showAcknowledgeAlert = document => {
+        Swal.fire({
+            title: `Are you sure you want to Acknowledge the document no."${document.tracking_no}"?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, acknowledge it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
+                    navigate('../');
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
                 });
-            }).catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: error,
-                    icon: 'error'
-                });
-            });
-        }
-    });
-};
+            }
+        });
+    };
 
     // DELETE
     const showDeleteAlert = document => {
@@ -320,7 +378,7 @@ function Documents() {
                 icon: 'success'
             })
         }).catch(error => {
-            setIsValid(false);
+            setForwardError(error);
         });
     };
 
@@ -500,34 +558,34 @@ function Documents() {
                                                                     ) : (
                                                                         <Badge bg="primary">Received</Badge>
                                                                     )}
-                                                                    </>
-                                                                    ) : row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
-                                                                        <OverlayTrigger
-                                                                            trigger={['click', 'hover']}
-                                                                            placement="left"
-                                                                            overlay={
-                                                                                <Popover>
-                                                                                    <Popover.Header className="bg-primary text-white">
-                                                                                        Assigned to
-                                                                                    </Popover.Header>
-                                                                                    <Popover.Body>
-                                                                                        <ListGroup variant="flush">
-                                                                                            {row.assign.map((assign, index) => (
-                                                                                                <ListGroupItem
-                                                                                                    variant="primary text-black"
-                                                                                                    key={assign.assigned_user.profile.id}
-                                                                                                >
-                                                                                                    {assign.assigned_user.profile.name}
-                                                                                                </ListGroupItem>
-                                                                                            ))}
-                                                                                        </ListGroup>
-                                                                                    </Popover.Body>
-                                                                                </Popover>
-                                                                            }
-                                                                        >
-                                                                            <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
-                                                                        </OverlayTrigger>
-                                                                ) : <Badge bg="primary">Received</Badge> }
+                                                                </>
+                                                            ) : row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
+                                                                <OverlayTrigger
+                                                                    trigger={['click', 'hover']}
+                                                                    placement="left"
+                                                                    overlay={
+                                                                        <Popover>
+                                                                            <Popover.Header className="bg-primary text-white">
+                                                                                Assigned to
+                                                                            </Popover.Header>
+                                                                            <Popover.Body>
+                                                                                <ListGroup variant="flush">
+                                                                                    {row.assign.map((assign, index) => (
+                                                                                        <ListGroupItem
+                                                                                            variant="primary text-black"
+                                                                                            key={assign.assigned_user.profile.id}
+                                                                                        >
+                                                                                            {assign.assigned_user.profile.name}
+                                                                                        </ListGroupItem>
+                                                                                    ))}
+                                                                                </ListGroup>
+                                                                            </Popover.Body>
+                                                                        </Popover>
+                                                                    }
+                                                                >
+                                                                    <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
+                                                                </OverlayTrigger>
+                                                            ) : <Badge bg="primary">Received</Badge>}
 
 
                                                         </td>
@@ -545,30 +603,32 @@ function Documents() {
 
                                                             {row.category.is_assignable ? (
                                                                 <Button variant="link" size='sm' onClick={e => {
+                                                                    let isDisabled = false;
                                                                     if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                                        setIsSelectDisabled(false);
+                                                                        isDisabled = false;
                                                                     } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                                        setIsSelectDisabled(true);
+                                                                        isDisabled = true;
                                                                     } else if (!row.category.is_assignable) {
-                                                                        setIsSelectDisabled(true);
+                                                                        isDisabled = true;
                                                                     }
                                                                     handleShowModal(row);
                                                                 }}>
                                                                     <FontAwesomeIcon icon={faShare} className="" />
                                                                 </Button>
                                                             ) : !row.category.is_assignable && row.logs.length === 0 ? (
-                                                                    <Button variant="link" size='sm' onClick={e => {
-                                                                        if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                                            setIsSelectDisabled(false);
-                                                                        } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                                            setIsSelectDisabled(true);
-                                                                        } else if (!row.category.is_assignable) {
-                                                                            setIsSelectDisabled(true);
-                                                                        }
-                                                                        handleShowModal(row);
-                                                                    }}>
-                                                                        <FontAwesomeIcon icon={faShare} className="" />
-                                                                    </Button>
+                                                                <Button variant="link" size='sm' onClick={e => {
+                                                                    let isDisabled = false;
+                                                                    if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
+                                                                        isDisabled = false;
+                                                                    } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
+                                                                        isDisabled = true;
+                                                                    } else if (!row.category.is_assignable) {
+                                                                        isDisabled = true;
+                                                                    }
+                                                                    handleShowModal(row, isDisabled);
+                                                                }}>
+                                                                    <FontAwesomeIcon icon={faShare} className="" />
+                                                                </Button>
                                                             ) : null}
 
                                                             {row.logs.some(log => log.acknowledge_id !== null) ? (
@@ -608,7 +668,7 @@ function Documents() {
                     }
                 </Tab>
                 <Tab eventKey="mydocument" title="My Documents" >
-                {
+                    {
                         data.data.length === 0 ? (
                             <Alert variant='primary'>
                                 No Documents found.
@@ -654,7 +714,7 @@ function Documents() {
                                                             </div>
                                                         </td>
                                                         <td>
-                                                        {row.logs.length > 0 ? (
+                                                            {row.logs.length > 0 ? (
                                                                 <>
                                                                     {row.logs.some(log => log.acknowledge_id !== null) ? (
                                                                         <OverlayTrigger
@@ -724,34 +784,34 @@ function Documents() {
                                                                     ) : (
                                                                         <Badge bg="primary">Received</Badge>
                                                                     )}
-                                                                    </>
-                                                                    ) : row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
-                                                                        <OverlayTrigger
-                                                                            trigger={['click', 'hover']}
-                                                                            placement="left"
-                                                                            overlay={
-                                                                                <Popover>
-                                                                                    <Popover.Header className="bg-primary text-white">
-                                                                                        Assigned to
-                                                                                    </Popover.Header>
-                                                                                    <Popover.Body>
-                                                                                        <ListGroup variant="flush">
-                                                                                            {row.assign.map((assign, index) => (
-                                                                                                <ListGroupItem
-                                                                                                    variant="primary text-black"
-                                                                                                    key={assign.assigned_user.profile.id}
-                                                                                                >
-                                                                                                    {assign.assigned_user.profile.name}
-                                                                                                </ListGroupItem>
-                                                                                            ))}
-                                                                                        </ListGroup>
-                                                                                    </Popover.Body>
-                                                                                </Popover>
-                                                                            }
-                                                                        >
-                                                                            <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
-                                                                        </OverlayTrigger>
-                                                                ) : <Badge bg="primary">Received</Badge> }
+                                                                </>
+                                                            ) : row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
+                                                                <OverlayTrigger
+                                                                    trigger={['click', 'hover']}
+                                                                    placement="left"
+                                                                    overlay={
+                                                                        <Popover>
+                                                                            <Popover.Header className="bg-primary text-white">
+                                                                                Assigned to
+                                                                            </Popover.Header>
+                                                                            <Popover.Body>
+                                                                                <ListGroup variant="flush">
+                                                                                    {row.assign.map((assign, index) => (
+                                                                                        <ListGroupItem
+                                                                                            variant="primary text-black"
+                                                                                            key={assign.assigned_user.profile.id}
+                                                                                        >
+                                                                                            {assign.assigned_user.profile.name}
+                                                                                        </ListGroupItem>
+                                                                                    ))}
+                                                                                </ListGroup>
+                                                                            </Popover.Body>
+                                                                        </Popover>
+                                                                    }
+                                                                >
+                                                                    <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
+                                                                </OverlayTrigger>
+                                                            ) : <Badge bg="primary">Received</Badge>}
 
 
                                                         </td>
@@ -766,35 +826,37 @@ function Documents() {
                                                                     <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                                 </Button>
                                                             ) : null}
-                                                        
+
                                                             {row.category.is_assignable ? (
                                                                 <Button variant="link" size='sm' onClick={e => {
+                                                                    let isDisabled = false;
                                                                     if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                                        setIsSelectDisabled(false);
+                                                                        isDisabled = false;
                                                                     } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                                        setIsSelectDisabled(true);
+                                                                        isDisabled = true;
                                                                     } else if (!row.category.is_assignable) {
-                                                                        setIsSelectDisabled(true);
+                                                                        isDisabled = true;
                                                                     }
-                                                                    handleShowModal(row);
+                                                                    handleShowModal(row, isDisabled);
                                                                 }}>
                                                                     <FontAwesomeIcon icon={faShare} className="" />
                                                                 </Button>
                                                             ) : !row.category.is_assignable && row.logs.length === 0 ? (
                                                                 <Button variant="link" size='sm' onClick={e => {
+                                                                    let isDisabled = false;
                                                                     if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                                        setIsSelectDisabled(false);
+                                                                        isDisabled = false;
                                                                     } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                                        setIsSelectDisabled(true);
+                                                                        isDisabled = true;
                                                                     } else if (!row.category.is_assignable) {
-                                                                        setIsSelectDisabled(true);
+                                                                        isDisabled = true;
                                                                     }
-                                                                    handleShowModal(row);
+                                                                    handleShowModal(row, isDisabled);
                                                                 }}>
                                                                     <FontAwesomeIcon icon={faShare} className="" />
                                                                 </Button>
                                                             ) : null}
-                                                       
+
                                                             {row.logs.some(log => log.acknowledge_id !== null) ? (
                                                                 null
                                                             ) : <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
@@ -838,8 +900,8 @@ function Documents() {
                                 No Ongoing Documents found.
                             </Alert>
                         ) : isTableLoading ? (
-                                <Spinner animation='border' />
-                            ) : (
+                            <Spinner animation='border' />
+                        ) : (
                             <div className='loading-table-container'>
                                 <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
                                     <div className='spinner-icon'>
@@ -988,27 +1050,29 @@ function Documents() {
 
                                                         {row.category.is_assignable ? (
                                                             <Button variant="link" size='sm' onClick={e => {
+                                                                let isDisabled = false;
                                                                 if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                                    setIsSelectDisabled(false);
+                                                                    isDisabled = false;
                                                                 } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                                    setIsSelectDisabled(true);
+                                                                    isDisabled = true;
                                                                 } else if (!row.category.is_assignable) {
-                                                                    setIsSelectDisabled(true);
+                                                                    isDisabled = true;
                                                                 }
-                                                                handleShowModal(row);
+                                                                handleShowModal(row, isDisabled);
                                                             }}>
                                                                 <FontAwesomeIcon icon={faShare} className="" />
                                                             </Button>
                                                         ) : !row.category.is_assignable && row.logs.length === 0 ? (
                                                             <Button variant="link" size='sm' onClick={e => {
+                                                                let isDisabled = false;
                                                                 if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                                    setIsSelectDisabled(false);
+                                                                    isDisabled = false;
                                                                 } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                                    setIsSelectDisabled(true);
+                                                                    isDisabled = true;
                                                                 } else if (!row.category.is_assignable) {
-                                                                    setIsSelectDisabled(true);
+                                                                    isDisabled = true;
                                                                 }
-                                                                handleShowModal(row);
+                                                                handleShowModal(row, isDisabled);
                                                             }}>
                                                                 <FontAwesomeIcon icon={faShare} className="" />
                                                             </Button>
@@ -1035,13 +1099,13 @@ function Documents() {
                                     <div>
                                         {data.data.length > 0 && (
                                             <Pagination style={{ float: 'right' }}>
-                                                    <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
-                                                    <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                                <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                                <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
                                                 <Pagination.Item disabled>
-                                                        {`${data.current_page} / ${data.last_page}`}
+                                                    {`${data.current_page} / ${data.last_page}`}
                                                 </Pagination.Item>
-                                                    <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
-                                                    <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                                                <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                                <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
                                             </Pagination>
                                         )}
                                     </div>
@@ -1050,7 +1114,7 @@ function Documents() {
                         )
                     }
                 </Tab>
-                
+
                 <Tab eventKey="releasing" title="Releasing" >
                     {/* {
                         releasingData.data.length === 0 ? (
@@ -1090,14 +1154,32 @@ function Documents() {
                             </Form.Label>
                             <Select
                                 isMulti
+                                styles={{
+                                    multiValue: (base, state) => {
+                                        return state.data.isFixed ? { ...base, backgroundColor: 'chocolate' } : base;
+                                    },
+                                    multiValueLabel: (base, state) => {
+                                        return state.data.isFixed
+                                            ? { ...base, color: 'white', paddingRight: 6 }
+                                            : base;
+                                    },
+                                    multiValueRemove: (base, state) => {
+                                        return state.data.isFixed ? { ...base, display: 'none' } : base;
+                                    },
+                                }}
+                                isClearable={false}
                                 name='assignTo'
                                 options={options}
                                 value={selectedOptions}
                                 onChange={handleUserSelection}
-                                Required
+                                required
                                 isDisabled={isSelectDisabled}
                             />
-                            {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
+                            {
+                                forwardError && (
+                                    <p style={{ color: 'red' }}>{forwardError}</p>
+                                )
+                            }
                         </Col>
                     </Row>
                 </Modal.Body>
@@ -1106,7 +1188,7 @@ function Documents() {
                     <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                         Cancel
                     </Button>
-                    <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={forwardError}>
                         Forward
                     </Button>
                 </Modal.Footer>
