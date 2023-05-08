@@ -40,7 +40,7 @@ import Validator from 'validatorjs';
 function DocumentsUser() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
-    const [data, setData] = useState({ data: [] });
+    const [data, setData] = useState([]);
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [options, setOptions] = useState([]);
@@ -49,8 +49,18 @@ function DocumentsUser() {
     const loaderData = useLoaderData();
     const [activeTab, setActiveTab] = useState('all');
 
-    const [showModalApprove, setShowModalApprove] = useState(false);
-    const [showModalReject, setShowModalReject] = useState(false);
+    const [showModalApprove, setShowModalApprove] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    const [showModalReject, setShowModalReject] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
     const [showModalAction, setShowModalAction] = useState({ //modal variables
         show: false,
         data: null,
@@ -132,17 +142,62 @@ function DocumentsUser() {
     }, [modal, users])
 
     //For Approve Modal
-    const handleCloseApprove = () => setShowModalApprove(false);
-    const handleShowApprove = () => setShowModalApprove(true);
-    const handleApprove = e => {
-        
-  };
-
+    const handleCloseApprove = () => setShowModalApprove({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const handleShowApprove = (data) => setShowModalApprove({ //modal variables
+        show: true,
+        data,
+        isLoading: false
+    });
+    
     //For Reject Modal
-    const handleCloseReject = () => setShowModalReject(false);
-    const handleShowReject = () => setShowModalReject(true);
-    const handleReject = e => {
-        
+    const handleCloseReject = () => setShowModalReject({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const handleShowReject = (data) => setShowModalReject({ //modal variables
+        show: true,
+        data,
+        isLoading: false
+    });
+
+    const handleReject = event => {
+        event.preventDefault();
+
+        let validation = new Validator(formInputs, {
+            comment: 'nullable|string|min:5',
+
+        });
+
+        if (validation.fails()) {
+            setFormErrors({
+                comment: validation.errors.first('comment')
+            });
+            return;
+        } else {
+            setFormErrors({
+                comment: ''
+            });
+        }
+
+        apiClient.post(`/document/${showModalReject.data?.id}/reject`, formInputs).then(response => {
+            navigate('../');
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        });
     };
 
     const handleInputChange = e => {
@@ -162,6 +217,7 @@ function DocumentsUser() {
         data,
         isLoading: false
     });
+
     const handleAction = event => {
             event.preventDefault();
 
@@ -346,27 +402,40 @@ function DocumentsUser() {
         });
     };
 
-    // const handleApprove = event => {
-    //     event.preventDefault();
+    const handleApprove = event => {
+        event.preventDefault();
         
-    //     const formData = new FormData();
-    //     formData.append('comment', comment);
+        let validation = new Validator(formInputs, {
+            comment: 'nullable|string|min:5',
 
-    //     apiClient.post(`/document/${modal.data?.id}/approve`, formData, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data'
-    //         }
-    //     }).then(response => {
-    //         navigate('../');
-    //         Swal.fire({
-    //             title: 'Success',
-    //             text: response.data.message,
-    //             icon: 'success'
-    //         })
-    //     }).catch(error => {
-    //         setIsValid(false);
-    //     });
-    // };
+        });
+
+        if (validation.fails()) {
+            setFormErrors({
+                comment: validation.errors.first('comment')
+            });
+            return;
+        } else {
+            setFormErrors({
+                comment: ''
+            });
+        }
+
+        apiClient.post(`/document/${showModalApprove.data?.id}/approve`, formInputs).then(response => {
+            navigate('../');
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        });
+    };
 
     if (isLoading) {
         return (
@@ -536,35 +605,7 @@ function DocumentsUser() {
                                                                     >
                                                                         <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                     </OverlayTrigger>
-                                                                ) : ((row.assign.length > 0) && (row.assign[0].assigned_id !== null) && (row.logs[0].to_id !== null) && (row.logs.assigned_id === row.logs.to_id) && (row.logs.some(log => log.to_id === log.from_id || log.to_id !== log.from_id)) ?  (
-                                                                        <OverlayTrigger
-                                                                            trigger={['click', 'hover']}
-                                                                            placement="left"
-                                                                            overlay={
-                                                                                <Popover>
-                                                                                    <Popover.Header className="bg-warning text-white">
-                                                                                        Forwarded from
-                                                                                    </Popover.Header>
-                                                                                    <Popover.Body>
-                                                                                        <ListGroup variant="flush">
-                                                                                            {row.logs.map((log, index) => (
-                                                                                                log.to_id !== null && loaderData.id - log.to_id ? (
-                                                                                                    <ListGroupItem
-                                                                                                        variant="warning text-black"
-                                                                                                        key={log.user.profile.id}
-                                                                                                    >
-                                                                                                        {log.user.profile.name}
-                                                                                                    </ListGroupItem>
-                                                                                                ) : null
-                                                                                            ))}
-                                                                                        </ListGroup>
-                                                                                    </Popover.Body>
-                                                                                </Popover>
-                                                                            }
-                                                                        >
-                                                                            <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
-                                                                        </OverlayTrigger>
-                                                                        ) : (row.assign.length > 0) && (row.assign[0].assigned_id !== null) && (row.logs[0].to_id !== null) && (row.logs.some(log => log.to_id !== log.from_id)) ? (
+                                                                ) : ((row.logs.some(log => log.to_id > loaderData.id)) && (row.assign.length > 0) && (row.assign[0].assigned_id !== null) && (row.logs[0].to_id !== null) && (row.logs.assigned_id === row.logs.to_id) && (row.logs.some(log => log.to_id === log.from_id || log.to_id !== log.from_id)) ? (
                                                                         <OverlayTrigger
                                                                             trigger={['click', 'hover']}
                                                                             placement="left"
@@ -576,7 +617,7 @@ function DocumentsUser() {
                                                                                     <Popover.Body>
                                                                                         <ListGroup variant="flush">
                                                                                             {row.logs.map((log, index) => (
-                                                                                                log.to_id !== null && loaderData.id - log.to_id ? (
+                                                                                                log.to_id !== null && loaderData.id - log.to_id && loaderData.id > 1 && log.to_id !== 1? (
                                                                                                     <ListGroupItem
                                                                                                         variant="warning text-black"
                                                                                                         key={log.user.profile.id}
@@ -592,40 +633,40 @@ function DocumentsUser() {
                                                                         >
                                                                             <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
                                                                         </OverlayTrigger>
-                                                                    ) 
-                                                                    : (
-                                                                        row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
-                                                                            <OverlayTrigger
-                                                                                trigger={['click', 'hover']}
-                                                                                placement="left"
-                                                                                overlay={
-                                                                                    <Popover>
-                                                                                        <Popover.Header className="bg-primary text-white">
-                                                                                            Assigned to
-                                                                                        </Popover.Header>
-                                                                                        <Popover.Body>
-                                                                                            <ListGroup variant="flush">
-                                                                                                {row.assign.map((assign, index) => (
+                                                                        ) : (row.logs.some(log => log.to_id < loaderData.id)) && (row.assign.length > 0) && (row.assign[0].assigned_id !== null) && (row.logs[0].to_id !== null) && (row.logs.assigned_id === row.logs.to_id) && (row.logs.some(log => log.to_id === log.from_id || log.to_id !== log.from_id)) ? (
+                                                                        <OverlayTrigger
+                                                                            trigger={['click', 'hover']}
+                                                                            placement="left"
+                                                                            overlay={
+                                                                                <Popover>
+                                                                                    <Popover.Header className="bg-warning text-white">
+                                                                                        Forwarded from
+                                                                                    </Popover.Header>
+                                                                                    <Popover.Body>
+                                                                                        <ListGroup variant="flush">
+                                                                                            {row.logs.map((log, index) => (
+                                                                                                log.to_id !== null && loaderData.id - log.to_id && loaderData.id > 1 && (log.to_id !== 1 || log.to_id === 1) ? (
                                                                                                     <ListGroupItem
-                                                                                                        variant="primary text-black"
-                                                                                                        key={assign.assigned_user.profile.id}
+                                                                                                        variant="warning text-black"
+                                                                                                        key={log.user.profile.id}
                                                                                                     >
-                                                                                                        {assign.assigned_user.profile.name}
+                                                                                                        {log.user.profile.name}
                                                                                                     </ListGroupItem>
-                                                                                                ))}
-                                                                                            </ListGroup>
-                                                                                        </Popover.Body>
-                                                                                    </Popover>
-                                                                                }
-                                                                            >
-                                                                                <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
-                                                                            </OverlayTrigger>
-                                                                        ) : (
+                                                                                                ) : null
+                                                                                            ))}
+                                                                                        </ListGroup>
+                                                                                    </Popover.Body>
+                                                                                </Popover>
+                                                                            }
+                                                                        >
+                                                                            <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
+                                                                        </OverlayTrigger>
+                                                                    ) 
+                                                                     : (
                                                                             <Badge bg="primary">Received</Badge>
                                                                         )
                                                                     )
-                                                                )
-                                                            ) : null}
+                                                                ) : null}
 
 
                                                         </td>
@@ -654,13 +695,13 @@ function DocumentsUser() {
                                                             ) : null} 
 
                                                             {(loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={handleShowApprove}>
+                                                                <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
                                                             ): null}
 
                                                             {(loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={handleShowReject}>
+                                                                <Button variant="link" size='sm' onClick={e => handleShowReject(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
                                                             ): null}
@@ -917,7 +958,7 @@ function DocumentsUser() {
                         </Modal>
 
                         {/* Approve Document Modal*/}
-                        <Modal show={showModalApprove} onHide={handleCloseApprove}>
+                        <Modal show={showModalApprove.show} onHide={handleCloseApprove}>
                             <Modal.Header closeButton>
                             <Modal.Title>Approve Document</Modal.Title>
                             </Modal.Header>
@@ -930,7 +971,11 @@ function DocumentsUser() {
                                     type="text" 
                                     name='comment' 
                                     placeholder="Leave a comment here." 
-                    />
+                                    isInvalid={!!formErrors.comment}
+                                 />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.comment}
+                            </Form.Control.Feedback>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleCloseApprove}>
@@ -943,7 +988,7 @@ function DocumentsUser() {
                         </Modal> 
                         
                         {/* Reject Document Modal*/}
-                        <Modal show={showModalReject} onHide={handleCloseReject}>
+                        <Modal show={showModalReject.show} onHide={handleCloseReject}>
                             <Modal.Header closeButton>
                             <Modal.Title>Reject Document</Modal.Title>
                             </Modal.Header>
@@ -985,7 +1030,7 @@ function DocumentsUser() {
                                     value={formInputs.comment}
                                     placeholder="Leave a comment here."
                                     isInvalid={!!formErrors.comment}
-                            />
+                                />
                             <Form.Control.Feedback type='invalid'>
                                 {formErrors.comment}
                             </Form.Control.Feedback>
@@ -1000,6 +1045,7 @@ function DocumentsUser() {
                             </Modal.Footer>
                         </Modal> 
         </div>
+
     );
 }
 
