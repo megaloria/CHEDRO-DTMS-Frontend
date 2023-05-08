@@ -271,6 +271,7 @@ function Documents() {
 
     const handleSearch = e => {
         e.preventDefault();
+        e.currentTarget.disabled = true;
 
         setIsTableLoading(true);
         apiClient.get(`/document/${activeTab === 'all' ? '' : activeTab}`, {
@@ -359,6 +360,7 @@ function Documents() {
 
     const handleForward = event => {
         event.preventDefault();
+        event.currentTarget.disabled = true;
         const formData = new FormData();
 
         for (let i = 0; i < selectedUsers.length; i++) {

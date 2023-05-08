@@ -111,7 +111,8 @@ function DocumentReceive() {
 
     const handleSubmit = event => {
         event.preventDefault();
-
+        event.currentTarget.querySelector('[type="submit"]').disabled = true;
+        
         let validation = new Validator(formInputs, {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
@@ -209,6 +210,7 @@ function DocumentReceive() {
 
     const handleForward = (event) => {
         event.preventDefault();
+        event.currentTarget.disabled = true;
 
         let validation = new Validator(formInputs, {
             document_type_id: 'required|integer|min:1',
