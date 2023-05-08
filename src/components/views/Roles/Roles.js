@@ -86,6 +86,7 @@ function Roles() {
 
     const handleSubmit = event => {
         event.preventDefault();
+        event.currentTarget.querySelector('[type="submit"]').disabled = true
 
         let validation = new Validator(formInputs, {
             division: 'present|integer|min:1',

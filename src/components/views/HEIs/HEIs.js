@@ -92,6 +92,7 @@ function Heis() {
 
     const handleSubmit = event => {
         event.preventDefault();
+        event.currentTarget.querySelector('[type="submit"]').disabled = true
 
         let validation = new Validator(formInputs, {
             uii: 'required|string',

@@ -87,6 +87,17 @@ function DocumentReceive() {
             if (selectedOptions[i].data.id !== selectedOptions[i].data.role.division.role.user.id) {
                 toDisable.push(selectedOptions[i].data.role.division.role.user.id);
             }
+
+            if (selectedOptions[i].data.role.level !== selectedOptions[i].data.role.division.role.level+1) {
+                for (let j = 0; j < users.length; j++) {
+                    if (
+                        users[j].role.level === selectedOptions[i].data.role.division.role.level+1 &&
+                        users[j].role.division_id === selectedOptions[i].data.role.division.role.division_id
+                    ) {
+                        toDisable.push(users[j].id);
+                    }
+                }
+            }
         }
 
         let newOptions = options.map(opt => {
@@ -111,7 +122,8 @@ function DocumentReceive() {
 
     const handleSubmit = event => {
         event.preventDefault();
-
+        event.currentTarget.querySelector('[type="submit"]').disabled = true;
+        
         let validation = new Validator(formInputs, {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
@@ -209,6 +221,7 @@ function DocumentReceive() {
 
     const handleForward = (event) => {
         event.preventDefault();
+        event.currentTarget.disabled = true;
 
         let validation = new Validator(formInputs, {
             document_type_id: 'required|integer|min:1',
