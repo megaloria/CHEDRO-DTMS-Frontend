@@ -87,6 +87,17 @@ function DocumentReceive() {
             if (selectedOptions[i].data.id !== selectedOptions[i].data.role.division.role.user.id) {
                 toDisable.push(selectedOptions[i].data.role.division.role.user.id);
             }
+
+            if (selectedOptions[i].data.role.level !== selectedOptions[i].data.role.division.role.level+1) {
+                for (let j = 0; j < users.length; j++) {
+                    if (
+                        users[j].role.level === selectedOptions[i].data.role.division.role.level+1 &&
+                        users[j].role.division_id === selectedOptions[i].data.role.division.role.division_id
+                    ) {
+                        toDisable.push(users[j].id);
+                    }
+                }
+            }
         }
 
         let newOptions = options.map(opt => {

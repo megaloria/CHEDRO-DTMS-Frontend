@@ -222,7 +222,19 @@ function Documents() {
                 if (findOption.data.id !== findOption.data.role.division.role.user.id) {
                     toDisable.push(findOption.data.role.division.role.user.id);
                 }
+
+                if (findOption.data.role.level !== findOption.data.role.division.role.level+1) {
+                    for (let j = 0; j < users.length; j++) {
+                        if (
+                            users[j].role.level === findOption.data.role.division.role.level+1 &&
+                            users[j].role.division_id === findOption.data.role.division.role.division_id
+                        ) {
+                            toDisable.push(users[j].id);
+                        }
+                    }
+                }
             }
+
             newOptions = newOptions.map(opt => {
                 if (toDisable.includes(opt.value)) {
                     return {
