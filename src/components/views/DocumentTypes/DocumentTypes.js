@@ -83,7 +83,8 @@ function DocumentTypes() {
 
     const handleSubmit = event => {
         event.preventDefault();
-
+        event.currentTarget.querySelector('[type="submit"]').disabled = true
+        
         let validation = new Validator(formInputs, {
             code: 'required|string|min:4',
             description: 'required|min:3',

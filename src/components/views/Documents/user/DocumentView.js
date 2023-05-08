@@ -187,7 +187,7 @@ function DocumentView() {
 
 
     const handleForward = event => {
-
+        event.currentTarget.disabled = true;
         const formData = new FormData();
 
         for (let i = 0; i < selectedUsers.length; i++) {
