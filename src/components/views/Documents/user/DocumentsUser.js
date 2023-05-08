@@ -40,7 +40,7 @@ import Validator from 'validatorjs';
 function DocumentsUser() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
-    const [data, setData] = useState({ data: [] });
+    const [data, setData] = useState([]);
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [options, setOptions] = useState([]);
@@ -49,8 +49,18 @@ function DocumentsUser() {
     const loaderData = useLoaderData();
     const [activeTab, setActiveTab] = useState('all');
 
-    const [showModalApprove, setShowModalApprove] = useState(false);
-    const [showModalReject, setShowModalReject] = useState(false);
+    const [showModalApprove, setShowModalApprove] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    const [showModalReject, setShowModalReject] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
     const [showModalAction, setShowModalAction] = useState({ //modal variables
         show: false,
         data: null,
@@ -132,17 +142,62 @@ function DocumentsUser() {
     }, [modal, users])
 
     //For Approve Modal
-    const handleCloseApprove = () => setShowModalApprove(false);
-    const handleShowApprove = () => setShowModalApprove(true);
-    const handleApprove = e => {
-        
-  };
-
+    const handleCloseApprove = () => setShowModalApprove({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const handleShowApprove = (data) => setShowModalApprove({ //modal variables
+        show: true,
+        data,
+        isLoading: false
+    });
+    
     //For Reject Modal
-    const handleCloseReject = () => setShowModalReject(false);
-    const handleShowReject = () => setShowModalReject(true);
-    const handleReject = e => {
-        
+    const handleCloseReject = () => setShowModalReject({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const handleShowReject = (data) => setShowModalReject({ //modal variables
+        show: true,
+        data,
+        isLoading: false
+    });
+
+    const handleReject = event => {
+        event.preventDefault();
+
+        let validation = new Validator(formInputs, {
+            comment: 'nullable|string|min:5',
+
+        });
+
+        if (validation.fails()) {
+            setFormErrors({
+                comment: validation.errors.first('comment')
+            });
+            return;
+        } else {
+            setFormErrors({
+                comment: ''
+            });
+        }
+
+        apiClient.post(`/document/${showModalReject.data?.id}/reject`, formInputs).then(response => {
+            navigate('../');
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        });
     };
 
     const handleInputChange = e => {
@@ -162,6 +217,7 @@ function DocumentsUser() {
         data,
         isLoading: false
     });
+
     const handleAction = event => {
             event.preventDefault();
 
@@ -346,27 +402,40 @@ function DocumentsUser() {
         });
     };
 
-    // const handleApprove = event => {
-    //     event.preventDefault();
+    const handleApprove = event => {
+        event.preventDefault();
         
-    //     const formData = new FormData();
-    //     formData.append('comment', comment);
+        let validation = new Validator(formInputs, {
+            comment: 'nullable|string|min:5',
 
-    //     apiClient.post(`/document/${modal.data?.id}/approve`, formData, {
-    //         headers: {
-    //             'Content-Type': 'multipart/form-data'
-    //         }
-    //     }).then(response => {
-    //         navigate('../');
-    //         Swal.fire({
-    //             title: 'Success',
-    //             text: response.data.message,
-    //             icon: 'success'
-    //         })
-    //     }).catch(error => {
-    //         setIsValid(false);
-    //     });
-    // };
+        });
+
+        if (validation.fails()) {
+            setFormErrors({
+                comment: validation.errors.first('comment')
+            });
+            return;
+        } else {
+            setFormErrors({
+                comment: ''
+            });
+        }
+
+        apiClient.post(`/document/${showModalApprove.data?.id}/approve`, formInputs).then(response => {
+            navigate('../');
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        });
+    };
 
     if (isLoading) {
         return (
@@ -625,13 +694,13 @@ function DocumentsUser() {
                                                             ) : null} 
 
                                                             {(loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={handleShowApprove}>
+                                                                <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
                                                             ): null}
 
                                                             {(loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
-                                                                <Button variant="link" size='sm' onClick={handleShowReject}>
+                                                                <Button variant="link" size='sm' onClick={e => handleShowReject(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
                                                             ): null}
@@ -888,7 +957,7 @@ function DocumentsUser() {
                         </Modal>
 
                         {/* Approve Document Modal*/}
-                        <Modal show={showModalApprove} onHide={handleCloseApprove}>
+                        <Modal show={showModalApprove.show} onHide={handleCloseApprove}>
                             <Modal.Header closeButton>
                             <Modal.Title>Approve Document</Modal.Title>
                             </Modal.Header>
@@ -901,7 +970,11 @@ function DocumentsUser() {
                                     type="text" 
                                     name='comment' 
                                     placeholder="Leave a comment here." 
-                    />
+                                    isInvalid={!!formErrors.comment}
+                                 />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.comment}
+                            </Form.Control.Feedback>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleCloseApprove}>
@@ -914,7 +987,7 @@ function DocumentsUser() {
                         </Modal> 
                         
                         {/* Reject Document Modal*/}
-                        <Modal show={showModalReject} onHide={handleCloseReject}>
+                        <Modal show={showModalReject.show} onHide={handleCloseReject}>
                             <Modal.Header closeButton>
                             <Modal.Title>Reject Document</Modal.Title>
                             </Modal.Header>
@@ -956,7 +1029,7 @@ function DocumentsUser() {
                                     value={formInputs.comment}
                                     placeholder="Leave a comment here."
                                     isInvalid={!!formErrors.comment}
-                            />
+                                />
                             <Form.Control.Feedback type='invalid'>
                                 {formErrors.comment}
                             </Form.Control.Feedback>
