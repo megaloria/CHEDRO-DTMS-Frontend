@@ -663,7 +663,7 @@ function DocumentsUser() {
                                                                         </OverlayTrigger>
                                                                     ) 
                                                                      : (
-                                                                            <Badge bg="primary">Received</Badge>
+                                                                            <Badge bg="light">Released</Badge>
                                                                         )
                                                                     )
                                                                 ) : null}

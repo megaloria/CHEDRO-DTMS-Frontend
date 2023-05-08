@@ -1147,7 +1147,7 @@ function Documents() {
                         <Col md={'auto'}>
                             <Form.Label>
                                 {!isSelectDisabled ? (
-                                    <><span className='text-muted'>Forward to</span> :</>
+                                    <><span className=''>Forward to</span> :</>
                                 ) : (
                                     <>Forward to <span className='text-muted'>(Disabled because the document is confidential)</span>:</>
                                 )}
@@ -1156,11 +1156,11 @@ function Documents() {
                                 isMulti
                                 styles={{
                                     multiValue: (base, state) => {
-                                        return state.data.isFixed ? { ...base, backgroundColor: 'chocolate' } : base;
+                                        return state.data.isFixed ? { ...base, backgroundColor:'#e8e8e8 ' } : base;
                                     },
                                     multiValueLabel: (base, state) => {
                                         return state.data.isFixed
-                                            ? { ...base, color: 'white', paddingRight: 6 }
+                                            ? { ...base, color: '#6c757d', paddingRight: 6 }
                                             : base;
                                     },
                                     multiValueRemove: (base, state) => {
