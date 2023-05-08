@@ -468,7 +468,37 @@ function DocumentsUser() {
                                                             </div>
                                                         </td>
                                                         <td>
-                                                            {row.logs.length > 0 ? (
+                                                            {
+                                                                (row.logs.some(log => log.from_id === log.action_id)) ? (
+                                                                    <OverlayTrigger
+                                                                        trigger={['click', 'hover']}
+                                                                        placement="left"
+                                                                        overlay={
+                                                                            <Popover>
+                                                                                <Popover.Header className="bg-warning text-white">
+                                                                                    Acted by
+                                                                                </Popover.Header>
+                                                                                <Popover.Body>
+                                                                                    <ListGroup variant="flush">
+                                                                                        {row.logs.map((log, index) => (
+                                                                                            loaderData.id !== log.action_id ? (
+                                                                                                <ListGroupItem
+                                                                                                    variant="warning text-black"
+                                                                                                    key={log.action_user?.profile.id}
+                                                                                                >
+                                                                                                    {log.action_user?.profile.name}
+                                                                                                </ListGroupItem> 
+                                                                                            ) : null
+                                                                                        ))}
+                                                                                    </ListGroup>
+                                                                                </Popover.Body>
+                                                                            </Popover>
+                                                                        }
+                                                                    >
+                                                                        <Badge bg="success" style={{ cursor: 'pointer' }}>Acted</Badge>
+                                                                    </OverlayTrigger>
+                                                                ) : 
+                                                            row.logs.length > 0 ? (
                                                                 row.logs.some(log => log.acknowledge_id !== null) ? (
                                                                     <OverlayTrigger
                                                                         trigger={['click', 'hover']}
@@ -561,34 +591,6 @@ function DocumentsUser() {
                                                                             }
                                                                         >
                                                                             <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
-                                                                        </OverlayTrigger>
-                                                                    ) : (row.logs.some(log => log.to_id === log.action_id)) ? (
-                                                                        <OverlayTrigger
-                                                                            trigger={['click', 'hover']}
-                                                                            placement="left"
-                                                                            overlay={
-                                                                                <Popover>
-                                                                                    <Popover.Header className="bg-warning text-white">
-                                                                                        Acted by
-                                                                                    </Popover.Header>
-                                                                                    <Popover.Body>
-                                                                                        <ListGroup variant="flush">
-                                                                                            {row.logs.map((log, index) => (
-                                                                                                log.to_id !== null && loaderData.id - log.to_id ? (
-                                                                                                    <ListGroupItem
-                                                                                                        variant="warning text-black"
-                                                                                                        key={log.user.profile.id}
-                                                                                                    >
-                                                                                                        {log.user.profile.name}
-                                                                                                    </ListGroupItem>
-                                                                                                ) : null
-                                                                                            ))}
-                                                                                        </ListGroup>
-                                                                                    </Popover.Body>
-                                                                                </Popover>
-                                                                            }
-                                                                        >
-                                                                            <Badge bg="success" style={{ cursor: 'pointer' }}>Acted</Badge>
                                                                         </OverlayTrigger>
                                                                     ) 
                                                                     : (
