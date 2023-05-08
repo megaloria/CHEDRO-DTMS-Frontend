@@ -516,11 +516,11 @@ function Documents() {
                                                                                         </Popover.Header>
                                                                                         <Popover.Body>
                                                                                             <ListGroup variant="flush">
-                                                                                                {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
+                                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
                                                                                                     <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
                                                                                                         {log?.action_user?.profile?.name}
                                                                                                     </ListGroupItem>
-                                                                                                ))}
+                                                                                                ))} */}
                                                                                             </ListGroup>
                                                                                         </Popover.Body>
                                                                                     </Popover>
@@ -540,11 +540,9 @@ function Documents() {
                                                                                         </Popover.Header>
                                                                                         <Popover.Body>
                                                                                             <ListGroup variant="flush">
-                                                                                                {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
-                                                                                                    <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
-                                                                                                        {log?.action_user?.profile?.name}
+                                                                                                    <ListGroupItem variant="success text-black" >
+                                                                                                        {row.logs[0]?.approved_user?.profile?.name}
                                                                                                     </ListGroupItem>
-                                                                                                ))}
                                                                                             </ListGroup>
                                                                                         </Popover.Body>
                                                                                     </Popover>
@@ -560,21 +558,19 @@ function Documents() {
                                                                                     overlay={
                                                                                         <Popover>
                                                                                             <Popover.Header className="bg-success text-white">
-                                                                                                Acted by
+                                                                                                Rejected by
                                                                                             </Popover.Header>
                                                                                             <Popover.Body>
                                                                                                 <ListGroup variant="flush">
-                                                                                                    {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
-                                                                                                        <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
-                                                                                                            {log?.action_user?.profile?.name}
+                                                                                                        <ListGroupItem variant="success text-black" >
+                                                                                                            {row.logs[0]?.rejected_user?.profile?.name}
                                                                                                         </ListGroupItem>
-                                                                                                    ))}
                                                                                                 </ListGroup>
                                                                                             </Popover.Body>
                                                                                         </Popover>
                                                                                     }
                                                                                 >
-                                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Acted</Badge>
+                                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                                                 </OverlayTrigger>
                                                                             ) :
                                                                         (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null) ? (
@@ -587,12 +583,17 @@ function Documents() {
                                                                                             Acted by
                                                                                         </Popover.Header>
                                                                                         <Popover.Body>
-                                                                                            <ListGroup variant="flush">
+                                                                                            {/* <ListGroup variant="flush">
                                                                                                 {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
                                                                                                     <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
                                                                                                         {log?.action_user?.profile?.name}
                                                                                                     </ListGroupItem>
                                                                                                 ))}
+                                                                                            </ListGroup> */}
+                                                                                            <ListGroup variant="flush">
+                                                                                                <ListGroupItem variant="success text-black" >
+                                                                                                    {row.logs[0]?.action_user?.profile?.name}
+                                                                                                </ListGroupItem>
                                                                                             </ListGroup>
                                                                                         </Popover.Body>
                                                                                     </Popover>
