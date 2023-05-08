@@ -587,7 +587,7 @@ function DocumentsUser() {
                                                                                     <Popover.Body>
                                                                                         <ListGroup variant="flush">
                                                                                             {row.logs.map((log, index) => (
-                                                                                                log.to_id !== null && loaderData.id - log.to_id && log.to_id !== 1 ? (
+                                                                                                log.to_id !== null && loaderData.id - log.to_id && loaderData.id > 1 && log.to_id !== 1? (
                                                                                                     <ListGroupItem
                                                                                                         variant="warning text-black"
                                                                                                         key={log.user.profile.id}
@@ -615,7 +615,7 @@ function DocumentsUser() {
                                                                                     <Popover.Body>
                                                                                         <ListGroup variant="flush">
                                                                                             {row.logs.map((log, index) => (
-                                                                                                log.to_id !== null && loaderData.id - log.to_id && log.to_id !== 1 ? (
+                                                                                                log.to_id !== null && loaderData.id - log.to_id && loaderData.id > 1 && (log.to_id !== 1 || log.to_id === 1) ? (
                                                                                                     <ListGroupItem
                                                                                                         variant="warning text-black"
                                                                                                         key={log.user.profile.id}
