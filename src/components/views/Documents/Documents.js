@@ -1170,11 +1170,11 @@ function Documents() {
                                 isMulti
                                 styles={{
                                     multiValue: (base, state) => {
-                                        return state.data.isFixed ? { ...base, backgroundColor:'#e8e8e8 ' } : base;
+                                        return state.data.isFixed ? { ...base, backgroundColor:'#9d9d9d' } : base;
                                     },
                                     multiValueLabel: (base, state) => {
                                         return state.data.isFixed
-                                            ? { ...base, color: '#6c757d', paddingRight: 6 }
+                                            ? { ...base, color: 'white', paddingRight: 6 }
                                             : base;
                                     },
                                     multiValueRemove: (base, state) => {
