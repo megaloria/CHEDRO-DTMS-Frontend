@@ -18,14 +18,19 @@ import {
     faCheck,
     faTimes
 } from '@fortawesome/free-solid-svg-icons';
+import {
+    useNavigate
+} from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 
 function Category() {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
+    const [isDisabled, setIsDisabled] = useState(false); 
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -55,8 +60,7 @@ function Category() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        event.currentTarget.querySelector('[type="submit"]').disabled = true
-
+        
         let validation = new Validator(formInputs, {
             description: 'required|min:2',
             is_assignable: 'boolean'
@@ -87,6 +91,7 @@ function Category() {
     };
 
     const handleAdd = () => {
+        setIsDisabled(true);
         apiClient.post('/settings/categories', {
             ...formInputs,
             description: formInputs.description,
@@ -96,6 +101,7 @@ function Category() {
                 ...data,
                 response.data.data
             ]);
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -104,6 +110,7 @@ function Category() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -118,6 +125,7 @@ function Category() {
     }
 
     const handleEdit = () => {
+        setIsDisabled(true)
         apiClient.post(`/settings/categories/${modal.data?.id}`, {
             ...formInputs
         }).then(response => {
@@ -128,6 +136,7 @@ function Category() {
                 return {...d};
             })
             setData(newData);
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -136,6 +145,7 @@ function Category() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -207,6 +217,7 @@ function Category() {
                 return apiClient.delete(`/settings/categories/${category.id}`).then(response => {
                     let newData = data.filter(d => d.id !== category.id);
                     setData(newData);
+                    navigate('../');
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -309,7 +320,7 @@ function Category() {
                 backdrop='static'
                 keyboard={false}>
                 <Modal.Header closeButton>
-                    <Modal.Title>{modal.data ? 'Edit' : 'Add'} category</Modal.Title>
+                    <Modal.Title>{modal.data ? 'Edit' : 'Add'} Category</Modal.Title>
                 </Modal.Header>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
@@ -344,8 +355,8 @@ function Category() {
                         <Button 
                         type='submit' 
                         variant='primary' 
-                        disabled={modal.isLoading}>
-                            {modal.data ? 'Edit' : 'Add'}
+                        disabled={modal.isLoading || isDisabled}>
+                        {modal.data ? 'Edit' : 'Add'}
                         </Button>
                     </Modal.Footer>
                 </Form>

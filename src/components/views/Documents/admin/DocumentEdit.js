@@ -37,6 +37,7 @@ function DocumentEdit() {
     const [isNavigationLoading, setIsNavigationLoading] = useState(true);
     const [isOptionLoading, setIsOptionLoading] = useState(false);
     const [isOptionLoading1, setIsOptionLoading1] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
     const [attachment, setAttachment] = useState(null);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [dateReceived, setDateReceived] = useState(moment().format('YYYY-MM-DD'));
@@ -324,7 +325,6 @@ function DocumentEdit() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        event.currentTarget.querySelector('[type="submit"]').disabled = true
 
         let validation = new Validator(formInputs, {
             document_type_id: 'required|integer|min:1',
@@ -380,7 +380,7 @@ function DocumentEdit() {
     };
     
     const handleEdit = () => {
-
+        setIsDisabled(true);
         const formData = new FormData();
 
         if (attachment) {
@@ -406,6 +406,7 @@ function DocumentEdit() {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
+            setIsDisabled(false)
             navigate('../');
             Swal.fire({
                 title: 'Success',
@@ -413,6 +414,7 @@ function DocumentEdit() {
                 icon: 'success'
             })
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -820,7 +822,7 @@ function DocumentEdit() {
                         </Button>
                     </Col>
                     <Col md="auto">
-                        <Button variant="primary" type='submit'>
+                        <Button variant="primary" type='submit' disabled={isDisabled}>
                             Save 
                         </Button>
                     </Col>

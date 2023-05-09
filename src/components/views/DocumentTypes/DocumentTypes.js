@@ -18,6 +18,9 @@ import {
     faAdd,
     faSearch
 } from '@fortawesome/free-solid-svg-icons'
+import {
+    useNavigate
+} from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
@@ -25,11 +28,13 @@ import './styles.css';
 
 
 function DocumentTypes() {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
+    const [isDisabled, setIsDisabled] = useState(false); 
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -83,7 +88,6 @@ function DocumentTypes() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        event.currentTarget.querySelector('[type="submit"]').disabled = true
         
         let validation = new Validator(formInputs, {
             code: 'required|string|min:4',
@@ -121,6 +125,7 @@ function DocumentTypes() {
     };
 
     const handleAdd = () => {
+        setIsDisabled(true)
         apiClient.post('/settings/document-types', {
             ...formInputs
         }).then(response => {
@@ -131,6 +136,7 @@ function DocumentTypes() {
                     response.data.data
                 ]
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -139,6 +145,7 @@ function DocumentTypes() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -153,6 +160,7 @@ function DocumentTypes() {
     }
     
     const handleEdit = () => {
+        setIsDisabled(true)
         apiClient.post(`/settings/document-types/${modal.data?.id}`, {
             ...formInputs
         }).then(response => {
@@ -166,6 +174,7 @@ function DocumentTypes() {
                 ...data,
                 data: newData
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -174,6 +183,7 @@ function DocumentTypes() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -263,6 +273,7 @@ function DocumentTypes() {
                         ...data,
                         data: newData
                     });
+                    navigate('../');
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -447,7 +458,7 @@ function DocumentTypes() {
                         <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                             Cancel
                         </Button>
-                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                        <Button type='submit' variant='primary' disabled={modal.isLoading || isDisabled}>
                             {modal.data ? 'Edit' : 'Add'}
                         </Button>
                     </Modal.Footer>

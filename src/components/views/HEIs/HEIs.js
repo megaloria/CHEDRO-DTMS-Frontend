@@ -18,6 +18,9 @@ import {
     faAdd,
     faSearch
 } from '@fortawesome/free-solid-svg-icons'
+import {
+    useNavigate
+} from 'react-router-dom';
 import Swal from 'sweetalert2';
 import './styles.css';
 import Validator from 'validatorjs';
@@ -25,8 +28,10 @@ import apiClient from '../../../helpers/apiClient';
 import './styles.css';
 
 function Heis() {
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [isDisabled, setIsDisabled] = useState(false); 
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
@@ -92,7 +97,6 @@ function Heis() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        event.currentTarget.querySelector('[type="submit"]').disabled = true
 
         let validation = new Validator(formInputs, {
             uii: 'required|string',
@@ -139,6 +143,7 @@ function Heis() {
     };
 
     const handleAdd = () => {
+        setIsDisabled(true)
         apiClient.post('/settings/heis', {
             ...formInputs
         }).then(response => {
@@ -149,6 +154,7 @@ function Heis() {
                     response.data.data
                 ]
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -157,6 +163,7 @@ function Heis() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -171,6 +178,7 @@ function Heis() {
     }
 
     const handleEdit = () => {
+        setIsDisabled(true)
         apiClient.post(`/settings/heis/${modal.data?.id}`, {
             ...formInputs
         }).then(response => {
@@ -185,6 +193,7 @@ function Heis() {
                 ...data,
                 data: newData
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -193,6 +202,7 @@ function Heis() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -290,6 +300,7 @@ function Heis() {
                         ...data,
                         data: newData
                     });
+                    navigate('../');
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -565,7 +576,7 @@ function Heis() {
                             <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                                 Cancel
                             </Button>
-                            <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                            <Button type='submit' variant='primary' disabled={modal.isLoading || isDisabled}>
                                  {modal.data ? 'Edit' : 'Add'} 
                             </Button>
                         </Modal.Footer>

@@ -41,6 +41,7 @@ function DocumentReceive() {
     const [attachment, setAttachment] = useState(null);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [dateReceived, setDateReceived] = useState(moment().format('YYYY-MM-DD'));
+    const [isDisabled, setIsDisabled] = useState(false);
 
     //Add Receive documents
     const [documentTypes, setDocumentTypes] = useState([]);
@@ -122,7 +123,6 @@ function DocumentReceive() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        event.currentTarget.querySelector('[type="submit"]').disabled = true;
         
         let validation = new Validator(formInputs, {
             document_type_id: 'required|integer|min:1',
@@ -179,6 +179,7 @@ function DocumentReceive() {
 
     const handleAdd = () => {
 
+        setIsDisabled(true);
         const formData = new FormData();
        
         if (attachment) {
@@ -204,25 +205,28 @@ function DocumentReceive() {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
+            setIsDisabled(false)
             navigate('../');
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
-                icon: 'success'
+                icon: 'success',
+                allowOutsideClick: false
             })
         }).catch(error => {
             Swal.fire({
                 title: 'Error',
                 text: error,
-                icon: 'error'
+                icon: 'error',
+                allowOutsideClick: false
             });
         });
     }
 
     const handleForward = (event) => {
         event.preventDefault();
-        event.currentTarget.disabled = true;
-
+        setIsDisabled(true);
+        
         let validation = new Validator(formInputs, {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
@@ -299,6 +303,7 @@ function DocumentReceive() {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
+            setIsDisabled(false);
             navigate('../');
             Swal.fire({
                 title: 'Success',
@@ -306,6 +311,7 @@ function DocumentReceive() {
                 icon: 'success'
             })
         }).catch(error => {
+            setIsDisabled(false);
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -810,7 +816,7 @@ function DocumentReceive() {
                             </Col>
                             
                             <Col md="auto" className="me-2">
-                                <Button type='submit' variant="outline-primary"> 
+                                <Button type='submit' variant="outline-primary" disabled={isDisabled}> 
                                 Receive 
                                 </Button>
                             </Col>
@@ -818,7 +824,7 @@ function DocumentReceive() {
                             <Col md="auto">
                             {selectedCategory && 
                                 (!selectedCategory.is_assignable || selectedUsers.length > 0) &&
-                                    <Button onClick={handleForward} variant="primary"> 
+                                <Button onClick={handleForward} variant="primary" disabled={isDisabled}> 
                                     Forward 
                                     </Button>
                             }

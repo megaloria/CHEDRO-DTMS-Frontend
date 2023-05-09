@@ -46,6 +46,7 @@ function Documents() {
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
     const navigate = useNavigate();
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
 
     const [activeTab, setActiveTab] = useState('all');
 
@@ -283,7 +284,6 @@ function Documents() {
 
     const handleSearch = e => {
         e.preventDefault();
-        e.currentTarget.disabled = true;
 
         setIsTableLoading(true);
         apiClient.get(`/document/${activeTab === 'all' ? '' : activeTab}`, {
@@ -354,6 +354,7 @@ function Documents() {
                         ...data,
                         data: newData
                     });
+                    navigate('../')
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -371,8 +372,8 @@ function Documents() {
     };
 
     const handleForward = event => {
+        setIsDisabled(true)
         event.preventDefault();
-        event.currentTarget.disabled = true;
         const formData = new FormData();
 
         for (let i = 0; i < selectedUsers.length; i++) {
@@ -384,6 +385,7 @@ function Documents() {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
+            setIsDisabled(false)
             navigate('../');
             setIsSelectDisabled(false);
             Swal.fire({
@@ -392,6 +394,7 @@ function Documents() {
                 icon: 'success'
             })
         }).catch(error => {
+            setIsDisabled(false)
             setForwardError(error);
         });
     };
@@ -715,13 +718,12 @@ function Documents() {
 
                                                             {row.category.is_assignable ? (
                                                                 <Button variant="link" size='sm' onClick={e => {
-                                                                    let isDisabled = false;
                                                                     if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                                        isDisabled = false;
+                                                                        setIsSelectDisabled(false);
                                                                     } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                                        isDisabled = true;
+                                                                        setIsSelectDisabled(true);
                                                                     } else if (!row.category.is_assignable) {
-                                                                        isDisabled = true;
+                                                                        setIsSelectDisabled(true);
                                                                     }
                                                                     handleShowModal(row);
                                                                 }}>
@@ -1300,7 +1302,7 @@ function Documents() {
                     <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                         Cancel
                     </Button>
-                    <Button type='submit' variant='primary' onClick={handleForward} disabled={forwardError}>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={forwardError || isDisabled}>
                         Forward
                     </Button>
                 </Modal.Footer>

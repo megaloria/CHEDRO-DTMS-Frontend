@@ -16,14 +16,19 @@ import {
     Alert,
     Spinner
 } from 'react-bootstrap';
+import {
+    useNavigate
+} from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 
 
 function Division() {
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [isDisabled, setIsDisabled] = useState(false); 
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -80,6 +85,7 @@ function Division() {
     };
 
     const handleAdd = () => {
+        setIsDisabled(true)
         apiClient.post('/settings/divisions', {
             ...formInputs,
             division_id: formInputs.division
@@ -88,6 +94,7 @@ function Division() {
                 ...data,
                 response.data.data
             ]);
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -96,6 +103,7 @@ function Division() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -110,6 +118,7 @@ function Division() {
     }
 
     const handleEdit = () => {
+        setIsDisabled(true)
         apiClient.post(`/settings/divisions/${modal.data?.id}`, {
             ...formInputs,
             division_id: formInputs.division
@@ -122,6 +131,7 @@ function Division() {
                 return {...d};
             })
             setData(newData);
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -130,6 +140,7 @@ function Division() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -191,6 +202,7 @@ function Division() {
                 return apiClient.delete(`/settings/divisions/${division.id}`).then(response => {
                     let newData = data.filter(d => d.id !== division.id);
                     setData(newData);
+                    navigate('../')
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -324,7 +336,7 @@ function Division() {
                         <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                             Cancel
                         </Button>
-                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                        <Button type='submit' variant='primary' disabled={modal.isLoading || isDisabled}>
                             {modal.data ? 'Edit' : 'Add'}
                         </Button>
                     </Modal.Footer>

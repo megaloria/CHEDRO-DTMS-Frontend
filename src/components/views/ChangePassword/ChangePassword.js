@@ -28,6 +28,7 @@ const loaderData = useLoaderData();
     
 const[passwordType, setPasswordType] = useState('password')
 const[passwordType1, setPasswordType1] = useState('password')
+const[isDisabled, setIsDisabled] = useState(false)
 const[passwordIcon, setPasswordIcon] = useState(<FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />);
 const[passwordIcon1, setPasswordIcon1] = useState(<FontAwesomeIcon icon={faEyeSlash} className='fa-fw' />);
 const navigate = useNavigate();
@@ -98,6 +99,7 @@ const navigate = useNavigate();
     }
 
     function handleSubmit(e) {
+        
         e.preventDefault();
         let validation = new Validator(values, {
             password: 'required|string|min:8',
@@ -124,11 +126,13 @@ const navigate = useNavigate();
     }
 
     const handleChangePass = () => {
+        setIsDisabled(true)
         apiClient.post('/user/change-password', {
             password: values.password,
             new_password: values.new_password,
             confirm_password: values.confirm_password
         }).then(response => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -137,6 +141,7 @@ const navigate = useNavigate();
                 navigate('/')
             })
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -216,7 +221,8 @@ const navigate = useNavigate();
                                     <div className='d-grid gap-2'>
                                         <Button
                                             type='submit'
-                                            variant='primary'> Save
+                                            variant='primary'
+                                            disabled={isDisabled}> Save
                                         </Button>
                                        
                                         {loaderData.is_first_login ? null : (
