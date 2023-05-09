@@ -601,7 +601,7 @@ function DocumentsUser() {
                                                                                 >
                                                                                     <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                                 </OverlayTrigger>
-                                                                            ) : row.logs.some(log => log.to_id !== null) ? (
+                                                                            ) : row.logs.some(log => loaderData.id === log.from_id) ? (
                                                                                 <OverlayTrigger
                                                                                     trigger={['click', 'hover']}
                                                                                     placement="left"
@@ -613,7 +613,7 @@ function DocumentsUser() {
                                                                                             <Popover.Body>
                                                                                                 <ListGroup variant="flush">
                                                                                                     {row.logs.map((log, index) => (
-                                                                                                        log.to_id !== null ? (
+                                                                                                        (loaderData.id === log.from_id) ? (
                                                                                                             <ListGroupItem
                                                                                                                 variant="warning text-black"
                                                                                                                 key={log.user.profile.id}
@@ -628,6 +628,27 @@ function DocumentsUser() {
                                                                                     }
                                                                                 >
                                                                                     <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
+                                                                                </OverlayTrigger>
+                                                                            ) : row.logs.some(log => loaderData.id === log.to_id) ? (
+                                                                                <OverlayTrigger
+                                                                                    trigger={['click', 'hover']}
+                                                                                    placement="left"
+                                                                                    overlay={
+                                                                                        <Popover>
+                                                                                            <Popover.Header className="bg-warning text-white">
+                                                                                                Forwarded from
+                                                                                            </Popover.Header>
+                                                                                            <Popover.Body>
+                                                                                                <ListGroup variant="flush">
+                                                                                                    <ListGroupItem>
+                                                                                                        {row.logs[0].from_user.profile.name}
+                                                                                                    </ListGroupItem>
+                                                                                                </ListGroup>
+                                                                                            </Popover.Body>
+                                                                                        </Popover>
+                                                                                    }
+                                                                                >
+                                                                                    <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
                                                                                 </OverlayTrigger>
                                                                             ) : (
                                                                                 <Badge bg="primary">Received</Badge>
