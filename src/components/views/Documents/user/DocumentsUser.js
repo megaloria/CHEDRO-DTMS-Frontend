@@ -674,7 +674,7 @@ function DocumentsUser() {
                                                                 </Button>
                                                             ) : null}
 
-                                                            {(row.logs[0].to_id === row.logs.assigned_id && row.logs[0].acknowledge_id !== null) ? (
+                                                            {(row.logs[0].to_id === row.logs.assigned_id && row.logs[0].acknowledge_id !== null) || (row.logs[0].assigned_id === row.logs.from_id && row.logs[0].acknowledge_id !== null) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
                                                                         <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                                                                     </Button>
