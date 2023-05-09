@@ -28,7 +28,7 @@ import {
     faSearch,
     faThumbsDown,
     faUserCheck,
-    faFilePen
+    faFileCircleCheck
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './../styles.css';
@@ -614,7 +614,7 @@ function DocumentsUser() {
                                                                                 >
                                                                                     <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                                 </OverlayTrigger>
-                                                                            ) : row.logs.some(log => log.to_id !== null) ? (
+                                                                            ) : row.logs.some(log => loaderData.id === log.from_id) ? (
                                                                                 <OverlayTrigger
                                                                                     trigger={['click', 'hover']}
                                                                                     placement="left"
@@ -626,7 +626,7 @@ function DocumentsUser() {
                                                                                             <Popover.Body>
                                                                                                 <ListGroup variant="flush">
                                                                                                     {row.logs.map((log, index) => (
-                                                                                                        log.to_id !== null ? (
+                                                                                                        (loaderData.id === log.from_id) ? (
                                                                                                             <ListGroupItem
                                                                                                                 variant="warning text-black"
                                                                                                                 key={log.user.profile.id}
@@ -642,8 +642,29 @@ function DocumentsUser() {
                                                                                 >
                                                                                     <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
                                                                                 </OverlayTrigger>
+                                                                            ) : row.logs.some(log => loaderData.id === log.to_id) ? (
+                                                                                <OverlayTrigger
+                                                                                    trigger={['click', 'hover']}
+                                                                                    placement="left"
+                                                                                    overlay={
+                                                                                        <Popover>
+                                                                                            <Popover.Header className="bg-warning text-white">
+                                                                                                Forwarded from
+                                                                                            </Popover.Header>
+                                                                                            <Popover.Body>
+                                                                                                <ListGroup variant="flush">
+                                                                                                    <ListGroupItem>
+                                                                                                        {row.logs[0].from_user.profile.name}
+                                                                                                    </ListGroupItem>
+                                                                                                </ListGroup>
+                                                                                            </Popover.Body>
+                                                                                        </Popover>
+                                                                                    }
+                                                                                >
+                                                                                    <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
+                                                                                </OverlayTrigger>
                                                                             ) : (
-                                                                                <Badge bg="primary">Received</Badge>
+                                                                                null
                                                                             )}
                                                                 </>
                                                             ) : row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
@@ -672,7 +693,7 @@ function DocumentsUser() {
                                                                 >
                                                                     <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
                                                                 </OverlayTrigger>
-                                                            ) : <Badge bg="primary">Received</Badge>}
+                                                            ) : <Badge bg="secondary">Released</Badge>}
                                                         </td>
 
                                                         <td style={{ whiteSpace: 'nowrap' }}>
@@ -680,15 +701,16 @@ function DocumentsUser() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                             </Button>
 
-                                                            {row.logs.every(log => log.acknowledge_id !== loaderData.id) && row.logs.some(log => log.to_id === loaderData.id) ? (
+                                                            {
+                                                            (row.assign[0].assigned_id === loaderData.id) || (row.logs[0].to_id === loaderData.id && row.logs[0].action_id !== null )  ? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                     <FontAwesomeIcon icon={faUserCheck} className='text-success' />
                                                                 </Button>
                                                             ) : null}
 
-                                                            {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                            {(row.logs[0].to_id === row.logs.assigned_id && row.logs[0].acknowledge_id !== null) || (row.logs[0].assigned_id === row.logs.from_id && row.logs[0].acknowledge_id !== null) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
-                                                                        <FontAwesomeIcon icon={faFilePen} className='text-success' />
+                                                                        <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                                                                     </Button>
                                                             ) : null} 
 
@@ -869,7 +891,7 @@ function DocumentsUser() {
                                                                     
                                                         {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
-                                                                        <FontAwesomeIcon icon={faFilePen} className='text-success' />
+                                                                        <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                                                                     </Button>
                                                             ) : null} 
 
