@@ -28,7 +28,7 @@ import {
     faSearch,
     faThumbsDown,
     faUserCheck,
-    faFilePen
+    faFileCircleCheck
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './../styles.css';
@@ -630,7 +630,7 @@ function DocumentsUser() {
                                                                                     <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
                                                                                 </OverlayTrigger>
                                                                             ) : (
-                                                                                <Badge bg="primary">Received</Badge>
+                                                                                null
                                                                             )}
                                                                 </>
                                                             ) : row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
@@ -659,7 +659,7 @@ function DocumentsUser() {
                                                                 >
                                                                     <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
                                                                 </OverlayTrigger>
-                                                            ) : <Badge bg="primary">Received</Badge>}
+                                                            ) : <Badge bg="secondary">Released</Badge>}
                                                         </td>
 
                                                         <td style={{ whiteSpace: 'nowrap' }}>
@@ -675,7 +675,7 @@ function DocumentsUser() {
 
                                                             {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
-                                                                        <FontAwesomeIcon icon={faFilePen} className='text-success' />
+                                                                        <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                                                                     </Button>
                                                             ) : null} 
 
@@ -856,7 +856,7 @@ function DocumentsUser() {
                                                                     
                                                         {row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
-                                                                        <FontAwesomeIcon icon={faFilePen} className='text-success' />
+                                                                        <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                                                                     </Button>
                                                             ) : null} 
 
