@@ -689,31 +689,31 @@ function DocumentsUser() {
                                                             </Button>
                                                         
                                                             {
-                                                            (row.assign[0].assigned_id === loaderData.id) || (row.logs[0].to_id === loaderData.id && row.logs[0].action_id !== null ) ? (
+                                                            (((row.assign[0].assigned_id === loaderData.id) && (row.logs[0].to_id === loaderData.id)) || (row.logs[0].to_id === loaderData.id && row.logs[0].action_id !== null)) ? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                     <FontAwesomeIcon icon={faUserCheck} className='text-success' />
                                                                 </Button>
                                                             ) : 
 
-                                                            (row.logs[0].to_id === row.logs.assigned_id && row.logs[0].acknowledge_id !== null) || (row.logs[0].assigned_id === row.logs.from_id && row.logs[0].acknowledge_id !== null) ? (
+                                                            ((row.logs[0].to_id === row.logs[0].assigned_id && row.logs[0].acknowledge_id !== null) || (row.logs[0].assigned_id === row.logs[0].from_id && row.logs[0].acknowledge_id !== null)) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
                                                                         <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                                                                     </Button>
                                                             ) :  
 
-                                                            row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) && options.length > 0 ? (
+                                                            ((row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) && options.length > 0)) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
                                                                         <FontAwesomeIcon icon={faShare} />
                                                                     </Button>
                                                             ) : 
 
-                                                            (loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                            (row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id)) ? (
                                                                 <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsUp}/>
                                                                 </Button>
                                                             ): 
 
-                                                            (loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) ? (
+                                                            ((loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id)) ? (
                                                                 <Button variant="link" size='sm' onClick={e => handleShowReject(row)}>
                                                                     <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
                                                                 </Button>
