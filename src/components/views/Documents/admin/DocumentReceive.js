@@ -214,6 +214,7 @@ function DocumentReceive() {
                 allowOutsideClick: false
             })
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
