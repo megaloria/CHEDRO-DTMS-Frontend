@@ -39,6 +39,7 @@ import Validator from 'validatorjs';
 
 function DocumentsUser() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [isDisabled, setIsDisabled] = useState(false); 
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]);
     const [users, setUsers] = useState([]);
@@ -166,6 +167,7 @@ function DocumentsUser() {
     });
 
     const handleReject = event => {
+        setIsDisabled(true)
         event.preventDefault();
 
         let validation = new Validator(formInputs, {
@@ -185,6 +187,7 @@ function DocumentsUser() {
         }
 
         apiClient.post(`/document/${showModalReject.data?.id}/reject`, formInputs).then(response => {
+            setIsDisabled(false)
             navigate('../');
             Swal.fire({
                 title: 'Success',
@@ -192,6 +195,7 @@ function DocumentsUser() {
                 icon: 'success'
             })
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -219,6 +223,7 @@ function DocumentsUser() {
     });
 
     const handleAction = event => {
+            setIsDisabled(true)
             event.preventDefault();
 
             let validation = new Validator(formInputs, {
@@ -238,6 +243,7 @@ function DocumentsUser() {
             }
             
             apiClient.post(`/document/${showModalAction.data?.id}/action`, formInputs).then(response => {
+                setIsDisabled(false)
                 navigate('../');
                 Swal.fire({
                     title: 'Success',
@@ -245,6 +251,7 @@ function DocumentsUser() {
                     icon: 'success'
                 })
             }).catch(error => {
+                setIsDisabled(false)
                 Swal.fire({
                     title: 'Error',
                     text: error,
@@ -379,6 +386,7 @@ function DocumentsUser() {
 
 
     const handleForward = event => {
+        setIsDisabled(true)
         event.preventDefault();
         const formData = new FormData();
 
@@ -391,6 +399,7 @@ function DocumentsUser() {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
+            setIsDisabled(false)
             navigate('../');
             Swal.fire({
                 title: 'Success',
@@ -398,11 +407,13 @@ function DocumentsUser() {
                 icon: 'success'
             })
         }).catch(error => {
+            setIsDisabled(false)
             setIsValid(false);
         });
     };
 
     const handleApprove = event => {
+        setIsDisabled(true)
         event.preventDefault();
         
         let validation = new Validator(formInputs, {
@@ -422,6 +433,7 @@ function DocumentsUser() {
         }
 
         apiClient.post(`/document/${showModalApprove.data?.id}/approve`, formInputs).then(response => {
+            setIsDisabled(false)
             navigate('../');
             Swal.fire({
                 title: 'Success',
@@ -429,6 +441,7 @@ function DocumentsUser() {
                 icon: 'success'
             })
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -969,7 +982,7 @@ function DocumentsUser() {
                                 <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                                     Cancel
                                 </Button>
-                                <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
+                                <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid || isDisabled}>
                                     Forward
                                 </Button>
                             </Modal.Footer>
@@ -999,7 +1012,7 @@ function DocumentsUser() {
                                 <Button variant="secondary" onClick={handleCloseApprove}>
                                 Cancel
                                 </Button>
-                                <Button variant="primary" onClick={handleApprove}>
+                                <Button variant="primary" onClick={handleApprove} disabled={isDisabled}>
                                 Approve
                                 </Button>
                             </Modal.Footer>
@@ -1025,7 +1038,7 @@ function DocumentsUser() {
                                 <Button variant="secondary" onClick={handleCloseReject}>
                                 Cancel
                                 </Button>
-                                <Button variant="danger" onClick={handleReject}>
+                                <Button variant="danger" onClick={handleReject} disabled={isDisabled}>
                                 Reject
                                 </Button>
                             </Modal.Footer>
@@ -1057,7 +1070,7 @@ function DocumentsUser() {
                                 <Button variant="secondary" onClick={handleCloseAction}>
                                 Cancel
                                 </Button>
-                                <Button type='submit' variant="primary" onClick={handleAction}>
+                                <Button type='submit' variant="primary" onClick={handleAction} disabled={isDisabled}>
                                 Confirm
                                 </Button>
                             </Modal.Footer>

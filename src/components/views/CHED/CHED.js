@@ -18,15 +18,20 @@ import {
     faAdd,
     faSearch
 } from '@fortawesome/free-solid-svg-icons'
+import {
+    useNavigate
+} from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 import './styles.css';
 
 function CHED() {
+    const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [isDisabled, setIsDisabled] = useState(false); 
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
@@ -115,6 +120,7 @@ function CHED() {
     };
 
     const handleAdd = () => {
+        setIsDisabled(true)
         apiClient.post('/settings/ched-offices', {
             ...formInputs
         }).then(response => {
@@ -125,6 +131,7 @@ function CHED() {
                     response.data.data
                 ]
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -133,6 +140,7 @@ function CHED() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -147,6 +155,7 @@ function CHED() {
     }
 
     const handleEdit = () => {
+        setIsDisabled(true)
         apiClient.post(`/settings/ched-offices/${modal.data?.id}`, {
             ...formInputs
         }).then(response => {
@@ -161,6 +170,7 @@ function CHED() {
                 ...data,
                 data: newData
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -169,6 +179,7 @@ function CHED() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -258,6 +269,7 @@ function CHED() {
                         ...data,
                         data: newData
                     });
+                    navigate('../');
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -449,7 +461,7 @@ function CHED() {
                         <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                             Cancel
                         </Button>
-                        <Button type='submit' variant='primary' disabled={modal.isLoading}>
+                        <Button type='submit' variant='primary' disabled={modal.isLoading || isDisabled}>
                             {modal.data ? 'Edit' : 'Add'}
                         </Button>
                     </Modal.Footer>

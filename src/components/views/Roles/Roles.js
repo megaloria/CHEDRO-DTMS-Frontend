@@ -18,6 +18,9 @@ import {
     faAdd,
     faSearch
 } from '@fortawesome/free-solid-svg-icons';
+import {
+    useNavigate
+} from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
@@ -25,7 +28,9 @@ import './styles.css';
 
 
 function Roles() {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [isDisabled, setIsDisabled] = useState(false); 
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
     const [divisions, setDivisions] = useState([]); //division variable
@@ -86,7 +91,6 @@ function Roles() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        event.currentTarget.querySelector('[type="submit"]').disabled = true
 
         let validation = new Validator(formInputs, {
             division: 'present|integer|min:1',
@@ -121,6 +125,7 @@ function Roles() {
     };
 
     const handleAdd = () => {
+        setIsDisabled(true)
         apiClient.post('/settings/roles', {
             ...formInputs,
             division_id: formInputs.division
@@ -132,6 +137,7 @@ function Roles() {
                     response.data.data
                 ]
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -140,6 +146,7 @@ function Roles() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -154,6 +161,7 @@ function Roles() {
     }
 
     const handleEdit = () => {
+        setIsDisabled(true)
         apiClient.post(`/settings/roles/${modal.data?.id}`, {
             ...formInputs,
             division_id: formInputs.division
@@ -169,6 +177,7 @@ function Roles() {
                 ...data,
                 data: newData
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -177,6 +186,7 @@ function Roles() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -272,6 +282,7 @@ function Roles() {
                         ...data,
                         data: newData
                     });
+                    navigate('../');
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -459,7 +470,7 @@ function Roles() {
                         <Button 
                         type='submit' 
                         variant='primary' 
-                        disabled={modal.isLoading}>
+                        disabled={modal.isLoading || isDisabled}>
                             {modal.data ? 'Edit' : 'Add'}
                         </Button>
                     </Modal.Footer>

@@ -21,14 +21,16 @@ import {
     faSearch
 } from '@fortawesome/free-solid-svg-icons';
 import {
-    useRouteLoaderData
+    useRouteLoaderData, useNavigate
 } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import Validator from 'validatorjs';
 import apiClient from '../../../helpers/apiClient';
 
 function Users() {
+    const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true); //loading variable
+    const [isDisabled, setIsDisabled] = useState(false); 
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
     const [roles, setRoles] = useState([]); //user variable
@@ -103,7 +105,6 @@ function Users() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        event.currentTarget.querySelector('[type="submit"]').disabled = true
 
         let validation = new Validator(formInputs, {
             username: 'required|string|min:1',
@@ -156,6 +157,7 @@ function Users() {
     };
 
     const handleAdd = () => {
+        setIsDisabled(true)
         apiClient.post('/users', {
             ...formInputs,
       
@@ -167,6 +169,7 @@ function Users() {
                     response.data.data
                 ]
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -175,6 +178,7 @@ function Users() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -189,6 +193,7 @@ function Users() {
     }
 
     const handleEdit = () => {
+        setIsDisabled(true)
         apiClient.post(`/users/${modal.data?.id}`, {
             ...formInputs,
         }).then(response => {
@@ -203,6 +208,7 @@ function Users() {
                 ...data,
                 data: newData
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -211,6 +217,7 @@ function Users() {
                 handleHideModal();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -331,6 +338,7 @@ function Users() {
     };
 
     const handleReset = () => {
+        setIsDisabled(true)
         apiClient.post(`/users/${modalReset.data?.id}/reset`, {
             ...formInputPass,
         }).then(response => {
@@ -345,6 +353,7 @@ function Users() {
                 ...data,
                 data: newData
             });
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -353,6 +362,7 @@ function Users() {
                 handleHidemodalReset();
             });
         }).catch(error => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
@@ -422,6 +432,7 @@ function Users() {
                         ...data,
                         data: newData
                     });
+                    navigate('../')
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -754,7 +765,7 @@ function Users() {
                             <Button 
                                 type='submit'
                                 variant='primary' 
-                                disabled={modal.isLoading}>
+                                disabled={modal.isLoading || isDisabled}>
                                     {modal.data ? 'Edit' : 'Add'}
                             </Button>
                         </Modal.Footer>
@@ -798,7 +809,7 @@ function Users() {
                                 <Button 
                                     type='submit'
                                     variant='primary'
-                                    disabled={modalReset.isLoading}>
+                                    disabled={modalReset.isLoading || isDisabled}>
                                        Reset
                                 </Button>
                             </Modal.Footer>
