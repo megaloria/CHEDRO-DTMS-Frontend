@@ -667,7 +667,8 @@ function DocumentsUser() {
                                                                 <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                             </Button>
 
-                                                            {row.logs.every(log => log.acknowledge_id !== loaderData.id) && row.logs.some(log => log.to_id === loaderData.id) ? (
+                                                            {
+                                                            (row.assign[0].assigned_id === loaderData.id) || (row.logs[0].to_id === loaderData.id && row.logs[0].action_id !== null )  ? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                     <FontAwesomeIcon icon={faUserCheck} className='text-success' />
                                                                 </Button>
