@@ -714,34 +714,26 @@ function DocumentsUser() {
                                                             </Button>
                                                         
                                                             {
-                                                            (row.logs.filter(log  => log.assigned_id === loaderData.id && log.to_id === loaderData.id) && row.logs[0].acknowledge_id === null) ? (
-                                                                <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                                    <FontAwesomeIcon icon={faUserCheck} className='text-success' />
-                                                                </Button>
-                                                            ) : 
-
-                                                            (row.logs.filter(log => log.assigned_id === loaderData.id)) ? (
+                                                                (row.logs_grouped[loaderData.id][0].to_id === loaderData.id && row.logs_grouped[loaderData.id][0].acknowledge_id === null) ? (
+                                                                    <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
+                                                                        <FontAwesomeIcon icon={faUserCheck} className='text-success' />
+                                                                    </Button>
+                                                                ) : 
+                                                                (row.logs_grouped[loaderData.id][0].acknowledge_id === loaderData.id) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
                                                                         <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                                                                     </Button>
-
-                                                                        // ((row.logs[0].to_id === row.assign.some(assign => assign.assigned_id === loaderData.id) && row.logs[0].acknowledge_id !== null) || (row.assign.some(assign => assign.assigned_id === loaderData.id) === row.logs[0].from_id && row.logs[0].acknowledge_id !== null)) ? (
-                                                                        //     <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
-                                                                        //         <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
-                                                                        //     </Button>
-                                                            ) :  
-                                                                
-                                                            (row.logs.filter(log => log.acknowledged_id === loaderData.id) && options.length > 0) ? (
+                                                                ) :  
+                                                                ((row.logs_grouped[loaderData.id][0].assigned_id === loaderData.id && row.logs_grouped[loaderData.id][0].acknowledge_id === loaderData.id) && options.length > 0) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
                                                                         <FontAwesomeIcon icon={faShare} />
                                                                     </Button>
-                                                            ) : 
-
-                                                            ((row.logs[0].acknowledge_id === loaderData.id && row.logs[0].action_id !== null)) ? (
-                                                                <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
-                                                                    <FontAwesomeIcon icon={faThumbsUp}/>
-                                                                </Button>
-                                                            ): 
+                                                                ) : 
+                                                                ((row.logs[0].acknowledge_id === loaderData.id && row.logs[0].action_id !== null)) ? (
+                                                                    <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
+                                                                        <FontAwesomeIcon icon={faThumbsUp}/>
+                                                                    </Button>
+                                                                ): 
 
                                                             ((loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id)) ? (
                                                                 <Button variant="link" size='sm' onClick={e => handleShowReject(row)}>
