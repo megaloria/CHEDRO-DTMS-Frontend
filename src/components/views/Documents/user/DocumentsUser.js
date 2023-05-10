@@ -588,16 +588,19 @@ function DocumentsUser() {
                                                                                             </Popover.Header>
                                                                                             <Popover.Body>
                                                                                                 <ListGroup variant="flush">
-                                                                                                    {Array.from(new Set(row.logs.map(log => log.acknowledge_user && log.acknowledge_user.profile.name)))
-                                                                                                        .filter(name => name !== null)
-                                                                                                        .map(name => (
-                                                                                                            <ListGroupItem className="custom-badge text-white" style={{ cursor: 'pointer' }} key={name}>
-                                                                                                                {name}
+                                                                                                    {row.logs.map((log, index) => (
+                                                                                                        (loaderData.id === log.acknowledge_id && loaderData.id === log.assigned_id) ? (
+                                                                                                            <ListGroupItem
+                                                                                                                className="custom-badge text-white"
+                                                                                                                key={log.acknowledge_user.profile.id}
+                                                                                                            >
+                                                                                                                {log.acknowledge_user.profile.name}
                                                                                                             </ListGroupItem>
-                                                                                                        ))}
+                                                                                                        ) : null
+                                                                                                    ))}
                                                                                                 </ListGroup>
 
-                                                                                                {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
+                                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
                                                                                                     <div>Forwarded To:</div>
                                                                                                 )}
                                                                                                 <ListGroup variant="flush">
@@ -606,7 +609,7 @@ function DocumentsUser() {
                                                                                                             {log?.user?.profile?.name}
                                                                                                         </ListGroupItem>
                                                                                                     ))}
-                                                                                                </ListGroup>
+                                                                                                </ListGroup> */}
 
                                                                                             </Popover.Body>
                                                                                         </Popover>
@@ -654,7 +657,16 @@ function DocumentsUser() {
                                                                                             <Popover.Body>
                                                                                                 <ListGroup variant="flush">
                                                                                                     <ListGroupItem>
-                                                                                                        {row.logs[0].from_user.profile.name}
+                                                                                                        {row.logs.map((log, index) => (
+                                                                                                            (loaderData.id === log.to_id) ? (
+                                                                                                                <ListGroupItem
+                                                                                                                    variant="warning text-black"
+                                                                                                                    key={log.from_user.profile.id}
+                                                                                                                >
+                                                                                                                    {log.from_user.profile.name}
+                                                                                                                </ListGroupItem>
+                                                                                                            ) : null
+                                                                                                        ))}
                                                                                                     </ListGroupItem>
                                                                                                 </ListGroup>
                                                                                             </Popover.Body>
@@ -702,13 +714,13 @@ function DocumentsUser() {
                                                             </Button>
                                                         
                                                             {
-                                                            (((row.assign[0].assigned_id === loaderData.id) && (row.logs[0].to_id === loaderData.id)) || (row.logs[0].to_id === loaderData.id && row.logs[0].action_id !== null)) ? (
+                                                            (row.logs.filter(log  => log.assigned_id === loaderData.id && log.to_id === loaderData.id) && row.logs[0].acknowledge_id === null) ? (
                                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                                     <FontAwesomeIcon icon={faUserCheck} className='text-success' />
                                                                 </Button>
                                                             ) : 
 
-                                                            ((row.logs[0].to_id === row.assign[0].assigned_id && row.logs[0].acknowledge_id !== null) || (row.logs[0].assigned_id === row.logs[0].from_id && row.logs[0].acknowledge_id !== null)) ? (
+                                                            (row.logs.filter(log => log.assigned_id === loaderData.id)) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
                                                                         <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                                                                     </Button>
@@ -718,8 +730,8 @@ function DocumentsUser() {
                                                                         //         <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                                                                         //     </Button>
                                                             ) :  
-
-                                                            ((row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id) && options.length > 0)) ? (
+                                                                
+                                                            (row.logs.filter(log => log.acknowledged_id === loaderData.id) && options.length > 0) ? (
                                                                     <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
                                                                         <FontAwesomeIcon icon={faShare} />
                                                                     </Button>
