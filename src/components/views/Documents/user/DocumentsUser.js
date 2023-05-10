@@ -450,6 +450,60 @@ function DocumentsUser() {
         });
     };
 
+    const renderButtons = row => {
+        let groupedLogs = [];
+        for (let id in row.logs_grouped) {
+            let hasUser = row.logs_grouped[id].filter(lg => lg.to_id === loaderData.id);
+            if (hasUser.length > 0) {
+                groupedLogs = [...row.logs_grouped[id]];
+                break;
+            }
+        }
+
+        let indexOfLatestForward = groupedLogs.findIndex(log => log.to_id === loaderData.id);
+        let indexOfLatestAcknowledge = groupedLogs.findIndex(log => log.acknowledge_id === loaderData.id);
+        let actionLog = groupedLogs.find(log => log.action_id !== null);
+
+        return (
+            <>
+                {
+                    (indexOfLatestForward !== -1 && (indexOfLatestAcknowledge === -1 || indexOfLatestAcknowledge > indexOfLatestForward)) ? (
+                        <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
+                            <FontAwesomeIcon icon={faUserCheck} className='text-success' />
+                        </Button>
+                    ) : (indexOfLatestForward !== -1 && indexOfLatestAcknowledge !== -1 && indexOfLatestAcknowledge < indexOfLatestForward && !actionLog) ? (
+                        <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
+                            <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
+                        </Button>
+                    ) : null
+                }
+                {
+                    ((groupedLogs[0].assigned_id === loaderData.id && groupedLogs[0]?.acknowledge_id === loaderData.id) && (groupedLogs[0].assigned_id === loaderData.id) && users.length > 0) ? (
+                        <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
+                            <FontAwesomeIcon icon={faShare} />
+                        </Button>
+                    ) : null
+                }
+
+                {
+                    ((row.logs[0].acknowledge_id === loaderData.id && row.logs[0].action_id !== null)) ? (
+                        <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
+                            <FontAwesomeIcon icon={faThumbsUp} />
+                        </Button>
+                    ) : null
+                }
+
+                {
+                    ((loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id)) ? (
+                        <Button variant="link" size='sm' onClick={e => handleShowReject(row)}>
+                            <FontAwesomeIcon icon={faThumbsDown} className='text-danger' />
+                        </Button>
+                    ) : null
+                }
+            </>
+        )
+    }
+
     if (isLoading) {
         return (
             <Spinner animation='border' />
@@ -712,40 +766,8 @@ function DocumentsUser() {
                                                             <Button className='me-1' variant="outline-primary" size='sm' as={Link} to={`user-view/${row.id}`} >
                                                                 <FontAwesomeIcon icon={faCircleArrowRight}/> View
                                                             </Button>
-                                                        
-                                                            {
-                                                                (row.logs_grouped[loaderData.id][0].to_id === loaderData.id && row.logs_grouped[loaderData.id][0].acknowledge_id === null) ? (
-                                                                    <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                                        <FontAwesomeIcon icon={faUserCheck} className='text-success' />
-                                                                    </Button>
-                                                                ) : null }
 
-                                                            
-                                                                {(row.logs_grouped[loaderData.id][0].acknowledge_id === loaderData.id) ? (
-                                                                    <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
-                                                                        <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
-                                                                    </Button>
-                                                                ) : null  }
-
-
-                                                                {((row.logs_grouped[loaderData.id][0].assigned_id === loaderData.id && row.logs_grouped[loaderData.id][0].acknowledge_id === loaderData.id) && options.length > 0) ? (
-                                                                    <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
-                                                                        <FontAwesomeIcon icon={faShare} />
-                                                                    </Button>
-                                                                ) : null }
-
-                                                              {  ((row.logs[0].acknowledge_id === loaderData.id && row.logs[0].action_id !== null)) ? (
-                                                                    <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
-                                                                        <FontAwesomeIcon icon={faThumbsUp}/>
-                                                                    </Button>
-                                                                ): null}
-
-                                                            {
-                                                            ((loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id)) ? (
-                                                                <Button variant="link" size='sm' onClick={e => handleShowReject(row)}>
-                                                                    <FontAwesomeIcon icon={faThumbsDown} className='text-danger'/>
-                                                                </Button>
-                                                            ): null}
+                                                            {renderButtons(row)}
                                                           
                                                         </td>
                                                     </tr>
