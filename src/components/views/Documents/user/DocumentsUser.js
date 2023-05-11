@@ -232,6 +232,7 @@ function DocumentsUser() {
             });
     
             if (validation.fails()){
+                setIsDisabled(false)
                 setFormErrors({
                     comment: validation.errors.first('comment')
                 });
@@ -243,8 +244,8 @@ function DocumentsUser() {
             }
             
             apiClient.post(`/document/${showModalAction.data?.id}/action`, formInputs).then(response => {
-                setIsDisabled(false)
                 navigate('../');
+                setIsDisabled(false)
                 Swal.fire({
                     title: 'Success',
                     text: response.data.message,
@@ -460,44 +461,105 @@ function DocumentsUser() {
             }
         }
 
-        let indexOfLatestForward = groupedLogs.findIndex(log => log.to_id === loaderData.id);
+        let indexOfLatestReceive = groupedLogs.findIndex(log => log.to_id === loaderData.id && log.action_id === null);
+        let indexOfLatestReceiveWithAction = groupedLogs.findIndex(log => log.to_id === loaderData.id && log.action_id !== null);
+        let indexOfLatestForward = groupedLogs.findIndex(log => log.from_id === loaderData.id && log.action_id === null);
+        let indexOfLatestForwardWithAction = groupedLogs.findIndex(log => log.from_id === loaderData.id && log.action_id !== null);
         let indexOfLatestAcknowledge = groupedLogs.findIndex(log => log.acknowledge_id === loaderData.id);
+        let indexOfLatestAcknowledgeWithAction = groupedLogs.findIndex(log => log.acknowledge_id === loaderData.id && log.action_id !== null);
+        let indexOfLatestRejected = groupedLogs.findIndex(log => log.to_id !== null && log.rejected_id !== null);
+
+        let indexOfLatestApprovedBy = groupedLogs.findIndex(log => log.approved_id === loaderData.id);
+        let indexOfLatestRejectedBy = groupedLogs.findIndex(log => log.rejected_id === loaderData.id);
         let actionLog = groupedLogs.find(log => log.action_id !== null);
+        let rejected = groupedLogs.find(log => log.action_id === loaderData.id );
+        console.log(groupedLogs, indexOfLatestRejected)
 
         return (
             <>
                 {
-                    (indexOfLatestForward !== -1 && (indexOfLatestAcknowledge === -1 || indexOfLatestAcknowledge > indexOfLatestForward)) ? (
+                    (
+                        (
+                            indexOfLatestReceive !== -1 &&
+                            (
+                                indexOfLatestAcknowledge === -1 ||
+                                (
+                                    indexOfLatestAcknowledge > indexOfLatestRejected &&
+                                    indexOfLatestRejected !== -1 &&
+                                    groupedLogs[indexOfLatestRejected].to_id === loaderData.id
+                                )
+                            )
+                        ) || (
+                            indexOfLatestReceiveWithAction !== -1 &&
+                            (
+                                indexOfLatestAcknowledgeWithAction === -1 ||
+                                indexOfLatestReceiveWithAction < indexOfLatestAcknowledgeWithAction
+                            )
+                        )
+                    ) ? (
                         <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                             <FontAwesomeIcon icon={faUserCheck} className='text-success' />
                         </Button>
-                    ) : (indexOfLatestForward !== -1 && indexOfLatestAcknowledge !== -1 && indexOfLatestAcknowledge < indexOfLatestForward && !actionLog) ? (
-                        <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
-                            <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
-                        </Button>
+                    ) : (
+                        indexOfLatestForward === -1 &&
+                        (
+                            indexOfLatestForwardWithAction === -1 ||
+                            indexOfLatestAcknowledge < indexOfLatestForwardWithAction
+                        ) &&
+                        indexOfLatestReceive !== -1 &&
+                        indexOfLatestAcknowledge !== -1 &&
+                        indexOfLatestAcknowledge < indexOfLatestReceive &&
+                        (
+                            !actionLog ||
+                            indexOfLatestRejected > -1
+                        )
+                    ) ? (
+                        <>
+                            <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
+                                <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
+                            </Button>
+                            {
+                                users.length > 0 && (
+                                    <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
+                                        <FontAwesomeIcon icon={faShare} />
+                                    </Button>
+                                )
+                            }
+                        </>
                     ) : null
                 }
                 {
-                    ((groupedLogs[0].assigned_id === loaderData.id && groupedLogs[0]?.acknowledge_id === loaderData.id) && (groupedLogs[0].assigned_id === loaderData.id) && users.length > 0) ? (
-                        <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
-                            <FontAwesomeIcon icon={faShare} />
-                        </Button>
-                    ) : null
-                }
-
-                {
-                    ((row.logs[0].acknowledge_id === loaderData.id && row.logs[0].action_id !== null)) ? (
-                        <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
-                            <FontAwesomeIcon icon={faThumbsUp} />
-                        </Button>
-                    ) : null
-                }
-
-                {
-                    ((loaderData.role.level === 3 || loaderData.role.level === 2) && row.logs.some(log => log.acknowledge_id !== null && log.acknowledge_id === loaderData.id)) ? (
-                        <Button variant="link" size='sm' onClick={e => handleShowReject(row)}>
-                            <FontAwesomeIcon icon={faThumbsDown} className='text-danger' />
-                        </Button>
+                    (
+                        indexOfLatestReceiveWithAction !== -1 &&
+                        groupedLogs[indexOfLatestReceiveWithAction].rejected_id === null &&
+                        (
+                            (
+                                indexOfLatestApprovedBy === -1 || (
+                                    (
+                                        indexOfLatestApprovedBy < indexOfLatestRejectedBy &&
+                                        indexOfLatestApprovedBy > -1 &&
+                                        indexOfLatestReceiveWithAction < indexOfLatestApprovedBy
+                                    )
+                                )
+                            ) || (
+                                indexOfLatestRejectedBy === -1 || (
+                                    indexOfLatestApprovedBy > indexOfLatestRejectedBy &&
+                                    indexOfLatestRejectedBy > -1 &&
+                                    indexOfLatestReceiveWithAction < indexOfLatestRejectedBy
+                                )
+                            )
+                        ) &&
+                        indexOfLatestAcknowledgeWithAction !== -1 &&
+                        indexOfLatestReceiveWithAction > indexOfLatestAcknowledgeWithAction
+                    ) ? (
+                        <>
+                            <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
+                                <FontAwesomeIcon icon={faThumbsUp} />
+                            </Button>
+                            <Button variant="link" size='sm' onClick={e => handleShowReject(row)}>
+                                <FontAwesomeIcon icon={faThumbsDown} className='text-danger' />
+                            </Button>
+                        </>
                     ) : null
                 }
             </>
@@ -686,9 +748,9 @@ function DocumentsUser() {
                                                                                                         (loaderData.id === log.from_id) ? (
                                                                                                             <ListGroupItem
                                                                                                                 variant="warning text-black"
-                                                                                                                key={log.user.profile.id}
+                                                                                                                key={log.user?.profile.id}
                                                                                                             >
-                                                                                                                {log.user.profile.name}
+                                                                                                                {log.user?.profile.name}
                                                                                                             </ListGroupItem>
                                                                                                         ) : null
                                                                                                     ))}
