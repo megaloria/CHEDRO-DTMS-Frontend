@@ -208,7 +208,7 @@ function DocumentView() {
             Document forwarded to:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name} - {user?.position_designation}
+                    {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
