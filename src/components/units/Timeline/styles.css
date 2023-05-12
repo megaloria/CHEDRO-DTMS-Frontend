@@ -63,6 +63,7 @@
     box-shadow: -1px 1px 1px rgba(0, 0, 0, 0.2);
 }
 .timeline-item-content .tag {
+    margin-top: -5px !important;
     color: #fff;
     background-color: #ffd506 !important;
     font-size: 12px;
@@ -71,11 +72,14 @@
     left: 5px;
     letter-spacing: 1px;
     padding: 5px;
-    position: absolute;
+    
+    /* position: absolute; */
     text-transform: uppercase;
 }
 
 .timeline-item .timeline-item-content .tag {
+    margin-right: -10px;
+    border-radius: 0 5px 0 0;
     left: auto;
     right: 5px;
 }
@@ -120,3 +124,5 @@
     right: auto;
     left: -40px;
 }
+
+
