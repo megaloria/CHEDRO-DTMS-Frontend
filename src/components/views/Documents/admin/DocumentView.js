@@ -89,101 +89,25 @@ function DocumentView() {
     }, [document.id]);
 
     useEffect(() => {
-        let newTimelineData = [];
+        let newTimelineData = document.logs.map(log =>
+            ({
+            text: log.rejected_id !== null && log.from_id === null ? <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]}/> : 
+                    log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} /> :
+                        log.action_id !== null && log.comment !== null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} /> :
+                            log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} /> :
+                                log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} /> : log.to_id === null ? <>Document for Releasing</> : null,
+                date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                category: {
+                    tag: log.assigned_user?.profile.name,
+                    color: '#6dedd4',
+                },
+                circleStyle: {
+                    borderColor: '#e17b77',
+                },
+            })
+        )
 
-        if (document.logs.length > 0 && document.logs.some(log => log.rejected_id !== null)) {
-            newTimelineData = newTimelineData.concat(
-                document.logs
-                    .filter(log => log.rejected_id !== null)
-                    .map(log => ({
-                        text: <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]} />,
-                        date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                        category: {
-                            tag: log.assigned_user?.profile.name,
-                            color: '#6dedd4',
-                        },
-                        circleStyle: {
-                            borderColor: '#e17b77',
-                        },
-                    }))
-            );
-        }
-
-        if (document.logs.length > 0 && document.logs.some(log => log.approved_id !== null)) {
-            newTimelineData = newTimelineData.concat(
-                document.logs
-                    .filter(log => log.approved_id !== null)
-                    .map(log => ({
-                        text: <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} />,
-                        date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                        category: {
-                            tag: log.assigned_user?.profile.name,
-                            color: '#6dedd4',
-                        },
-                        circleStyle: {
-                            borderColor: '#e17b77',
-                        },
-                    }))
-            );
-        }
-
-        if (document.logs.length > 0 && document.logs.some(log => log.action_id !== null)) {
-            newTimelineData = newTimelineData.concat(
-                document.logs
-                    .filter(log => log.action_id !== null)
-                    .map(log => ({
-                        text: <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} />,
-                        date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                        category: {
-                            tag: log.assigned_user.profile.name,
-                            color: '#6dedd4',
-                        },
-                        circleStyle: {
-                            borderColor: '#e17b77',
-                        },
-                    }))
-            );
-        }
-
-        if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-            newTimelineData = newTimelineData.concat(
-                document.logs
-                    .filter(log => log.acknowledge_id !== null)
-                    .map(log => ({
-                        text: <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} />,
-                        date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                        category: {
-                            tag: log.assigned_user.profile.name,
-                            color: '#6dedd4',
-                        },
-                        circleStyle: {
-                            borderColor: '#e17b77',
-                        },
-                    }))
-            );
-        }
-
-
-        if (document.logs.length > 0 && document.logs.some(log => log.to_id !== null) ) {
-            newTimelineData = newTimelineData.concat(
-                document.logs
-                    .filter(log => log.to_id !== null)
-                    .map((logs) => ({
-                        text: <ForwardedUsersText key={logs.id} users={[logs?.user?.profile]} />,
-                        date: moment(logs.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                        category: {
-                            tag: logs.assigned_user.profile.name,
-                            color: '#6dedd4',
-                        },
-                        circleStyle: {
-                            borderColor: '#e17b77',
-                        },
-                    }))
-            );
-        }
-
-        if (document.assign.length > 0) {
-            newTimelineData = newTimelineData.concat(
+        newTimelineData = newTimelineData.concat(
                 document.assign.map((assign) => ({
                     text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
                     date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss a'),
@@ -196,8 +120,6 @@ function DocumentView() {
                     },
                 }))
             );
-        }
-        newTimelineData.sort((a, b) => moment(b.date) - moment(a.date));
 
         setTimelineData(newTimelineData);
     }, [document.logs, document.assign]);
