@@ -472,8 +472,11 @@ function DocumentsUser() {
         let indexOfLatestApprovedBy = groupedLogs.findIndex(log => log.approved_id === loaderData.id);
         let indexOfLatestRejectedBy = groupedLogs.findIndex(log => log.rejected_id === loaderData.id);
         let actionLog = groupedLogs.find(log => log.action_id !== null);
-        let rejected = groupedLogs.find(log => log.action_id === loaderData.id );
-        console.log(groupedLogs, indexOfLatestRejected)
+        console.log((
+            indexOfLatestRejectedBy 
+        ))
+                
+        
 
         return (
             <>
@@ -518,7 +521,7 @@ function DocumentsUser() {
                             <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
                                 <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                             </Button>
-                            {
+                            {   
                                 users.length > 0 && (
                                     <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
                                         <FontAwesomeIcon icon={faShare} />
@@ -541,7 +544,7 @@ function DocumentsUser() {
                                         indexOfLatestReceiveWithAction < indexOfLatestApprovedBy
                                     )
                                 )
-                            ) || (
+                            ) && (
                                 indexOfLatestRejectedBy === -1 || (
                                     indexOfLatestApprovedBy > indexOfLatestRejectedBy &&
                                     indexOfLatestRejectedBy > -1 &&
