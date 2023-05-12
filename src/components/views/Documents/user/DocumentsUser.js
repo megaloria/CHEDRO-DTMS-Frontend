@@ -472,10 +472,6 @@ function DocumentsUser() {
         let indexOfLatestApprovedBy = groupedLogs.findIndex(log => log.approved_id === loaderData.id);
         let indexOfLatestRejectedBy = groupedLogs.findIndex(log => log.rejected_id === loaderData.id);
         let actionLog = groupedLogs.find(log => log.action_id !== null);
-        console.log((
-            indexOfLatestRejectedBy 
-        ))
-                
         
 
         return (
