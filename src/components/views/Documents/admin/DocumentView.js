@@ -220,7 +220,7 @@ function DocumentView() {
             Document acknowledged by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name}
+                    {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
@@ -232,7 +232,7 @@ function DocumentView() {
             Document actioned by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name}
+                    {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
@@ -244,7 +244,7 @@ function DocumentView() {
             Document approved by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name}
+                    {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
@@ -256,7 +256,7 @@ function DocumentView() {
             Document rejected by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name}
+                    {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
@@ -268,7 +268,7 @@ function DocumentView() {
             Document assigned to:{" "}
             {users.map((user, index) => (
                 <p key={user.id}>
-                    {user.name}
+                    {user.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
