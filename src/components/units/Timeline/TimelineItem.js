@@ -2,7 +2,9 @@ import { faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React  from 'react';
 import {
-  Button
+  Button,
+  OverlayTrigger,
+  Tooltip
 } from 'react-bootstrap';
 
 const TimelineItem = ({ data }) => (
@@ -12,10 +14,25 @@ const TimelineItem = ({ data }) => (
                 <span className="tag d-none d-md-inline-block" >
                     {data.category?.tag}
                 </span> 
-                <span className='d-inline-block d-md-none'>
-                <Button variant="outline-warning" size='sm'>
-                        <FontAwesomeIcon icon={faUserCheck} className=""/> </Button>
-                 </span>
+
+                {['bottom'].map((placement) => (
+                <OverlayTrigger
+                    key={placement}
+                    trigger={['click', 'hover']}
+                    placement={placement}
+                    overlay={
+                        <Tooltip id={`tooltip-${placement}`}>
+                            {data.category?.tag}
+                        </Tooltip>
+                    }
+                    >
+                    <span className='d-inline-block d-md-none' >
+                        <Button variant="outline-warning" size='sm' style={{marginRight:'-9.5px'}}>
+                            <FontAwesomeIcon icon={faUserCheck} className=""/> 
+                        </Button>
+                    </span>
+                </OverlayTrigger>
+                ))}
              </div> 
             
             <div>
