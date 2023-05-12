@@ -89,106 +89,30 @@ function DocumentView() {
     }, [document.id]);
 
     useEffect(() => {
-        let newTimelineData = [];
+        let newTimelineData = document.logs.map(log =>
+            ({
+            text: log.rejected_id !== null && log.from_id === null ? <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]}/> : 
+                    log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} /> :
+                        log.action_id !== null && log.comment !== null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} /> :
+                            log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} /> :
+                                log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} /> : log.to_id === null ? <>Document for Releasing</> : null,
+                date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                category: {
+                    tag: log.assigned_user?.profile.name,
+                    color: '#6dedd4',
+                },
+                circleStyle: {
+                    borderColor: '#e17b77',
+                },
+            })
+        )
 
-        if (document.logs.length > 0 && document.logs.some(log => log.rejected_id !== null)) {
-            newTimelineData = newTimelineData.concat(
-                document.logs
-                    .filter(log => log.rejected_id !== null)
-                    .map(log => ({
-                        text: <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]} />,
-                        date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                        category: {
-                            tag: log.rejected_user?.profile.position_designation,
-                            color: '#6dedd4',
-                        },
-                        circleStyle: {
-                            borderColor: '#e17b77',
-                        },
-                    }))
-            );
-        }
-
-        if (document.logs.length > 0 && document.logs.some(log => log.approved_id !== null)) {
-            newTimelineData = newTimelineData.concat(
-                document.logs
-                    .filter(log => log.approved_id !== null)
-                    .map(log => ({
-                        text: <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} />,
-                        date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                        category: {
-                            tag: log.approved_user?.profile.position_designation,
-                            color: '#6dedd4',
-                        },
-                        circleStyle: {
-                            borderColor: '#e17b77',
-                        },
-                    }))
-            );
-        }
-
-        if (document.logs.length > 0 && document.logs.some(log => log.action_id !== null)) {
-            newTimelineData = newTimelineData.concat(
-                document.logs
-                    .filter(log => log.action_id !== null)
-                    .map(log => ({
-                        text: <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} />,
-                        date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                        category: {
-                            tag: log.action_user.profile.position_designation,
-                            color: '#6dedd4',
-                        },
-                        circleStyle: {
-                            borderColor: '#e17b77',
-                        },
-                    }))
-            );
-        }
-
-        if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-            newTimelineData = newTimelineData.concat(
-                document.logs
-                    .filter(log => log.acknowledge_id !== null)
-                    .map(log => ({
-                        text: <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} />,
-                        date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                        category: {
-                            tag: log.acknowledge_user.profile.position_designation,
-                            color: '#6dedd4',
-                        },
-                        circleStyle: {
-                            borderColor: '#e17b77',
-                        },
-                    }))
-            );
-        }
-
-
-        if (document.logs.length > 0 ) {
-            newTimelineData = newTimelineData.concat(
-                document.logs
-                    .filter(log => log.to_id !== null)
-                    .map((logs) => ({
-                        text: <ForwardedUsersText key={logs.id} users={[logs?.user?.profile]} />,
-                        date: moment(logs.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                        category: {
-                            tag: document.user.profile.position_designation,
-                            color: '#6dedd4',
-                        },
-                        circleStyle: {
-                            borderColor: '#e17b77',
-                        },
-                    }))
-            );
-        }
-
-        if (document.assign.length > 0) {
-            newTimelineData = newTimelineData.concat(
+        newTimelineData = newTimelineData.concat(
                 document.assign.map((assign) => ({
                     text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
                     date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss a'),
                     category: {
-                        tag: document.user.profile.position_designation,
+                        tag: assign.assigned_user.profile.name,
                         color: '#6dedd4',
                     },
                     circleStyle: {
@@ -196,11 +120,9 @@ function DocumentView() {
                     },
                 }))
             );
-        }
-        newTimelineData.sort((a, b) => moment(b.date) - moment(a.date));
 
         setTimelineData(newTimelineData);
-    }, [document.logs, document.assign, document.user.profile.position_designation]);
+    }, [document.logs, document.assign]);
 
 
     const ForwardedUsersText = ({ users }) => (
@@ -208,7 +130,7 @@ function DocumentView() {
             Document forwarded to:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name}
+                    {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
@@ -220,7 +142,7 @@ function DocumentView() {
             Document acknowledged by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name}
+                    {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
@@ -232,7 +154,7 @@ function DocumentView() {
             Document actioned by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name}
+                    {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
@@ -244,7 +166,7 @@ function DocumentView() {
             Document approved by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name}
+                    {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
@@ -256,7 +178,7 @@ function DocumentView() {
             Document rejected by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name}
+                    {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
@@ -268,7 +190,7 @@ function DocumentView() {
             Document assigned to:{" "}
             {users.map((user, index) => (
                 <p key={user.id}>
-                    {user.name}
+                    {user.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
