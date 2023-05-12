@@ -14,7 +14,8 @@ import {
     Modal,
     Form,
     Alert,
-    Spinner
+    Spinner,
+    Tooltip
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -338,12 +339,33 @@ function DocumentView() {
     
                     <Card.Body>
                     <Row>
-                            <Col className='float-right offset-md-10'>
-                                <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
-                                <i style={{color:'#545454'}}> {moment(document.created_at).format('MMMM DD, YYYY')} 
-                                 </i> 
-                            </Col> 
+                    <span className="d-none d-md-inline-block" >
+                        <Col className='float-right offset-md-10' style={{whiteSpace:'nowrap'}}>
+                            <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
+                            <i style={{color:'#545454'}}> {moment(document.created_at).format('MMMM DD, YYYY')} 
+                                </i> 
+                        </Col> 
+                    </span>
+
+                    <div className='d-block d-md-none'>
+                    {['bottom'].map((placement) => (
+                    <OverlayTrigger
+                        key={placement}
+                        placement={placement}
+                        overlay={
+                            <Tooltip id={`tooltip-${placement}`}>
+                                {moment(document.created_at).format('MMMM DD, YYYY')}
+                            </Tooltip>
+                        }
+                        >
+                        <Button size='sm' variant='outline' style={{float: 'right'}}>
+                            <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
+                        </Button>
+                        </OverlayTrigger>
+                    ))}
+                    </div>
                     </Row>
+
                         <Row className="mb-3"> 
                             <Col> 
                                 <FontAwesomeIcon 
