@@ -561,7 +561,7 @@ function DocumentsUser() {
                                         indexOfLatestReceiveWithAction < indexOfLatestApprovedBy
                                     )
                                 )
-                            ) && (
+                            ) || (
                                 indexOfLatestRejectedBy === -1 || (
                                     indexOfLatestApprovedBy > indexOfLatestRejectedBy &&
                                     indexOfLatestRejectedBy > -1 &&
