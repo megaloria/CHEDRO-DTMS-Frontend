@@ -200,7 +200,7 @@ function DocumentView() {
         newTimelineData.sort((a, b) => moment(b.date) - moment(a.date));
 
         setTimelineData(newTimelineData);
-    }, [document.logs, document.assign, document.user.profile.position_designation]);
+    }, [document.logs, document.assign]);
 
 
     const ForwardedUsersText = ({ users }) => (
