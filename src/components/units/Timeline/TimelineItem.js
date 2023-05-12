@@ -26,8 +26,8 @@ const TimelineItem = ({ data }) => (
                         </Tooltip>
                     }
                     >
-                    <span className='d-inline-block d-md-none'>
-                        <Button variant="outline-warning" size='sm'>
+                    <span className='d-inline-block d-md-none' >
+                        <Button variant="outline-warning" size='sm' style={{marginRight:'-9.5px'}}>
                             <FontAwesomeIcon icon={faUserCheck} className=""/> 
                         </Button>
                     </span>
