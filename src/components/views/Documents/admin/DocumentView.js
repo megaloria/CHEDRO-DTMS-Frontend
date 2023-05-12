@@ -99,7 +99,7 @@ function DocumentView() {
                         text: <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]} />,
                         date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
                         category: {
-                            tag: log.rejected_user?.profile.position_designation,
+                            tag: log.assigned_user?.profile.name,
                             color: '#6dedd4',
                         },
                         circleStyle: {
@@ -117,7 +117,7 @@ function DocumentView() {
                         text: <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} />,
                         date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
                         category: {
-                            tag: log.approved_user?.profile.position_designation,
+                            tag: log.assigned_user?.profile.name,
                             color: '#6dedd4',
                         },
                         circleStyle: {
@@ -135,7 +135,7 @@ function DocumentView() {
                         text: <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} />,
                         date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
                         category: {
-                            tag: log.action_user.profile.position_designation,
+                            tag: log.assigned_user.profile.name,
                             color: '#6dedd4',
                         },
                         circleStyle: {
@@ -153,7 +153,7 @@ function DocumentView() {
                         text: <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} />,
                         date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
                         category: {
-                            tag: log.acknowledge_user.profile.position_designation,
+                            tag: log.assigned_user.profile.name,
                             color: '#6dedd4',
                         },
                         circleStyle: {
@@ -164,7 +164,7 @@ function DocumentView() {
         }
 
 
-        if (document.logs.length > 0 ) {
+        if (document.logs.length > 0 && document.logs.some(log => log.to_id !== null) ) {
             newTimelineData = newTimelineData.concat(
                 document.logs
                     .filter(log => log.to_id !== null)
@@ -172,7 +172,7 @@ function DocumentView() {
                         text: <ForwardedUsersText key={logs.id} users={[logs?.user?.profile]} />,
                         date: moment(logs.created_at).format('MMMM DD, YYYY h:mm:ss a'),
                         category: {
-                            tag: document.user.profile.position_designation,
+                            tag: logs.assigned_user.profile.name,
                             color: '#6dedd4',
                         },
                         circleStyle: {
@@ -188,7 +188,7 @@ function DocumentView() {
                     text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
                     date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss a'),
                     category: {
-                        tag: document.user.profile.position_designation,
+                        tag: assign.assigned_user.profile.name,
                         color: '#6dedd4',
                     },
                     circleStyle: {
@@ -208,7 +208,7 @@ function DocumentView() {
             Document forwarded to:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
-                    {user?.name}
+                    {user?.name} - {user?.position_designation}
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
