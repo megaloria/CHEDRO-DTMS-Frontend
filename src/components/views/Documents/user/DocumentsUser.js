@@ -176,6 +176,7 @@ function DocumentsUser() {
         });
 
         if (validation.fails()) {
+            setIsDisabled(false)
             setFormErrors({
                 comment: validation.errors.first('comment')
             });
@@ -423,6 +424,7 @@ function DocumentsUser() {
         });
 
         if (validation.fails()) {
+            setIsDisabled(false)
             setFormErrors({
                 comment: validation.errors.first('comment')
             });

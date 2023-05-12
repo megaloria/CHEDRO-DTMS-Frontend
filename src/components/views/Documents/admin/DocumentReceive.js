@@ -245,6 +245,7 @@ function DocumentReceive() {
         });
 
         if (validation.fails()) {
+            setIsDisabled(false)
             setFormErrors({
                 document_type_id: validation.errors.first('document_type_id'),
                 attachment: validation.errors.first('attachment'),
