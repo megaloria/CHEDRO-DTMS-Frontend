@@ -96,8 +96,8 @@ function DocumentView() {
                     log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} /> :
                         log.action_id !== null && log.comment !== null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} /> :
                             log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} /> :
-                                log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} /> : log.to_id === null ? <>Document for Releasing</> : null,
-                date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                                log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} /> : log.to_id === null ? 'Document for Releasing' : null,
+                date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss A'),
                 category: {
                     tag: log.assigned_user?.profile.name,
                     color: '#6dedd4',
@@ -111,9 +111,9 @@ function DocumentView() {
         newTimelineData = newTimelineData.concat(
                 document.assign.map((assign) => ({
                     text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
-                    date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                    date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss A'),
                     category: {
-                        tag: assign.assigned_user.profile.name,
+                        tag: '',
                         color: '#6dedd4',
                     },
                     circleStyle: {
