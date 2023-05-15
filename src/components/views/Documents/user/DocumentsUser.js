@@ -520,7 +520,7 @@ function DocumentsUser() {
                         )
                     ) ? (
                         <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                            <FontAwesomeIcon icon={faUserCheck} className='text-success' />
+                            <FontAwesomeIcon icon={faUserCheck} className='ack-btn' />
                         </Button>
                     ) : (
                         (
@@ -848,7 +848,7 @@ function DocumentsUser() {
                                                                         </Popover>
                                                                     }
                                                                 >
-                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Rejected</Badge>
+                                                                    <Badge bg="danger" style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                                 </OverlayTrigger>
                                                             ):(
                                                                 null
