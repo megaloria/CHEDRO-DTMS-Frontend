@@ -519,7 +519,7 @@ function DocumentsUser() {
                         )
                     ) ? (
                         <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                            <FontAwesomeIcon icon={faUserCheck} className='text-success' />
+                            <FontAwesomeIcon icon={faUserCheck} className='ack-btn' />
                         </Button>
                     ) : (
                         indexOfLatestForward === -1 &&
