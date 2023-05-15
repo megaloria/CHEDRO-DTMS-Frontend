@@ -28,7 +28,8 @@ import {
     faRightToBracket,
     faShare,
     faSearch,
-    faThumbsUp
+    faThumbsUp,
+    faCircleArrowUp
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
@@ -683,7 +684,7 @@ function Documents() {
                                                 )
                                             } */}
 
-                                            <Button variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
+                                            <Button className='me-1' variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                             </Button>
 
@@ -731,6 +732,13 @@ function Documents() {
                                             {!row.logs || row.logs.length === 0 ? (
                                                 <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
                                                     <FontAwesomeIcon icon={faTrash} className="text-danger" />
+                                                </Button>
+                                            ) : null}
+
+                                            {/* To edit condition */}
+                                            {!row.logs || row.logs.length === 0 ? (
+                                                <Button variant="outline-success" size='sm' >
+                                                    <FontAwesomeIcon icon={faCircleArrowUp} className="" /> Release
                                                 </Button>
                                             ) : null}
                                         </td>
