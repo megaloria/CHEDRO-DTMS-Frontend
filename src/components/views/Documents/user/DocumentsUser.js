@@ -493,6 +493,7 @@ function DocumentsUser() {
         let indexOfLatestApprovedBy = groupedLogs.findIndex(log => log.approved_id === loaderData.id);
         let indexOfLatestRejectedBy = groupedLogs.findIndex(log => log.rejected_id === loaderData.id);
         let actionLog = groupedLogs.find(log => log.action_id !== null);
+        console.log(indexOfLatestForward)
         
 
         return (
@@ -507,7 +508,7 @@ function DocumentsUser() {
                                     indexOfLatestAcknowledge > indexOfLatestRejected &&
                                     indexOfLatestRejected !== -1 &&
                                     groupedLogs[indexOfLatestRejected].to_id === loaderData.id
-                                )
+                                )  
                             )
                         ) || (
                             indexOfLatestReceiveWithAction !== -1 &&
@@ -552,20 +553,23 @@ function DocumentsUser() {
                     (
                         indexOfLatestReceiveWithAction !== -1 &&
                         groupedLogs[indexOfLatestReceiveWithAction].rejected_id === null &&
+                        groupedLogs[indexOfLatestForward].rejected_id === null &&
                         (
                             (
-                                indexOfLatestApprovedBy === -1 || (
+                                indexOfLatestApprovedBy === -1 && (
                                     (
-                                        indexOfLatestApprovedBy < indexOfLatestRejectedBy &&
-                                        indexOfLatestApprovedBy > -1 &&
-                                        indexOfLatestReceiveWithAction < indexOfLatestApprovedBy
+                                        indexOfLatestApprovedBy <= indexOfLatestRejectedBy &&
+                                        indexOfLatestApprovedBy >= -1 &&
+                                        (indexOfLatestReceiveWithAction < indexOfLatestApprovedBy || 
+                                        indexOfLatestReceiveWithAction > indexOfLatestApprovedBy )
                                     )
                                 )
-                            ) && (
-                                indexOfLatestRejectedBy === -1 || (
-                                    indexOfLatestApprovedBy > indexOfLatestRejectedBy &&
-                                    indexOfLatestRejectedBy > -1 &&
-                                    indexOfLatestReceiveWithAction < indexOfLatestRejectedBy
+                            ) || (
+                                indexOfLatestRejectedBy === -1 && (
+                                    indexOfLatestApprovedBy >= indexOfLatestRejectedBy &&
+                                    indexOfLatestRejectedBy >= -1 &&
+                                    (indexOfLatestReceiveWithAction < indexOfLatestRejectedBy ||
+                                    indexOfLatestReceiveWithAction > indexOfLatestRejectedBy) 
                                 )
                             )
                         ) &&
