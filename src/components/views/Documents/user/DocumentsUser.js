@@ -829,7 +829,7 @@ function DocumentsUser() {
                                                                         </Popover>
                                                                     }
                                                                 >
-                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Rejected</Badge>
+                                                                    <Badge bg="danger" style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                                 </OverlayTrigger>
                                                             ):(
                                                                 null
