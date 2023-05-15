@@ -473,14 +473,15 @@ function DocumentsUser() {
     };
 
     const renderButtons = row => {
+        console.log(row)
         let groupedLogs = [];
         for (let id in row.logs_grouped) {
-            let hasUser = row.logs_grouped[id].filter(lg => lg.to_id === loaderData.id);
+            let hasUser = row.logs_grouped[id].filter(lg => lg.to_id === loaderData.id && lg.assigned_id !== null);
             if (hasUser.length > 0) {
                 groupedLogs = [...row.logs_grouped[id]];
                 break;
             }
-        }
+        }   
 
         let indexOfLatestReceive = groupedLogs.findIndex(log => log.to_id === loaderData.id && log.action_id === null);
         let indexOfLatestReceiveWithAction = groupedLogs.findIndex(log => log.to_id === loaderData.id && log.action_id !== null);
@@ -493,8 +494,8 @@ function DocumentsUser() {
         let indexOfLatestApprovedBy = groupedLogs.findIndex(log => log.approved_id === loaderData.id);
         let indexOfLatestRejectedBy = groupedLogs.findIndex(log => log.rejected_id === loaderData.id);
         let actionLog = groupedLogs.find(log => log.action_id !== null);
-        console.log(indexOfLatestForward)
-        
+
+        console.log(indexOfLatestForward, indexOfLatestRejected)
 
         return (
             <>
@@ -508,7 +509,7 @@ function DocumentsUser() {
                                     indexOfLatestAcknowledge > indexOfLatestRejected &&
                                     indexOfLatestRejected !== -1 &&
                                     groupedLogs[indexOfLatestRejected].to_id === loaderData.id
-                                )  
+                                )
                             )
                         ) || (
                             indexOfLatestReceiveWithAction !== -1 &&
@@ -522,7 +523,11 @@ function DocumentsUser() {
                             <FontAwesomeIcon icon={faUserCheck} className='text-success' />
                         </Button>
                     ) : (
-                        indexOfLatestForward === -1 &&
+                        (
+                            indexOfLatestForward === -1 || (
+                                indexOfLatestAcknowledge < indexOfLatestForward
+                            )
+                        ) &&
                         (
                             indexOfLatestForwardWithAction === -1 ||
                             indexOfLatestAcknowledge < indexOfLatestForwardWithAction
@@ -553,23 +558,37 @@ function DocumentsUser() {
                     (
                         indexOfLatestReceiveWithAction !== -1 &&
                         groupedLogs[indexOfLatestReceiveWithAction].rejected_id === null &&
-                        groupedLogs[indexOfLatestForward].rejected_id === null &&
+                        // groupedLogs[indexOfLatestForward].rejected_id === null &&
                         (
-                            (
-                                indexOfLatestApprovedBy === -1 && (
+                            (indexOfLatestApprovedBy === -1 && indexOfLatestRejectedBy === -1) || (
+                                (indexOfLatestApprovedBy !== -1 && indexOfLatestRejectedBy !== -1) && (
                                     (
-                                        indexOfLatestApprovedBy <= indexOfLatestRejectedBy &&
-                                        indexOfLatestApprovedBy >= -1 &&
-                                        (indexOfLatestReceiveWithAction < indexOfLatestApprovedBy || 
-                                        indexOfLatestReceiveWithAction > indexOfLatestApprovedBy )
+                                        indexOfLatestApprovedBy < indexOfLatestRejectedBy && (
+                                            (
+                                                indexOfLatestApprovedBy < indexOfLatestRejectedBy &&
+                                                indexOfLatestReceiveWithAction < indexOfLatestApprovedBy
+                                            )
+                                        )
+                                    ) || (
+                                        indexOfLatestApprovedBy > indexOfLatestRejectedBy && (
+                                            (
+                                                indexOfLatestApprovedBy > indexOfLatestRejectedBy &&
+                                                indexOfLatestReceiveWithAction < indexOfLatestRejectedBy
+                                            )
+                                        )
                                     )
                                 )
                             ) || (
-                                indexOfLatestRejectedBy === -1 && (
-                                    indexOfLatestApprovedBy >= indexOfLatestRejectedBy &&
-                                    indexOfLatestRejectedBy >= -1 &&
-                                    (indexOfLatestReceiveWithAction < indexOfLatestRejectedBy ||
-                                    indexOfLatestReceiveWithAction > indexOfLatestRejectedBy) 
+                                indexOfLatestApprovedBy !== -1 && indexOfLatestRejectedBy === -1 && (
+                                    (
+                                        indexOfLatestReceiveWithAction < indexOfLatestApprovedBy
+                                    )
+                                )
+                            ) || (
+                                indexOfLatestRejectedBy !== -1 && indexOfLatestApprovedBy === -1 && (
+                                    (
+                                        indexOfLatestReceiveWithAction < indexOfLatestRejectedBy
+                                    )
                                 )
                             )
                         ) &&

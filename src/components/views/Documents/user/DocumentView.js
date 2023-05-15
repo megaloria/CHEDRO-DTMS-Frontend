@@ -32,7 +32,7 @@ import {
     faUserCheck
 } from '@fortawesome/free-solid-svg-icons'
 import {
-    Link, useLoaderData, useNavigate, useLocation
+    Link, useLoaderData, useNavigate, useLocation, useRouteLoaderData
 } from 'react-router-dom';
 import moment from 'moment';
 import Select from 'react-select';
@@ -41,6 +41,7 @@ import Swal from 'sweetalert2';
 
 function DocumentView() {
     const document = useLoaderData();
+    const currentUser = useRouteLoaderData('user');
     const location = useLocation();
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
@@ -90,37 +91,67 @@ function DocumentView() {
     }, [document.id]);
 
     useEffect(() => {
-        let newTimelineData = document.logs.map(log =>
-            ({
-            text: log.rejected_id !== null && log.from_id === null ? <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]}/> : 
-                    log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} /> :
-                        log.action_id !== null && log.comment !== null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} /> :
-                            log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} /> :
-                                log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} /> : log.to_id === null ? <>Document for Releasing</> : null,
-                date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                category: {
-                    tag: log.assigned_user?.profile.name,
-                    color: '#6dedd4',
-                },
-                circleStyle: {
-                    borderColor: '#e17b77',
-                },
-            })
-        )
-
-        newTimelineData = newTimelineData.concat(
-                document.assign.map((assign) => ({
-                    text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
-                    date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+        let logsLastIndex = document.logs.findLastIndex(dl => dl.to_id === currentUser.id);
+        let logSlice = document.logs.slice(0, logsLastIndex+1);
+        let assignedIds = document.logs.filter(dl => dl.from_id === currentUser.id).map(dl => dl.assigned_id);
+        let filteredLogs = logSlice.filter(log => document.logs[logsLastIndex].assigned_id ? log.assigned_id === document.logs[logsLastIndex].assigned_id : (assignedIds.indexOf(log.assigned_id) !== -1 || log.to_id === currentUser.id));
+        let newTimelineData = filteredLogs.map(log => {
+            return {
+                text: log.rejected_id !== null && log.from_id === null ? <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]} log={log}/> : 
+                        log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} log={log} /> :
+                            log.action_id !== null && log.comment !== null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} log={log} /> :
+                                log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} log={log} /> :
+                                    log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} log={log} /> : log.to_id === null ? <>Document for Releasing</> : null,
+                    date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
                     category: {
-                        tag: assign.assigned_user.profile.name,
+                        tag: currentUser?.role.level > log?.assigned_user?.role.level ? '' : log.assigned_user?.profile.name,
                         color: '#6dedd4',
                     },
                     circleStyle: {
                         borderColor: '#e17b77',
                     },
-                }))
-            );
+                };
+        })
+
+        if (filteredLogs.length > 0) {
+            let firstLog = filteredLogs[filteredLogs.length-1];
+            newTimelineData = newTimelineData.concat({
+                text: (
+                    <>
+                        Document forwarded from:{" "}
+                        <p>
+                            {firstLog?.from_user?.profile?.name} - <i>{firstLog?.from_user?.profile?.position_designation}</i>
+                        </p>
+                    </>
+                ),
+                date: moment(firstLog.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                category: {
+                    tag: '',
+                    color: '#6dedd4',
+                },
+                circleStyle: {
+                    borderColor: '#e17b77',
+                },
+            });
+        }
+        
+        let isAssignedToUser = document.assign.find(da => da.assigned_id === currentUser.id);
+
+        if (isAssignedToUser) {
+            newTimelineData = newTimelineData.concat(
+                    document.assign.map((assign) => ({
+                        text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
+                        date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                        category: {
+                            tag: '',
+                            color: '#6dedd4',
+                        },
+                        circleStyle: {
+                            borderColor: '#e17b77',
+                        },
+                    }))
+                );
+        }
 
         setTimelineData(newTimelineData);
     }, [document.logs, document.assign]);
@@ -150,7 +181,7 @@ function DocumentView() {
         </>
     );
 
-    const ActionedUsersText = ({ users }) => (
+    const ActionedUsersText = ({ users, log }) => (
         <>
             Document actioned by:{" "}
             {users.map((user, index) => (
@@ -159,6 +190,13 @@ function DocumentView() {
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
+            {
+                log.comment && (
+                    <div>
+                        <FontAwesomeIcon icon={faQuoteLeft} className=''/> {log.comment}
+                    </div>
+                )
+            }
         </>
     );
 
