@@ -182,7 +182,7 @@ function DocumentView() {
 
     const ActionedUsersText = ({ users, log }) => (
         <>
-            Document actioned by:{" "}
+            Document acted by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
                     {user?.name} - <i>{user?.position_designation}</i>
