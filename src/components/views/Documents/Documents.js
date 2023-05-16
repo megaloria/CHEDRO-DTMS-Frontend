@@ -180,108 +180,101 @@ function Documents() {
     };
 
     //For assigning multiple users 
-    const handleUserSelection = selectedOptions => {
-        let toDisable = [];
-        for (let i = 0; i < selectedOptions.length; i++) {
-            if (selectedOptions[i].data.id !== selectedOptions[i].data.role.division.role.user.id) {
-                toDisable.push(selectedOptions[i].data.role.division.role.user.id);
-            }
-        }
-
-        let newOptions = options.map(opt => {
-            if (toDisable.includes(opt.value)) {
-                return {
-                    ...opt,
-                    isDisabled: true
-                };
-            }
-
-            return {
-                ...opt,
-                isDisabled: false
-            };
-        });
-        setOptions(newOptions);
-
-        let userIds = selectedOptions.map(option => option.value);
-        userIds = userIds.filter(uid => !toDisable.includes(uid));
-        setSelectedUsers(userIds);
-        // Update the form validity
-        setForwardError(selectedOptions.length > 0 ? '' : 'Please select at least one option');
+    const handleUserSelection = async (selectedOption) => {
+        const userId = selectedOption.value;
+        setSelectedUsers(userId);
     };
 
-    const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
+    const handleShowModal = (data = null) => {
+        // if (!isDisabled) {
+        //     let newOptions = users.map(user => ({
+        //         value: user.id,
+        //         label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`,
+        //         data: user,
+        //         isFixed: false,
+        //         isDisabled: false
+        //     }));
+    
+        //     let assignedUsers = data.assign.map(da => {
+        //         return da.assigned_id;
+        //     });
+        //     let acknowledged = data.logs.map(dl => dl.acknowledge_id);
+    
+        //     newOptions = newOptions.map(no => {
+        //         if (assignedUsers.includes(no.value)) {
+        //             return {
+        //                 ...no,
+        //                 isFixed: acknowledged.includes(no.value)
+        //             };
+        //         }
+    
+        //         return {
+        //             ...no,
+        //             isFixed: false
+        //         };
+        //     });
+    
+        //     let toDisable = [];
+        //     for (let i = 0; i < assignedUsers.length; i++) {
+        //         let findOption = newOptions.find(no => no.value === assignedUsers[i]);
+        //         if (findOption.data.id !== findOption.data.role.division.role.user.id) {
+        //             toDisable.push(findOption.data.role.division.role.user.id);
+        //         }
 
-    const handleShowModal = (data = null, isDisabled) => {
-        if (!isDisabled) {
-            let newOptions = users.map(user => ({
+        //         if (findOption.data.role.level !== findOption.data.role.division.role.level+1) {
+        //             for (let j = 0; j < users.length; j++) {
+        //                 if (
+        //                     users[j].role.level === findOption.data.role.division.role.level+1 &&
+        //                     users[j].role.division_id === findOption.data.role.division.role.division_id
+        //                 ) {
+        //                     toDisable.push(users[j].id);
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     newOptions = newOptions.map(opt => {
+        //         if (toDisable.includes(opt.value)) {
+        //             return {
+        //                 ...opt,
+        //                 isDisabled: true
+        //             };
+        //         }
+    
+        //         return {
+        //             ...opt,
+        //             isDisabled: false
+        //         };
+        //     });
+        //     setOptions(newOptions);
+        //     setSelectedUsers(assignedUsers);
+        // } else {
+        //     let assignedUsers = data.assign.map(da => {
+        //         return da.assigned_id;
+        //     });
+        //     setSelectedUsers([assignedUsers]);
+        //     setIsSelectDisabled(true);
+        // }
+
+        if(data.category.is_assignable) {
+            setOptions(users.filter(user => user.id !== 1).map(user => ({
                 value: user.id,
-                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`,
-                data: user,
-                isFixed: false,
-                isDisabled: false
-            }));
-    
-            let assignedUsers = data.assign.map(da => {
-                return da.assigned_id;
-            });
-            let acknowledged = data.logs.map(dl => dl.acknowledge_id);
-    
-            newOptions = newOptions.map(no => {
-                if (assignedUsers.includes(no.value)) {
-                    return {
-                        ...no,
-                        isFixed: acknowledged.includes(no.value)
-                    };
-                }
-    
-                return {
-                    ...no,
-                    isFixed: false
-                };
-            });
-    
-            let toDisable = [];
-            for (let i = 0; i < assignedUsers.length; i++) {
-                let findOption = newOptions.find(no => no.value === assignedUsers[i]);
-                if (findOption.data.id !== findOption.data.role.division.role.user.id) {
-                    toDisable.push(findOption.data.role.division.role.user.id);
-                }
-
-                if (findOption.data.role.level !== findOption.data.role.division.role.level+1) {
-                    for (let j = 0; j < users.length; j++) {
-                        if (
-                            users[j].role.level === findOption.data.role.division.role.level+1 &&
-                            users[j].role.division_id === findOption.data.role.division.role.division_id
-                        ) {
-                            toDisable.push(users[j].id);
-                        }
-                    }
-                }
-            }
-
-            newOptions = newOptions.map(opt => {
-                if (toDisable.includes(opt.value)) {
-                    return {
-                        ...opt,
-                        isDisabled: true
-                    };
-                }
-    
-                return {
-                    ...opt,
-                    isDisabled: false
-                };
-            });
-            setOptions(newOptions);
-            setSelectedUsers(assignedUsers);
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })));
         } else {
-            let assignedUsers = data.assign.map(da => {
-                return da.assigned_id;
-            });
-            setSelectedUsers([assignedUsers]);
-            setIsSelectDisabled(true);
+            setOptions(users.map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })))
+            setIsSelectDisabled(true)
         }
+           
+
+        let userIds = data.assign.map(log => {
+            return log.assigned_id;
+        });
+        setSelectedUsers(userIds.length > 0 ? userIds[0] : '');
+
 
         setModal({
             show: true,
@@ -853,26 +846,10 @@ function Documents() {
                                 )}
                             </Form.Label>
                             <Select
-                                isMulti
-                                styles={{
-                                    multiValue: (base, state) => {
-                                        return state.data.isFixed ? { ...base, backgroundColor:'#9d9d9d' } : base;
-                                    },
-                                    multiValueLabel: (base, state) => {
-                                        return state.data.isFixed
-                                            ? { ...base, color: 'white', paddingRight: 6 }
-                                            : base;
-                                    },
-                                    multiValueRemove: (base, state) => {
-                                        return state.data.isFixed ? { ...base, display: 'none' } : base;
-                                    },
-                                }}
-                                isClearable={false}
                                 name='assignTo'
                                 options={options}
-                                value={selectedOptions}
+                                value={options.find(option => option.value === selectedUsers)}
                                 onChange={handleUserSelection}
-                                required
                                 isDisabled={isSelectDisabled}
                             />
                             {
