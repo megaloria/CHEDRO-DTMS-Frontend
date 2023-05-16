@@ -1,9 +1,9 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    Button, 
-    Form, 
-    Row, 
-    Col, 
+    Button,
+    Form,
+    Row,
+    Col,
     Breadcrumb,
     Alert,
     Spinner
@@ -34,10 +34,9 @@ function DocumentReceive() {
     const [trackingNo, setTrackingNo] = useState('');
     const [docType, setDocType] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
-    const [isLoading, setIsLoading] = useState(true); 
-    const [options, setOptions] = useState([]);
-    const [isOptionLoading, setIsOptionLoading] = useState(false); 
-    const [isOptionLoading1, setIsOptionLoading1] = useState(false); 
+    const [isLoading, setIsLoading] = useState(true);
+    const [isOptionLoading, setIsOptionLoading] = useState(false);
+    const [isOptionLoading1, setIsOptionLoading1] = useState(false);
     const [attachment, setAttachment] = useState(null);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [dateReceived, setDateReceived] = useState(moment().format('YYYY-MM-DD'));
@@ -46,7 +45,7 @@ function DocumentReceive() {
     //Add Receive documents
     const [documentTypes, setDocumentTypes] = useState([]);
 
-    const [formInputs, setFormInputs] = useState ({
+    const [formInputs, setFormInputs] = useState({
         document_type_id: '',
         attachment: '',
         date_received: moment().format("YYYY-MM-DD"),
@@ -63,7 +62,7 @@ function DocumentReceive() {
         assignTo: ''
     });
 
-    const[formErrors, setFormErrors] = useState ({
+    const [formErrors, setFormErrors] = useState({
         document_type_id: '',
         attachment: '',
         date_received: '',
@@ -82,49 +81,64 @@ function DocumentReceive() {
 
     //For assigning multiple users 
     //yarn add react-select
-    const handleUserSelection = (selectedOptions) => {
-        let toDisable = [];
-        for (let i = 0; i < selectedOptions.length; i++) {
-            if (selectedOptions[i].data.id !== selectedOptions[i].data.role.division.role.user.id) {
-                toDisable.push(selectedOptions[i].data.role.division.role.user.id);
-            }
+    // const handleUserSelection = (selectedOptions) => {
+    //     let toDisable = [];
+    //     for (let i = 0; i < selectedOptions.length; i++) {
+    //         if (selectedOptions[i].data.id !== selectedOptions[i].data.role.division.role.user.id) {
+    //             toDisable.push(selectedOptions[i].data.role.division.role.user.id);
+    //         }
 
-            if (selectedOptions[i].data.role.level !== selectedOptions[i].data.role.division.role.level+1) {
-                for (let j = 0; j < users.length; j++) {
-                    if (
-                        users[j].role.level === selectedOptions[i].data.role.division.role.level+1 &&
-                        users[j].role.division_id === selectedOptions[i].data.role.division.role.division_id
-                    ) {
-                        toDisable.push(users[j].id);
-                    }
-                }
-            }
-        }
+    //         if (selectedOptions[i].data.role.level !== selectedOptions[i].data.role.division.role.level+1) {
+    //             for (let j = 0; j < users.length; j++) {
+    //                 if (
+    //                     users[j].role.level === selectedOptions[i].data.role.division.role.level+1 &&
+    //                     users[j].role.division_id === selectedOptions[i].data.role.division.role.division_id
+    //                 ) {
+    //                     toDisable.push(users[j].id);
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        let newOptions = options.map(opt => {
-            if (toDisable.includes(opt.value)) {
-                return {
-                    ...opt,
-                    isDisabled: true
-                };
-            }
+    //     let newOptions = options.map(opt => {
+    //         if (toDisable.includes(opt.value)) {
+    //             return {
+    //                 ...opt,
+    //                 isDisabled: true
+    //             };
+    //         }
 
-            return {
-                ...opt,
-                isDisabled: false
-            };
-        });
-        setOptions(newOptions);
+    //         return {
+    //             ...opt,
+    //             isDisabled: false
+    //         };
+    //     });
+    //     setOptions(newOptions);
 
-        let userIds = selectedOptions.map(option => option.value);
-        userIds = userIds.filter(uid => !toDisable.includes(uid));
-        setSelectedUsers(userIds);
+    //     let userIds = selectedOptions.map(option => option.value);
+    //     userIds = userIds.filter(uid => !toDisable.includes(uid));
+    //     setSelectedUsers(userIds);
+    // };
+
+    const handleUserSelection = async (selectedOption) => {
+        const userId = selectedOption.value;
+        setSelectedUsers(userId);
     };
+
+    const options = users.map(user => ({
+        value: user.id,
+        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+    }));
 
     const handleSubmit = event => {
         event.preventDefault();
-        
-        let validation = new Validator(formInputs, {
+
+        let assignTo = [selectedUsers];
+
+        let validation = new Validator({
+            ...formInputs,
+            assignTo
+        }, {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
             date_received: 'date',
@@ -136,11 +150,11 @@ function DocumentReceive() {
             chedoffices: 'integer|min:1',
             description: 'required|string|min:5',
             category_id: 'required|integer|min:1',
-            assignTo: 'array',
+            assignTo: 'array|max:1',
             'assignTo.*': 'integer|min:1'
         });
 
-        if (validation.fails()){
+        if (validation.fails()) {
             setFormErrors({
                 document_type_id: validation.errors.first('document_type_id'),
                 attachment: validation.errors.first('attachment'),
@@ -180,8 +194,10 @@ function DocumentReceive() {
     const handleAdd = () => {
 
         setIsDisabled(true);
+
+        let assignTo = [selectedUsers];
         const formData = new FormData();
-       
+
         if (attachment) {
             formData.append('attachment', attachment, attachment.name);
         }
@@ -191,13 +207,14 @@ function DocumentReceive() {
 
         let receivableId = formInputs.receivable_type === 'HEIs' ? formInputs.insti :
             formInputs.receivable_type === 'NGAs' ? formInputs.ngas :
-            formInputs.receivable_type === 'CHED Offices' ? formInputs.chedoffices : '';
+                formInputs.receivable_type === 'CHED Offices' ? formInputs.chedoffices : '';
         formData.append('receivable_id', receivableId);
         formData.append('receivable_name', formInputs.receivable_name);
         formData.append('description', formInputs.description);
         formData.append('category_id', formInputs.category_id);
-        for (let i = 0; i < selectedUsers.length; i++) {
-            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        
+        for (let i = 0; i < assignTo.length; i++) {
+            formData.append(`assign_to[${i}]`, assignTo[i]);
         }
 
         apiClient.post('/document', formData, {
@@ -227,8 +244,13 @@ function DocumentReceive() {
     const handleForward = (event) => {
         event.preventDefault();
         setIsDisabled(true);
-        
-        let validation = new Validator(formInputs, {
+
+        let assignTo = [selectedUsers];
+
+        let validation = new Validator({
+            ...formInputs,
+            assignTo
+        }, {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
             date_received: 'date',
@@ -240,7 +262,7 @@ function DocumentReceive() {
             chedoffices: 'integer|min:1',
             description: 'required|string|min:5',
             category_id: 'required|integer|min:1',
-            assignTo: 'array',
+            assignTo: 'array|max:1',
             'assignTo.*': 'integer|min:1'
         });
 
@@ -296,8 +318,8 @@ function DocumentReceive() {
         formData.append('receivable_name', formInputs.receivable_name);
         formData.append('description', formInputs.description);
         formData.append('category_id', formInputs.category_id);
-        for (let i = 0; i < selectedUsers.length; i++) {
-            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        for (let i = 0; i < assignTo.length; i++) {
+            formData.append(`assign_to[${i}]`, assignTo[i]);
         }
 
         apiClient.post(`/document/forward`, formData, {
@@ -328,20 +350,20 @@ function DocumentReceive() {
             [e.target.name]: e.target.value
         });
         if (e.target.name === 'date_received') {
-            setDateReceived (e.target.value)
+            setDateReceived(e.target.value)
         } else if (e.target.name === 'category_id') {
             setSelectedCategory(categories.find(c => c.id === +e.target.value));
         }
     }
 
-    useEffect (() => {
-        if (docType){
+    useEffect(() => {
+        if (docType) {
             setIsOptionLoading1(true);
             let docTypeFind = documentTypes.find(d => d.id === +docType);
             let temp = docTypeFind ? docTypeFind.code : '';
             apiClient.get(`/document/series/${docType}`)
                 .then(response => {
-                    setTrackingNo (moment(dateReceived).format('YY')+ '-' + temp + '-' + response.data.data.toString().padStart(4, '0'));
+                    setTrackingNo(moment(dateReceived).format('YY') + '-' + temp + '-' + response.data.data.toString().padStart(4, '0'));
                 })
                 .catch(error => {
                     setErrorMessage(error);
@@ -355,8 +377,8 @@ function DocumentReceive() {
         const value = event.target.value;
         setFormInputs({
             ...formInputs,
-            document_type_id:value,
-        }); 
+            document_type_id: value,
+        });
         setDocType(value)
     }
 
@@ -366,9 +388,9 @@ function DocumentReceive() {
             const value = event.target.value;
             setFormInputs({
                 ...formInputs,
-                receivable_type:value,
+                receivable_type: value,
             });
-            
+
             if (value === 'HEIs') {
                 const response = await apiClient.get('/settings/heis/provinces');
                 setProvinces(response.data.data);
@@ -381,17 +403,17 @@ function DocumentReceive() {
                 const response = await apiClient.get('/settings/ched-offices/all');
                 setChedOffices(response.data.data);
                 // Fetch data for Ched Offices
-            } 
+            }
         } catch (error) {
             setErrorMessage(error);
         } finally {
             setIsOptionLoading(false);
         }
     };
-        
+
 
     const handleChangeProvince = async (event) => {
-        try{
+        try {
             setIsOptionLoading(true);
             const value = event.target.value;
             const response = await apiClient.get(`/settings/heis/municipalities/${value}`);
@@ -399,7 +421,7 @@ function DocumentReceive() {
             setFormInputs({
                 ...formInputs,
                 province: value,
-            }); 
+            });
         } catch (error) {
             setErrorMessage(error);
         } finally {
@@ -430,7 +452,7 @@ function DocumentReceive() {
             const value = event.target.value;
             setFormInputs({
                 ...formInputs,
-                insti:value,
+                insti: value,
             });
         } catch (error) {
             setErrorMessage(error);
@@ -445,7 +467,7 @@ function DocumentReceive() {
             const value = event.target.value;
             setFormInputs({
                 ...formInputs,
-                ngas:value,
+                ngas: value,
             });
             const response = await apiClient.get('/settings/ngas/all');
             setNames(response.data.data);
@@ -462,14 +484,14 @@ function DocumentReceive() {
             const value = event.target.value;
             setFormInputs({
                 ...formInputs,
-                chedoffices:value,
+                chedoffices: value,
             });
             // console.log(value);
             // setSelectedValue(value);
-        {
-          const response = await apiClient.get('/settings/ched-offices/all');
-          setNames(response.data.data);
-        }   
+            {
+                const response = await apiClient.get('/settings/ched-offices/all');
+                setNames(response.data.data);
+            }
         } catch (error) {
             setErrorMessage(error);
         } finally {
@@ -491,14 +513,6 @@ function DocumentReceive() {
                 setUsers(response.data.data.users);
                 setDocumentTypes(response.data.data.documentTypes);
                 setCategories(response.data.data.categories);
-
-                let newOptions = response.data.data.users.map(user => ({
-                    value: user.id,
-                    label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`,
-                    data: user,
-                    isDisabled: false
-                }));
-                setOptions(newOptions);
             })
             .catch(error => {
                 setErrorMessage(error);
@@ -524,8 +538,8 @@ function DocumentReceive() {
     return (
         <Form onSubmit={handleSubmit}>
             <div className="container fluid">
-                <div className="crud bg-body rounded"> 
-                    <Row className= "justify-content-end mt-4 mb-3">
+                <div className="crud bg-body rounded">
+                    <Row className="justify-content-end mt-4 mb-3">
                         <Col>
                             <Breadcrumb>
                                 <Breadcrumb.Item linkAs={Link} linkProps={{ to: '../' }}>Documents</Breadcrumb.Item>
@@ -538,17 +552,17 @@ function DocumentReceive() {
                     <Col>
                         <Form.Label>Document Type </Form.Label>
                         <Form.Select
-                            name='document_type_id' 
-                            value={formInputs.document_type_id} 
+                            name='document_type_id'
+                            value={formInputs.document_type_id}
                             onChange={handleChangeDocType}
                             isInvalid={!!formErrors.document_type_id}
                             disabled={isOptionLoading1}>
-                                <option hidden value=''>Select Document Type...</option>
-                                {
-                                    documentTypes.map(item => (
-                                        <option key={item.id} value={item.id}>{item.description}</option>
-                                    ))
-                                }
+                            <option hidden value=''>Select Document Type...</option>
+                            {
+                                documentTypes.map(item => (
+                                    <option key={item.id} value={item.id}>{item.description}</option>
+                                ))
+                            }
                         </Form.Select>
                         <Form.Control.Feedback type='invalid'>
                             {formErrors.document_type_id}
@@ -557,8 +571,8 @@ function DocumentReceive() {
 
                     <Row className='d-md-none mb-3'> </Row>
                     <Col >
-                        <Form.Label>Tracking No. {isOptionLoading1 ? <Spinner animation='border' size='sm'/> : ""}</Form.Label>
-                        <Form.Control 
+                        <Form.Label>Tracking No. {isOptionLoading1 ? <Spinner animation='border' size='sm' /> : ""}</Form.Label>
+                        <Form.Control
                             type='text'
                             name='trackingNo'
                             placeholder='Tracking Number'
@@ -572,20 +586,20 @@ function DocumentReceive() {
 
                     <Col>
                         <Form.Label>Attachment <span className='text-muted text-italic'>(Optional)</span></Form.Label>
-                        <Form.Control 
-                            type="file" 
-                            name='attachment' 
-                            placeholder="Attachment" 
+                        <Form.Control
+                            type="file"
+                            name='attachment'
+                            placeholder="Attachment"
                             onChange={handleFileInputChange} />
                     </Col>
                 </Row>
 
-    
+
                 <Row className="mb-3">
                     <Col>
                         <Form.Label>Date Received</Form.Label>
                         <Form.Control
-                            type='date' 
+                            type='date'
                             name='date_received'
                             max={moment().format("YYYY-MM-DD")}
                             value={formInputs.date_received}
@@ -598,34 +612,34 @@ function DocumentReceive() {
                     </Col>
 
                     <Row className='d-md-none mb-3'> </Row>
-                    
+
                     <Col>
-                        <Form.Label>Receive from {isOptionLoading ? <Spinner animation='border' size='sm'/> : ""} </Form.Label>
-                        <Form.Select 
-                            name='receivable_type' 
-                            value={formInputs.receivable_type} 
+                        <Form.Label>Receive from {isOptionLoading ? <Spinner animation='border' size='sm' /> : ""} </Form.Label>
+                        <Form.Select
+                            name='receivable_type'
+                            value={formInputs.receivable_type}
                             onChange={handleChange}
                             isInvalid={!!formErrors.receivable_type}
                             disabled={isOptionLoading}>
-                                <option hidden value="">Select an option</option>
-                                <option value="HEIs">HEIs</option>
-                                <option value="NGAs">NGAs</option>
-                                <option value="CHED Offices">CHED Offices</option>
-                                <option value="Others">Others</option>
+                            <option hidden value="">Select an option</option>
+                            <option value="HEIs">HEIs</option>
+                            <option value="NGAs">NGAs</option>
+                            <option value="CHED Offices">CHED Offices</option>
+                            <option value="Others">Others</option>
                         </Form.Select>
                         <Form.Control.Feedback type='invalid'>
                             {formErrors.receivable_type}
                         </Form.Control.Feedback>
 
                         {
-                            (formInputs.receivable_type === 'HEIs' && provinces.length !== 0) &&  (
-                                <Form.Select 
-                                    name= 'province' 
+                            (formInputs.receivable_type === 'HEIs' && provinces.length !== 0) && (
+                                <Form.Select
+                                    name='province'
                                     value={formInputs.province}
-                                    onChange={handleChangeProvince} 
+                                    onChange={handleChangeProvince}
                                     isInvalid={!!formErrors.province}
                                     disabled={isOptionLoading}
-                                    >
+                                >
                                     <option hidden value="">Select a province</option>
                                     {
                                         provinces.map((province) => (
@@ -639,14 +653,14 @@ function DocumentReceive() {
                         }
 
                         {
-                            (formInputs.receivable_type === 'HEIs' && formInputs.province !== '' && municipalities.length !== 0) &&  (
-                                <Form.Select 
-                                    name='municipality' 
-                                    value={formInputs.municipality} 
-                                    onChange={handleChangeMunicipality}  
+                            (formInputs.receivable_type === 'HEIs' && formInputs.province !== '' && municipalities.length !== 0) && (
+                                <Form.Select
+                                    name='municipality'
+                                    value={formInputs.municipality}
+                                    onChange={handleChangeMunicipality}
                                     isInvalid={!!formErrors.municipality}
                                     disabled={isOptionLoading}
-                                    >
+                                >
                                     <option hidden value="">Select a municipality</option>
                                     {
                                         municipalities.map((municipality) => (
@@ -660,13 +674,13 @@ function DocumentReceive() {
                         }
 
                         {
-                            (formInputs.receivable_type === 'HEIs' && formInputs.municipality !== '' && names.length !== 0) &&  (
-                                <Form.Select 
-                                name= 'insti' 
-                                value={formInputs.insti}
-                                onChange={handleChangeInstitution} 
-                                isInvalid={!!formErrors.insti}
-                                disabled={isOptionLoading} 
+                            (formInputs.receivable_type === 'HEIs' && formInputs.municipality !== '' && names.length !== 0) && (
+                                <Form.Select
+                                    name='insti'
+                                    value={formInputs.insti}
+                                    onChange={handleChangeInstitution}
+                                    isInvalid={!!formErrors.insti}
+                                    disabled={isOptionLoading}
                                 >
                                     <option hidden value="">Select a name of institution</option>
                                     {
@@ -683,82 +697,82 @@ function DocumentReceive() {
                             {formErrors.insti}
                         </Form.Control.Feedback>
                         {
-                            (formInputs.receivable_type === 'NGAs' && NGAs.length !==0) &&  (
-                                <Form.Select 
-                                    name='ngas' 
-                                    value={formInputs.ngas} 
-                                    onChange={handleChangeNGA} 
+                            (formInputs.receivable_type === 'NGAs' && NGAs.length !== 0) && (
+                                <Form.Select
+                                    name='ngas'
+                                    value={formInputs.ngas}
+                                    onChange={handleChangeNGA}
                                     isInvalid={!!formErrors.ngas}
                                     disabled={isOptionLoading}
-                                    >
-                                        <option hidden value=''>Select NGA...</option>
+                                >
+                                    <option hidden value=''>Select NGA...</option>
                                     {
                                         NGAs.map(item => (
                                             <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
                                         ))
-                                    }  
+                                    }
                                 </Form.Select>
                             )
                         }
                         {
                             (formInputs.receivable_type === 'CHED Offices' && ChedOffices.length !== 0) && (
-                                    <Form.Select 
+                                <Form.Select
                                     name='chedoffices'
-                                    value={formInputs.chedoffices} 
-                                    onChange={handleChangeCO} 
+                                    value={formInputs.chedoffices}
+                                    onChange={handleChangeCO}
                                     isInvalid={!!formErrors.chedoffices}
-                                    disabled={isOptionLoading} 
-                                    >
-                                        <option hidden value=''>Select Ched Office...</option>
-                                        {
-                                            ChedOffices.map(item => (
-                                                <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
-                                            ))
-                                        }
+                                    disabled={isOptionLoading}
+                                >
+                                    <option hidden value=''>Select Ched Office...</option>
+                                    {
+                                        ChedOffices.map(item => (
+                                            <option key={item.id} value={item.id}>{item.code} - {item.description}</option>
+                                        ))
+                                    }
                                 </Form.Select>
                             )
                         }
                         {
                             formInputs.receivable_type === 'Others' && (
-                                    <Form.Control 
+                                <Form.Control
                                     type='text'
                                     name='receivable_name'
-                                    value={formInputs.receivable_name} 
-                                    onChange={handleInputChange} 
+                                    value={formInputs.receivable_name}
+                                    onChange={handleInputChange}
                                     isInvalid={!!formErrors.receivable_name}
-                                    disabled={isOptionLoading} 
-                                    />
+                                    disabled={isOptionLoading}
+                                />
                             )
                         }
-                            <Form.Control.Feedback type='invalid'>
-                                {formErrors.receivable_name}
-                            </Form.Control.Feedback>
+                        <Form.Control.Feedback type='invalid'>
+                            {formErrors.receivable_name}
+                        </Form.Control.Feedback>
                     </Col>
                 </Row>
 
                 <Row className="mb-3">
                     <Col>
                         <Form.Label>Description</Form.Label>
-                        <Form.Control 
-                            as="textarea" 
-                            rows={3} 
-                            type="text" 
-                            name='description' 
-                            placeholder="Description" 
+                        <Form.Control
+                            as="textarea"
+                            rows={3}
+                            type="text"
+                            name='description'
+                            placeholder="Description"
                             value={formInputs.description}
                             onChange={handleInputChange}
-                            isInvalid={!!formErrors.description}/>
+                            isInvalid={!!formErrors.description} />
                         <Form.Control.Feedback type='invalid'>
                             {formErrors.description}
                         </Form.Control.Feedback>
                     </Col>
                 </Row>
-                
-                <Row className="mb-3"> 
-                <Form.Group>
-                    <div>
-                        <Form.Label>Category </Form.Label>
-                    </div>
+
+                <Row className="mb-3">
+                    <Form.Group>
+                        <div>
+                            <Form.Label>Category </Form.Label>
+                        </div>
                         <div>
                             {
                                 categories.map((category, index) => (
@@ -778,22 +792,22 @@ function DocumentReceive() {
                             <Form.Control.Feedback type='invalid'>
                                 {formErrors.category_id}
                             </Form.Control.Feedback>
-                            
+
                             {/* Conditional rendering */}
-                        
+
                             {
                                 selectedCategory && (
                                     <div style={{ marginTop: '10px' }}>
-                                        {selectedCategory.is_assignable &&(
-                                            <Row> 
-                                                <Col md={'auto'}> 
+                                        {selectedCategory.is_assignable && (
+                                            <Row>
+                                                <Col md={'auto'}>
                                                     <Form.Label>Assign to <span className='text-muted'>(Optional)</span>:</Form.Label>
-                                                    <Select 
-                                                        isMulti
-                                                        name='assignTo' 
+                                                    <Select
+                                                        name='assignTo'
                                                         options={options}
-                                                        value={options.filter(option => selectedUsers.includes(option.value))}
-                                                        onChange={handleUserSelection} />
+                                                        value={options.find(option => option.value === selectedUsers)}
+                                                        onChange={handleUserSelection}
+                                                    />
                                                 </Col>
                                             </Row>
                                         )}
@@ -801,38 +815,38 @@ function DocumentReceive() {
                                 )
                             }
                         </div>
-                        
-                        
+
+
                     </Form.Group>
                 </Row>
-                    
-                    <Row>
-                        <div className='d-flex justify-content-end mt-4 mb-4'>
-                            <Col md="auto" className="me-2">
-                                <Button 
+
+                <Row>
+                    <div className='d-flex justify-content-end mt-4 mb-4'>
+                        <Col md="auto" className="me-2">
+                            <Button
                                 variant="secondary"
                                 as={Link}
-                                to='../'> 
-                                    Cancel 
-                                </Button>
-                            </Col>
-                            
-                            <Col md="auto" className="me-2">
-                                <Button type='submit' variant="outline-primary" disabled={isDisabled}> 
-                                Receive 
-                                </Button>
-                            </Col>
+                                to='../'>
+                                Cancel
+                            </Button>
+                        </Col>
 
-                            <Col md="auto">
-                            {selectedCategory && 
-                                (!selectedCategory.is_assignable || selectedUsers.length > 0) &&
-                                <Button onClick={handleForward} variant="primary" disabled={isDisabled}> 
-                                    Forward 
-                                    </Button>
+                        <Col md="auto" className="me-2">
+                            <Button type='submit' variant="outline-primary" disabled={isDisabled}>
+                                Receive
+                            </Button>
+                        </Col>
+
+                        <Col md="auto">
+                            {selectedCategory &&
+                                (!selectedCategory.is_assignable || selectedUsers.length !== 0) &&
+                                <Button onClick={handleForward} variant="primary" disabled={isDisabled}>
+                                    Forward
+                                </Button>
                             }
-                            </Col>
-                        </div>
-                    </Row>
+                        </Col>
+                    </div>
+                </Row>
             </div>
         </Form>
     );
