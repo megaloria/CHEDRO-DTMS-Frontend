@@ -91,7 +91,7 @@ function DocumentView() {
 
     useEffect(() => {
         let newTimelineData = document.logs.map(log =>
-            ({
+            ({ 
             text: log.rejected_id !== null && log.from_id === null ? <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]}/> : 
                     log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} /> :
                         log.action_id !== null && log.comment !== null && log.from_id === null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} /> :
