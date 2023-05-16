@@ -190,7 +190,7 @@ function DocumentsUser() {
         event.preventDefault();
 
         let validation = new Validator(formInputs, {
-            comment: 'nullable|string|min:5',
+            comment: 'string|min:5',
 
         });
 
@@ -207,8 +207,8 @@ function DocumentsUser() {
         }
 
         apiClient.post(`/document/${showModalReject.data?.id}/reject`, formInputs).then(response => {
-            setIsDisabled(false)
             navigate('../');
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -438,7 +438,7 @@ function DocumentsUser() {
         event.preventDefault();
         
         let validation = new Validator(formInputs, {
-            comment: 'nullable|string|min:5',
+            comment: 'string|min:5',
 
         });
 
@@ -454,7 +454,9 @@ function DocumentsUser() {
             });
         }
 
-        apiClient.post(`/document/${showModalApprove.data?.id}/approve`, formInputs).then(response => {
+        apiClient.post(`/document/${showModalApprove.data?.id}/approve`, {
+            ...formInputs
+        }).then(response => {
             setIsDisabled(false)
             navigate('../');
             Swal.fire({
@@ -1018,15 +1020,16 @@ function DocumentsUser() {
                             </Modal.Header>
                             <Modal.Body>
                             <Form.Label>Add a comment</Form.Label>
-                                <Form.Control 
-                                    as="textarea" 
-                                    rows={3} 
-                                    Required
-                                    type="text" 
-                                    name='comment' 
-                                    placeholder="Leave a comment here." 
-                                    isInvalid={!!formErrors.comment}
-                                 />
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                onChange={handleInputChange}
+                                type="text"
+                                name='comment'
+                                value={formInputs.comment}
+                                placeholder="Leave a comment here."
+                                isInvalid={!!formErrors.comment}
+                            />
                             <Form.Control.Feedback type='invalid'>
                                 {formErrors.comment}
                             </Form.Control.Feedback>
@@ -1048,14 +1051,19 @@ function DocumentsUser() {
                             </Modal.Header>
                             <Modal.Body>
                             <Form.Label>Add a comment</Form.Label>
-                                <Form.Control 
-                                    as="textarea" 
-                                    rows={3} 
-                                    Required
-                                    type="text" 
-                                    name='comment' 
-                                    placeholder="Leave a comment here." 
-                    />
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                onChange={handleInputChange}
+                                type="text"
+                                name='comment'
+                                value={formInputs.comment}
+                                placeholder="Leave a comment here."
+                                isInvalid={!!formErrors.comment}
+                            />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrors.comment}
+                            </Form.Control.Feedback>
                             </Modal.Body>
                             <Modal.Footer>
                                 <Button variant="secondary" onClick={handleCloseReject}>
