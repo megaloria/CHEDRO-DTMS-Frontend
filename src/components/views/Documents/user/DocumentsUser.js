@@ -721,12 +721,12 @@ function DocumentsUser() {
                                                                     placement="left"
                                                                     overlay={
                                                                         <Popover>
-                                                                            <Popover.Header className="bg-success text-white">
+                                                                            <Popover.Header className="custom-rejected">
                                                                                 Rejected by
                                                                             </Popover.Header>
                                                                             <Popover.Body>
                                                                                 <ListGroup variant="flush">
-                                                                                    <ListGroupItem variant="success text-black" >
+                                                                                    <ListGroupItem className="custom-rejected">
                                                                                         {row.logs[0]?.rejected_user?.profile?.name}
                                                                                     </ListGroupItem>
                                                                                 </ListGroup>
@@ -734,10 +734,11 @@ function DocumentsUser() {
                                                                         </Popover>
                                                                     }
                                                                 >
-                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Rejected</Badge>
+                                                                    <Badge bg='' className="custom-rejected" style={{ cursor: 'pointer'}}>Rejected</Badge>
                                                                 </OverlayTrigger>
                                                             ) :
-                                                        (row.logs[0].action_id !== null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
+                                                        // (row.logs[0].action_id !== null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
+                                                            (row.logs[0].action_id !== null && row.logs[0].acknowledge_id === null) ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
                                                                 placement="left"
@@ -845,9 +846,9 @@ function DocumentsUser() {
                                                                                             (loaderData.id === log.to_id) ? (
                                                                                                 <ListGroupItem
                                                                                                     variant="warning text-black"
-                                                                                                    key={log.from_user.profile.id}
+                                                                                                    key={log?.from_user?.profile.id}
                                                                                                 >
-                                                                                                    {log.from_user.profile.name}
+                                                                                                    {log?.from_user?.profile.name}
                                                                                                 </ListGroupItem>
                                                                                             ) : null
                                                                                         ))}
