@@ -625,6 +625,7 @@ function DocumentsUser() {
                 </Alert>
             );
         }
+        
 
         return (
             <div className='loading-table-container'>
@@ -668,7 +669,75 @@ function DocumentsUser() {
                                             {row.logs.length > 0 ? (
                                                 <>
                                                     {
-                                                        (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null) ? (
+                                                        (row.logs[0].to_id === null && row.logs[0].from_id === 1 && row.logs[0].approved_id === 1) ? (
+                                                            <OverlayTrigger
+                                                                trigger={['click', 'hover']}
+                                                                placement="left"
+                                                                overlay={
+                                                                    <Popover>
+                                                                        <Popover.Header className="bg-success text-white">
+                                                                            For Releasing
+                                                                        </Popover.Header>
+                                                                        <Popover.Body>
+                                                                            <ListGroup variant="flush">
+                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
+                                                                                    <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
+                                                                                        {log?.action_user?.profile?.name}
+                                                                                    </ListGroupItem>
+                                                                                ))} */}
+                                                                            </ListGroup>
+                                                                        </Popover.Body>
+                                                                    </Popover>
+                                                                }
+                                                            >
+                                                                <Badge bg="success" style={{ cursor: 'pointer' }}>For Releasing</Badge>
+                                                            </OverlayTrigger>
+                                                        ) :
+                                                        (row.logs[0].approved_id !== null) ? (
+                                                            <OverlayTrigger
+                                                                trigger={['click', 'hover']}
+                                                                placement="left"
+                                                                overlay={
+                                                                    <Popover>
+                                                                        <Popover.Header className="bg-success text-white">
+                                                                            Approved by
+                                                                        </Popover.Header>
+                                                                        <Popover.Body>
+                                                                            <ListGroup variant="flush">
+                                                                                <ListGroupItem variant="success text-black" >
+                                                                                    {row.logs[0]?.approved_user?.profile?.name}
+                                                                                </ListGroupItem>
+                                                                            </ListGroup>
+                                                                        </Popover.Body>
+                                                                    </Popover>
+                                                                }
+                                                            >
+                                                                <Badge bg="success" style={{ cursor: 'pointer' }}>Approved</Badge>
+                                                            </OverlayTrigger>
+                                                        ) :
+                                                            (row.logs[0].rejected_id !== null) ? (
+                                                                <OverlayTrigger
+                                                                    trigger={['click', 'hover']}
+                                                                    placement="left"
+                                                                    overlay={
+                                                                        <Popover>
+                                                                            <Popover.Header className="bg-success text-white">
+                                                                                Rejected by
+                                                                            </Popover.Header>
+                                                                            <Popover.Body>
+                                                                                <ListGroup variant="flush">
+                                                                                    <ListGroupItem variant="success text-black" >
+                                                                                        {row.logs[0]?.rejected_user?.profile?.name}
+                                                                                    </ListGroupItem>
+                                                                                </ListGroup>
+                                                                            </Popover.Body>
+                                                                        </Popover>
+                                                                    }
+                                                                >
+                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Rejected</Badge>
+                                                                </OverlayTrigger>
+                                                            ) :
+                                                        (row.logs[0].action_id !== null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
                                                                 placement="left"
@@ -732,7 +801,7 @@ function DocumentsUser() {
                                                                 >
                                                                     <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                 </OverlayTrigger>
-                                                            ) : row.logs.some(log => loaderData.id === log.from_id) ? (
+                                                            ) : row.logs[0].from_id === loaderData.id ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
                                                                     placement="left"
@@ -760,7 +829,7 @@ function DocumentsUser() {
                                                                 >
                                                                     <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
                                                                 </OverlayTrigger>
-                                                            ) : row.logs.some(log => loaderData.id === log.to_id) ? (
+                                                            ) : row.logs[0].to_id === loaderData.id ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
                                                                     placement="left"
@@ -791,68 +860,7 @@ function DocumentsUser() {
                                                                     <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
                                                                 </OverlayTrigger>
                                                             ) : 
-                                                            row.logs[0].approved_id !== null ? (
-                                                                <OverlayTrigger
-                                                                    trigger={['click', 'hover']}
-                                                                    placement="left"
-                                                                    overlay={
-                                                                        <Popover>
-                                                                            <Popover.Header className="bg-success text-white">
-                                                                                Approved by
-                                                                            </Popover.Header>
-                                                                            <Popover.Body>
-                                                                                <ListGroup variant="flush">
-                                                                                    <ListGroupItem>
-                                                                                        {row.logs.map((log, index) => (
-                                                                                            (loaderData.id === log.to_id) ? (
-                                                                                                <ListGroupItem
-                                                                                                    variant="warning text-black"
-                                                                                                    key={log.from_user.profile.id}
-                                                                                                >
-                                                                                                    {log.from_user.profile.name}
-                                                                                                </ListGroupItem>
-                                                                                            ) : null
-                                                                                        ))}
-                                                                                    </ListGroupItem>
-                                                                                </ListGroup>
-                                                                            </Popover.Body>
-                                                                        </Popover>
-                                                                    }
-                                                                >
-                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Approved</Badge>
-                                                                </OverlayTrigger>
-                                                            ):
-                                                            row.logs[0].rejected_id !== null ? (
-                                                                <OverlayTrigger
-                                                                    trigger={['click', 'hover']}
-                                                                    placement="left"
-                                                                    overlay={
-                                                                        <Popover>
-                                                                            <Popover.Header className="bg-success text-white">
-                                                                                Rejected by
-                                                                            </Popover.Header>
-                                                                            <Popover.Body>
-                                                                                <ListGroup variant="flush">
-                                                                                    <ListGroupItem>
-                                                                                        {row.logs.map((log, index) => (
-                                                                                            (loaderData.id === log.to_id) ? (
-                                                                                                <ListGroupItem
-                                                                                                    variant="warning text-black"
-                                                                                                    key={log.from_user.profile.id}
-                                                                                                >
-                                                                                                    {log.from_user.profile.name}
-                                                                                                </ListGroupItem>
-                                                                                            ) : null
-                                                                                        ))}
-                                                                                    </ListGroupItem>
-                                                                                </ListGroup>
-                                                                            </Popover.Body>
-                                                                        </Popover>
-                                                                    }
-                                                                >
-                                                                    <Badge bg="danger" style={{ cursor: 'pointer' }}>Rejected</Badge>
-                                                                </OverlayTrigger>
-                                                            ):(
+                                                            (
                                                                 null
                                                             )}
                                                 </>
