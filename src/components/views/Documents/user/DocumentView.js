@@ -152,7 +152,7 @@ function DocumentView() {
         }
 
         setTimelineData(newTimelineData);
-    }, [document.logs, document.assign]);
+    }, [document.logs, document.assign, currentUser]);
 
 
     const ForwardedUsersText = ({ users }) => (
