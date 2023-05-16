@@ -29,7 +29,8 @@ import {
     faTag,
     faBuildingUser,
     faClock,
-    faUserCheck
+    faUserCheck,
+    faQuoteRight
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData, useNavigate, useLocation, useRouteLoaderData
@@ -190,9 +191,9 @@ function DocumentView() {
             ))}
             {
                 log.comment && (
-                    <div>
-                        <FontAwesomeIcon icon={faQuoteLeft} className=''/> {log.comment}
-                    </div>
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left'/> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
                 )
             }
         </>
@@ -209,9 +210,9 @@ function DocumentView() {
             ))}
             {
                 log.comment && (
-                    <div>
-                        <FontAwesomeIcon icon={faQuoteLeft} className='' /> {log.comment}
-                    </div>
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
                 )
             }
         </>
@@ -228,9 +229,9 @@ function DocumentView() {
             ))}
             {
                 log.comment && (
-                    <div>
-                        <FontAwesomeIcon icon={faQuoteLeft} className='' /> {log.comment}
-                    </div>
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
                 )
             }
         </>
