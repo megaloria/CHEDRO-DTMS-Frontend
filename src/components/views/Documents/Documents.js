@@ -578,12 +578,12 @@ function Documents() {
                                                                     placement="left"
                                                                     overlay={
                                                                         <Popover>
-                                                                            <Popover.Header className="bg-success text-white">
+                                                                            <Popover.Header className="custom-rejected">
                                                                                 Rejected by
                                                                             </Popover.Header>
                                                                             <Popover.Body>
                                                                                 <ListGroup variant="flush">
-                                                                                        <ListGroupItem variant="success text-black" >
+                                                                                        <ListGroupItem className="custom-rejected" >
                                                                                             {row.logs[0]?.rejected_user?.profile?.name}
                                                                                         </ListGroupItem>
                                                                                 </ListGroup>
@@ -591,7 +591,7 @@ function Documents() {
                                                                         </Popover>
                                                                     }
                                                                 >
-                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Rejected</Badge>
+                                                                    <Badge bg="" className="custom-rejected" style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                                 </OverlayTrigger>
                                                             ) :
                                                         (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null) ? (
@@ -643,7 +643,7 @@ function Documents() {
                                                                                         ))}
                                                                                 </ListGroup>
 
-                                                                                {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
+                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
                                                                                     <div>Forwarded To:</div>
                                                                                 )}
                                                                                 <ListGroup variant="flush">
@@ -652,7 +652,7 @@ function Documents() {
                                                                                             {log?.user?.profile?.name}
                                                                                         </ListGroupItem>
                                                                                     ))}
-                                                                                </ListGroup>
+                                                                                </ListGroup> */}
 
                                                                             </Popover.Body>
                                                                         </Popover>
@@ -660,7 +660,7 @@ function Documents() {
                                                                 >
                                                                 <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                             </OverlayTrigger>
-                                                        ) : row.logs.some(log => log.to_id !== null) ? (
+                                                        ) : row.logs[0].to_id !== null ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
                                                                 placement="left"
@@ -671,17 +671,15 @@ function Documents() {
                                                                         </Popover.Header>
                                                                         <Popover.Body>
                                                                             <ListGroup variant="flush">
-                                                                                {row.logs.map((log, index) => (
-                                                                                    log.to_id !== null ? (
-                                                                                        <ListGroupItem
-                                                                                            variant="warning text-black"
-                                                                                            key={log.user.profile.id}
-                                                                                        >
-                                                                                            {log.user.profile.name}
-                                                                                        </ListGroupItem>
-                                                                                    ) : null
-                                                                                ))}
-                                                                            </ListGroup>
+                                                                                {row.logs.length > 0 ? (
+                                                                                    <ListGroupItem className="bg-warning text-white"
+                                                                                    key={row.logs[0]?.user.profile.id}
+                                                                                    >
+
+                                                                                    {row.logs[0]?.user.profile.name}
+                                                                                    </ListGroupItem>
+                                                                                ) : null}
+                                                                                </ListGroup>
                                                                         </Popover.Body>
                                                                     </Popover>
                                                                 }
