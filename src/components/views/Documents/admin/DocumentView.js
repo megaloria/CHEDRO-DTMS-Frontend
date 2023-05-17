@@ -607,7 +607,7 @@ function DocumentView() {
                                 <Col>
                                     <FontAwesomeIcon icon={faCalendar} className='text-dark me-4'/>
                                     {moment(document.date_received).format('MMMM DD, YYYY')} 
-                                    <i style={{color:'#545454'}}> (Received {moment(document.date_received).fromNow()})</i> 
+                                    {/* <i style={{color:'#545454'}}> (Received {moment(document.date_received).fromNow()})</i>  */}
                                 </Col>
                         </Row>
 
