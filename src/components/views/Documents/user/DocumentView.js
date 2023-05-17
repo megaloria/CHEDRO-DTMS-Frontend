@@ -102,7 +102,7 @@ function DocumentView() {
                         log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} log={log} /> :
                             log.action_id !== null && log.comment !== null && log.from_id === null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} log={log} /> :
                                 log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} log={log} /> :
-                                    log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} log={log} /> : log.to_id === null ? <>Document for Releasing</> : null,
+                                    log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} log={log} /> : log.to_id === null ? 'Document for Releasing' : null,
                     date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
                     category: {
                         tag: currentUser?.role.level > log?.assigned_user?.role.level ? '' : log.assigned_user?.profile.name,
@@ -119,7 +119,7 @@ function DocumentView() {
             newTimelineData = newTimelineData.concat({
                 text: (
                     <>
-                        Document forwarded from:{" "}
+                        Document <span className='forwarded-text'>Forwarded</span> from:{" "}
                         <p>
                             {firstLog?.from_user?.profile?.name} - <i>{firstLog?.from_user?.profile?.position_designation}</i>
                         </p>
@@ -158,7 +158,7 @@ function DocumentView() {
 
     const ForwardedUsersText = ({ users }) => (
         <>
-            Document forwarded to:{" "}
+            Document <span className='forwarded-text'>Forwarded</span> to:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
                     {user?.name} - <i>{user?.position_designation}</i>
@@ -170,7 +170,7 @@ function DocumentView() {
 
     const AcknowledgedUsersText = ({ users }) => (
         <>
-            Document acknowledged by:{" "}
+            Document <span className='ack-text'>Acknowledged</span> by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
                     {user?.name} - <i>{user?.position_designation}</i>
@@ -182,7 +182,7 @@ function DocumentView() {
 
     const ActionedUsersText = ({ users, log }) => (
         <>
-            Document acted by:{" "}
+            Document <span className='act-approve-text'>Acted</span> by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
                     {user?.name} - <i>{user?.position_designation}</i>
@@ -201,7 +201,7 @@ function DocumentView() {
 
     const ApprovedUsersText = ({ users, log }) => (
         <>
-            Document approved by:{" "}
+            Document <span className='act-approve-text'>Approved</span> by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
                     {user?.name} - <i>{user?.position_designation}</i>
@@ -220,7 +220,7 @@ function DocumentView() {
 
     const RejectedUsersText = ({ users, log }) => (
         <>
-            Document rejected by:{" "}
+            Document <span className='reject-text'>Rejected</span> by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
                     {user?.name} - <i>{user?.position_designation}</i>
@@ -239,7 +239,7 @@ function DocumentView() {
 
     const UsersText = ({ users }) => (
         <>
-            Document assigned to:{" "}
+            Document <span className='assign-text'>Assigned</span> to:{" "}
             {users.map((user, index) => (
                 <p key={user.id}>
                     {user.name} - <i>{user?.position_designation}</i>
@@ -483,12 +483,12 @@ function DocumentView() {
                                                                     placement="left"
                                                                     overlay={
                                                                         <Popover>
-                                                                            <Popover.Header className="bg-success text-white">
+                                                                            <Popover.Header  className="custom-rejected">
                                                                                 Rejected by
                                                                             </Popover.Header>
                                                                             <Popover.Body>
                                                                                 <ListGroup variant="flush">
-                                                                                        <ListGroupItem variant="success text-black" >
+                                                                                        <ListGroupItem  className="custom-rejected">
                                                                                             {document.logs[0]?.rejected_user?.profile?.name}
                                                                                         </ListGroupItem>
                                                                                 </ListGroup>
@@ -496,7 +496,7 @@ function DocumentView() {
                                                                         </Popover>
                                                                     }
                                                                 >
-                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Rejected</Badge>
+                                                                    <Badge bg='' className="custom-rejected" style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                                 </OverlayTrigger>
                                                             ) :
                                                         (document.logs[0].action_id !== null && document.logs[0].from_id !== null && document.logs[0].to_id !== null) ? (
@@ -565,10 +565,10 @@ function DocumentView() {
                                                                 >
                                                                 <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                             </OverlayTrigger>
-                                                        ) : document.logs.some(log => log.to_id !== null) ? (
+                                                        ) : document.logs[0].to_id !== null ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
-                                                                placement="left"
+                                                                placement="bottom"
                                                                 overlay={
                                                                     <Popover>
                                                                         <Popover.Header className="bg-warning text-white">
@@ -576,16 +576,14 @@ function DocumentView() {
                                                                         </Popover.Header>
                                                                         <Popover.Body>
                                                                             <ListGroup variant="flush">
-                                                                                {document.logs.map((log, index) => (
-                                                                                    log.to_id !== null ? (
+                                                                                {document.logs.length > 0 ? (
                                                                                         <ListGroupItem
                                                                                             variant="warning text-black"
-                                                                                            key={log.user.profile.id}
+                                                                                            key={document.logs[0]?.user.profile.id}
                                                                                         >
-                                                                                            {log.user.profile.name}
+                                                                                            {document.logs[0]?.user.profile.name}
                                                                                         </ListGroupItem>
-                                                                                    ) : null
-                                                                                ))}
+                                                                                 ) : null}
                                                                             </ListGroup>
                                                                         </Popover.Body>
                                                                     </Popover>
