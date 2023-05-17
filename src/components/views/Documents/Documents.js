@@ -180,108 +180,101 @@ function Documents() {
     };
 
     //For assigning multiple users 
-    const handleUserSelection = selectedOptions => {
-        let toDisable = [];
-        for (let i = 0; i < selectedOptions.length; i++) {
-            if (selectedOptions[i].data.id !== selectedOptions[i].data.role.division.role.user.id) {
-                toDisable.push(selectedOptions[i].data.role.division.role.user.id);
-            }
-        }
-
-        let newOptions = options.map(opt => {
-            if (toDisable.includes(opt.value)) {
-                return {
-                    ...opt,
-                    isDisabled: true
-                };
-            }
-
-            return {
-                ...opt,
-                isDisabled: false
-            };
-        });
-        setOptions(newOptions);
-
-        let userIds = selectedOptions.map(option => option.value);
-        userIds = userIds.filter(uid => !toDisable.includes(uid));
-        setSelectedUsers(userIds);
-        // Update the form validity
-        setForwardError(selectedOptions.length > 0 ? '' : 'Please select at least one option');
+    const handleUserSelection = async (selectedOption) => {
+        const userId = selectedOption.value;
+        setSelectedUsers(userId);
     };
 
-    const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
+    const handleShowModal = (data = null) => {
+        // if (!isDisabled) {
+        //     let newOptions = users.map(user => ({
+        //         value: user.id,
+        //         label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`,
+        //         data: user,
+        //         isFixed: false,
+        //         isDisabled: false
+        //     }));
+    
+        //     let assignedUsers = data.assign.map(da => {
+        //         return da.assigned_id;
+        //     });
+        //     let acknowledged = data.logs.map(dl => dl.acknowledge_id);
+    
+        //     newOptions = newOptions.map(no => {
+        //         if (assignedUsers.includes(no.value)) {
+        //             return {
+        //                 ...no,
+        //                 isFixed: acknowledged.includes(no.value)
+        //             };
+        //         }
+    
+        //         return {
+        //             ...no,
+        //             isFixed: false
+        //         };
+        //     });
+    
+        //     let toDisable = [];
+        //     for (let i = 0; i < assignedUsers.length; i++) {
+        //         let findOption = newOptions.find(no => no.value === assignedUsers[i]);
+        //         if (findOption.data.id !== findOption.data.role.division.role.user.id) {
+        //             toDisable.push(findOption.data.role.division.role.user.id);
+        //         }
 
-    const handleShowModal = (data = null, isDisabled) => {
-        if (!isDisabled) {
-            let newOptions = users.map(user => ({
+        //         if (findOption.data.role.level !== findOption.data.role.division.role.level+1) {
+        //             for (let j = 0; j < users.length; j++) {
+        //                 if (
+        //                     users[j].role.level === findOption.data.role.division.role.level+1 &&
+        //                     users[j].role.division_id === findOption.data.role.division.role.division_id
+        //                 ) {
+        //                     toDisable.push(users[j].id);
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     newOptions = newOptions.map(opt => {
+        //         if (toDisable.includes(opt.value)) {
+        //             return {
+        //                 ...opt,
+        //                 isDisabled: true
+        //             };
+        //         }
+    
+        //         return {
+        //             ...opt,
+        //             isDisabled: false
+        //         };
+        //     });
+        //     setOptions(newOptions);
+        //     setSelectedUsers(assignedUsers);
+        // } else {
+        //     let assignedUsers = data.assign.map(da => {
+        //         return da.assigned_id;
+        //     });
+        //     setSelectedUsers([assignedUsers]);
+        //     setIsSelectDisabled(true);
+        // }
+
+        if(data.category.is_assignable) {
+            setOptions(users.filter(user => user.id !== 1).map(user => ({
                 value: user.id,
-                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`,
-                data: user,
-                isFixed: false,
-                isDisabled: false
-            }));
-    
-            let assignedUsers = data.assign.map(da => {
-                return da.assigned_id;
-            });
-            let acknowledged = data.logs.map(dl => dl.acknowledge_id);
-    
-            newOptions = newOptions.map(no => {
-                if (assignedUsers.includes(no.value)) {
-                    return {
-                        ...no,
-                        isFixed: acknowledged.includes(no.value)
-                    };
-                }
-    
-                return {
-                    ...no,
-                    isFixed: false
-                };
-            });
-    
-            let toDisable = [];
-            for (let i = 0; i < assignedUsers.length; i++) {
-                let findOption = newOptions.find(no => no.value === assignedUsers[i]);
-                if (findOption.data.id !== findOption.data.role.division.role.user.id) {
-                    toDisable.push(findOption.data.role.division.role.user.id);
-                }
-
-                if (findOption.data.role.level !== findOption.data.role.division.role.level+1) {
-                    for (let j = 0; j < users.length; j++) {
-                        if (
-                            users[j].role.level === findOption.data.role.division.role.level+1 &&
-                            users[j].role.division_id === findOption.data.role.division.role.division_id
-                        ) {
-                            toDisable.push(users[j].id);
-                        }
-                    }
-                }
-            }
-
-            newOptions = newOptions.map(opt => {
-                if (toDisable.includes(opt.value)) {
-                    return {
-                        ...opt,
-                        isDisabled: true
-                    };
-                }
-    
-                return {
-                    ...opt,
-                    isDisabled: false
-                };
-            });
-            setOptions(newOptions);
-            setSelectedUsers(assignedUsers);
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })));
         } else {
-            let assignedUsers = data.assign.map(da => {
-                return da.assigned_id;
-            });
-            setSelectedUsers([assignedUsers]);
-            setIsSelectDisabled(true);
+            setOptions(users.map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })))
+            setIsSelectDisabled(true)
         }
+           
+
+        let userIds = data.assign.map(log => {
+            return log.assigned_id;
+        });
+        setSelectedUsers(userIds.length > 0 ? userIds[0] : '');
+
 
         setModal({
             show: true,
@@ -398,10 +391,13 @@ function Documents() {
     const handleForward = event => {
         setIsDisabled(true)
         event.preventDefault();
+
+        let assignTo = [selectedUsers];
+
         const formData = new FormData();
 
-        for (let i = 0; i < selectedUsers.length; i++) {
-            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        for (let i = 0; i < assignTo.length; i++) {
+            formData.append(`assign_to[${i}]`, assignTo[i]);
         }
 
         apiClient.post(`/document/${modal.data?.id}/forward`, formData, {
@@ -422,6 +418,7 @@ function Documents() {
             setForwardError(error);
         });
     };
+
 
     const renderTable = () => {
         if (isTableLoading) {
@@ -688,13 +685,16 @@ function Documents() {
                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                             </Button>
 
-                                            {row.logs.some(log => log.to_id === row.user_id) && row.logs.every(log => log.acknowledge_id !== row.user_id) ? (
+                                            {row.logs[0]?.to_id === row.user_id && row.logs[0]?.acknowledge_id !== row.user_id ? (
                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                     <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                 </Button>
                                             ) : null}
 
-                                            {row.category.is_assignable ? (
+                                            {row.logs.some(log =>log.acknowledge_id !== null &&
+                                                 log.action_id !== null && log.from_id !== null && 
+                                                     log.to_id !== null && log.rejected_id !== null)
+                                                        && row.category.is_assignable ? (
                                                 <Button variant="link" size='sm' onClick={e => {
                                                     if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
                                                         setIsSelectDisabled(false);
@@ -707,7 +707,7 @@ function Documents() {
                                                 }}>
                                                     <FontAwesomeIcon icon={faShare} className="" />
                                                 </Button>
-                                            ) : !row.category.is_assignable && row.logs.length === 0 ? (
+                                            ) : !row.category.is_assignable && row.logs.length === 0  ? (
                                                 <Button variant="link" size='sm' onClick={e => {
                                                     let isDisabled = false;
                                                     if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
@@ -723,11 +723,12 @@ function Documents() {
                                                 </Button>
                                             ) : null}
 
-                                            {row.logs.some(log => log.acknowledge_id !== null) ? (
-                                                null
-                                            ) : <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
+                                            { row.logs.length === 0 || row.logs.some(log => log.acknowledge_id !== null &&
+                                                log.action_id !== null && log.from_id !== null &&
+                                                log.to_id !== null && log.rejected_id !== null) ? 
+                                             <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
                                                 <FontAwesomeIcon icon={faEdit} className="text-success" />
-                                            </Button>}
+                                            </Button> : null}
 
                                             {!row.logs || row.logs.length === 0 ? (
                                                 <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
@@ -735,8 +736,7 @@ function Documents() {
                                                 </Button>
                                             ) : null}
 
-                                            {/* To edit condition */}
-                                            {!row.logs || row.logs.length === 0 ? (
+                                            {row.logs[0]?.to_id === null && row.logs[0]?.from_id === 1 && row.logs[0]?.approved_id === 1 ? (
                                                 <Button variant="outline-success" size='sm' >
                                                     <FontAwesomeIcon icon={faCircleArrowUp} className="" /> Release
                                                 </Button>
@@ -853,26 +853,10 @@ function Documents() {
                                 )}
                             </Form.Label>
                             <Select
-                                isMulti
-                                styles={{
-                                    multiValue: (base, state) => {
-                                        return state.data.isFixed ? { ...base, backgroundColor:'#9d9d9d' } : base;
-                                    },
-                                    multiValueLabel: (base, state) => {
-                                        return state.data.isFixed
-                                            ? { ...base, color: 'white', paddingRight: 6 }
-                                            : base;
-                                    },
-                                    multiValueRemove: (base, state) => {
-                                        return state.data.isFixed ? { ...base, display: 'none' } : base;
-                                    },
-                                }}
-                                isClearable={false}
                                 name='assignTo'
                                 options={options}
-                                value={selectedOptions}
+                                value={options.find(option => option.value === selectedUsers)}
                                 onChange={handleUserSelection}
-                                required
                                 isDisabled={isSelectDisabled}
                             />
                             {
@@ -888,7 +872,7 @@ function Documents() {
                     <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                         Cancel
                     </Button>
-                    <Button type='submit' variant='primary' onClick={handleForward} disabled={forwardError || isDisabled}>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={isDisabled}>
                         Forward
                     </Button>
                 </Modal.Footer>

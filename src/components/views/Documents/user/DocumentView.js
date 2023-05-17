@@ -53,6 +53,7 @@ function DocumentView() {
     const [isValid, setIsValid] = useState(true);
     const [isNavigationLoading, setIsNavigationLoading] = useState(true);
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
     const [timelineData, setTimelineData] = useState([]);
     const navigate = useNavigate();
 
@@ -253,7 +254,7 @@ function DocumentView() {
 
 
     const handleForward = event => {
-        event.currentTarget.disabled = true;
+        setIsDisabled(true);
         const formData = new FormData();
 
         for (let i = 0; i < selectedUsers.length; i++) {
@@ -265,6 +266,7 @@ function DocumentView() {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
+            setIsDisabled(false)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
@@ -276,6 +278,7 @@ function DocumentView() {
             navigate(`/documents/view/${document.id}`);
             
         }).catch(error => {
+            setIsDisabled(false)
             setIsValid(false);
         });
     };
@@ -724,7 +727,6 @@ function DocumentView() {
                                 )}
                             </Form.Label>
                             <Select
-                                isMulti
                                 name='assignTo'
                                 options={options}
                                 value={selectedOptions}
@@ -741,7 +743,7 @@ function DocumentView() {
                     <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                         Cancel
                     </Button>
-                    <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={isDisabled}>
                         Forward
                     </Button>
                 </Modal.Footer>

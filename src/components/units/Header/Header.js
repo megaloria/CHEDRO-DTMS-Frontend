@@ -77,7 +77,7 @@ function Header(props) {
           placement='right'
           delay={{ show: 250, hide: 200 }}
           overlay={renderTooltip}>
-          <Navbar.Brand className='title' href='#home'>
+            <Navbar.Brand className='title' as={Link} to='documents'>
             <span className='d-none d-md-inline-block'>
               CHEDRO IV Document Tracking Management System
             </span>
