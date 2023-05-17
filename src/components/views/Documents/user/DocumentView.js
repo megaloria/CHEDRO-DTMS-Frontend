@@ -29,7 +29,8 @@ import {
     faTag,
     faBuildingUser,
     faClock,
-    faUserCheck
+    faUserCheck,
+    faQuoteRight
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData, useNavigate, useLocation, useRouteLoaderData
@@ -182,7 +183,7 @@ function DocumentView() {
 
     const ActionedUsersText = ({ users, log }) => (
         <>
-            Document actioned by:{" "}
+            Document acted by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
                     {user?.name} - <i>{user?.position_designation}</i>
@@ -191,9 +192,9 @@ function DocumentView() {
             ))}
             {
                 log.comment && (
-                    <div>
-                        <FontAwesomeIcon icon={faQuoteLeft} className=''/> {log.comment}
-                    </div>
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left'/> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
                 )
             }
         </>
@@ -210,9 +211,9 @@ function DocumentView() {
             ))}
             {
                 log.comment && (
-                    <div>
-                        <FontAwesomeIcon icon={faQuoteLeft} className='' /> {log.comment}
-                    </div>
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
                 )
             }
         </>
@@ -229,9 +230,9 @@ function DocumentView() {
             ))}
             {
                 log.comment && (
-                    <div>
-                        <FontAwesomeIcon icon={faQuoteLeft} className='' /> {log.comment}
-                    </div>
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
                 )
             }
         </>

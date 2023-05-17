@@ -29,7 +29,8 @@ import {
     faTag,
     faBuildingUser,
     faClock,
-    faUserCheck
+    faUserCheck,
+    faQuoteRight
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData, useNavigate, useLocation
@@ -151,19 +152,26 @@ function DocumentView() {
         </>
     );
 
-    const ActionedUsersText = ({ users }) => (
+    const ActionedUsersText = ({ users, log }) => (
         <>
-            Document actioned by:{" "}
+            Document acted by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
                     {user?.name} - <i>{user?.position_designation}</i>
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
+             {
+                log.comment && (
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left'/> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
+                )
+            }
         </>
     );
 
-    const ApprovedUsersText = ({ users }) => (
+    const ApprovedUsersText = ({ users, log }) => (
         <>
             Document approved by:{" "}
             {users.map((user, index) => (
@@ -172,10 +180,17 @@ function DocumentView() {
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
+               {
+                log.comment && (
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
+                )
+            }
         </>
     );
 
-    const RejectedUsersText = ({ users }) => (
+    const RejectedUsersText = ({ users, log }) => (
         <>
             Document rejected by:{" "}
             {users.map((user, index) => (
@@ -184,6 +199,13 @@ function DocumentView() {
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
+               {
+                log.comment && (
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
+                )
+            }
         </>
     );
 
