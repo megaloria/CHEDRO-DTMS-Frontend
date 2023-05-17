@@ -391,10 +391,13 @@ function Documents() {
     const handleForward = event => {
         setIsDisabled(true)
         event.preventDefault();
+
+        let assignTo = [selectedUsers];
+
         const formData = new FormData();
 
-        for (let i = 0; i < selectedUsers.length; i++) {
-            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        for (let i = 0; i < assignTo.length; i++) {
+            formData.append(`assign_to[${i}]`, assignTo[i]);
         }
 
         apiClient.post(`/document/${modal.data?.id}/forward`, formData, {
@@ -415,6 +418,7 @@ function Documents() {
             setForwardError(error);
         });
     };
+
 
     const renderTable = () => {
         if (isTableLoading) {
@@ -681,13 +685,16 @@ function Documents() {
                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                             </Button>
 
-                                            {row.logs.some(log => log.to_id === row.user_id) && row.logs.every(log => log.acknowledge_id !== row.user_id) ? (
+                                            {row.logs[0]?.to_id === row.user_id && row.logs[0]?.acknowledge_id !== row.user_id ? (
                                                 <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                                                     <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
                                                 </Button>
                                             ) : null}
 
-                                            {row.category.is_assignable ? (
+                                            {row.logs.some(log =>log.acknowledge_id !== null &&
+                                                 log.action_id !== null && log.from_id !== null && 
+                                                     log.to_id !== null && log.rejected_id !== null)
+                                                        && row.category.is_assignable ? (
                                                 <Button variant="link" size='sm' onClick={e => {
                                                     if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
                                                         setIsSelectDisabled(false);
@@ -700,7 +707,7 @@ function Documents() {
                                                 }}>
                                                     <FontAwesomeIcon icon={faShare} className="" />
                                                 </Button>
-                                            ) : !row.category.is_assignable && row.logs.length === 0 ? (
+                                            ) : !row.category.is_assignable && row.logs.length === 0  ? (
                                                 <Button variant="link" size='sm' onClick={e => {
                                                     let isDisabled = false;
                                                     if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
@@ -716,11 +723,12 @@ function Documents() {
                                                 </Button>
                                             ) : null}
 
-                                            {row.logs.some(log => log.acknowledge_id !== null) ? (
-                                                null
-                                            ) : <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
+                                            { row.logs.length === 0 || row.logs.some(log => log.acknowledge_id !== null &&
+                                                log.action_id !== null && log.from_id !== null &&
+                                                log.to_id !== null && log.rejected_id !== null) ? 
+                                             <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
                                                 <FontAwesomeIcon icon={faEdit} className="text-success" />
-                                            </Button>}
+                                            </Button> : null}
 
                                             {!row.logs || row.logs.length === 0 ? (
                                                 <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
@@ -728,8 +736,7 @@ function Documents() {
                                                 </Button>
                                             ) : null}
 
-                                            {/* To edit condition */}
-                                            {!row.logs || row.logs.length === 0 ? (
+                                            {row.logs[0]?.to_id === null && row.logs[0]?.from_id === 1 && row.logs[0]?.approved_id === 1 ? (
                                                 <Button variant="outline-success" size='sm' >
                                                     <FontAwesomeIcon icon={faCircleArrowUp} className="" /> Release
                                                 </Button>
@@ -865,7 +872,7 @@ function Documents() {
                     <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                         Cancel
                     </Button>
-                    <Button type='submit' variant='primary' onClick={handleForward} disabled={forwardError || isDisabled}>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={isDisabled}>
                         Forward
                     </Button>
                 </Modal.Footer>
