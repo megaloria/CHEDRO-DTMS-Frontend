@@ -160,13 +160,13 @@ function DocumentView() {
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
-             {
+             {/* {
                 log.comment && (
                     <span className='comment-text'>
                         <FontAwesomeIcon icon={faQuoteLeft} className='quote-left'/> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
                     </span>
                 )
-            }
+            } */}
         </>
     );
 
@@ -179,13 +179,13 @@ function DocumentView() {
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
-               {
+               {/* {
                 log.comment && (
                     <span className='comment-text'>
                         <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
                     </span>
                 )
-            }
+            } */}
         </>
     );
 
@@ -198,13 +198,13 @@ function DocumentView() {
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
-               {
+               {/* {
                 log.comment && (
                     <span className='comment-text'>
                         <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
                     </span>
                 )
-            }
+            } */}
         </>
     );
 
