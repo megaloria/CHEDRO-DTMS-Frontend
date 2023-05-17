@@ -137,20 +137,22 @@ function DocumentView() {
             });
         }
         
-        let isAssignedToUser = document.assign.find(da => da.assigned_id === currentUser.id);
+        let isAssignedToUser = document.assign.filter(da => da.assigned_id === currentUser.id || (da.assigned_user.role.division_id === currentUser.role.division_id && da.assigned_user.role.level > currentUser.role.level));
 
         if (isAssignedToUser) {
-            newTimelineData = newTimelineData.concat({
-                text: <UsersText users={[isAssignedToUser.assigned_user.profile]} />,
-                date: moment(isAssignedToUser.created_at).format('MMMM DD, YYYY h:mm:ss a'),
-                category: {
-                    tag: '',
-                    color: '#6dedd4',
-                },
-                circleStyle: {
-                    borderColor: '#e17b77',
-                },
-            });
+            newTimelineData = newTimelineData.concat(
+                isAssignedToUser.map((assign) => ({
+                    text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
+                    date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                    category: {
+                        tag: '',
+                        color: '#6dedd4',
+                    },
+                    circleStyle: {
+                        borderColor: '#e17b77',
+                    },
+                }))
+            );
         }
 
         setTimelineData(newTimelineData);

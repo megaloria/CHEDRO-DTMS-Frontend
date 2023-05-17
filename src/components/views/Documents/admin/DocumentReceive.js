@@ -38,9 +38,10 @@ function DocumentReceive() {
     const [isOptionLoading, setIsOptionLoading] = useState(false);
     const [isOptionLoading1, setIsOptionLoading1] = useState(false);
     const [attachment, setAttachment] = useState(null);
-    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [selectedUsers, setSelectedUsers] = useState(null);
     const [dateReceived, setDateReceived] = useState(moment().format('YYYY-MM-DD'));
     const [isDisabled, setIsDisabled] = useState(false);
+    const [options, setOptions] = useState([]);
 
     //Add Receive documents
     const [documentTypes, setDocumentTypes] = useState([]);
@@ -121,19 +122,17 @@ function DocumentReceive() {
     // };
 
     const handleUserSelection = async (selectedOption) => {
-        const userId = selectedOption.value;
+        let userId = null;
+        if (selectedOption !== null) {
+            userId = selectedOption.value;
+        }
         setSelectedUsers(userId);
     };
-
-    const options = users.map(user => ({
-        value: user.id,
-        label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-    }));
 
     const handleSubmit = event => {
         event.preventDefault();
 
-        let assignTo = [selectedUsers];
+        let assignTo = selectedUsers ? [selectedUsers] : [];
 
         let validation = new Validator({
             ...formInputs,
@@ -245,7 +244,7 @@ function DocumentReceive() {
         event.preventDefault();
         setIsDisabled(true);
 
-        let assignTo = [selectedUsers];
+        let assignTo = selectedUsers ? [selectedUsers] : [];
 
         let validation = new Validator({
             ...formInputs,
@@ -282,6 +281,7 @@ function DocumentReceive() {
                 category_id: validation.errors.first('category_id'),
                 assignTo: validation.errors.first('assignTo')
             });
+            console.log(validation.errors, selectedUsers)
             return;
         } else {
             setFormErrors({
@@ -349,14 +349,30 @@ function DocumentReceive() {
             ...formInputs,
             [e.target.name]: e.target.value
         });
+
         if (e.target.name === 'date_received') {
             setDateReceived(e.target.value)
         } else if (e.target.name === 'category_id') {
-            setSelectedCategory(categories.find(c => c.id === +e.target.value));
-        }
+            let newSelectedCategory = categories.find(c => c.id === +e.target.value);
+            setSelectedCategory(newSelectedCategory);
 
-        if(!selectedCategory.is_assignable) {
-            setSelectedUsers(1)
+            if(!newSelectedCategory.is_assignable) {
+                let newOptions = users.map(user => ({
+                    value: user.id,
+                    label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+                }));
+                setOptions(newOptions);
+
+                let newSelectedUser = users.find(u => u.role.level === 2)?.id;
+                setSelectedUsers(newSelectedUser);
+            } else {
+                let newOptions = users.filter(u => u.role.level !== 2).map(user => ({
+                    value: user.id,
+                    label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+                }));
+                setOptions(newOptions);
+                setSelectedUsers(null)
+            }
         }
     }
 
@@ -802,19 +818,19 @@ function DocumentReceive() {
                             {
                                 selectedCategory && (
                                     <div style={{ marginTop: '10px' }}>
-                                        {selectedCategory.is_assignable && (
-                                            <Row>
-                                                <Col md={'auto'}>
-                                                    <Form.Label>Assign to <span className='text-muted'>(Optional)</span>:</Form.Label>
-                                                    <Select
-                                                        name='assignTo'
-                                                        options={options}
-                                                        value={options.find(option => option.value === selectedUsers)}
-                                                        onChange={handleUserSelection}
-                                                    />
-                                                </Col>
-                                            </Row>
-                                        )}
+                                        <Row>
+                                            <Col md={'auto'}>
+                                                <Form.Label>Assign to <span className='text-muted'>(Optional)</span>:</Form.Label>
+                                                <Select
+                                                    isClearable
+                                                    name='assignTo'
+                                                    options={options}
+                                                    value={options.find(option => option.value === selectedUsers)}
+                                                    onChange={handleUserSelection}
+                                                    isDisabled={!selectedCategory.is_assignable}
+                                                />
+                                            </Col>
+                                        </Row>
                                     </div>
                                 )
                             }
@@ -843,7 +859,7 @@ function DocumentReceive() {
 
                         <Col md="auto">
                             {selectedCategory &&
-                                (!selectedCategory.is_assignable || selectedUsers.length !== 0) &&
+                                (!selectedCategory.is_assignable || selectedUsers !== null) &&
                                 <Button onClick={handleForward} variant="primary" disabled={isDisabled}>
                                     Forward
                                 </Button>
