@@ -39,6 +39,7 @@ import moment from 'moment';
 import Select from 'react-select';
 import apiClient from '../../../../helpers/apiClient';
 import Swal from 'sweetalert2';
+import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 function DocumentView() {
     const document = useLoaderData();
@@ -691,7 +692,6 @@ function DocumentView() {
                                 )}
                             </Form.Label>
                             <Select
-                                isMulti
                                 name='assignTo'
                                 options={options}
                                 value={selectedOptions}
@@ -708,7 +708,7 @@ function DocumentView() {
                     <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                         Cancel
                     </Button>
-                    <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid}>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={isDisabled}>
                         Forward
                     </Button>
                 </Modal.Footer>

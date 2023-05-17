@@ -133,19 +133,20 @@ function DocumentEdit() {
         }
 
         setSelectedCategory(categories.find(c => c.id === document.category_id));
-        let userIds = document.assign.filter(l => l.assigned_id);
-        userIds = userIds.map(log => {
+        // let userIds = document.assign.filter(l => l.assigned_id);
+        let userIds = document.assign.map(log => {
             return log.assigned_id;
         });
-        setSelectedUsers(userIds);
+        setSelectedUsers(userIds.length > 0 ? userIds[0] : '');
     }, [formInputs.receivable_type, formInputs.province, formInputs.municipality, formInputs.insti, categories, document.category_id, document.assign]);
 
     //For assigning multiple users 
     //yarn add react-select
-    const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
+    const handleUserSelection = async (selectedOptions) => {
+        const userIds = selectedOptions.value;
         setSelectedUsers(userIds);
     };
+
 
     const options = users.map(user => ({
         value: user.id,
@@ -326,7 +327,12 @@ function DocumentEdit() {
     const handleSubmit = event => {
         event.preventDefault();
 
-        let validation = new Validator(formInputs, {
+        let assignTo = [selectedUsers];
+
+        let validation = new Validator({
+            ...formInputs,
+            assignTo
+        }, {
             document_type_id: 'required|integer|min:1',
             attachment: 'file',
             date_received: 'date',
@@ -338,7 +344,7 @@ function DocumentEdit() {
             chedoffices: 'integer|min:1',
             description: 'required|string|min:5',
             category_id: 'required|integer|min:1',
-            assignTo: 'array',
+            assignTo: 'array|max:1',
             'assignTo.*': 'integer|min:1'
         });
 
@@ -381,6 +387,8 @@ function DocumentEdit() {
     
     const handleEdit = () => {
         setIsDisabled(true);
+
+        let assignTo = [selectedUsers];
         const formData = new FormData();
 
         if (attachment) {
@@ -397,8 +405,8 @@ function DocumentEdit() {
         formData.append('receivable_name', formInputs.receivable_name);
         formData.append('description', formInputs.description);
         formData.append('category_id', formInputs.category_id);
-        for (let i = 0; i < selectedUsers.length; i++) {
-            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        for (let i = 0; i < assignTo.length; i++) {
+            formData.append(`assign_to[${i}]`, assignTo[i]);
         }
         
         apiClient.post(`/document/${document.id}`, formData, {
@@ -749,7 +757,7 @@ function DocumentEdit() {
             <Form.Group>
                 <div> 
                             <Form.Label>
-                                Category {document.logs && document.logs.length > 0 && document.logs[0].to_id !== null ? <span className='text-muted'>(Already Forwarded):</span> : ''}
+                                Category {document.logs && document.logs.length > 0 && document.logs[0].acknowledge_id !== null ? <span className='text-muted'>(Already Forwarded):</span> : ''}
                             </Form.Label>
 
                 </div>
@@ -764,7 +772,7 @@ function DocumentEdit() {
                                             value={category.id}
                                             checked={+formInputs.category_id === category.id}
                                             isInvalid={!!formErrors.category_id}
-                                            disabled={document.logs && document.logs.length > 0 && document.logs[0].to_id !== null} />
+                                            disabled={document.logs && document.logs.length > 0 && document.logs[0].acknowledge_id !== null} />
                                         <Form.Check.Label>
                                             {category.description}
                                         </Form.Check.Label>
@@ -792,12 +800,11 @@ function DocumentEdit() {
                                                     </Form.Label>
 
                                                     <Select
-                                                        isMulti
                                                         name="assignTo"
                                                         options={options}
-                                                        value={options.filter(option => selectedUsers.includes(option.value))}
+                                                        value={options.find(option => option.value === selectedUsers)}
                                                         onChange={handleUserSelection}
-                                                        isDisabled={document.logs && document.logs.length > 0 && document.logs[0].to_id !== null}
+                                                        isDisabled={document.logs && document.logs.length > 0 && document.logs[0].acknowledge_id !== null}
                                                     />
 
                                                 </Col>

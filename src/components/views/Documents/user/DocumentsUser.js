@@ -1017,7 +1017,6 @@ function DocumentsUser() {
                                     <Col md={'auto'}>
                                         <Form.Label>Forward to:</Form.Label>
                                         <Select
-                                            isMulti
                                             name='forwardTo'
                                             options={options}
                                             value={selectedOptions}
