@@ -137,7 +137,7 @@ function DocumentView() {
             });
         }
         
-        let isAssignedToUser = document.assign.filter(da => da.assigned_id === currentUser.id || (da.assigned_user.role.division_id === currentUser.role.division_id && da.assigned_user.role.level > currentUser.role.level));
+        let isAssignedToUser = document.assign.filter(da => da.assigned_id === currentUser.id || (da.assigned_user.role?.division_id === currentUser.role?.division_id && da.assigned_user.role.level > currentUser.role.level));
 
         if (isAssignedToUser) {
             newTimelineData = newTimelineData.concat(
@@ -285,6 +285,12 @@ function DocumentView() {
         });
     };
 
+    //For assigning multiple users 
+    const handleUserSelection = async (selectedOption) => {
+        const userId = selectedOption.value;
+        setSelectedUsers(userId);
+    };
+
     const handleShowModal = (data = null) => {
 
         if (data.category.is_assignable) {
@@ -313,11 +319,6 @@ function DocumentView() {
         });
     }
 
-    //For assigning multiple users 
-    const handleUserSelection = async (selectedOption) => {
-        const userId = selectedOption.value;
-        setSelectedUsers(userId);
-    };
 
     const handleHideModal = () => {
         setForwardError('');
@@ -343,6 +344,58 @@ function DocumentView() {
         );
     }
 
+    const renderShareButton = document => {
+        let groupedLogs = [];
+        for (let id in document.logs_grouped) {
+            let hasUser = document.logs_grouped[id].filter(lg => lg.to_id === currentUser.id && lg.assigned_id !== null);
+            if (hasUser.length > 0) {
+                groupedLogs = [...document.logs_grouped[id]];
+                break;
+            }
+        }
+
+        let indexOfLatestReceive = groupedLogs.findIndex(log => log.to_id === currentUser.id && log.action_id === null);
+        let indexOfLatestForward = groupedLogs.findIndex(log => log.from_id === currentUser.id && log.action_id === null);
+        let indexOfLatestForwardWithAction = groupedLogs.findIndex(log => log.from_id === currentUser.id && log.action_id !== null);
+        let indexOfLatestAcknowledge = groupedLogs.findIndex(log => log.acknowledge_id === currentUser.id);
+        let indexOfLatestRejected = groupedLogs.findIndex(log => log.to_id !== null && log.rejected_id !== null);
+        let actionLog = groupedLogs.find(log => log.action_id !== null);
+
+        return (
+            <>
+                {
+                    (
+                        (
+                            indexOfLatestForward === -1 || (
+                                indexOfLatestAcknowledge < indexOfLatestForward
+                            )
+                        ) &&
+                        (
+                            indexOfLatestForwardWithAction === -1 ||
+                            indexOfLatestAcknowledge < indexOfLatestForwardWithAction
+                        ) &&
+                        indexOfLatestReceive !== -1 &&
+                        indexOfLatestAcknowledge !== -1 &&
+                        indexOfLatestAcknowledge < indexOfLatestReceive &&
+                        (
+                            !actionLog ||
+                            indexOfLatestRejected > -1
+                        )
+                    ) ? (
+                        <>
+                            {
+                                users.length > 0 && (
+                                    <Button size='sm' onClick={e => handleShowModal(document)}>
+                                        <FontAwesomeIcon icon={faShare} className="text-link" /> Forward
+                                    </Button>
+                                )
+                            }
+                        </>
+                    ) : null
+                }
+            </>
+        )
+    }
    
     return (
         <div className="container fluid">
@@ -355,33 +408,9 @@ function DocumentView() {
                         </Breadcrumb>
                     </Col>
                     <Col md="auto">
-                        {document.category.is_assignable ? (
-                            <Button onClick={e => {
-                                if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-                                    setIsSelectDisabled(false);
-                                } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
-                                    setIsSelectDisabled(true);
-                                } else if (!document.category.is_assignable) {
-                                    setIsSelectDisabled(true);
-                                }
-                                handleShowModal(document);
-                            }}>
-                                <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
-                            </Button>
-                        ) : !document.category.is_assignable && document.logs.length === 0 ? (
-                                <Button onClick={e => {
-                                    if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-                                        setIsSelectDisabled(false);
-                                    } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
-                                        setIsSelectDisabled(true);
-                                    } else if (!document.category.is_assignable) {
-                                        setIsSelectDisabled(true);
-                                    }
-                                    handleShowModal(document);
-                                }}>
-                                    <FontAwesomeIcon icon={faShare} className="text-link" /> Forward
-                                </Button>
-                        ) : null}
+                        {
+                            renderShareButton(document)
+                        }
                     </Col>
                 </Row>
             </div>
