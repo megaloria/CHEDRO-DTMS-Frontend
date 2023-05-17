@@ -772,17 +772,15 @@ function DocumentsUser() {
                                                                                 Acknowledged by
                                                                             </Popover.Header>
                                                                             <Popover.Body>
-                                                                                <ListGroup variant="flush">
-                                                                                    {row.logs.map((log, index) => (
-                                                                                        (loaderData.id === log.acknowledge_id && loaderData.id === log.assigned_id) ? (
-                                                                                            <ListGroupItem
-                                                                                                className="custom-badge text-white"
-                                                                                                key={log.acknowledge_user.profile.id}
-                                                                                            >
-                                                                                                {log.acknowledge_user.profile.name}
-                                                                                            </ListGroupItem>
-                                                                                        ) : null
-                                                                                    ))}
+                                                                            <ListGroup variant="flush">
+                                                                                {row.logs.length > 0 ? (
+                                                                                    <ListGroupItem className="custom-badge text-white" 
+                                                                                    key={row.logs[0]?.acknowledge_user.profile.id}
+                                                                                    >
+
+                                                                                    {row.logs[0]?.acknowledge_user.profile.name}
+                                                                                    </ListGroupItem>
+                                                                                ) : null}
                                                                                 </ListGroup>
 
                                                                                 {/* {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
@@ -830,7 +828,7 @@ function DocumentsUser() {
                                                                 >
                                                                     <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
                                                                 </OverlayTrigger>
-                                                            ) : row.logs[0].to_id === loaderData.id ? (
+                                                            ) : row.logs[0].to_id ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
                                                                     placement="left"
