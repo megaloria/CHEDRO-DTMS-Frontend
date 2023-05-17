@@ -30,7 +30,9 @@ import {
     faBuildingUser,
     faClock,
     faUserCheck,
-    faQuoteRight
+    faQuoteRight,
+    faEdit,
+    faThumbsUp
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData, useNavigate, useLocation
@@ -316,60 +318,68 @@ function DocumentView() {
     return (
         <div className="container fluid">
             <div className="crud bg-body rounded"> 
-                <Row className= "justify-content-end mt-4 mb-3">
-                    <Col>
-                        <Breadcrumb>
-                            <Breadcrumb.Item linkAs={Link} linkProps={{  to: '../' }}>Document</Breadcrumb.Item>
-                            <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
-                        </Breadcrumb>
-                    </Col>
-                    <Col md="auto">
-                        {
-                            (document.logs.length === 0 || !document.logs.some(log => log.acknowledge_id !== null)) && (
-                                <>
-                                    <Button size='sm' onClick={e => handleShowModal(document)}>
-                                        <FontAwesomeIcon icon={faShare} className="text-link" /> Forward
-                                    </Button>
-                                </>
-                            )
-                        }
-                    </Col>
-                </Row>
+                <div className='mt-3'>
+                    <Breadcrumb>
+                        <Breadcrumb.Item linkAs={Link} linkProps={{  to: '../' }}>Document</Breadcrumb.Item>
+                        <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
+                    </Breadcrumb>
+                </div>
+                <div className='text-end mb-3 m-1'>
+                    {
+                        (document.logs[0]?.to_id === document.user_id && document.logs[0]?.acknowledge_id !== document.user_id) && (
+                            <Button variant="success" /*onClick={e => showAcknowledgeAlert(document)}*/>
+                                <FontAwesomeIcon icon={faThumbsUp} /> <span className='d-none d-md-inline-block'>Acknowledge</span>
+                            </Button>
+                        )
+                    }
+                    {
+                        (document.logs.length === 0 || !document.logs.some(log => log.acknowledge_id !== null)) && (
+                            <>
+                                {
+                                    (document.category.is_assignable || document.logs.length === 0) && (
+                                        <Button className="ms-2" onClick={e => handleShowModal(document)}>
+                                            <FontAwesomeIcon icon={faShare} /> <span className='d-none d-md-inline-block'>Forward</span>
+                                        </Button>
+                                    )
+                                }
+                                <Button variant='success' className="ms-2" as={Link} to={`../edit/${document.id}`} state={{ from: 'view' }} >
+                                    <FontAwesomeIcon icon={faEdit} />  <span className='d-none d-md-inline-block'>Edit</span>
+                                </Button>
+                            </>
+                        )
+                    }
+                </div>
             </div>
 
-            <div style={{margin:'0 30px', }}> 
+            <div className='m-1'> 
                 <Card 
                         bg="light"
                         border="light" style={{ marginRight:'auto'}}>
     
                     <Card.Body>
-                    <Row>
-                    <span className="d-none d-md-inline-block" >
-                        <Col className='float-right offset-md-10' style={{whiteSpace:'nowrap'}}>
-                            <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
-                            <i style={{color:'#545454'}}> {moment(document.created_at).format('MMMM DD, YYYY')} 
-                                </i> 
-                        </Col> 
-                    </span>
+                        <div className='text-end'>
+                            <div className="d-none d-md-block" style={{ whiteSpace: 'nowrap'}} >
+                                    <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
+                                    <i style={{color:'#545454'}}> {moment(document.created_at).format('MMMM DD, YYYY')} 
+                                        </i> 
+                            </div>
 
-                    <div className='d-block d-md-none'>
-                    {['bottom'].map((placement) => (
-                    <OverlayTrigger
-                        key={placement}
-                        placement={placement}
-                        overlay={
-                            <Tooltip id={`tooltip-${placement}`}>
-                                {moment(document.created_at).format('MMMM DD, YYYY')}
-                            </Tooltip>
-                        }
-                        >
-                        <Button size='sm' variant='outline' style={{float: 'right'}}>
-                            <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
-                        </Button>
-                        </OverlayTrigger>
-                    ))}
-                    </div>
-                    </Row>
+                            <div className='d-block d-md-none'>
+                                <OverlayTrigger
+                                    placement='bottom'
+                                    overlay={
+                                        <Tooltip>
+                                            {moment(document.created_at).format('MMMM DD, YYYY')}
+                                        </Tooltip>
+                                    }
+                                    trigger={['click', 'hover']}
+                                    >
+                                    <Button size='sm' variant='outline'>
+                                        <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
+                                    </Button>
+                                </OverlayTrigger>
+                            </div>
+                        </div>
 
                         <Row className="mb-3"> 
                             <Col> 
