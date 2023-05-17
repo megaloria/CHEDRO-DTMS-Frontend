@@ -50,7 +50,7 @@ function DocumentView() {
     const [url, setUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [isValid, setIsValid] = useState(true);
+    const [forwardError, setForwardError] = useState('');
     const [isNavigationLoading, setIsNavigationLoading] = useState(true);
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -255,8 +255,10 @@ function DocumentView() {
         setIsDisabled(true);
         const formData = new FormData();
 
-        for (let i = 0; i < selectedUsers.length; i++) {
-            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        let assignTo = [selectedUsers];
+
+        for (let i = 0; i < assignTo.length; i++) {
+            formData.append(`assign_to[${i}]`, assignTo[i]);
         }
 
         apiClient.post(`/document/${document.id}/forward`, formData, {
@@ -277,32 +279,30 @@ function DocumentView() {
             
         }).catch(error => {
             setIsDisabled(false)
-            setIsValid(false);
+            setForwardError(error);
         });
     };
 
-    const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
-
     const handleShowModal = (data = null) => {
 
-        options = users.map(user => ({
-            value: user.id,
-            label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-        }));
-
-        const assigned = data.logs.map(log => log.to_id);
-        const optionsFiltered = options.filter(option => !assigned.includes(option.value));
-        setOptions(optionsFiltered);
-
-        if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
-            setSelectedUsers([]);
+        if (data.category.is_assignable) {
+            setOptions(users.filter(user => user.id !== 1).map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })));
         } else {
-            let userIds = data.assign.filter(l => l.assigned_id);
-            userIds = userIds.map(log => {
-                return log.assigned_id;
-            });
-            setSelectedUsers(userIds);
+            setOptions(users.map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })))
+            setIsSelectDisabled(true)
         }
+
+
+        let userIds = data.assign.map(log => {
+            return log.assigned_id;
+        });
+        setSelectedUsers(userIds.length > 0 ? userIds[0] : '');
 
         setModal({
             show: true,
@@ -312,15 +312,13 @@ function DocumentView() {
     }
 
     //For assigning multiple users 
-    const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
-        setSelectedUsers(userIds);
-        // Update the form validity
-        setIsValid(selectedOptions.length > 0);
+    const handleUserSelection = async (selectedOption) => {
+        const userId = selectedOption.value;
+        setSelectedUsers(userId);
     };
 
     const handleHideModal = () => {
-        setIsValid(true);
+        setForwardError('');
         setIsSelectDisabled(false);
         setModal({
             show: false,
@@ -727,12 +725,15 @@ function DocumentView() {
                             <Select
                                 name='assignTo'
                                 options={options}
-                                value={selectedOptions}
+                                value={options.find(option => option.value === selectedUsers)}
                                 onChange={handleUserSelection}
-                                Required
                                 isDisabled={isSelectDisabled}
                             />
-                            {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
+                            {
+                                forwardError && (
+                                    <p style={{ color: 'red' }}>{forwardError}</p>
+                                )
+                            }
                         </Col>
                     </Row>
                 </Modal.Body>

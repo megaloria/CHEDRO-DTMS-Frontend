@@ -40,7 +40,9 @@ import Validator from 'validatorjs';
 function DocumentsUser() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [isDisabled, setIsDisabled] = useState(false); 
+    const [isSelectDisabled, setIsSelectDisabled] = useState(false); 
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
+    const [forwardError, setForwardError] = useState('');
     const [data, setData] = useState([]);
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
@@ -346,20 +348,33 @@ function DocumentsUser() {
         };
     };
 
-    const [isValid, setIsValid] = useState(true);
-
     //For assigning multiple users 
-    const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
-        setSelectedUsers(userIds);
-        // Update the form validity
-        setIsValid(selectedOptions.length > 0);
+    const handleUserSelection = async (selectedOption) => {
+        const userId = selectedOption.value;
+        setSelectedUsers(userId);
     };
 
-    const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
-
     const handleShowForward = (data = null) => {
-        
+
+        if (data.category.is_assignable) {
+            setOptions(users.filter(user => user.id !== 1).map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })));
+        } else {
+            setOptions(users.map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })))
+            setIsSelectDisabled(true)
+        }
+
+
+        let userIds = data.assign.map(log => {
+            return log.assigned_id;
+        });
+        setSelectedUsers(userIds.length > 0 ? userIds[0] : '');
+
         setModal({
             show: true,
             data,
@@ -370,7 +385,8 @@ function DocumentsUser() {
 
     const handleHideModal = () => {
 
-        setIsValid(true);
+        setForwardError('');
+        setIsSelectDisabled(false);
 
         setModal({
             show: false,
@@ -409,10 +425,13 @@ function DocumentsUser() {
     const handleForward = event => {
         setIsDisabled(true)
         event.preventDefault();
+
+        let assignTo = [selectedUsers];
+
         const formData = new FormData();
 
-        for (let i = 0; i < selectedUsers.length; i++) {
-            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        for (let i = 0; i < assignTo.length; i++) {
+            formData.append(`assign_to[${i}]`, assignTo[i]);
         }
 
         apiClient.post(`/document/${modal.data?.id}/forward`, formData, {
@@ -429,7 +448,7 @@ function DocumentsUser() {
             })
         }).catch(error => {
             setIsDisabled(false)
-            setIsValid(false);
+            setForwardError(error);
         });
     };
 
@@ -1000,13 +1019,17 @@ function DocumentsUser() {
                                     <Col md={'auto'}>
                                         <Form.Label>Forward to:</Form.Label>
                                         <Select
-                                            name='forwardTo'
-                                            options={options}
-                                            value={selectedOptions}
-                                            onChange={handleUserSelection}
-                                            Required
-                                        />
-                                        {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
+                                        name='assignTo'
+                                        options={options}
+                                        value={options.find(option => option.value === selectedUsers)}
+                                        onChange={handleUserSelection}
+                                        isDisabled={isSelectDisabled}
+                                    />
+                                    {
+                                        forwardError && (
+                                            <p style={{ color: 'red' }}>{forwardError}</p>
+                                        )
+                                    }
                                     </Col>
                                 </Row>
                             </Modal.Body>
@@ -1015,7 +1038,7 @@ function DocumentsUser() {
                                 <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                                     Cancel
                                 </Button>
-                                <Button type='submit' variant='primary' onClick={handleForward} disabled={!isValid || isDisabled}>
+                                <Button type='submit' variant='primary' onClick={handleForward} disabled={isDisabled}>
                                     Forward
                                 </Button>
                             </Modal.Footer>
