@@ -39,20 +39,20 @@ import moment from 'moment';
 import Select from 'react-select';
 import apiClient from '../../../../helpers/apiClient';
 import Swal from 'sweetalert2';
-import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 function DocumentView() {
     const document = useLoaderData();
     const location = useLocation();
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
-    let [options, setOptions] = useState([]);
+    const [options, setOptions] = useState([]);
     const [url, setUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [isValid, setIsValid] = useState(true);
+    const [forwardError, setForwardError] = useState('');
     const [isNavigationLoading, setIsNavigationLoading] = useState(true);
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
     const [timelineData, setTimelineData] = useState([]);
     const navigate = useNavigate();
 
@@ -223,11 +223,15 @@ function DocumentView() {
 
 
     const handleForward = event => {
-        event.currentTarget.disabled = true;
+        setIsDisabled(true)
+        event.preventDefault();
+
+        let assignTo = [selectedUsers];
+
         const formData = new FormData();
 
-        for (let i = 0; i < selectedUsers.length; i++) {
-            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        for (let i = 0; i < assignTo.length; i++) {
+            formData.append(`assign_to[${i}]`, assignTo[i]);
         }
 
         apiClient.post(`/document/${document.id}/forward`, formData, {
@@ -246,32 +250,30 @@ function DocumentView() {
             navigate(`/documents/view/${document.id}`);
             
         }).catch(error => {
-            setIsValid(false);
+            setIsDisabled(false)
+            setForwardError(error);
         });
     };
 
-    const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
-
     const handleShowModal = (data = null) => {
 
-        options = users.map(user => ({
-            value: user.id,
-            label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-        }));
-
-        const assigned = data.logs.map(log => log.to_id);
-        const optionsFiltered = options.filter(option => !assigned.includes(option.value));
-        setOptions(optionsFiltered);
-
-        if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
-            setSelectedUsers([]);
+        if (data.category.is_assignable) {
+            setOptions(users.filter(user => user.role.level !== 2).map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })));
         } else {
-            let userIds = data.assign.filter(l => l.assigned_id);
-            userIds = userIds.map(log => {
-                return log.assigned_id;
-            });
-            setSelectedUsers(userIds);
+            setOptions(users.map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })))
+            setIsSelectDisabled(true)
         }
+
+        let userIds = data.assign.map(log => {
+            return log.assigned_id;
+        });
+        setSelectedUsers(userIds.length > 0 ? userIds[0] : '');
 
         setModal({
             show: true,
@@ -281,15 +283,13 @@ function DocumentView() {
     }
 
     //For assigning multiple users 
-    const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
-        setSelectedUsers(userIds);
-        // Update the form validity
-        setIsValid(selectedOptions.length > 0);
+    const handleUserSelection = async (selectedOption) => {
+        const userId = selectedOption.value;
+        setSelectedUsers(userId);
     };
 
     const handleHideModal = () => {
-        setIsValid(true);
+        setForwardError('');
         setIsSelectDisabled(false);
         setModal({
             show: false,
@@ -324,33 +324,15 @@ function DocumentView() {
                         </Breadcrumb>
                     </Col>
                     <Col md="auto">
-                        {document.category.is_assignable ? (
-                            <Button onClick={e => {
-                                if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-                                    setIsSelectDisabled(false);
-                                } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
-                                    setIsSelectDisabled(true);
-                                } else if (!document.category.is_assignable) {
-                                    setIsSelectDisabled(true);
-                                }
-                                handleShowModal(document);
-                            }}>
-                                <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
-                            </Button>
-                        ) : !document.category.is_assignable && document.logs.length === 0 ? (
-                                <Button onClick={e => {
-                                    if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-                                        setIsSelectDisabled(false);
-                                    } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
-                                        setIsSelectDisabled(true);
-                                    } else if (!document.category.is_assignable) {
-                                        setIsSelectDisabled(true);
-                                    }
-                                    handleShowModal(document);
-                                }}>
-                                    <FontAwesomeIcon icon={faShare} className="text-link" /> Forward
-                                </Button>
-                        ) : null}
+                        {
+                            (document.logs.length === 0 || !document.logs.some(log => log.acknowledge_id !== null)) && (
+                                <>
+                                    <Button size='sm' onClick={e => handleShowModal(document)}>
+                                        <FontAwesomeIcon icon={faShare} className="text-link" /> Forward
+                                    </Button>
+                                </>
+                            )
+                        }
                     </Col>
                 </Row>
             </div>
@@ -694,12 +676,15 @@ function DocumentView() {
                             <Select
                                 name='assignTo'
                                 options={options}
-                                value={selectedOptions}
+                                value={options.find(option => option.value === selectedUsers)}
                                 onChange={handleUserSelection}
-                                Required
                                 isDisabled={isSelectDisabled}
                             />
-                            {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
+                            {
+                                forwardError && (
+                                    <p style={{ color: 'red' }}>{forwardError}</p>
+                                )
+                            }
                         </Col>
                     </Row>
                 </Modal.Body>
