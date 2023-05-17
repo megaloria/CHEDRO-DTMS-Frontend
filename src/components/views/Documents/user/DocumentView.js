@@ -431,21 +431,18 @@ function DocumentView() {
                     </span>
 
                     <div className='d-block d-md-none'>
-                    {['bottom'].map((placement) => (
-                    <OverlayTrigger
-                        key={placement}
-                        placement={placement}
-                        overlay={
-                            <Tooltip id={`tooltip-${placement}`}>
-                                {moment(document.created_at).format('MMMM DD, YYYY')}
-                            </Tooltip>
-                        }
-                        >
-                        <Button size='sm' variant='outline' style={{float: 'right'}}>
-                            <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
-                        </Button>
+                        <OverlayTrigger
+                            placement='bottom'
+                            overlay={
+                                <Tooltip>
+                                    {moment(document.created_at).format('MMMM DD, YYYY')}
+                                </Tooltip>
+                            }
+                            >
+                            <Button size='sm' variant='outline' style={{float: 'right'}}>
+                                <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
+                            </Button>
                         </OverlayTrigger>
-                    ))}
                     </div>
                     </Row>
 
@@ -681,21 +678,23 @@ function DocumentView() {
                             </Col>
                         </Row>
 
-                        {document.assign && document.assign.length > 0 ? (
-                        <Row className="mb-3">
-                            <Col> 
-                            <FontAwesomeIcon icon={faUserCheck} className='text-dark' style={{marginRight:'18px'}}/>
-                                {document.assign.map((assign, index) => (
-                                    <span key={assign.assigned_user.profile.id}>
-                                        {assign.assigned_user.profile.name}
-                                        {index !== document.assign.length - 1 ? ', ' : ''}
-                                    </span>
-                                ))}
-                            </Col>
-                            </Row>    
-                                ) : ( null
-                                   
-                                )}
+                        {
+                            (document.assign && document.assign.length > 0 && document.assign.filter(da => da.assigned_user?.role.level >= currentUser?.role.level).length > 0) && (
+                                <Row className="mb-3">
+                                    <Col>
+                                        <FontAwesomeIcon icon={faUserCheck} className='text-dark' style={{marginRight:'18px'}}/>
+                                        {
+                                            document.assign.filter(da => da.assigned_user.role.level >= currentUser?.role.level).map((assign, index) => (
+                                                <span key={assign.assigned_user.profile.id}>
+                                                    {assign.assigned_user.profile.name}
+                                                    {index !== document.assign.length - 1 ? ', ' : ''}
+                                                </span>
+                                            ))
+                                        }
+                                    </Col>
+                                </Row>
+                            )
+                        }
                         {/* <Row className="mb-3">
                             <Col>
                                 <FontAwesomeIcon icon={faUserCheck} className="text-dark" style={{marginRight:'18px'}}/>
