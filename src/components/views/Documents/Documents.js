@@ -257,7 +257,7 @@ function Documents() {
         // }
 
         if(data.category.is_assignable) {
-            setOptions(users.filter(user => user.id !== 1).map(user => ({
+            setOptions(users.filter(user => user.role.level !== 2).map(user => ({
                 value: user.id,
                 label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
             })));
@@ -268,13 +268,11 @@ function Documents() {
             })))
             setIsSelectDisabled(true)
         }
-           
 
         let userIds = data.assign.map(log => {
             return log.assigned_id;
         });
         setSelectedUsers(userIds.length > 0 ? userIds[0] : '');
-
 
         setModal({
             show: true,
@@ -419,6 +417,57 @@ function Documents() {
         });
     };
 
+    const renderButtons = row => {
+        return (
+            <>
+                {/* {
+                    activeTab === 'ongoing' && (
+                        <Button>Hello</Button>
+                    )
+                } */}
+
+                {row.logs[0]?.to_id === row.user_id && row.logs[0]?.acknowledge_id !== row.user_id ? (
+                    <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
+                        <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
+                    </Button>
+                ) : null}
+
+                {
+                    (row.logs.length === 0 || !row.logs.some(log => log.acknowledge_id !== null)) && (
+                        <>
+                            <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                <FontAwesomeIcon icon={faShare} className="" />
+                            </Button>
+                            <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
+                                <FontAwesomeIcon icon={faEdit} className="text-success" />
+                            </Button>
+                        </>
+                    )
+                }
+
+                {
+                    (!row.logs || row.logs.length === 0) && (
+                        <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
+                            <FontAwesomeIcon icon={faTrash} className="text-danger" />
+                        </Button>
+                    )
+                }
+
+                {
+                    (
+                        row.logs[0]?.to_id === null &&
+                        row.logs[0]?.action_id === null &&
+                        row.logs[0]?.acknowledge_id === null
+                    ) && (
+                        <Button variant="outline-success" size='sm' >
+                            <FontAwesomeIcon icon={faCircleArrowUp} className="" /> Release
+                        </Button>
+                    )
+                }
+            </>
+        );
+    }
+
 
     const renderTable = () => {
         if (isTableLoading) {
@@ -529,12 +578,12 @@ function Documents() {
                                                                     placement="left"
                                                                     overlay={
                                                                         <Popover>
-                                                                            <Popover.Header className="bg-success text-white">
+                                                                            <Popover.Header className="custom-rejected">
                                                                                 Rejected by
                                                                             </Popover.Header>
                                                                             <Popover.Body>
                                                                                 <ListGroup variant="flush">
-                                                                                        <ListGroupItem variant="success text-black" >
+                                                                                        <ListGroupItem className="custom-rejected" >
                                                                                             {row.logs[0]?.rejected_user?.profile?.name}
                                                                                         </ListGroupItem>
                                                                                 </ListGroup>
@@ -542,7 +591,7 @@ function Documents() {
                                                                         </Popover>
                                                                     }
                                                                 >
-                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Rejected</Badge>
+                                                                    <Badge bg="" className="custom-rejected" style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                                 </OverlayTrigger>
                                                             ) :
                                                         (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null) ? (
@@ -594,7 +643,7 @@ function Documents() {
                                                                                         ))}
                                                                                 </ListGroup>
 
-                                                                                {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
+                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
                                                                                     <div>Forwarded To:</div>
                                                                                 )}
                                                                                 <ListGroup variant="flush">
@@ -603,7 +652,7 @@ function Documents() {
                                                                                             {log?.user?.profile?.name}
                                                                                         </ListGroupItem>
                                                                                     ))}
-                                                                                </ListGroup>
+                                                                                </ListGroup> */}
 
                                                                             </Popover.Body>
                                                                         </Popover>
@@ -611,7 +660,7 @@ function Documents() {
                                                                 >
                                                                 <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                             </OverlayTrigger>
-                                                        ) : row.logs.some(log => log.to_id !== null) ? (
+                                                        ) : row.logs[0].to_id !== null ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
                                                                 placement="left"
@@ -622,17 +671,15 @@ function Documents() {
                                                                         </Popover.Header>
                                                                         <Popover.Body>
                                                                             <ListGroup variant="flush">
-                                                                                {row.logs.map((log, index) => (
-                                                                                    log.to_id !== null ? (
-                                                                                        <ListGroupItem
-                                                                                            variant="warning text-black"
-                                                                                            key={log.user.profile.id}
-                                                                                        >
-                                                                                            {log.user.profile.name}
-                                                                                        </ListGroupItem>
-                                                                                    ) : null
-                                                                                ))}
-                                                                            </ListGroup>
+                                                                                {row.logs.length > 0 ? (
+                                                                                    <ListGroupItem className="bg-warning text-white"
+                                                                                    key={row.logs[0]?.user.profile.id}
+                                                                                    >
+
+                                                                                    {row.logs[0]?.user.profile.name}
+                                                                                    </ListGroupItem>
+                                                                                ) : null}
+                                                                                </ListGroup>
                                                                         </Popover.Body>
                                                                     </Popover>
                                                                 }
@@ -675,72 +722,10 @@ function Documents() {
                                         </td>
 
                                         <td style={{ whiteSpace: 'nowrap' }}>
-                                            {/* {
-                                                activeTab === 'ongoing' && (
-                                                    <Button>Hello</Button>
-                                                )
-                                            } */}
-
                                             <Button className='me-1' variant="outline-primary" size='sm' as={Link} to={`view/${row.id}`} >
                                                 <FontAwesomeIcon icon={faCircleArrowRight} className="" /> View
                                             </Button>
-
-                                            {row.logs[0]?.to_id === row.user_id && row.logs[0]?.acknowledge_id !== row.user_id ? (
-                                                <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                                                    <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
-                                                </Button>
-                                            ) : null}
-
-                                            {row.logs.some(log =>log.acknowledge_id !== null &&
-                                                 log.action_id !== null && log.from_id !== null && 
-                                                     log.to_id !== null && log.rejected_id !== null)
-                                                        && row.category.is_assignable ? (
-                                                <Button variant="link" size='sm' onClick={e => {
-                                                    if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                        setIsSelectDisabled(false);
-                                                    } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                        setIsSelectDisabled(true);
-                                                    } else if (!row.category.is_assignable) {
-                                                        setIsSelectDisabled(true);
-                                                    }
-                                                    handleShowModal(row);
-                                                }}>
-                                                    <FontAwesomeIcon icon={faShare} className="" />
-                                                </Button>
-                                            ) : !row.category.is_assignable && row.logs.length === 0  ? (
-                                                <Button variant="link" size='sm' onClick={e => {
-                                                    let isDisabled = false;
-                                                    if (row.logs.length > 0 && row.logs.some(log => log.acknowledge_id !== null)) {
-                                                        isDisabled = false;
-                                                    } else if (!row.category.is_assignable && row.logs.length > 0 && row.logs.some(log => log.to_id !== null)) {
-                                                        isDisabled = true;
-                                                    } else if (!row.category.is_assignable) {
-                                                        isDisabled = true;
-                                                    }
-                                                    handleShowModal(row, isDisabled);
-                                                }}>
-                                                    <FontAwesomeIcon icon={faShare} className="" />
-                                                </Button>
-                                            ) : null}
-
-                                            { row.logs.length === 0 || row.logs.some(log => log.acknowledge_id !== null &&
-                                                log.action_id !== null && log.from_id !== null &&
-                                                log.to_id !== null && log.rejected_id !== null) ? 
-                                             <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
-                                                <FontAwesomeIcon icon={faEdit} className="text-success" />
-                                            </Button> : null}
-
-                                            {!row.logs || row.logs.length === 0 ? (
-                                                <Button onClick={e => showDeleteAlert(row)} variant="link" size="sm">
-                                                    <FontAwesomeIcon icon={faTrash} className="text-danger" />
-                                                </Button>
-                                            ) : null}
-
-                                            {row.logs[0]?.to_id === null && row.logs[0]?.from_id === 1 && row.logs[0]?.approved_id === 1 ? (
-                                                <Button variant="outline-success" size='sm' >
-                                                    <FontAwesomeIcon icon={faCircleArrowUp} className="" /> Release
-                                                </Button>
-                                            ) : null}
+                                            {renderButtons(row)}
                                         </td>
                                     </tr>
 

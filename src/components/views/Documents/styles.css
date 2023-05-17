@@ -47,7 +47,7 @@
   }
 
   .custom-rejected {
-    background-color: #D22B2B !important; 
+    background-color: #fd0303 !important; 
     color: white !important;
   }
   .ack-btn{
@@ -62,6 +62,31 @@
     background-color:#E5E4E2;
     color: black;
     font-size: 13.5px;
+    font-weight: bold;
+  }
+
+  .forwarded-text {
+    /* background-color: #ffc107; */
+    color:#ffc107c7;
+    font-weight: bold;
+  }
+
+  .ack-text {
+    color:#d2691e;
+    font-weight: bold;
+  }
+
+  .act-approve-text {
+    color: #198754;
+    font-weight: bold;
+  }
+
+  .reject-text {
+    color:#D22B2B;
+    font-weight: bold;
+  }
+
+  .assign-text {
     font-weight: bold;
   }
   
