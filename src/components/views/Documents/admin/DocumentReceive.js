@@ -354,6 +354,10 @@ function DocumentReceive() {
         } else if (e.target.name === 'category_id') {
             setSelectedCategory(categories.find(c => c.id === +e.target.value));
         }
+
+        if(!selectedCategory.is_assignable) {
+            setSelectedUsers(1)
+        }
     }
 
     useEffect(() => {
@@ -843,6 +847,7 @@ function DocumentReceive() {
                                 <Button onClick={handleForward} variant="primary" disabled={isDisabled}>
                                     Forward
                                 </Button>
+                                
                             }
                         </Col>
                     </div>
