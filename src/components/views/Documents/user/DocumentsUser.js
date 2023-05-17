@@ -845,9 +845,9 @@ function DocumentsUser() {
                                                                                             (loaderData.id === log.to_id) ? (
                                                                                                 <ListGroupItem
                                                                                                     variant="warning text-black"
-                                                                                                    key={log.from_user.profile.id}
+                                                                                                    key={log.from_user?.profile.id}
                                                                                                 >
-                                                                                                    {log.from_user.profile.name}
+                                                                                                    {log.from_user?.profile.name}
                                                                                                 </ListGroupItem>
                                                                                             ) : null
                                                                                         ))}
@@ -999,7 +999,6 @@ function DocumentsUser() {
                                     <Col md={'auto'}>
                                         <Form.Label>Forward to:</Form.Label>
                                         <Select
-                                            isMulti
                                             name='forwardTo'
                                             options={options}
                                             value={selectedOptions}
