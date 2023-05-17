@@ -46,8 +46,23 @@
     background-color:chocolate !important;
   }
 
+  .custom-rejected {
+    background-color: #D22B2B !important; 
+    color: white !important;
+  }
   .ack-btn{
     color:chocolate !important;
+  }
+
+  .quote-left {
+    color: black;
+  }
+
+  .comment-text {
+    background-color:#E5E4E2;
+    color: black;
+    font-size: 13.5px;
+    font-weight: bold;
   }
   
   

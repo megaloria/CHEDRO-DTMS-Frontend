@@ -29,7 +29,8 @@ import {
     faTag,
     faBuildingUser,
     faClock,
-    faUserCheck
+    faUserCheck,
+    faQuoteRight
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData, useNavigate, useLocation, useRouteLoaderData
@@ -99,7 +100,7 @@ function DocumentView() {
             return {
                 text: log.rejected_id !== null && log.from_id === null ? <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]} log={log}/> : 
                         log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} log={log} /> :
-                            log.action_id !== null && log.comment !== null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} log={log} /> :
+                            log.action_id !== null && log.comment !== null && log.from_id === null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} log={log} /> :
                                 log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} log={log} /> :
                                     log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} log={log} /> : log.to_id === null ? <>Document for Releasing</> : null,
                     date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
@@ -154,7 +155,7 @@ function DocumentView() {
         }
 
         setTimelineData(newTimelineData);
-    }, [document.logs, document.assign]);
+    }, [document.logs, document.assign, currentUser]);
 
 
     const ForwardedUsersText = ({ users }) => (
@@ -183,7 +184,7 @@ function DocumentView() {
 
     const ActionedUsersText = ({ users, log }) => (
         <>
-            Document actioned by:{" "}
+            Document acted by:{" "}
             {users.map((user, index) => (
                 <p key={user?.id}>
                     {user?.name} - <i>{user?.position_designation}</i>
@@ -192,15 +193,15 @@ function DocumentView() {
             ))}
             {
                 log.comment && (
-                    <div>
-                        <FontAwesomeIcon icon={faQuoteLeft} className=''/> {log.comment}
-                    </div>
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left'/> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
                 )
             }
         </>
     );
 
-    const ApprovedUsersText = ({ users }) => (
+    const ApprovedUsersText = ({ users, log }) => (
         <>
             Document approved by:{" "}
             {users.map((user, index) => (
@@ -209,10 +210,17 @@ function DocumentView() {
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
+            {
+                log.comment && (
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
+                )
+            }
         </>
     );
 
-    const RejectedUsersText = ({ users }) => (
+    const RejectedUsersText = ({ users, log }) => (
         <>
             Document rejected by:{" "}
             {users.map((user, index) => (
@@ -221,6 +229,13 @@ function DocumentView() {
                     {index !== users.length - 1 ? ", " : ""}
                 </p>
             ))}
+            {
+                log.comment && (
+                    <span className='comment-text'>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                    </span>
+                )
+            }
         </>
     );
 
