@@ -45,6 +45,7 @@ import Swal from 'sweetalert2';
 function DocumentView() {
     const document = useLoaderData();
     const location = useLocation();
+    const [data, setData] = useState({ data: [] });
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
     const [options, setOptions] = useState([]);
@@ -314,6 +315,54 @@ function DocumentView() {
         );
     }
 
+
+    // ACKNOWLEDGE
+    const showAcknowledgeAlert = document => {
+        setIsDisabled(true)
+        Swal.fire({
+            title: `Are you sure you want to Acknowledge the document no."${document.tracking_no}"?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#7066e0',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, acknowledge it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
+                    let newData = [...data.data].map(d => {
+                        if (d.id === response.data.data.id) {
+                            return {
+                                ...response.data.data
+                            };
+                        }
+
+                        return {
+                            ...d
+                        };
+                    });
+                    setData({
+                        ...data,
+                        data: newData
+                    });
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                }).finally(() => {
+                    setIsDisabled(false)
+                });
+            }
+        });
+    };
    
     return (
         <div className="container fluid">
@@ -327,8 +376,8 @@ function DocumentView() {
                 <div className='text-end mb-3 m-1'>
                     {
                         (document.logs[0]?.to_id === document.user_id && document.logs[0]?.acknowledge_id !== document.user_id) && (
-                            <Button variant="success" /*onClick={e => showAcknowledgeAlert(document)}*/>
-                                <FontAwesomeIcon icon={faThumbsUp} /> <span className='d-none d-md-inline-block'>Acknowledge</span>
+                            <Button variant="" className='ack-btn-view'onClick={e => showAcknowledgeAlert(document)}>
+                                <FontAwesomeIcon icon={faThumbsUp} style={{color:'white'}}/> <span style={{color:'white'}} className='d-none d-md-inline-block'>Acknowledge</span>
                             </Button>
                         )
                     }
@@ -427,15 +476,15 @@ function DocumentView() {
                                                             (document.logs[0].rejected_id !== null) ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
-                                                                    placement="left"
+                                                                    placement="bottom"
                                                                     overlay={
                                                                         <Popover>
-                                                                            <Popover.Header className="bg-success text-white">
+                                                                            <Popover.Header className="custom-rejected">
                                                                                 Rejected by
                                                                             </Popover.Header>
                                                                             <Popover.Body>
                                                                                 <ListGroup variant="flush">
-                                                                                        <ListGroupItem variant="success text-black" >
+                                                                                        <ListGroupItem className="custom-rejected">
                                                                                             {document.logs[0]?.rejected_user?.profile?.name}
                                                                                         </ListGroupItem>
                                                                                 </ListGroup>
@@ -443,7 +492,7 @@ function DocumentView() {
                                                                         </Popover>
                                                                     }
                                                                 >
-                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Rejected</Badge>
+                                                                    <Badge bg="" className='custom-rejected' style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                                 </OverlayTrigger>
                                                             ) :
                                                         (document.logs[0].action_id !== null && document.logs[0].from_id !== null && document.logs[0].to_id !== null) ? (
@@ -478,7 +527,7 @@ function DocumentView() {
                                                             (document.logs[0].acknowledge_id !== null && document.logs[0].action_id === null) || (document.logs[0].acknowledge_id !== null && document.logs[0].action_id !== null) ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
-                                                                    placement="left"
+                                                                    placement="bottom"
                                                                     overlay={
                                                                         <Popover>
                                                                             <Popover.Header className="custom-badge text-white" style={{ cursor: 'pointer' }} >
@@ -494,18 +543,6 @@ function DocumentView() {
                                                                                             </ListGroupItem>
                                                                                         ))}
                                                                                 </ListGroup>
-
-                                                                                {document.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !document.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
-                                                                                    <div>Forwarded To:</div>
-                                                                                )}
-                                                                                <ListGroup variant="flush">
-                                                                                    {document.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !document.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).map((log, index) => (
-                                                                                        <ListGroupItem variant="warning text-black" key={log?.user?.profile?.id}>
-                                                                                            {log?.user?.profile?.name}
-                                                                                        </ListGroupItem>
-                                                                                    ))}
-                                                                                </ListGroup>
-
                                                                             </Popover.Body>
                                                                         </Popover>
                                                                     }
