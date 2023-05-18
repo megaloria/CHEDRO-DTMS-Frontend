@@ -843,7 +843,11 @@ function DocumentsUser() {
                                                                 >
                                                                     <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
                                                                 </OverlayTrigger>
-                                                            ) : row.logs[0].to_id ? (
+                                                                
+                                                            ) : row.logs[0].to_id && row.logs[0].from_id === null ? (
+                                                                <Badge bg="warning">Forwarded from RO</Badge>
+                                                            ) :
+                                                            row.logs[0].to_id ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
                                                                     placement="left"
@@ -873,10 +877,9 @@ function DocumentsUser() {
                                                                 >
                                                                     <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
                                                                 </OverlayTrigger>
-                                                            ) : 
-                                                            (
-                                                                null
-                                                            )}
+                                                            ) : null
+
+                                                            }
                                                 </>
                                             ) : row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
                                                 <OverlayTrigger
