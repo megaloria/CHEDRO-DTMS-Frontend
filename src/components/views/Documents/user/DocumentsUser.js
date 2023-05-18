@@ -571,76 +571,23 @@ function DocumentsUser() {
     };
 
     const renderButtons = row => {
-        console.log(row)
-        let groupedLogs = [];
-        for (let id in row.logs_grouped) {
-            let hasUser = row.logs_grouped[id].filter(lg => lg.to_id === loaderData.id && lg.assigned_id !== null);
-            if (hasUser.length > 0) {
-                groupedLogs = [...row.logs_grouped[id]];
-                break;
-            }
-        }   
-
-        let indexOfLatestReceive = groupedLogs.findIndex(log => log.to_id === loaderData.id && log.action_id === null);
-        let indexOfLatestReceiveWithAction = groupedLogs.findIndex(log => log.to_id === loaderData.id && log.action_id !== null);
-        let indexOfLatestForward = groupedLogs.findIndex(log => log.from_id === loaderData.id && log.action_id === null);
-        let indexOfLatestForwardWithAction = groupedLogs.findIndex(log => log.from_id === loaderData.id && log.action_id !== null);
-        let indexOfLatestAcknowledge = groupedLogs.findIndex(log => log.acknowledge_id === loaderData.id);
-        let indexOfLatestAcknowledgeWithAction = groupedLogs.findIndex(log => log.acknowledge_id === loaderData.id && log.action_id !== null);
-        let indexOfLatestRejected = groupedLogs.findIndex(log => log.to_id !== null && log.rejected_id !== null);
-
-        let indexOfLatestApprovedBy = groupedLogs.findIndex(log => log.approved_id === loaderData.id);
-        let indexOfLatestRejectedBy = groupedLogs.findIndex(log => log.rejected_id === loaderData.id);
-        let actionLog = groupedLogs.find(log => log.action_id !== null);
-
         return (
-            <>
+            <>         
                 {
-                    (
-                        (
-                            indexOfLatestReceive !== -1 &&
-                            (
-                                indexOfLatestAcknowledge === -1 ||
-                                (
-                                    indexOfLatestAcknowledge > indexOfLatestRejected &&
-                                    indexOfLatestRejected !== -1 &&
-                                    groupedLogs[indexOfLatestRejected].to_id === loaderData.id
-                                )
-                            )
-                        ) || (
-                            indexOfLatestReceiveWithAction !== -1 &&
-                            (
-                                indexOfLatestAcknowledgeWithAction === -1 ||
-                                indexOfLatestReceiveWithAction < indexOfLatestAcknowledgeWithAction
-                            )
-                        )
-                    ) ? (
+                    (row.logs[0]?.to_id === loaderData.id && row.logs[0]?.acknowledge_id !== loaderData.id) && (
                         <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
                             <FontAwesomeIcon icon={faUserCheck} className='ack-btn' />
                         </Button>
-                    ) : (
-                        (
-                            indexOfLatestForward === -1 || (
-                                indexOfLatestAcknowledge < indexOfLatestForward
-                            )
-                        ) &&
-                        (
-                            indexOfLatestForwardWithAction === -1 ||
-                            indexOfLatestAcknowledge < indexOfLatestForwardWithAction
-                        ) &&
-                        indexOfLatestReceive !== -1 &&
-                        indexOfLatestAcknowledge !== -1 &&
-                        indexOfLatestAcknowledge < indexOfLatestReceive &&
-                        (
-                            !actionLog ||
-                            indexOfLatestRejected > -1
-                        )
-                    ) ? (
+                    )
+                }
+
+                {
+                    row.logs[0]?.action_id === null && row.logs[0]?.acknowledge_id === loaderData.id && (
                         <>
                             <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
                                 <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
                             </Button>
-                            {   
+                            {
                                 users.length > 0 && (
                                     <Button variant="link" size='sm' onClick={e => handleShowForward(row)}>
                                         <FontAwesomeIcon icon={faShare} />
@@ -648,49 +595,12 @@ function DocumentsUser() {
                                 )
                             }
                         </>
-                    ) : null
+                    )
                 }
+                        
                 {
-                    (
-                        indexOfLatestReceiveWithAction !== -1 &&
-                        groupedLogs[indexOfLatestReceiveWithAction].rejected_id === null &&
-                        // groupedLogs[indexOfLatestForward].rejected_id === null &&
-                        (
-                            (indexOfLatestApprovedBy === -1 && indexOfLatestRejectedBy === -1) || (
-                                (indexOfLatestApprovedBy !== -1 && indexOfLatestRejectedBy !== -1) && (
-                                    (
-                                        indexOfLatestApprovedBy < indexOfLatestRejectedBy && (
-                                            (
-                                                indexOfLatestApprovedBy < indexOfLatestRejectedBy &&
-                                                indexOfLatestReceiveWithAction < indexOfLatestApprovedBy
-                                            )
-                                        )
-                                    ) || (
-                                        indexOfLatestApprovedBy > indexOfLatestRejectedBy && (
-                                            (
-                                                indexOfLatestApprovedBy > indexOfLatestRejectedBy &&
-                                                indexOfLatestReceiveWithAction < indexOfLatestRejectedBy
-                                            )
-                                        )
-                                    )
-                                )
-                            ) || (
-                                indexOfLatestApprovedBy !== -1 && indexOfLatestRejectedBy === -1 && (
-                                    (
-                                        indexOfLatestReceiveWithAction < indexOfLatestApprovedBy
-                                    )
-                                )
-                            ) || (
-                                indexOfLatestRejectedBy !== -1 && indexOfLatestApprovedBy === -1 && (
-                                    (
-                                        indexOfLatestReceiveWithAction < indexOfLatestRejectedBy
-                                    )
-                                )
-                            )
-                        ) &&
-                        indexOfLatestAcknowledgeWithAction !== -1 &&
-                        indexOfLatestReceiveWithAction > indexOfLatestAcknowledgeWithAction
-                    ) ? (
+                    (row.logs[0]?.action_id !== null && row.logs[0]?.acknowledge_id === loaderData.id &&
+                    row.logs[0]?.approved_id === null && row.logs[0]?.rejected_id === null) && (
                         <>
                             <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
                                 <FontAwesomeIcon icon={faThumbsUp} />
@@ -699,8 +609,9 @@ function DocumentsUser() {
                                 <FontAwesomeIcon icon={faThumbsDown} className='text-danger' />
                             </Button>
                         </>
-                    ) : null
-                }
+                    )
+                }            
+                    
             </>
         )
     }
@@ -815,7 +726,7 @@ function DocumentsUser() {
                                                                 </OverlayTrigger>
                                                             ) :
                                                         // (row.logs[0].action_id !== null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
-                                                            (row.logs[0].action_id !== null && row.logs[0].acknowledge_id === null) ? (
+                                                            (row.logs[0].action_id !== null && row.logs[0].acknowledge_id === null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
                                                                 placement="left"
