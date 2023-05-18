@@ -281,7 +281,6 @@ function DocumentReceive() {
                 category_id: validation.errors.first('category_id'),
                 assignTo: validation.errors.first('assignTo')
             });
-            console.log(validation.errors, selectedUsers)
             return;
         } else {
             setFormErrors({

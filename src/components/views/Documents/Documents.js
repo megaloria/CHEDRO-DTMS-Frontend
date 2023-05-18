@@ -321,6 +321,7 @@ function Documents() {
 
     // ACKNOWLEDGE
     const showAcknowledgeAlert = document => {
+        setIsDisabled(true)
         Swal.fire({
             title: `Are you sure you want to Acknowledge the document no."${document.tracking_no}"?`,
             text: 'You won\'t be able to revert this!',
@@ -333,7 +334,21 @@ function Documents() {
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
-                    navigate('../');
+                    let newData = [...data.data].map(d => {
+                        if (d.id === response.data.data.id) {
+                            return {
+                                ...response.data.data
+                            };
+                        }
+
+                        return {
+                            ...d
+                        };
+                    });
+                    setData({
+                        ...data,
+                        data: newData
+                    });
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -345,6 +360,8 @@ function Documents() {
                         text: error,
                         icon: 'error'
                     });
+                }).finally(() => {
+                    setIsDisabled(false)
                 });
             }
         });
@@ -477,8 +494,10 @@ function Documents() {
                 {
                     (
                         row.logs[0]?.to_id === null &&
-                        row.logs[0]?.action_id === null &&
-                        row.logs[0]?.acknowledge_id === null
+                        row.logs[0]?.from_id !== null &&
+                        row.logs[0]?.action_id !== null &&
+                        row.logs[0]?.acknowledge_id === null &&
+                        row.logs[0]?.approved_id !== null
                     ) && (
                         <Button variant="outline-success" size='sm' >
                             <FontAwesomeIcon icon={faCircleArrowUp} className="" /> Release
@@ -547,30 +566,13 @@ function Documents() {
                                             {row.logs.length > 0 ? (
                                                 <>
                                                     {
-                                                        (row.logs[0].to_id === null && row.logs[0].from_id === 1 && row.logs[0].approved_id === 1) ? (
-                                                            <OverlayTrigger
-                                                                trigger={['click', 'hover']}
-                                                                placement="left"
-                                                                overlay={
-                                                                    <Popover>
-                                                                        <Popover.Header className="bg-success text-white">
-                                                                            For Releasing
-                                                                        </Popover.Header>
-                                                                        <Popover.Body>
-                                                                            <ListGroup variant="flush">
-                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
-                                                                                    <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
-                                                                                        {log?.action_user?.profile?.name}
-                                                                                    </ListGroupItem>
-                                                                                ))} */}
-                                                                            </ListGroup>
-                                                                        </Popover.Body>
-                                                                    </Popover>
-                                                                }
-                                                            >
+                                                        (row.logs[0]?.to_id === null &&
+                                                            row.logs[0]?.from_id !== null &&
+                                                            row.logs[0]?.action_id !== null &&
+                                                            row.logs[0]?.acknowledge_id === null &&
+                                                            row.logs[0]?.approved_id !== null) ? (
                                                                 <Badge bg="success" style={{ cursor: 'pointer' }}>For Releasing</Badge>
-                                                            </OverlayTrigger>
-                                                        ) :
+                                                        ) : 
                                                         (row.logs[0].approved_id !== null) ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}

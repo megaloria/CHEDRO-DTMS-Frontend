@@ -361,7 +361,7 @@ function DocumentView() {
                             <div className="d-none d-md-block" style={{ whiteSpace: 'nowrap'}} >
                                     <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
                                     <i style={{color:'#545454'}}> {moment(document.created_at).format('MMMM DD, YYYY')} 
-                                        </i> 
+                                    </i> 
                             </div>
 
                             <div className='d-block d-md-none'>
@@ -395,29 +395,12 @@ function DocumentView() {
                                 {document.logs.length > 0 ? (
                                                 <>
                                                     {
-                                                        (document.logs[0].to_id === null && document.logs[0].from_id === 1 && document.logs[0].approved_id === 1) ? (
-                                                            <OverlayTrigger
-                                                                trigger={['click', 'hover']}
-                                                                placement="left"
-                                                                overlay={
-                                                                    <Popover>
-                                                                        <Popover.Header className="bg-success text-white">
-                                                                            For Releasing
-                                                                        </Popover.Header>
-                                                                        <Popover.Body>
-                                                                            <ListGroup variant="flush">
-                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
-                                                                                    <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
-                                                                                        {log?.action_user?.profile?.name}
-                                                                                    </ListGroupItem>
-                                                                                ))} */}
-                                                                            </ListGroup>
-                                                                        </Popover.Body>
-                                                                    </Popover>
-                                                                }
-                                                            >
+                                            (document.logs[0]?.to_id === null &&
+                                                document.logs[0]?.from_id !== null &&
+                                                document.logs[0]?.action_id !== null &&
+                                                document.logs[0]?.acknowledge_id === null &&
+                                                document.logs[0]?.approved_id !== null) ? (
                                                                 <Badge bg="success" style={{ cursor: 'pointer' }}>For Releasing</Badge>
-                                                            </OverlayTrigger>
                                                         ) :
                                                         (document.logs[0].approved_id !== null) ? (
                                                             <OverlayTrigger

@@ -18,7 +18,7 @@ import {
     ListGroupItem
 } from 'react-bootstrap';
 import {
-    Link, useNavigate, useLoaderData
+    Link, useLoaderData
 } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -48,7 +48,6 @@ function DocumentsUser() {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [options, setOptions] = useState([]);
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
-    const navigate = useNavigate();
     const loaderData = useLoaderData();
     const [activeTab, setActiveTab] = useState('all');
 
@@ -209,20 +208,35 @@ function DocumentsUser() {
         }
 
         apiClient.post(`/document/${showModalReject.data?.id}/reject`, formInputs).then(response => {
-            navigate('../');
-            setIsDisabled(false)
+            let newData = [...data.data].map(d => {
+                if (d.id === response.data.data.id) {
+                    return {
+                        ...response.data.data
+                    };
+                }
+
+                return {
+                    ...d
+                };
+            });
+            setData({
+                ...data,
+                data: newData
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
                 icon: 'success'
             })
         }).catch(error => {
-            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
                 icon: 'error'
             });
+        }).finally(() => {
+            setIsDisabled(false)
+            handleCloseReject();
         });
     };
 
@@ -266,26 +280,42 @@ function DocumentsUser() {
             }
             
             apiClient.post(`/document/${showModalAction.data?.id}/action`, formInputs).then(response => {
-                navigate('../');
-                setIsDisabled(false)
+                let newData = [...data.data].map(d => {
+                    if (d.id === response.data.data.id) {
+                        return {
+                            ...response.data.data
+                        };
+                    }
+
+                    return {
+                        ...d
+                    };
+                });
+                setData({
+                    ...data,
+                    data: newData
+                });
                 Swal.fire({
                     title: 'Success',
                     text: response.data.message,
                     icon: 'success'
                 })
             }).catch(error => {
-                setIsDisabled(false)
                 Swal.fire({
                     title: 'Error',
                     text: error,
                     icon: 'error'
                 });
+            }).finally(() => {
+                setIsDisabled(false)
+                handleCloseAction();
             });
         };
 
 
 // ACKNOWLEDGE
     const showAcknowledgeAlert = document => {
+        setIsDisabled(true)
         Swal.fire({
             title: `Are you sure you want to Acknowledge the document no."${document.tracking_no}"?`,
             text: 'You won\'t be able to revert this!',
@@ -298,7 +328,21 @@ function DocumentsUser() {
             showLoaderOnConfirm: true,
             preConfirm: () => {
                 return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
-                    navigate('../');
+                    let newData = [...data.data].map(d => {
+                        if (d.id === response.data.data.id) {
+                            return {
+                                ...response.data.data
+                            };
+                        }
+
+                        return {
+                            ...d
+                        };
+                    });
+                    setData({
+                        ...data,
+                        data: newData
+                    });
                     Swal.fire({
                         title: 'Success',
                         text: response.data.message,
@@ -310,6 +354,8 @@ function DocumentsUser() {
                         text: error,
                         icon: 'error'
                     });
+                }).finally(() => {
+                    setIsDisabled(false)
                 });
             }
         });
@@ -439,16 +485,32 @@ function DocumentsUser() {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
-            setIsDisabled(false)
-            navigate('../');
+            let newData = [...data.data].map(d => {
+                if (d.id === response.data.data.id) {
+                    return {
+                        ...response.data.data
+                    };
+                }
+
+                return {
+                    ...d
+                };
+            });
+            setData({
+                ...data,
+                data: newData
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
                 icon: 'success'
             })
         }).catch(error => {
-            setIsDisabled(false)
             setForwardError(error);
+        }).finally(() => {
+            setIsDisabled(false)
+            setIsSelectDisabled(false);
+            handleHideModal();
         });
     };
 
@@ -476,20 +538,35 @@ function DocumentsUser() {
         apiClient.post(`/document/${showModalApprove.data?.id}/approve`, {
             ...formInputs
         }).then(response => {
-            setIsDisabled(false)
-            navigate('../');
+            let newData = [...data.data].map(d => {
+                if (d.id === response.data.data.id) {
+                    return {
+                        ...response.data.data
+                    };
+                }
+
+                return {
+                    ...d
+                };
+            });
+            setData({
+                ...data,
+                data: newData
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
                 icon: 'success'
             })
         }).catch(error => {
-            setIsDisabled(false)
             Swal.fire({
                 title: 'Error',
                 text: error,
                 icon: 'error'
             });
+        }).finally(() => {
+            setIsDisabled(false)
+            handleCloseApprove();
         });
     };
 
@@ -686,7 +763,11 @@ function DocumentsUser() {
                                             {row.logs.length > 0 ? (
                                                 <>
                                                     {
-                                                        (row.logs[0].to_id === null && row.logs[0].from_id === 1 && row.logs[0].approved_id === 1) ? (
+                                                        (row.logs[0]?.to_id === null &&
+                                                            row.logs[0]?.from_id !== null &&
+                                                            row.logs[0]?.action_id !== null &&
+                                                            row.logs[0]?.acknowledge_id === null &&
+                                                            row.logs[0]?.approved_id !== null) ? (
                                                                 <Badge bg="success" style={{ cursor: '' }}>For Releasing</Badge>
                                                         ) :
                                                         (row.logs[0].approved_id !== null) ? (
