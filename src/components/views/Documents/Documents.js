@@ -50,6 +50,7 @@ function Documents() {
     const navigate = useNavigate();
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
+    const date_released = moment().format('YYYY-MM-DD');
 
     const [activeTab, setActiveTab] = useState('all');
 
@@ -187,11 +188,11 @@ function Documents() {
         isLoading: false
     });
     const [formInputs, setFormInputs] = useState({
-        comment: ''
+        comment: '',
     });
 
     const [formErrors, setFormErrors] = useState({
-        comment: ''
+        comment: '',
     });
     const handleInputChange = e => {
         setFormInputs({
@@ -418,7 +419,7 @@ function Documents() {
             reverseButtons: true,
             showLoaderOnConfirm: true,
             preConfirm: () => {
-                return apiClient.post(`/document/${document.id}/release`).then(response => {
+                return apiClient.post(`/document/${document.id}/release`, {date_released}).then(response => {
                     let newData = [...data.data].map(d => {
                         if (d.id === response.data.data.id) {
                             return {
@@ -707,6 +708,9 @@ function Documents() {
                                             {row.logs.length > 0 ? (
                                                 <>
                                                     {
+                                                        (row.logs[0].released_at !== null) ? (
+                                                            <Badge bg="success" style={{ cursor: 'pointer' }}>Done</Badge>
+                                                        ) :
                                                         (row.logs[0]?.to_id === null &&
                                                             row.logs[0]?.from_id !== null &&
                                                             row.logs[0]?.action_id !== null &&
