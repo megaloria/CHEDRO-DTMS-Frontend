@@ -686,7 +686,9 @@ function DocumentsUser() {
                                             {row.logs.length > 0 ? (
                                                 <>
                                                     {
-                                                        (row.logs[0].to_id === null && row.logs[0].from_id === 1 && row.logs[0].approved_id === 1) ? (
+                                                        (row.logs[0]?.to_id === null &&
+                                                            row.logs[0]?.action_id === null &&
+                                                            row.logs[0]?.acknowledge_id === null) ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
                                                                 placement="left"

@@ -361,7 +361,7 @@ function DocumentView() {
                             <div className="d-none d-md-block" style={{ whiteSpace: 'nowrap'}} >
                                     <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
                                     <i style={{color:'#545454'}}> {moment(document.created_at).format('MMMM DD, YYYY')} 
-                                        </i> 
+                                    </i> 
                             </div>
 
                             <div className='d-block d-md-none'>
