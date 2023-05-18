@@ -689,28 +689,7 @@ function DocumentsUser() {
                                                         (row.logs[0]?.to_id === null &&
                                                             row.logs[0]?.action_id === null &&
                                                             row.logs[0]?.acknowledge_id === null) ? (
-                                                            <OverlayTrigger
-                                                                trigger={['click', 'hover']}
-                                                                placement="left"
-                                                                overlay={
-                                                                    <Popover>
-                                                                        <Popover.Header className="bg-success text-white">
-                                                                            For Releasing
-                                                                        </Popover.Header>
-                                                                        <Popover.Body>
-                                                                            <ListGroup variant="flush">
-                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
-                                                                                    <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
-                                                                                        {log?.action_user?.profile?.name}
-                                                                                    </ListGroupItem>
-                                                                                ))} */}
-                                                                            </ListGroup>
-                                                                        </Popover.Body>
-                                                                    </Popover>
-                                                                }
-                                                            >
-                                                                <Badge bg="success" style={{ cursor: 'pointer' }}>For Releasing</Badge>
-                                                            </OverlayTrigger>
+                                                                <Badge bg="success" style={{ cursor: '' }}>For Releasing</Badge>
                                                         ) :
                                                         (row.logs[0].approved_id !== null) ? (
                                                             <OverlayTrigger
