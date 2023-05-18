@@ -514,7 +514,13 @@ function DocumentEdit() {
                     <Row className="justify-content-end mt-4 mb-3">
                         <Col>
                             <Breadcrumb>
-                                <Breadcrumb.Item linkAs={Link} linkProps={{ to: '../' }}>Documents</Breadcrumb.Item>
+                                {
+                                    location.state?.from === 'view' ? (
+                                        <Breadcrumb.Item linkAs={Link} linkProps={{ to: `../view/${document.id}` }}>View Document</Breadcrumb.Item>
+                                    ) : (
+                                        <Breadcrumb.Item linkAs={Link} linkProps={{ to: '../' }}>Documents</Breadcrumb.Item>
+                                    )
+                                }
                                 <Breadcrumb.Item href="#" active>Edit</Breadcrumb.Item>
                             </Breadcrumb>
                         </Col>

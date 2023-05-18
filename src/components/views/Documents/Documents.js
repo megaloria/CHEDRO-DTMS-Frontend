@@ -403,17 +403,32 @@ function Documents() {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
-            setIsDisabled(false)
-            navigate('../');
-            setIsSelectDisabled(false);
+            let newData = [...data.data].map(d => {
+                if (d.id === response.data.data.id) {
+                    return {
+                        ...response.data.data
+                    };
+                }
+
+                return {
+                    ...d
+                };
+            });
+            setData({
+                ...data,
+                data: newData
+            });
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
                 icon: 'success'
-            })
+            });
         }).catch(error => {
-            setIsDisabled(false)
             setForwardError(error);
+        }).finally(() => {
+            setIsDisabled(false)
+            setIsSelectDisabled(false);
+            handleHideModal();
         });
     };
 
@@ -426,18 +441,24 @@ function Documents() {
                     )
                 } */}
 
-                {row.logs[0]?.to_id === row.user_id && row.logs[0]?.acknowledge_id !== row.user_id ? (
-                    <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                        <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
-                    </Button>
-                ) : null}
+                {
+                    (row.logs[0]?.to_id === row.user_id && row.logs[0]?.acknowledge_id !== row.user_id) && (
+                        <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
+                            <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
+                        </Button>
+                    )
+                }
 
                 {
                     (row.logs.length === 0 || !row.logs.some(log => log.acknowledge_id !== null)) && (
                         <>
-                            <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
-                                <FontAwesomeIcon icon={faShare} className="" />
-                            </Button>
+                            {
+                                (row.category.is_assignable || row.logs.length === 0) && (
+                                    <Button variant="link" size='sm' onClick={e => handleShowModal(row)}>
+                                        <FontAwesomeIcon icon={faShare} className="" />
+                                    </Button>
+                                )
+                            }
                             <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
                                 <FontAwesomeIcon icon={faEdit} className="text-success" />
                             </Button>
@@ -857,7 +878,7 @@ function Documents() {
                     <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                         Cancel
                     </Button>
-                    <Button type='submit' variant='primary' onClick={handleForward} disabled={isDisabled}>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={isDisabled || (selectedUsers && modal?.data?.logs?.find(l => l.to_id === +selectedUsers))}>
                         Forward
                     </Button>
                 </Modal.Footer>

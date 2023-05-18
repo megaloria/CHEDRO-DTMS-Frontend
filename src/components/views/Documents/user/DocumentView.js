@@ -50,7 +50,7 @@ function DocumentView() {
     const [url, setUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [isValid, setIsValid] = useState(true);
+    const [forwardError, setForwardError] = useState('');
     const [isNavigationLoading, setIsNavigationLoading] = useState(true);
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
@@ -104,7 +104,7 @@ function DocumentView() {
                             log.action_id !== null && log.comment !== null && log.from_id === null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} log={log} /> :
                                 log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} log={log} /> :
                                     log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} log={log} /> : log.to_id === null ? 'Document for Releasing' : null,
-                    date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                    date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss A'),
                     category: {
                         tag: currentUser?.role.level > log?.assigned_user?.role.level ? '' : log.assigned_user?.profile.name,
                         color: '#6dedd4',
@@ -126,7 +126,7 @@ function DocumentView() {
                         </p>
                     </>
                 ),
-                date: moment(firstLog.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                date: moment(firstLog.created_at).format('MMMM DD, YYYY h:mm:ss A'),
                 category: {
                     tag: '',
                     color: '#6dedd4',
@@ -137,13 +137,13 @@ function DocumentView() {
             });
         }
         
-        let isAssignedToUser = document.assign.filter(da => da.assigned_id === currentUser.id || (da.assigned_user.role.division_id === currentUser.role.division_id && da.assigned_user.role.level > currentUser.role.level));
+        let isAssignedToUser = document.assign.filter(da => da.assigned_id === currentUser.id || (da.assigned_user.role?.division_id === currentUser.role?.division_id && da.assigned_user.role.level > currentUser.role.level));
 
         if (isAssignedToUser) {
             newTimelineData = newTimelineData.concat(
                 isAssignedToUser.map((assign) => ({
                     text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
-                    date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                    date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss A'),
                     category: {
                         tag: '',
                         color: '#6dedd4',
@@ -257,8 +257,10 @@ function DocumentView() {
         setIsDisabled(true);
         const formData = new FormData();
 
-        for (let i = 0; i < selectedUsers.length; i++) {
-            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        let assignTo = [selectedUsers];
+
+        for (let i = 0; i < assignTo.length; i++) {
+            formData.append(`assign_to[${i}]`, assignTo[i]);
         }
 
         apiClient.post(`/document/${document.id}/forward`, formData, {
@@ -279,32 +281,36 @@ function DocumentView() {
             
         }).catch(error => {
             setIsDisabled(false)
-            setIsValid(false);
+            setForwardError(error);
         });
     };
 
-    const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
+    //For assigning multiple users 
+    const handleUserSelection = async (selectedOption) => {
+        const userId = selectedOption.value;
+        setSelectedUsers(userId);
+    };
 
     const handleShowModal = (data = null) => {
 
-        options = users.map(user => ({
-            value: user.id,
-            label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-        }));
-
-        const assigned = data.logs.map(log => log.to_id);
-        const optionsFiltered = options.filter(option => !assigned.includes(option.value));
-        setOptions(optionsFiltered);
-
-        if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
-            setSelectedUsers([]);
+        if (data.category.is_assignable) {
+            setOptions(users.filter(user => user.role.level !== 2).map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })));
         } else {
-            let userIds = data.assign.filter(l => l.assigned_id);
-            userIds = userIds.map(log => {
-                return log.assigned_id;
-            });
-            setSelectedUsers(userIds);
+            setOptions(users.map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })))
+            setIsSelectDisabled(true)
         }
+
+
+        let userIds = data.assign.map(log => {
+            return log.assigned_id;
+        });
+        setSelectedUsers(userIds.length > 0 ? userIds[0] : '');
 
         setModal({
             show: true,
@@ -313,16 +319,9 @@ function DocumentView() {
         });
     }
 
-    //For assigning multiple users 
-    const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
-        setSelectedUsers(userIds);
-        // Update the form validity
-        setIsValid(selectedOptions.length > 0);
-    };
 
     const handleHideModal = () => {
-        setIsValid(true);
+        setForwardError('');
         setIsSelectDisabled(false);
         setModal({
             show: false,
@@ -345,6 +344,58 @@ function DocumentView() {
         );
     }
 
+    const renderShareButton = document => {
+        let groupedLogs = [];
+        for (let id in document.logs_grouped) {
+            let hasUser = document.logs_grouped[id].filter(lg => lg.to_id === currentUser.id && lg.assigned_id !== null);
+            if (hasUser.length > 0) {
+                groupedLogs = [...document.logs_grouped[id]];
+                break;
+            }
+        }
+
+        let indexOfLatestReceive = groupedLogs.findIndex(log => log.to_id === currentUser.id && log.action_id === null);
+        let indexOfLatestForward = groupedLogs.findIndex(log => log.from_id === currentUser.id && log.action_id === null);
+        let indexOfLatestForwardWithAction = groupedLogs.findIndex(log => log.from_id === currentUser.id && log.action_id !== null);
+        let indexOfLatestAcknowledge = groupedLogs.findIndex(log => log.acknowledge_id === currentUser.id);
+        let indexOfLatestRejected = groupedLogs.findIndex(log => log.to_id !== null && log.rejected_id !== null);
+        let actionLog = groupedLogs.find(log => log.action_id !== null);
+
+        return (
+            <>
+                {
+                    (
+                        (
+                            indexOfLatestForward === -1 || (
+                                indexOfLatestAcknowledge < indexOfLatestForward
+                            )
+                        ) &&
+                        (
+                            indexOfLatestForwardWithAction === -1 ||
+                            indexOfLatestAcknowledge < indexOfLatestForwardWithAction
+                        ) &&
+                        indexOfLatestReceive !== -1 &&
+                        indexOfLatestAcknowledge !== -1 &&
+                        indexOfLatestAcknowledge < indexOfLatestReceive &&
+                        (
+                            !actionLog ||
+                            indexOfLatestRejected > -1
+                        )
+                    ) ? (
+                        <>
+                            {
+                                users.length > 0 && (
+                                    <Button size='sm' onClick={e => handleShowModal(document)}>
+                                        <FontAwesomeIcon icon={faShare} className="text-link" /> Forward
+                                    </Button>
+                                )
+                            }
+                        </>
+                    ) : null
+                }
+            </>
+        )
+    }
    
     return (
         <div className="container fluid">
@@ -357,33 +408,9 @@ function DocumentView() {
                         </Breadcrumb>
                     </Col>
                     <Col md="auto">
-                        {document.category.is_assignable ? (
-                            <Button onClick={e => {
-                                if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-                                    setIsSelectDisabled(false);
-                                } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
-                                    setIsSelectDisabled(true);
-                                } else if (!document.category.is_assignable) {
-                                    setIsSelectDisabled(true);
-                                }
-                                handleShowModal(document);
-                            }}>
-                                <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
-                            </Button>
-                        ) : !document.category.is_assignable && document.logs.length === 0 ? (
-                                <Button onClick={e => {
-                                    if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-                                        setIsSelectDisabled(false);
-                                    } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
-                                        setIsSelectDisabled(true);
-                                    } else if (!document.category.is_assignable) {
-                                        setIsSelectDisabled(true);
-                                    }
-                                    handleShowModal(document);
-                                }}>
-                                    <FontAwesomeIcon icon={faShare} className="text-link" /> Forward
-                                </Button>
-                        ) : null}
+                        {
+                            renderShareButton(document)
+                        }
                     </Col>
                 </Row>
             </div>
@@ -404,21 +431,18 @@ function DocumentView() {
                     </span>
 
                     <div className='d-block d-md-none'>
-                    {['bottom'].map((placement) => (
-                    <OverlayTrigger
-                        key={placement}
-                        placement={placement}
-                        overlay={
-                            <Tooltip id={`tooltip-${placement}`}>
-                                {moment(document.created_at).format('MMMM DD, YYYY')}
-                            </Tooltip>
-                        }
-                        >
-                        <Button size='sm' variant='outline' style={{float: 'right'}}>
-                            <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
-                        </Button>
+                        <OverlayTrigger
+                            placement='bottom'
+                            overlay={
+                                <Tooltip>
+                                    {moment(document.created_at).format('MMMM DD, YYYY')}
+                                </Tooltip>
+                            }
+                            >
+                            <Button size='sm' variant='outline' style={{float: 'right'}}>
+                                <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
+                            </Button>
                         </OverlayTrigger>
-                    ))}
                     </div>
                     </Row>
 
@@ -633,21 +657,23 @@ function DocumentView() {
                             </Col>
                         </Row>
 
-                        {document.assign && document.assign.length > 0 ? (
-                        <Row className="mb-3">
-                            <Col> 
-                            <FontAwesomeIcon icon={faUserCheck} className='text-dark' style={{marginRight:'18px'}}/>
-                                {document.assign.map((assign, index) => (
-                                    <span key={assign.assigned_user.profile.id}>
-                                        {assign.assigned_user.profile.name}
-                                        {index !== document.assign.length - 1 ? ', ' : ''}
-                                    </span>
-                                ))}
-                            </Col>
-                            </Row>    
-                                ) : ( null
-                                   
-                                )}
+                        {
+                            (document.assign && document.assign.length > 0 && document.assign.filter(da => da.assigned_user?.role.level >= currentUser?.role.level).length > 0) && (
+                                <Row className="mb-3">
+                                    <Col>
+                                        <FontAwesomeIcon icon={faUserCheck} className='text-dark' style={{marginRight:'18px'}}/>
+                                        {
+                                            document.assign.filter(da => da.assigned_user.role.level >= currentUser?.role.level).map((assign, index) => (
+                                                <span key={assign.assigned_user.profile.id}>
+                                                    {assign.assigned_user.profile.name}
+                                                    {index !== document.assign.length - 1 ? ', ' : ''}
+                                                </span>
+                                            ))
+                                        }
+                                    </Col>
+                                </Row>
+                            )
+                        }
                         {/* <Row className="mb-3">
                             <Col>
                                 <FontAwesomeIcon icon={faUserCheck} className="text-dark" style={{marginRight:'18px'}}/>
@@ -706,12 +732,15 @@ function DocumentView() {
                             <Select
                                 name='assignTo'
                                 options={options}
-                                value={selectedOptions}
+                                value={options.find(option => option.value === selectedUsers)}
                                 onChange={handleUserSelection}
-                                Required
                                 isDisabled={isSelectDisabled}
                             />
-                            {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
+                            {
+                                forwardError && (
+                                    <p style={{ color: 'red' }}>{forwardError}</p>
+                                )
+                            }
                         </Col>
                     </Row>
                 </Modal.Body>

@@ -30,7 +30,9 @@ import {
     faBuildingUser,
     faClock,
     faUserCheck,
-    faQuoteRight
+    faQuoteRight,
+    faEdit,
+    faThumbsUp
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData, useNavigate, useLocation
@@ -39,20 +41,20 @@ import moment from 'moment';
 import Select from 'react-select';
 import apiClient from '../../../../helpers/apiClient';
 import Swal from 'sweetalert2';
-import { isDisabled } from '@testing-library/user-event/dist/utils';
 
 function DocumentView() {
     const document = useLoaderData();
     const location = useLocation();
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
-    let [options, setOptions] = useState([]);
+    const [options, setOptions] = useState([]);
     const [url, setUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [isValid, setIsValid] = useState(true);
+    const [forwardError, setForwardError] = useState('');
     const [isNavigationLoading, setIsNavigationLoading] = useState(true);
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(false);
     const [timelineData, setTimelineData] = useState([]);
     const navigate = useNavigate();
 
@@ -223,11 +225,15 @@ function DocumentView() {
 
 
     const handleForward = event => {
-        event.currentTarget.disabled = true;
+        setIsDisabled(true)
+        event.preventDefault();
+
+        let assignTo = [selectedUsers];
+
         const formData = new FormData();
 
-        for (let i = 0; i < selectedUsers.length; i++) {
-            formData.append(`assign_to[${i}]`, selectedUsers[i]);
+        for (let i = 0; i < assignTo.length; i++) {
+            formData.append(`assign_to[${i}]`, assignTo[i]);
         }
 
         apiClient.post(`/document/${document.id}/forward`, formData, {
@@ -246,32 +252,30 @@ function DocumentView() {
             navigate(`/documents/view/${document.id}`);
             
         }).catch(error => {
-            setIsValid(false);
+            setIsDisabled(false)
+            setForwardError(error);
         });
     };
 
-    const selectedOptions = options.filter(option => selectedUsers.includes(option.value));
-
     const handleShowModal = (data = null) => {
 
-        options = users.map(user => ({
-            value: user.id,
-            label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-        }));
-
-        const assigned = data.logs.map(log => log.to_id);
-        const optionsFiltered = options.filter(option => !assigned.includes(option.value));
-        setOptions(optionsFiltered);
-
-        if (data.logs.length > 0 && data.logs[0].to_id !== null && data.logs.some(log => log.acknowledge_id !== null)) {
-            setSelectedUsers([]);
+        if (data.category.is_assignable) {
+            setOptions(users.filter(user => user.role.level !== 2).map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })));
         } else {
-            let userIds = data.assign.filter(l => l.assigned_id);
-            userIds = userIds.map(log => {
-                return log.assigned_id;
-            });
-            setSelectedUsers(userIds);
+            setOptions(users.map(user => ({
+                value: user.id,
+                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+            })))
+            setIsSelectDisabled(true)
         }
+
+        let userIds = data.assign.map(log => {
+            return log.assigned_id;
+        });
+        setSelectedUsers(userIds.length > 0 ? userIds[0] : '');
 
         setModal({
             show: true,
@@ -281,15 +285,13 @@ function DocumentView() {
     }
 
     //For assigning multiple users 
-    const handleUserSelection = (selectedOptions) => {
-        const userIds = selectedOptions.map(option => option.value);
-        setSelectedUsers(userIds);
-        // Update the form validity
-        setIsValid(selectedOptions.length > 0);
+    const handleUserSelection = async (selectedOption) => {
+        const userId = selectedOption.value;
+        setSelectedUsers(userId);
     };
 
     const handleHideModal = () => {
-        setIsValid(true);
+        setForwardError('');
         setIsSelectDisabled(false);
         setModal({
             show: false,
@@ -316,78 +318,68 @@ function DocumentView() {
     return (
         <div className="container fluid">
             <div className="crud bg-body rounded"> 
-                <Row className= "justify-content-end mt-4 mb-3">
-                    <Col>
-                        <Breadcrumb>
-                            <Breadcrumb.Item linkAs={Link} linkProps={{  to: '../' }}>Document</Breadcrumb.Item>
-                            <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
-                        </Breadcrumb>
-                    </Col>
-                    <Col md="auto">
-                        {document.category.is_assignable ? (
-                            <Button onClick={e => {
-                                if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-                                    setIsSelectDisabled(false);
-                                } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
-                                    setIsSelectDisabled(true);
-                                } else if (!document.category.is_assignable) {
-                                    setIsSelectDisabled(true);
-                                }
-                                handleShowModal(document);
-                            }}>
-                                <FontAwesomeIcon icon={faShare} className="text-link"/> Forward
+                <div className='mt-3'>
+                    <Breadcrumb>
+                        <Breadcrumb.Item linkAs={Link} linkProps={{  to: '../' }}>Document</Breadcrumb.Item>
+                        <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
+                    </Breadcrumb>
+                </div>
+                <div className='text-end mb-3 m-1'>
+                    {
+                        (document.logs[0]?.to_id === document.user_id && document.logs[0]?.acknowledge_id !== document.user_id) && (
+                            <Button variant="success" /*onClick={e => showAcknowledgeAlert(document)}*/>
+                                <FontAwesomeIcon icon={faThumbsUp} /> <span className='d-none d-md-inline-block'>Acknowledge</span>
                             </Button>
-                        ) : !document.category.is_assignable && document.logs.length === 0 ? (
-                                <Button onClick={e => {
-                                    if (document.logs.length > 0 && document.logs.some(log => log.acknowledge_id !== null)) {
-                                        setIsSelectDisabled(false);
-                                    } else if (!document.category.is_assignable && document.logs.length > 0 && document.logs.some(log => log.to_id !== null)) {
-                                        setIsSelectDisabled(true);
-                                    } else if (!document.category.is_assignable) {
-                                        setIsSelectDisabled(true);
-                                    }
-                                    handleShowModal(document);
-                                }}>
-                                    <FontAwesomeIcon icon={faShare} className="text-link" /> Forward
+                        )
+                    }
+                    {
+                        (document.logs.length === 0 || !document.logs.some(log => log.acknowledge_id !== null)) && (
+                            <>
+                                {
+                                    (document.category.is_assignable || document.logs.length === 0) && (
+                                        <Button className="ms-2" onClick={e => handleShowModal(document)}>
+                                            <FontAwesomeIcon icon={faShare} /> <span className='d-none d-md-inline-block'>Forward</span>
+                                        </Button>
+                                    )
+                                }
+                                <Button variant='success' className="ms-2" as={Link} to={`../edit/${document.id}`} state={{ from: 'view' }} >
+                                    <FontAwesomeIcon icon={faEdit} />  <span className='d-none d-md-inline-block'>Edit</span>
                                 </Button>
-                        ) : null}
-                    </Col>
-                </Row>
+                            </>
+                        )
+                    }
+                </div>
             </div>
 
-            <div style={{margin:'0 30px', }}> 
+            <div className='m-1'> 
                 <Card 
                         bg="light"
                         border="light" style={{ marginRight:'auto'}}>
     
                     <Card.Body>
-                    <Row>
-                    <span className="d-none d-md-inline-block" >
-                        <Col className='float-right offset-md-10' style={{whiteSpace:'nowrap'}}>
-                            <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
-                            <i style={{color:'#545454'}}> {moment(document.created_at).format('MMMM DD, YYYY')} 
-                                </i> 
-                        </Col> 
-                    </span>
+                        <div className='text-end'>
+                            <div className="d-none d-md-block" style={{ whiteSpace: 'nowrap'}} >
+                                    <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
+                                    <i style={{color:'#545454'}}> {moment(document.created_at).format('MMMM DD, YYYY')} 
+                                        </i> 
+                            </div>
 
-                    <div className='d-block d-md-none'>
-                    {['bottom'].map((placement) => (
-                    <OverlayTrigger
-                        key={placement}
-                        placement={placement}
-                        overlay={
-                            <Tooltip id={`tooltip-${placement}`}>
-                                {moment(document.created_at).format('MMMM DD, YYYY')}
-                            </Tooltip>
-                        }
-                        >
-                        <Button size='sm' variant='outline' style={{float: 'right'}}>
-                            <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
-                        </Button>
-                        </OverlayTrigger>
-                    ))}
-                    </div>
-                    </Row>
+                            <div className='d-block d-md-none'>
+                                <OverlayTrigger
+                                    placement='bottom'
+                                    overlay={
+                                        <Tooltip>
+                                            {moment(document.created_at).format('MMMM DD, YYYY')}
+                                        </Tooltip>
+                                    }
+                                    trigger={['click', 'hover']}
+                                    >
+                                    <Button size='sm' variant='outline'>
+                                        <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
+                                    </Button>
+                                </OverlayTrigger>
+                            </div>
+                        </div>
 
                         <Row className="mb-3"> 
                             <Col> 
@@ -694,12 +686,15 @@ function DocumentView() {
                             <Select
                                 name='assignTo'
                                 options={options}
-                                value={selectedOptions}
+                                value={options.find(option => option.value === selectedUsers)}
                                 onChange={handleUserSelection}
-                                Required
                                 isDisabled={isSelectDisabled}
                             />
-                            {(!isValid) && <p style={{ color: 'red' }}>Please select at least one option.</p>}
+                            {
+                                forwardError && (
+                                    <p style={{ color: 'red' }}>{forwardError}</p>
+                                )
+                            }
                         </Col>
                     </Row>
                 </Modal.Body>
