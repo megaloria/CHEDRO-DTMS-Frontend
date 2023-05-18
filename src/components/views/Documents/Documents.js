@@ -29,13 +29,16 @@ import {
     faShare,
     faSearch,
     faThumbsUp,
-    faCircleArrowUp
+    faCircleArrowUp,
+    faFileCircleCheck,
+    faUserCheck
 } from '@fortawesome/free-solid-svg-icons'
 import Swal from 'sweetalert2';
 import './styles.css';
 import moment from 'moment';
 import Select from 'react-select';
 import apiClient from '../../../helpers/apiClient';
+import Validator from 'validatorjs';
 
 function Documents() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
@@ -179,6 +182,89 @@ function Documents() {
         };
     };
 
+    const [showModalAction, setShowModalAction] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const [formInputs, setFormInputs] = useState({
+        comment: ''
+    });
+
+    const [formErrors, setFormErrors] = useState({
+        comment: ''
+    });
+    const handleInputChange = e => {
+        setFormInputs({
+            ...formInputs,
+            [e.target.name]: e.target.value
+        });
+    }
+    //For Took Action Modal
+    const handleCloseAction = () => setShowModalAction({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const handleShowAction = (data) => setShowModalAction({ //modal variables
+        show: true,
+        data,
+        isLoading: false
+    });
+    const handleAction = event => {
+        setIsDisabled(true)
+        event.preventDefault();
+
+        let validation = new Validator(formInputs, {
+            comment: 'required|string|min:5',
+           
+        });
+
+        if (validation.fails()){
+            setIsDisabled(false)
+            setFormErrors({
+                comment: validation.errors.first('comment')
+            });
+            return;
+        } else {
+            setFormErrors({
+                comment: ''
+            });
+        }
+        
+        apiClient.post(`/document/${showModalAction.data?.id}/action`, formInputs).then(response => {
+            let newData = [...data.data].map(d => {
+                if (d.id === response.data.data.id) {
+                    return {
+                        ...response.data.data
+                    };
+                }
+
+                return {
+                    ...d
+                };
+            });
+            setData({
+                ...data,
+                data: newData
+            });
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setIsDisabled(false)
+            handleCloseAction();
+        });
+    };
+
     //For assigning multiple users 
     const handleUserSelection = async (selectedOption) => {
         const userId = selectedOption.value;
@@ -319,6 +405,54 @@ function Documents() {
         setActiveTab(key);
     }
 
+    //RELEASE
+    const showReleaseAlert = document => {
+        setIsDisabled(true)
+        Swal.fire({
+            title: `Are you sure you want to Release the document no."${document.tracking_no}"?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#198754',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Release it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.post(`/document/${document.id}/release`).then(response => {
+                    let newData = [...data.data].map(d => {
+                        if (d.id === response.data.data.id) {
+                            return {
+                                ...response.data.data
+                            };
+                        }
+
+                        return {
+                            ...d
+                        };
+                    });
+                    setData({
+                        ...data,
+                        data: newData
+                    });
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                }).finally(() => {
+                    setIsDisabled(false)
+                });
+            }
+        });
+    };
+
     // ACKNOWLEDGE
     const showAcknowledgeAlert = document => {
         setIsDisabled(true)
@@ -327,7 +461,7 @@ function Documents() {
             text: 'You won\'t be able to revert this!',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
+            confirmButtonColor: '#7066e0',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, acknowledge it!',
             reverseButtons: true,
@@ -461,11 +595,17 @@ function Documents() {
                 {
                     (row.logs[0]?.to_id === row.user_id && row.logs[0]?.acknowledge_id !== row.user_id) && (
                         <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
-                            <FontAwesomeIcon icon={faThumbsUp} className='text-success' />
+                            <FontAwesomeIcon icon={faUserCheck} className='ack-btn'/>
                         </Button>
                     )
                 }
-
+                {
+                    ((row.logs[0]?.assigned_id === row.user_id) && (row.logs[0]?.acknowledge_id === row.user_id)) && (
+                        <Button variant="link" size='sm' onClick={e => handleShowAction(row)}>
+                            <FontAwesomeIcon icon={faFileCircleCheck} className='text-success' />
+                        </Button>
+                    )
+                }
                 {
                     (row.logs.length === 0 || !row.logs.some(log => log.acknowledge_id !== null)) && (
                         <>
@@ -479,6 +619,8 @@ function Documents() {
                             <Button variant="link" size='sm' as={Link} to={`edit/${row.id}`} >
                                 <FontAwesomeIcon icon={faEdit} className="text-success" />
                             </Button>
+
+                            {/* To add forward button for jun magbanua */}
                         </>
                     )
                 }
@@ -499,7 +641,7 @@ function Documents() {
                         row.logs[0]?.acknowledge_id === null &&
                         row.logs[0]?.approved_id !== null
                     ) && (
-                        <Button variant="outline-success" size='sm' >
+                        <Button variant="outline-success" size='sm' onClick={e => showReleaseAlert(row)}>
                             <FontAwesomeIcon icon={faCircleArrowUp} className="" /> Release
                         </Button>
                     )
@@ -882,6 +1024,37 @@ function Documents() {
                     </Button>
                     <Button type='submit' variant='primary' onClick={handleForward} disabled={isDisabled || (selectedUsers && modal?.data?.logs?.find(l => l.to_id === +selectedUsers))}>
                         Forward
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Took Action Document Modal*/}
+            <Modal show={showModalAction.show} onHide={handleCloseAction}>
+                <Modal.Header closeButton>
+                <Modal.Title>Confirm Taking Action</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Form.Label>Add a comment</Form.Label>
+                    <Form.Control 
+                        as="textarea" 
+                        rows={3} 
+                        onChange={handleInputChange}
+                        type="text" 
+                        name='comment' 
+                        value={formInputs.comment}
+                        placeholder="Leave a comment here."
+                        isInvalid={!!formErrors.comment}
+                    />
+                <Form.Control.Feedback type='invalid'>
+                    {formErrors.comment}
+                </Form.Control.Feedback>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseAction}>
+                    Cancel
+                    </Button>
+                    <Button type='submit' variant="primary" onClick={handleAction} disabled={isDisabled}>
+                    Confirm
                     </Button>
                 </Modal.Footer>
             </Modal>
