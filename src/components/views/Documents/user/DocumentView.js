@@ -552,8 +552,10 @@ function DocumentView() {
                                                 <>
                                                     {
                                                         (document.logs[0]?.to_id === null &&
-                                                            document.logs[0]?.action_id === null &&
-                                                            document.logs[0]?.acknowledge_id === null) ? (
+                                                            document.logs[0]?.from_id !== null &&
+                                                            document.logs[0]?.action_id !== null &&
+                                                            document.logs[0]?.acknowledge_id === null &&
+                                                            document.logs[0]?.approved_id !== null) ? (
                                                                 <Badge bg="success" style={{ cursor: 'pointer' }}>For Releasing</Badge>
                                                         ) :
                                                         (document.logs[0].approved_id !== null) ? (
