@@ -43,15 +43,21 @@
   }
 
   .custom-badge {
-    background-color:chocolate !important;
+    background-color:#7066e0 !important;
   }
 
   .custom-rejected {
-    background-color: #fd0303 !important; 
+    background-color: #f24d43 !important; 
     color: white !important;
   }
+  
   .ack-btn{
-    color:chocolate !important;
+    color: #7066e0 !important;
+  }
+
+  .ack-btn-view{
+    background-color: #7066e0 !important;
+    color: white;
   }
 
   .quote-left {
@@ -67,12 +73,12 @@
 
   .forwarded-text {
     /* background-color: #ffc107; */
-    color:#ffc107c7;
+    color:#e6ac00;
     font-weight: bold;
   }
 
   .ack-text {
-    color:#d2691e;
+    color:#7066e0;
     font-weight: bold;
   }
 
@@ -82,12 +88,14 @@
   }
 
   .reject-text {
-    color:#D22B2B;
+    color:#f24d43;
     font-weight: bold;
   }
 
   .assign-text {
     font-weight: bold;
   }
+
+  
   
   
