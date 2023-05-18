@@ -139,29 +139,29 @@ function DocumentsUser() {
         }
     }, [activeTab]);
 
-    useEffect(() => {
-        if (modal.data) {
-            let newOptions = users.map(user => ({
-                value: user.id,
-                label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
-            }));
+    // useEffect(() => {
+    //     if (modal.data) {
+    //         let newOptions = users.map(user => ({
+    //             value: user.id,
+    //             label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
+    //         }));
 
-            const assigned = modal.data.logs.map(log => log.to_id);
-            const optionsFiltered = newOptions.filter(option => !assigned.includes(option.value));
-            setOptions(optionsFiltered);
+    //         const assigned = modal.data.logs.map(log => log.to_id);
+    //         const optionsFiltered = newOptions.filter(option => !assigned.includes(option.value));
+    //         setOptions(optionsFiltered);
 
-            if (modal.data.logs.length > 0 && modal.data.logs[0].to_id !== null && modal.data.logs.some(log => log.acknowledge_id !== null)) {
-                setSelectedUsers([]);
-            } else {
-                let userIds = modal.data.assign.filter(l => l.assigned_id);
-                userIds = userIds.map(log => {
-                    return log.assigned_id;
-                });
-                setSelectedUsers(userIds);
-            }
-        }
+    //         if (modal.data.logs.length > 0 && modal.data.logs[0].to_id !== null && modal.data.logs.some(log => log.acknowledge_id !== null)) {
+    //             setSelectedUsers([]);
+    //         } else {
+    //             let userIds = modal.data.assign.filter(l => l.assigned_id);
+    //             userIds = userIds.map(log => {
+    //                 return log.assigned_id;
+    //             });
+    //             setSelectedUsers(userIds);
+    //         }
+    //     }
         
-    }, [modal, users])
+    // }, [modal, users])
 
     //For Approve Modal
     const handleCloseApprove = () => setShowModalApprove({ //modal variables

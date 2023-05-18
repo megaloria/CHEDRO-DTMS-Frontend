@@ -104,7 +104,7 @@ function DocumentView() {
                             log.action_id !== null && log.comment !== null && log.from_id === null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} log={log} /> :
                                 log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} log={log} /> :
                                     log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} log={log} /> : log.to_id === null ? 'Document for Releasing' : null,
-                    date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                    date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss A'),
                     category: {
                         tag: currentUser?.role.level > log?.assigned_user?.role.level ? '' : log.assigned_user?.profile.name,
                         color: '#6dedd4',
@@ -126,7 +126,7 @@ function DocumentView() {
                         </p>
                     </>
                 ),
-                date: moment(firstLog.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                date: moment(firstLog.created_at).format('MMMM DD, YYYY h:mm:ss A'),
                 category: {
                     tag: '',
                     color: '#6dedd4',
@@ -143,7 +143,7 @@ function DocumentView() {
             newTimelineData = newTimelineData.concat(
                 isAssignedToUser.map((assign) => ({
                     text: <UsersText key={assign.id} users={[assign.assigned_user.profile]} />,
-                    date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss a'),
+                    date: moment(assign.created_at).format('MMMM DD, YYYY h:mm:ss A'),
                     category: {
                         tag: '',
                         color: '#6dedd4',
@@ -294,7 +294,7 @@ function DocumentView() {
     const handleShowModal = (data = null) => {
 
         if (data.category.is_assignable) {
-            setOptions(users.filter(user => user.id !== 1).map(user => ({
+            setOptions(users.filter(user => user.role.level !== 2).map(user => ({
                 value: user.id,
                 label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
             })));
