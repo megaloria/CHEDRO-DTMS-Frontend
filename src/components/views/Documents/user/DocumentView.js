@@ -36,20 +36,22 @@ import {
     faThumbsDown
 } from '@fortawesome/free-solid-svg-icons'
 import {
-    Link, useLoaderData, useNavigate, useLocation, useRouteLoaderData
+    Link, useLoaderData, useLocation, useRouteLoaderData
 } from 'react-router-dom';
 import moment from 'moment';
 import Select from 'react-select';
 import apiClient from '../../../../helpers/apiClient';
 import Swal from 'sweetalert2';
+import Validator from 'validatorjs';
 
 function DocumentView() {
-    const document = useLoaderData();
+    const loaderData = useLoaderData();
+    const [document, setDocument] = useState(loaderData);
     const currentUser = useRouteLoaderData('user');
     const location = useLocation();
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
-    let [options, setOptions] = useState([]);
+    const [options, setOptions] = useState([]);
     const [url, setUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
@@ -58,13 +60,203 @@ function DocumentView() {
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const [timelineData, setTimelineData] = useState([]);
-    const navigate = useNavigate();
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
         data: null,
         isLoading: false
     });
+
+    const [showModalAction, setShowModalAction] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    const [showModalApprove, setShowModalApprove] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    const [showModalReject, setShowModalReject] = useState({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+
+    //For Took Action Modal
+    const handleCloseAction = () => setShowModalAction({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const handleShowAction = (data) => setShowModalAction({ //modal variables
+        show: true,
+        data,
+        isLoading: false
+    });
+
+    //For Approve Modal
+    const handleCloseApprove = () => setShowModalApprove({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const handleShowApprove = (data) => setShowModalApprove({ //modal variables
+        show: true,
+        data,
+        isLoading: false
+    });
+
+    //For Reject Modal
+    const handleCloseReject = () => setShowModalReject({ //modal variables
+        show: false,
+        data: null,
+        isLoading: false
+    });
+    const handleShowReject = (data) => setShowModalReject({ //modal variables
+        show: true,
+        data,
+        isLoading: false
+    });
+
+    const [formInputs, setFormInputs] = useState({
+        comment: ''
+    });
+
+    const [formErrors, setFormErrors] = useState({
+        comment: ''
+    });
+
+    const handleAction = event => {
+        setIsDisabled(true)
+        event.preventDefault();
+
+        let validation = new Validator(formInputs, {
+            comment: 'required|string|min:5',
+
+        });
+
+        if (validation.fails()) {
+            setIsDisabled(false)
+            setFormErrors({
+                comment: validation.errors.first('comment')
+            });
+            return;
+        } else {
+            setFormErrors({
+                comment: ''
+            });
+        }
+
+        apiClient.post(`/document/${showModalAction.data?.id}/action`, formInputs).then(response => {
+            setDocument(response.data.data)
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setIsDisabled(false)
+            handleCloseAction();
+        });
+    };
+
+    const handleApprove = event => {
+        setIsDisabled(true)
+        event.preventDefault();
+
+        let validation = new Validator(formInputs, {
+            comment: 'string|min:5',
+
+        });
+
+        if (validation.fails()) {
+            setIsDisabled(false)
+            setFormErrors({
+                comment: validation.errors.first('comment')
+            });
+            return;
+        } else {
+            setFormErrors({
+                comment: ''
+            });
+        }
+
+        apiClient.post(`/document/${showModalApprove.data?.id}/approve`, {
+            ...formInputs
+        }).then(response => {
+            setDocument(response.data.data)
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setIsDisabled(false)
+            handleCloseApprove();
+        });
+    };
+
+    const handleReject = event => {
+        setIsDisabled(true)
+        event.preventDefault();
+
+        let validation = new Validator(formInputs, {
+            comment: 'string|min:5',
+
+        });
+
+        if (validation.fails()) {
+            setIsDisabled(false)
+            setFormErrors({
+                comment: validation.errors.first('comment')
+            });
+            return;
+        } else {
+            setFormErrors({
+                comment: ''
+            });
+        }
+
+        apiClient.post(`/document/${showModalReject.data?.id}/reject`, formInputs).then(response => {
+            setDocument(response.data.data)
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setIsDisabled(false)
+            handleCloseReject();
+        });
+    };
+
+    const handleInputChange = e => {
+        setFormInputs({
+            ...formInputs,
+            [e.target.name]: e.target.value
+        });
+    }
 
     useEffect(() => {
         apiClient.get('/document', {
@@ -257,10 +449,12 @@ function DocumentView() {
 
 
     const handleForward = event => {
-        setIsDisabled(true);
-        const formData = new FormData();
+        setIsDisabled(true)
+        event.preventDefault();
 
         let assignTo = [selectedUsers];
+
+        const formData = new FormData();
 
         for (let i = 0; i < assignTo.length; i++) {
             formData.append(`assign_to[${i}]`, assignTo[i]);
@@ -271,20 +465,53 @@ function DocumentView() {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
-            setIsDisabled(false)
+            setDocument(response.data.data)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
                 icon: 'success'
             })
             handleHideModal();
-            setIsSelectDisabled(false);
-            setIsNavigationLoading(true);
-            navigate(`/documents/view/${document.id}`);
-            
+            setIsSelectDisabled(false)
         }).catch(error => {
-            setIsDisabled(false)
             setForwardError(error);
+        }).finally(() => {
+            setIsDisabled(false)
+            handleHideModal();
+        });
+    };
+
+    // ACKNOWLEDGE
+    const showAcknowledgeAlert = document => {
+        setIsDisabled(true)
+        Swal.fire({
+            title: `Are you sure you want to Acknowledge the document no."${document.tracking_no}"?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, acknowledge it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
+                    setDocument(response.data.data)
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                }).finally(() => {
+                    setIsDisabled(false)
+                });
+            }
         });
     };
 
@@ -348,145 +575,45 @@ function DocumentView() {
     }
 
     const renderButtons = document => {
-        let groupedLogs = [];
-        for (let id in document.logs_grouped) {
-            let hasUser = document.logs_grouped[id].filter(lg => lg.to_id === currentUser.id && lg.assigned_id !== null);
-            if (hasUser.length > 0) {
-                groupedLogs = [...document.logs_grouped[id]];
-                break;
-            }
-        }
-
-        let indexOfLatestReceive = groupedLogs.findIndex(log => log.to_id === currentUser.id && log.action_id === null);
-        let indexOfLatestReceiveWithAction = groupedLogs.findIndex(log => log.to_id === currentUser.id && log.action_id !== null);
-        let indexOfLatestForward = groupedLogs.findIndex(log => log.from_id === currentUser.id && log.action_id === null);
-        let indexOfLatestForwardWithAction = groupedLogs.findIndex(log => log.from_id === currentUser.id && log.action_id !== null);
-        let indexOfLatestAcknowledge = groupedLogs.findIndex(log => log.acknowledge_id === currentUser.id);
-        let indexOfLatestAcknowledgeWithAction = groupedLogs.findIndex(log => log.acknowledge_id === currentUser.id && log.action_id !== null);
-        let indexOfLatestRejected = groupedLogs.findIndex(log => log.to_id !== null && log.rejected_id !== null);
-
-        let indexOfLatestApprovedBy = groupedLogs.findIndex(log => log.approved_id === currentUser.id);
-        let indexOfLatestRejectedBy = groupedLogs.findIndex(log => log.rejected_id === currentUser.id);
-        let actionLog = groupedLogs.find(log => log.action_id !== null);
-
-        console.log(
-           
-            
-            indexOfLatestReceive !== -1 &&
-            indexOfLatestAcknowledge !== -1 &&
-            indexOfLatestAcknowledge < indexOfLatestReceive &&
-            (
-                !actionLog ||
-                indexOfLatestRejected > -1
-            ))
         return (
             <>
                 {
-                    (
-                        (
-                            indexOfLatestReceive !== -1 &&
-                            (
-                                indexOfLatestAcknowledge === -1 ||
-                                (
-                                    indexOfLatestAcknowledge > indexOfLatestRejected &&
-                                    indexOfLatestRejected !== -1 &&
-                                    groupedLogs[indexOfLatestRejected].to_id === currentUser.id
-                                )
-                            )
-                        ) || (
-                            indexOfLatestReceiveWithAction !== -1 &&
-                            (
-                                indexOfLatestAcknowledgeWithAction === -1 ||
-                                indexOfLatestReceiveWithAction < indexOfLatestAcknowledgeWithAction
-                            )
-                        )
-                    ) ? (
-                        <Button className="ms-2" variant='ack-btn' /*onClick={e => showAcknowledgeAlert(row)}*/>
-                                <FontAwesomeIcon icon={faUserCheck} /> <span className='d-none d-md-inline-block'>Acknowledge</span>
+                    (document.logs[0]?.to_id === currentUser.id && document.logs[0]?.acknowledge_id !== currentUser.id) && (
+                        <Button className="ms-2 custom-badge" onClick={e => showAcknowledgeAlert(document)}>
+                            <FontAwesomeIcon icon={faUserCheck} /> <span className='d-none d-md-inline-block'>Acknowledge</span>
                         </Button>
-                        
-                    ) : (
-                        (
-                            indexOfLatestForward === -1 || (
-                                indexOfLatestAcknowledge < indexOfLatestForward
-                            )
-                        ) &&
-                        (
-                            indexOfLatestForwardWithAction === -1 ||
-                            indexOfLatestAcknowledge < indexOfLatestForwardWithAction
-                        ) &&
-                        indexOfLatestReceive !== -1 &&
-                        indexOfLatestAcknowledge !== -1 &&
-                        indexOfLatestAcknowledge < indexOfLatestReceive &&
-                        (
-                            !actionLog ||
-                            indexOfLatestRejected > -1
-                        )
-                    ) ? (
+                    )
+                }
+                
+                {   
+                    document.logs[0]?.action_id === null && document.logs[0]?.acknowledge_id === currentUser.id && (
                         <>
-                             <Button className="ms-2" variant='success' /*onClick={e => handleShowAction(document)}*/>
-                                    <FontAwesomeIcon icon={faCircleCheck} /> <span className='d-none d-md-inline-block'>Action</span>
+                            <Button className="ms-2" variant="success" onClick={e => handleShowAction(document)}>
+                                <FontAwesomeIcon icon={faCircleCheck} /> <span className="d-none d-md-inline-block">Action</span>
                             </Button>
                             {
                                 users.length > 0 && (
                                     <Button className="ms-2" onClick={e => handleShowModal(document)}>
-                                            <FontAwesomeIcon icon={faShare} /> <span className='d-none d-md-inline-block'>Forward</span>
+                                        <FontAwesomeIcon icon={faShare} /> <span className="d-none d-md-inline-block">Forward</span>
                                     </Button>
                                 )
                             }
                         </>
-                    ) : null
+                    )
                 }
+
                 {
-                    (
-                        indexOfLatestReceiveWithAction !== -1 &&
-                        groupedLogs[indexOfLatestReceiveWithAction].rejected_id === null &&
-                        // groupedLogs[indexOfLatestForward].rejected_id === null &&
-                        (
-                            (indexOfLatestApprovedBy === -1 && indexOfLatestRejectedBy === -1) || (
-                                (indexOfLatestApprovedBy !== -1 && indexOfLatestRejectedBy !== -1) && (
-                                    (
-                                        indexOfLatestApprovedBy < indexOfLatestRejectedBy && (
-                                            (
-                                                indexOfLatestApprovedBy < indexOfLatestRejectedBy &&
-                                                indexOfLatestReceiveWithAction < indexOfLatestApprovedBy
-                                            )
-                                        )
-                                    ) || (
-                                        indexOfLatestApprovedBy > indexOfLatestRejectedBy && (
-                                            (
-                                                indexOfLatestApprovedBy > indexOfLatestRejectedBy &&
-                                                indexOfLatestReceiveWithAction < indexOfLatestRejectedBy
-                                            )
-                                        )
-                                    )
-                                )
-                            ) || (
-                                indexOfLatestApprovedBy !== -1 && indexOfLatestRejectedBy === -1 && (
-                                    (
-                                        indexOfLatestReceiveWithAction < indexOfLatestApprovedBy
-                                    )
-                                )
-                            ) || (
-                                indexOfLatestRejectedBy !== -1 && indexOfLatestApprovedBy === -1 && (
-                                    (
-                                        indexOfLatestReceiveWithAction < indexOfLatestRejectedBy
-                                    )
-                                )
-                            )
-                        ) &&
-                        indexOfLatestAcknowledgeWithAction !== -1 &&
-                        indexOfLatestReceiveWithAction > indexOfLatestAcknowledgeWithAction
-                    ) ? (
+                    document.logs[0]?.action_id !== null && document.logs[0]?.acknowledge_id === currentUser.id &&
+                    document.logs[0]?.approved_id === null && document.logs[0]?.rejected_id === null && (
                         <>
-                            <Button className="ms-2" /*onClick={e => handleShowApprove(row)}*/>
+                            <Button className="ms-2" onClick={e => handleShowApprove(document)}>
                                     <FontAwesomeIcon icon={faThumbsUp} /> <span className='d-none d-md-inline-block'>Approve</span>
                             </Button>
-                            <Button className="ms-2" variant='danger' /*onClick={e => handleShowReject(row)}*/>
+                            <Button className="ms-2" variant='danger' onClick={e => handleShowReject(document)}>
                                     <FontAwesomeIcon icon={faThumbsDown} /> <span className='d-none d-md-inline-block'>Reject</span>
                             </Button>
                         </>
-                    ) : null
+                    )
                 }
             </>
         )
@@ -602,7 +729,7 @@ function DocumentView() {
                                                                     <Badge bg='' className="custom-rejected" style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                                 </OverlayTrigger>
                                                             ) :
-                                                        (document.logs[0].action_id !== null && document.logs[0].from_id !== null && document.logs[0].to_id !== null) ? (
+                                                        (document.logs[0].action_id !== null && document.logs[0].acknowledge_id === null && document.logs[0].from_id === null && document.logs[0].to_id === null) ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
                                                                 placement="left"
@@ -897,6 +1024,99 @@ function DocumentView() {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            {/* Took Action Document Modal*/}
+            <Modal show={showModalAction.show} onHide={handleCloseAction}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Taking Action</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Label>Add a comment</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        onChange={handleInputChange}
+                        type="text"
+                        name='comment'
+                        value={formInputs.comment}
+                        placeholder="Leave a comment here."
+                        isInvalid={!!formErrors.comment}
+                    />
+                    <Form.Control.Feedback type='invalid'>
+                        {formErrors.comment}
+                    </Form.Control.Feedback>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseAction}>
+                        Cancel
+                    </Button>
+                    <Button type='submit' variant="primary" onClick={handleAction} disabled={isDisabled}>
+                        Confirm
+                    </Button>
+                </Modal.Footer>
+            </Modal> 
+
+            {/* Approve Document Modal*/}
+            <Modal show={showModalApprove.show} onHide={handleCloseApprove}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Approve Document</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Label>Add a comment</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        onChange={handleInputChange}
+                        type="text"
+                        name='comment'
+                        value={formInputs.comment}
+                        placeholder="Leave a comment here."
+                        isInvalid={!!formErrors.comment}
+                    />
+                    <Form.Control.Feedback type='invalid'>
+                        {formErrors.comment}
+                    </Form.Control.Feedback>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseApprove}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={handleApprove} disabled={isDisabled}>
+                        Approve
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Reject Document Modal*/}
+            <Modal show={showModalReject.show} onHide={handleCloseReject}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Reject Document</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Label>Add a comment</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        onChange={handleInputChange}
+                        type="text"
+                        name='comment'
+                        value={formInputs.comment}
+                        placeholder="Leave a comment here."
+                        isInvalid={!!formErrors.comment}
+                    />
+                    <Form.Control.Feedback type='invalid'>
+                        {formErrors.comment}
+                    </Form.Control.Feedback>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseReject}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={handleReject} disabled={isDisabled}>
+                        Reject
+                    </Button>
+                </Modal.Footer>
+            </Modal> 
 
         </div>
     );

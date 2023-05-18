@@ -35,7 +35,7 @@ import {
     faThumbsUp
 } from '@fortawesome/free-solid-svg-icons'
 import {
-    Link, useLoaderData, useNavigate, useLocation
+    Link, useLoaderData, useLocation
 } from 'react-router-dom';
 import moment from 'moment';
 import Select from 'react-select';
@@ -43,9 +43,9 @@ import apiClient from '../../../../helpers/apiClient';
 import Swal from 'sweetalert2';
 
 function DocumentView() {
-    const document = useLoaderData();
+    const loaderData = useLoaderData();
+    const [document, setDocument] = useState(loaderData);
     const location = useLocation();
-    const [data, setData] = useState({ data: [] });
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
     const [options, setOptions] = useState([]);
@@ -57,7 +57,6 @@ function DocumentView() {
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const [timelineData, setTimelineData] = useState([]);
-    const navigate = useNavigate();
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -242,19 +241,53 @@ function DocumentView() {
                 'Content-Type': 'multipart/form-data'
             }
         }).then(response => {
+            setDocument(response.data.data)
             Swal.fire({
                 title: 'Success',
                 text: response.data.message,
                 icon: 'success'
             })
             handleHideModal();
-            setIsSelectDisabled(false);
-            setIsNavigationLoading(true);
-            navigate(`/documents/view/${document.id}`);
-            
+            setIsSelectDisabled(false)
         }).catch(error => {
-            setIsDisabled(false)
             setForwardError(error);
+        }).finally(() => {
+            setIsDisabled(false)
+            handleHideModal();
+        });
+    };
+
+    // ACKNOWLEDGE
+    const showAcknowledgeAlert = document => {
+        setIsDisabled(true)
+        Swal.fire({
+            title: `Are you sure you want to Acknowledge the document no."${document.tracking_no}"?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, acknowledge it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
+                    setDocument(response.data.data)
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                }).finally(() => {
+                    setIsDisabled(false)
+                });
+            }
         });
     };
 
@@ -314,55 +347,6 @@ function DocumentView() {
             </Alert>
         );
     }
-
-
-    // ACKNOWLEDGE
-    const showAcknowledgeAlert = document => {
-        setIsDisabled(true)
-        Swal.fire({
-            title: `Are you sure you want to Acknowledge the document no."${document.tracking_no}"?`,
-            text: 'You won\'t be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#7066e0',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, acknowledge it!',
-            reverseButtons: true,
-            showLoaderOnConfirm: true,
-            preConfirm: () => {
-                return apiClient.post(`/document/${document.id}/acknowledge`).then(response => {
-                    let newData = [...data.data].map(d => {
-                        if (d.id === response.data.data.id) {
-                            return {
-                                ...response.data.data
-                            };
-                        }
-
-                        return {
-                            ...d
-                        };
-                    });
-                    setData({
-                        ...data,
-                        data: newData
-                    });
-                    Swal.fire({
-                        title: 'Success',
-                        text: response.data.message,
-                        icon: 'success'
-                    });
-                }).catch(error => {
-                    Swal.fire({
-                        title: 'Error',
-                        text: error,
-                        icon: 'error'
-                    });
-                }).finally(() => {
-                    setIsDisabled(false)
-                });
-            }
-        });
-    };
    
     return (
         <div className="container fluid">

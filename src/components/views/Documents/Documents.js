@@ -28,7 +28,6 @@ import {
     faRightToBracket,
     faShare,
     faSearch,
-    faThumbsUp,
     faCircleArrowUp,
     faFileCircleCheck,
     faUserCheck
