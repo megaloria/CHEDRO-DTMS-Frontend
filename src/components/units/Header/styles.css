@@ -38,18 +38,16 @@
     transform: scale(1);
   }
 }
-
+/* 
 .user-icon {
   transition: transform 0.2s ease-in-out;
-}
+} */
 
 .text:hover .user-icon {
-  animation: bell-animation 0.5s ease-in-out forwards;
-  transform: translateX(-5px);
   color: #ffc107;
 }
 
-@keyframes user-animation {
+/* @keyframes user-animation {
   0% {
     transform: scale(1);
   }
@@ -59,7 +57,7 @@
   100% {
     transform: scale(1);
   }
-}
+} */
 
 @media screen and (max-width: 991px) {
   .ms-auto {
