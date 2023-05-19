@@ -726,7 +726,7 @@ function DocumentsUser() {
                                                                     </OverlayTrigger>
                                                                 ) :
                                                                     // (row.logs[0].action_id !== null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
-                                                                    (row.logs[0].action_id !== null && row.logs[0].acknowledge_id === null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
+                                                                    (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null) ? (
                                                                         <OverlayTrigger
                                                                             trigger={['click', 'hover']}
                                                                             placement="left"
@@ -818,7 +818,7 @@ function DocumentsUser() {
                                                                                         <Popover.Body>
                                                                                             <ListGroup variant="flush">
                                                                                                 <ListGroupItem variant="warning text-black">
-                                                                                                    {row.logs[0]?.user.profile.name}
+                                                                                                    {row.logs[0]?.user?.profile.name}
                                                                                                 </ListGroupItem>
                                                                                             </ListGroup>
                                                                                         </Popover.Body>
@@ -828,7 +828,7 @@ function DocumentsUser() {
                                                                                 <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
                                                                             </OverlayTrigger>
 
-                                                                        ) : row.logs[0].to_id && row.logs[0].from_id === null ? (
+                                                                        ) : row.logs[0].to_id === loaderData.id && row.logs[0].from_id === null && loaderData.role.level === 2 ? (
                                                                             <Badge bg="warning">Forwarded from RO</Badge>
                                                                         ) :
                                                                             row.logs[0].to_id && loaderData.role.level >=2 ? (
