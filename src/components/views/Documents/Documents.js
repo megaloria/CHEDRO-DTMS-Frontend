@@ -734,7 +734,7 @@ function Documents() {
                                                 <>
                                                     {
                                                         (row.logs[0].released_at !== null) ? (
-                                                            <Badge bg="success" style={{ cursor: 'pointer' }}>Done</Badge>
+                                                            <Badge bg="primary">Done</Badge>
                                                         ) :
                                                             (row.logs[0]?.to_id === null &&
                                                                 row.logs[0]?.from_id !== null &&
