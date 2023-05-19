@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Alert,
     Button,
@@ -30,7 +30,7 @@ import apiClient from '../../../helpers/apiClient';
 function Users() {
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [isDisabled, setIsDisabled] = useState(false); 
+    const [isDisabled, setIsDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
     const [roles, setRoles] = useState([]); //user variable
@@ -160,7 +160,7 @@ function Users() {
         setIsDisabled(true)
         apiClient.post('/users', {
             ...formInputs,
-      
+
         }).then(response => {
             setData({
                 ...data,
@@ -199,10 +199,10 @@ function Users() {
         }).then(response => {
             let newData = data.data.map(d => {
                 if (d.id === response.data.data.id) {
-                    return {...response.data.data};
+                    return { ...response.data.data };
                 }
 
-                return {...d};
+                return { ...d };
             })
             setData({
                 ...data,
@@ -344,10 +344,10 @@ function Users() {
         }).then(response => {
             let newData = data.data.map(d => {
                 if (d.id === response.data.data.id) {
-                    return {...response.data.data};
+                    return { ...response.data.data };
                 }
 
-                return {...d};
+                return { ...d };
             })
             setData({
                 ...data,
@@ -465,20 +465,20 @@ function Users() {
 
     return (
         <Container fluid>
-            <div className='bg-body rounded'> 
-                <Row className= 'justify-content-end mt-4 mb-3'>
+            <div className='bg-body rounded'>
+                <Row className='justify-content-end mt-4 mb-3'>
                     <Col>
                         <h1>Users</h1>
                     </Col>
                 </Row>
 
-                <div> 
+                <div>
                     <div className='d-md-flex mb-3 justify-content-end'>
                         <div className="search">
                             <Form className="d-flex" controlId="" onSubmit={handleSearch}>
                                 <Form.Control
-                                    type="search" 
-                                    placeholder="Search" 
+                                    type="search"
+                                    placeholder="Search"
                                     className="me-2"
                                     value={searchQuery}
                                     onChange={handleSearchInputChange}
@@ -486,9 +486,9 @@ function Users() {
                                 <Button type='submit'>
                                     <FontAwesomeIcon icon={faSearch} />
                                 </Button>
-                                <div className='ms-2'> 
-                                    <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>
-                                        <FontAwesomeIcon icon={faAdd} /> 
+                                <div className='ms-2'>
+                                    <Button variant='primary' onClick={e => handleShowModal()} style={{ whiteSpace: 'nowrap' }}>
+                                        <FontAwesomeIcon icon={faAdd} />
                                         <span className='d-none d-md-inline-block ms-1'> Add
                                         </span>
                                     </Button>
@@ -506,68 +506,68 @@ function Users() {
                     </Alert>
                 ) : (
                     <div className='loading-table-container'>
-                                    <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
-                                        <div className='spinner-icon'>
-                                            <Spinner animation='border' />
-                                        </div>
-                                    </div>
-                                <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
-                                    <thead className="table-primary">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Username</th>
-                                            <th>Role</th>
-                                            <th>Position/Designation</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            data.data.map((row, index) => (
-                                                <tr key={index}>
-                                                    <td className="table-primary">{row.id}</td>
-                                                    <td>{row.username}</td>
-                                                    <td>{getRoleDescription(row.role_id)}</td>
-                                                    <td>{row.profile.position_designation}</td>
-                                                    <td>
-                                                        <Button onClick={e => handleShowModal(row)} variant='link'>
-                                                            <FontAwesomeIcon icon={faEdit} className='text-primary'/>
+                        <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
+                            <div className='spinner-icon'>
+                                <Spinner animation='border' />
+                            </div>
+                        </div>
+                        <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
+                            <thead className="table-primary">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Username</th>
+                                    <th>Role</th>
+                                    <th>Position/Designation</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    data.data.map((row, index) => (
+                                        <tr key={index}>
+                                            <td className="table-primary">{row.id}</td>
+                                            <td>{row.username}</td>
+                                            <td>{getRoleDescription(row.role_id)}</td>
+                                            <td>{row.profile.position_designation}</td>
+                                            <td>
+                                                <Button onClick={e => handleShowModal(row)} variant='link'>
+                                                    <FontAwesomeIcon icon={faEdit} className='text-primary' />
+                                                </Button>
+                                                <Button onClick={e => handleShowmodalReset(row)} variant='link'>
+                                                    <FontAwesomeIcon icon={faRotate} className='text-success' />
+                                                </Button>
+                                                {
+                                                    loaderData.id !== row.id && (
+                                                        <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                                            <FontAwesomeIcon icon={faTrash} className='text-danger' />
                                                         </Button>
-                                                        <Button onClick={e => handleShowmodalReset(row)} variant='link'>
-                                                            <FontAwesomeIcon icon={faRotate} className='text-success'/>
-                                                        </Button> 
-                                                        {
-                                                            loaderData.id !== row.id && (
-                                                                <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                                                    <FontAwesomeIcon icon={faTrash} className='text-danger' />
-                                                                </Button>
-                                                            )
-                                                        }
-                                                        
-                                                    </td>
-                                                </tr>
-                                            ))
-                                        }
-                                    </tbody>
-                                </Table>
-                          
-                
-         <div>
-                {data.data.length > 0 && (
-                    <Pagination style={{ float: 'right' }}>
-                        <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
-                        <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
-                        <Pagination.Item disabled>
-                            {`${data.current_page} / ${data.last_page}`}
-                        </Pagination.Item>
-                        <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
-                        <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
-                    </Pagination>
-                )}
-            </div> 
-            </div>
+                                                    )
+                                                }
+
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </Table>
+
+
+                        <div>
+                            {data.data.length > 0 && (
+                                <Pagination style={{ float: 'right' }}>
+                                    <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                    <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                    <Pagination.Item disabled>
+                                        {`${data.current_page} / ${data.last_page}`}
+                                    </Pagination.Item>
+                                    <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                    <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                                </Pagination>
+                            )}
+                        </div>
+                    </div>
                 )
-}
+            }
 
             <Modal
                 show={modal.show}
@@ -580,241 +580,241 @@ function Users() {
                 </Modal.Header>
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
-                    <Row className='mb-2'>
-                        <Col>
-                            <Form.Group className='mb-2' controlId=''>
-                                <Form.Label>Username</Form.Label>
-                                <Form.Control 
-                                    type='text' 
-                                    placeholder='Enter Username'
-                                    name='username'
-                                    value={formInputs.username} 
-                                    onChange={handleInputChange}
-                                    isInvalid={!!formErrors.username}/>
+                        <Row className='mb-2'>
+                            <Col>
+                                <Form.Group className='mb-2' controlId=''>
+                                    <Form.Label>Username</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter Username'
+                                        name='username'
+                                        value={formInputs.username}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.username} />
                                     <Form.Control.Feedback type='invalid'>
                                         {formErrors.username}
                                     </Form.Control.Feedback>
-                            </Form.Group>
-                        </Col> 
+                                </Form.Group>
+                            </Col>
 
-                        <Row className='d-md-none'> </Row>
+                            <Row className='d-md-none'> </Row>
 
-                        {
-                            !modal.data && (
-                                <Col>
-                                    <Form.Group className='mb-2' controlId=''>
-                                        <Form.Label>Password</Form.Label>
-                                        <InputGroup>
-                                            <Form.Control
-                                                type='password' 
-                                                onChange={handleInputChange}
-                                                value={formInputs.password}
-                                                name='password'
-                                                placeholder='Enter Password'
-                                                isInvalid={!!formErrors.password}
-                                                 />
-                                            <Form.Control.Feedback type='invalid'>
-                                                {formErrors.password}
-                                            </Form.Control.Feedback>
-                                        </InputGroup>
-                                    </Form.Group>
-                                </Col>
-                            )
-                        }
+                            {
+                                !modal.data && (
+                                    <Col>
+                                        <Form.Group className='mb-2' controlId=''>
+                                            <Form.Label>Password</Form.Label>
+                                            <InputGroup>
+                                                <Form.Control
+                                                    type='password'
+                                                    onChange={handleInputChange}
+                                                    value={formInputs.password}
+                                                    name='password'
+                                                    placeholder='Enter Password'
+                                                    isInvalid={!!formErrors.password}
+                                                />
+                                                <Form.Control.Feedback type='invalid'>
+                                                    {formErrors.password}
+                                                </Form.Control.Feedback>
+                                            </InputGroup>
+                                        </Form.Group>
+                                    </Col>
+                                )
+                            }
 
-                        <Row className='d-md-none'> </Row>
+                            <Row className='d-md-none'> </Row>
 
-                        <Col>
-                            <Form.Group className='mb-2' controlId=''>
-                                <Form.Label>Role</Form.Label>
-                                <Form.Select 
-                                aria-label='Default select example'
-                                name='role_id'
-                                value={formInputs.role_id} 
-                                onChange={handleInputChange}
-                                isInvalid={!!formErrors.role_id}>
-                                    <option value=''>Select role...</option>
-                                    {
-                                        roles.map(roles => (
-                                            <option key={roles.id} value={roles.id}>{roles.description}</option>
-                                        ))
-                                    }
-                                </Form.Select>
-                                <Form.Control.Feedback type='invalid'>
-                                    {formErrors.role_id}
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
-                    </Row>
+                            <Col>
+                                <Form.Group className='mb-2' controlId=''>
+                                    <Form.Label>Role</Form.Label>
+                                    <Form.Select
+                                        aria-label='Default select example'
+                                        name='role_id'
+                                        value={formInputs.role_id}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.role_id}>
+                                        <option value=''>Select role...</option>
+                                        {
+                                            roles.map(roles => (
+                                                <option key={roles.id} value={roles.id}>{roles.description}</option>
+                                            ))
+                                        }
+                                    </Form.Select>
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.role_id}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Col>
+                        </Row>
 
-                    <Row>
-                        <Col>
-                            <Form.Group className='mb-2'>
-                                <Form.Label>First Name</Form.Label>
-                                <Form.Control 
-                                    type='text' 
-                                    placeholder='Enter First Name'
-                                    name='first_name'
-                                    value={formInputs.first_name}
-                                    onChange={handleInputChange}
-                                    isInvalid={!!formErrors.first_name}/>
+                        <Row>
+                            <Col>
+                                <Form.Group className='mb-2'>
+                                    <Form.Label>First Name</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter First Name'
+                                        name='first_name'
+                                        value={formInputs.first_name}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.first_name} />
                                     <Form.Control.Feedback type='invalid'>
                                         {formErrors.first_name}
                                     </Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
+                                </Form.Group>
+                            </Col>
 
-                        <Row className='d-md-none'> </Row>
+                            <Row className='d-md-none'> </Row>
 
-                        <Col>
-                            <Form.Group className='mb-2' controlId=''>
-                                <Form.Label>Middle Name</Form.Label>
-                                <Form.Control 
-                                type='text' 
-                                placeholder='Enter Middle Name' 
-                                name='middle_name'
-                                value={formInputs.middle_name}
-                                onChange={handleInputChange}
-                                isInvalid={!!formErrors.middle_name}/>
-                                <Form.Control.Feedback type='invalid'>
-                                    {formErrors.middle_name}
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
+                            <Col>
+                                <Form.Group className='mb-2' controlId=''>
+                                    <Form.Label>Middle Name</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter Middle Name'
+                                        name='middle_name'
+                                        value={formInputs.middle_name}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.middle_name} />
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.middle_name}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Col>
 
-                        <Row className='d-md-none'> </Row>
+                            <Row className='d-md-none'> </Row>
 
-                        <Col>
-                            <Form.Group className='mb-2' controlId=''>
-                                <Form.Label>Last Name</Form.Label>
-                                <Form.Control 
-                                    type='text' 
-                                    placeholder='Enter Last Name'
-                                    name='last_name'
-                                    value={formInputs.last_name}
-                                    onChange={handleInputChange}
-                                    isInvalid={!!formErrors.last_name}/>
-                                <Form.Control.Feedback type='invalid'>
-                                    {formErrors.last_name}
-                                </Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
-                    </Row>
-                    <Row className='justify-content-md'>
-                        
-                        <Col >
-                            <Form.Group className='mb-2' controlId=''>
-                                <Form.Label>Prefix</Form.Label>
-                                <Form.Control 
-                                    type='text' 
-                                    placeholder='Prefix'
-                                    name='prefix'
-                                    value={formInputs.prefix}
-                                    onChange={handleInputChange}
-                                    isInvalid={!!formErrors.prefix}/>
+                            <Col>
+                                <Form.Group className='mb-2' controlId=''>
+                                    <Form.Label>Last Name</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter Last Name'
+                                        name='last_name'
+                                        value={formInputs.last_name}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.last_name} />
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.last_name}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Col>
+                        </Row>
+                        <Row className='justify-content-md'>
+
+                            <Col >
+                                <Form.Group className='mb-2' controlId=''>
+                                    <Form.Label>Prefix</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Prefix'
+                                        name='prefix'
+                                        value={formInputs.prefix}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.prefix} />
                                     <Form.Control.Feedback type='invalid'>
                                         {formErrors.prefix}
                                     </Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
+                                </Form.Group>
+                            </Col>
 
-                        <Col >
-                            <Form.Group className='mb-2' controlId=''>
-                                <Form.Label>Suffix</Form.Label>
-                                <Form.Control 
-                                    type='text' 
-                                    placeholder='Enter Suffix'
-                                    name='suffix'
-                                    value={formInputs.suffix} 
-                                    onChange={handleInputChange}
-                                    isInvalid={!!formErrors.suffix}/>
+                            <Col >
+                                <Form.Group className='mb-2' controlId=''>
+                                    <Form.Label>Suffix</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter Suffix'
+                                        name='suffix'
+                                        value={formInputs.suffix}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.suffix} />
                                     <Form.Control.Feedback type='invalid'>
                                         {formErrors.suffix}
                                     </Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
+                                </Form.Group>
+                            </Col>
 
-                        <Row className='d-md-none'> </Row>
+                            <Row className='d-md-none'> </Row>
 
-                        <Col >
-                            <Form.Group className='mb-2' controlId=''>
-                                <Form.Label>Position/Designation</Form.Label>
-                                <Form.Control 
-                                    type='text' 
-                                    placeholder='Enter Position'
-                                    name='position_designation'
-                                    value={formInputs.position_designation}
-                                    onChange={handleInputChange}
-                                    isInvalid={!!formErrors.position_designation}/>
+                            <Col >
+                                <Form.Group className='mb-2' controlId=''>
+                                    <Form.Label>Position/Designation</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter Position'
+                                        name='position_designation'
+                                        value={formInputs.position_designation}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.position_designation} />
                                     <Form.Control.Feedback type='invalid'>
                                         {formErrors.position_designation}
                                     </Form.Control.Feedback>
-                            </Form.Group>
-                        </Col>
+                                </Form.Group>
+                            </Col>
 
-                    </Row>
-                   
-                        </Modal.Body>
-                        <Modal.Footer>
-                            <Button 
-                                variant='secondary' 
-                                onClick={handleHideModal} 
-                                disabled={modal.isLoading}>
-                                Cancel
-                            </Button>
-                            <Button 
-                                type='submit'
-                                variant='primary' 
-                                disabled={modal.isLoading || isDisabled}>
-                                    {modal.data ? 'Edit' : 'Add'}
-                            </Button>
-                        </Modal.Footer>
+                        </Row>
+
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            variant='secondary'
+                            onClick={handleHideModal}
+                            disabled={modal.isLoading}>
+                            Cancel
+                        </Button>
+                        <Button
+                            type='submit'
+                            variant='primary'
+                            disabled={modal.isLoading || isDisabled}>
+                            {modal.data ? 'Edit' : 'Add'}
+                        </Button>
+                    </Modal.Footer>
                 </Form>
             </Modal>
 
             {/* <!--- Model Box Reset password ---> */}
-                <Modal
-                    show={modalReset.show}
-                    onHide={handleHidemodalReset}
-                    backdrop="static"
-                    keyboard={false}
-                    aria-labelledby="example-custom-modal-styling-title"
-                    centered
-                >
-                    <Modal.Header closeButton>
-                        <Modal.Title id="example-custom-modal-styling-title">Reset Password</Modal.Title>
-                    </Modal.Header>
-                    <Form onSubmit={handleSubmitReset}>
-                        <Modal.Body>
-                            <Form.Group>
-                                <Form.Label>Password</Form.Label>
-                                    <Form.Control 
-                                        type='password'
-                                        name='reset_password'
-                                        value={formInputPass.reset_password} 
-                                        onChange={handleInputChangePass}
-                                        isInvalid={!!formErrorPass.reset_password}/>
-                                        <Form.Control.Feedback type='invalid'>
-                                            {formErrorPass.reset_password}
-                                        </Form.Control.Feedback>
-                            </Form.Group>
-                        </Modal.Body>
-                            <Modal.Footer>
-                                <Button
-                                    variant="secondary"
-                                    onClick={handleHidemodalReset}
-                                    disabled={modalReset.isLoading}>
-                                       Cancel
-                                </Button>
-                                <Button 
-                                    type='submit'
-                                    variant='primary'
-                                    disabled={modalReset.isLoading || isDisabled}>
-                                       Reset
-                                </Button>
-                            </Modal.Footer>
-                    </Form>
-                </Modal>
+            <Modal
+                show={modalReset.show}
+                onHide={handleHidemodalReset}
+                backdrop="static"
+                keyboard={false}
+                aria-labelledby="example-custom-modal-styling-title"
+                centered
+            >
+                <Modal.Header closeButton>
+                    <Modal.Title id="example-custom-modal-styling-title">Reset Password</Modal.Title>
+                </Modal.Header>
+                <Form onSubmit={handleSubmitReset}>
+                    <Modal.Body>
+                        <Form.Group>
+                            <Form.Label>Password</Form.Label>
+                            <Form.Control
+                                type='password'
+                                name='reset_password'
+                                value={formInputPass.reset_password}
+                                onChange={handleInputChangePass}
+                                isInvalid={!!formErrorPass.reset_password} />
+                            <Form.Control.Feedback type='invalid'>
+                                {formErrorPass.reset_password}
+                            </Form.Control.Feedback>
+                        </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button
+                            variant="secondary"
+                            onClick={handleHidemodalReset}
+                            disabled={modalReset.isLoading}>
+                            Cancel
+                        </Button>
+                        <Button
+                            type='submit'
+                            variant='primary'
+                            disabled={modalReset.isLoading || isDisabled}>
+                            Reset
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
         </Container>
     );
 }

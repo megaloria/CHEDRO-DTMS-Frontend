@@ -211,7 +211,7 @@ function DocumentReceive() {
         formData.append('receivable_name', formInputs.receivable_name);
         formData.append('description', formInputs.description);
         formData.append('category_id', formInputs.category_id);
-        
+
         for (let i = 0; i < assignTo.length; i++) {
             formData.append(`assign_to[${i}]`, assignTo[i]);
         }
@@ -355,7 +355,7 @@ function DocumentReceive() {
             let newSelectedCategory = categories.find(c => c.id === +e.target.value);
             setSelectedCategory(newSelectedCategory);
 
-            if(!newSelectedCategory.is_assignable) {
+            if (!newSelectedCategory.is_assignable) {
                 let newOptions = users.map(user => ({
                     value: user.id,
                     label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
@@ -862,7 +862,7 @@ function DocumentReceive() {
                                 <Button onClick={handleForward} variant="primary" disabled={isDisabled}>
                                     Forward
                                 </Button>
-                                
+
                             }
                         </Col>
                     </div>
