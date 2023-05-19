@@ -673,7 +673,9 @@ function DocumentsUser() {
                                         <td>
                                             {row.logs.length > 0 ? (
                                                 <>
-                                                    {
+                                                    {(row.logs[0].released_at !== null) ? (
+                                                            <Badge bg="primary">Done</Badge>
+                                                        ) :
                                                         (row.logs[0]?.to_id === null &&
                                                             row.logs[0]?.from_id !== null &&
                                                             row.logs[0]?.action_id !== null &&
@@ -726,7 +728,8 @@ function DocumentsUser() {
                                                                     </OverlayTrigger>
                                                                 ) :
                                                                     // (row.logs[0].action_id !== null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
-                                                                    (row.logs[0].action_id !== null && row.logs[0].acknowledge_id === null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
+                                                                        
+                                                                    (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null && row.logs[0].action_id !== loaderData.id) || (row.logs[0].from_id === row.logs[0].action_id && loaderData.role.level === 2) ? (
                                                                         <OverlayTrigger
                                                                             trigger={['click', 'hover']}
                                                                             placement="left"
@@ -785,7 +788,11 @@ function DocumentsUser() {
                                                                             >
                                                                                 <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                             </OverlayTrigger>
-                                                                        ) : row.logs[0].from_id === loaderData.id || loaderData.role.level <= 2 ? (
+
+                                                                        )  : row.logs[0].to_id && row.logs[0].from_id === null ? (
+                                                                            <Badge bg="warning">Forwarded from RO</Badge>
+
+                                                                        ) : row.logs[0].from_id === loaderData.id || row.logs[0].action_id === loaderData.id || loaderData.role.level <= 2 ? (
                                                                             <OverlayTrigger
                                                                                 trigger={['click', 'hover']}
                                                                                 placement="left"
@@ -797,7 +804,7 @@ function DocumentsUser() {
                                                                                         <Popover.Body>
                                                                                             <ListGroup variant="flush">
                                                                                                 <ListGroupItem variant="warning text-black">
-                                                                                                    {row.logs[0]?.user.profile.name}
+                                                                                                    {row.logs[0]?.user?.profile.name}
                                                                                                 </ListGroupItem>
                                                                                             </ListGroup>
                                                                                         </Popover.Body>
@@ -807,10 +814,7 @@ function DocumentsUser() {
                                                                                 <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
                                                                             </OverlayTrigger>
 
-                                                                        ) : row.logs[0].to_id && row.logs[0].from_id === null ? (
-                                                                            <Badge bg="warning">Forwarded from RO</Badge>
-                                                                        ) :
-                                                                            row.logs[0].to_id && loaderData.role.level >=2 ? (
+                                                                        ) : row.logs[0].to_id && loaderData.role.level >=2 ? (
                                                                                 <OverlayTrigger
                                                                                     trigger={['click', 'hover']}
                                                                                     placement="left"
