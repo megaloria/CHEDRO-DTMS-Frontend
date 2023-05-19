@@ -100,7 +100,9 @@ function DocumentView() {
                 log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} log={log} /> :
                     log.action_id !== null && log.comment !== null && log.from_id === null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} log={log} /> :
                         log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} log={log} /> :
-                            log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} /> : log.to_id === null ? 'Document for Releasing' : null,
+                            log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} /> 
+                            : log.to_id === null && log.released_at !== null? <p>Document <span className='released-text'>Released</span></p>
+                            : log.to_id === null ? <p>Document <span className='for-releasing-text'>For Releasing</span></p> : null,
             date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss A'),
             category: {
                 tag: log.assigned_user?.profile.name,
