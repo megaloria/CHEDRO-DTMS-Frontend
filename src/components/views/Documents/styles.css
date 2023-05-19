@@ -101,6 +101,18 @@
     font-weight: bold;
   }
 
+  .custom-acted {
+    background-color: #0dcaf0 !important;
+    /* background-color: #5cb85c !important; */
+  }
+ 
+  /* .custom-frwd {
+    background-color: #f57c02 !important;
+  }
+  
+  .custom-releasing {
+    background-color: #ffd506 !important;
+  } */
   /* .custom-done {
     background-color: #9ca2a8 !important; 
     color: white !important;
