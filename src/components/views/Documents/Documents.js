@@ -797,13 +797,6 @@ function Documents() {
                                                                                             Acted by
                                                                                         </Popover.Header>
                                                                                         <Popover.Body>
-                                                                                            {/* <ListGroup variant="flush">
-                                                                                {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
-                                                                                    <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
-                                                                                        {log?.action_user?.profile?.name}
-                                                                                    </ListGroupItem>
-                                                                                ))}
-                                                                            </ListGroup> */}
                                                                                             <ListGroup variant="flush">
                                                                                                 <ListGroupItem variant="success text-black" >
                                                                                                     {row.logs[0]?.action_user?.profile?.name}
@@ -835,18 +828,6 @@ function Documents() {
                                                                                                             </ListGroupItem>
                                                                                                         ))}
                                                                                                 </ListGroup>
-
-                                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
-                                                                                    <div>Forwarded To:</div>
-                                                                                )}
-                                                                                <ListGroup variant="flush">
-                                                                                    {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).map((log, index) => (
-                                                                                        <ListGroupItem variant="warning text-black" key={log?.user?.profile?.id}>
-                                                                                            {log?.user?.profile?.name}
-                                                                                        </ListGroupItem>
-                                                                                    ))}
-                                                                                </ListGroup> */}
-
                                                                                             </Popover.Body>
                                                                                         </Popover>
                                                                                     }
@@ -868,7 +849,6 @@ function Documents() {
                                                                                                         <ListGroupItem className="bg-warning text-white"
                                                                                                             key={row.logs[0]?.user.profile.id}
                                                                                                         >
-
                                                                                                             {row.logs[0]?.user.profile.name}
                                                                                                         </ListGroupItem>
                                                                                                     ) : null}
@@ -883,35 +863,7 @@ function Documents() {
                                                                                 <Badge bg="primary">Received</Badge>
                                                                             )}
                                                 </>
-                                            ) : row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
-                                                <OverlayTrigger
-                                                    trigger={['click', 'hover']}
-                                                    placement="left"
-                                                    overlay={
-                                                        <Popover>
-                                                            <Popover.Header className="bg-primary text-white">
-                                                                Assigned to
-                                                            </Popover.Header>
-                                                            <Popover.Body>
-                                                                <ListGroup variant="flush">
-                                                                    {row.assign.map((assign, index) => (
-                                                                        <ListGroupItem
-                                                                            variant="primary text-black"
-                                                                            key={assign.assigned_user.profile.id}
-                                                                        >
-                                                                            {assign.assigned_user.profile.name}
-                                                                        </ListGroupItem>
-                                                                    ))}
-                                                                </ListGroup>
-                                                            </Popover.Body>
-                                                        </Popover>
-                                                    }
-                                                >
-                                                    <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
-                                                </OverlayTrigger>
-                                            ) : <Badge bg="primary">Received</Badge>}
-
-
+                                            ) : null}
                                         </td>
 
                                         <td style={{ whiteSpace: 'nowrap' }}>

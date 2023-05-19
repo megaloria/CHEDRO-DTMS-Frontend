@@ -436,11 +436,14 @@ function DocumentView() {
                                                 document.logs[0]?.acknowledge_id === null &&
                                                 document.logs[0]?.approved_id !== null) ? (
                                                 <Badge bg="success" style={{ cursor: 'pointer' }}>For Releasing</Badge>
-                                            ) :
-                                                (document.logs[0].approved_id !== null) ? (
+
+                                            ) : (document.logs[0].released_at !== null) ? (
+                                                    <Badge bg="primary">Done</Badge>
+
+                                            ) : (document.logs[0].approved_id !== null) ? (
                                                     <OverlayTrigger
                                                         trigger={['click', 'hover']}
-                                                        placement="left"
+                                                        placement="bottom"
                                                         overlay={
                                                             <Popover>
                                                                 <Popover.Header className="bg-success text-white">
@@ -484,20 +487,13 @@ function DocumentView() {
                                                         (document.logs[0].action_id !== null && document.logs[0].from_id !== null && document.logs[0].to_id !== null) ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
-                                                                placement="left"
+                                                                placement="bottom"
                                                                 overlay={
                                                                     <Popover>
                                                                         <Popover.Header className="bg-success text-white">
                                                                             Acted by
                                                                         </Popover.Header>
                                                                         <Popover.Body>
-                                                                            {/* <ListGroup variant="flush">
-                                                                                {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
-                                                                                    <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
-                                                                                        {log?.action_user?.profile?.name}
-                                                                                    </ListGroupItem>
-                                                                                ))}
-                                                                            </ListGroup> */}
                                                                             <ListGroup variant="flush">
                                                                                 <ListGroupItem variant="success text-black" >
                                                                                     {document.logs[0]?.action_user?.profile?.name}
@@ -565,33 +561,7 @@ function DocumentView() {
                                                                 <Badge bg="primary">Received</Badge>
                                                             )}
                                     </>
-                                ) : document.assign.length > 0 && document.assign[0].assigned_id !== null ? (
-                                    <OverlayTrigger
-                                        trigger={['click', 'hover']}
-                                        placement="left"
-                                        overlay={
-                                            <Popover>
-                                                <Popover.Header className="bg-primary text-white">
-                                                    Assigned to
-                                                </Popover.Header>
-                                                <Popover.Body>
-                                                    <ListGroup variant="flush">
-                                                        {document.assign.map((assign, index) => (
-                                                            <ListGroupItem
-                                                                variant="primary text-black"
-                                                                key={assign.assigned_user.profile.id}
-                                                            >
-                                                                {assign.assigned_user.profile.name}
-                                                            </ListGroupItem>
-                                                        ))}
-                                                    </ListGroup>
-                                                </Popover.Body>
-                                            </Popover>
-                                        }
-                                    >
-                                        <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
-                                    </OverlayTrigger>
-                                ) : <Badge bg="primary">Received</Badge>}
+                                ) : null}
                             </Col>
                         </Row>
 
