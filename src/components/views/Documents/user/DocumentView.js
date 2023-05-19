@@ -298,7 +298,8 @@ function DocumentView() {
                     log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} log={log} /> :
                         log.action_id !== null && log.comment !== null && log.from_id === null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} log={log} /> :
                             log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} log={log} /> :
-                                log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} log={log} /> : log.to_id === null ? 'Document for Releasing' : null,
+                                log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} log={log} /> : log.to_id === null && log.released_at !== null? <p>Document <span className='released-text'>Released</span></p>
+                                : log.to_id === null ? <p>Document <span className='for-releasing-text'>For Releasing</span></p> : null,
                 date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss A'),
                 category: {
                     tag: currentUser?.role.level > log?.assigned_user?.role.level ? '' : log.assigned_user?.profile.name,
@@ -677,13 +678,15 @@ function DocumentView() {
                                 <FontAwesomeIcon icon={faTimeline} className='text-dark me-3' />
                                 {document.logs.length > 0 ? (
                                     <>
-                                        {
+                                        {(document.logs[0].released_at !== null) ? (
+                                                <Badge bg="primary">Done</Badge>
+                                            ) :
                                             (document.logs[0]?.to_id === null &&
                                                 document.logs[0]?.from_id !== null &&
                                                 document.logs[0]?.action_id !== null &&
                                                 document.logs[0]?.acknowledge_id === null &&
                                                 document.logs[0]?.approved_id !== null) ? (
-                                                <Badge bg="success" style={{ cursor: 'pointer' }}>For Releasing</Badge>
+                                                <Badge bg="success" style={{ cursor: '' }}>For Releasing</Badge>
                                             ) :
                                                 (document.logs[0].approved_id !== null) ? (
                                                     <OverlayTrigger
@@ -729,7 +732,9 @@ function DocumentView() {
                                                             <Badge bg='' className="custom-rejected" style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                         </OverlayTrigger>
                                                     ) :
-                                                        (document.logs[0].action_id !== null && document.logs[0].acknowledge_id === null && document.logs[0].from_id === null && document.logs[0].to_id === null) ? (
+                                                        // (row.logs[0].action_id !== null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
+                                                            
+                                                        (document.logs[0].action_id !== null && document.logs[0].from_id !== null && document.logs[0].to_id !== null && document.logs[0].action_id !== currentUser.id) || (document.logs[0].from_id === document.logs[0].action_id && document.logs[0].action_id !== null && currentUser.role.level === 2) ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
                                                                 placement="left"
@@ -739,13 +744,6 @@ function DocumentView() {
                                                                             Acted by
                                                                         </Popover.Header>
                                                                         <Popover.Body>
-                                                                            {/* <ListGroup variant="flush">
-                                                                                {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
-                                                                                    <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
-                                                                                        {log?.action_user?.profile?.name}
-                                                                                    </ListGroupItem>
-                                                                                ))}
-                                                                            </ListGroup> */}
                                                                             <ListGroup variant="flush">
                                                                                 <ListGroupItem variant="success text-black" >
                                                                                     {document.logs[0]?.action_user?.profile?.name}
@@ -753,20 +751,6 @@ function DocumentView() {
                                                                             </ListGroup>
                                                                         </Popover.Body>
                                                                     </Popover>
-                                                                    // <Popover>
-                                                                    //     <Popover.Header className="bg-success text-white">
-                                                                    //         Acted by
-                                                                    //     </Popover.Header>
-                                                                    //     <Popover.Body>
-                                                                    //         <ListGroup variant="flush">
-                                                                    //             {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
-                                                                    //                 <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
-                                                                    //                     {log?.action_user?.profile?.name}
-                                                                    //                 </ListGroupItem>
-                                                                    //             ))}
-                                                                    //         </ListGroup>
-                                                                    //     </Popover.Body>
-                                                                    // </Popover>
                                                                 }
                                                             >
                                                                 <Badge bg="success" style={{ cursor: 'pointer' }}>Acted</Badge>
@@ -785,32 +769,23 @@ function DocumentView() {
                                                                                 <ListGroup variant="flush">
                                                                                     {document.logs.length > 0 ? (
                                                                                         <ListGroupItem className="custom-badge text-white"
-                                                                                            key={document.logs[0]?.acknowledge_user.profile.id}
                                                                                         >
 
                                                                                             {document.logs[0]?.acknowledge_user.profile.name}
                                                                                         </ListGroupItem>
                                                                                     ) : null}
                                                                                 </ListGroup>
-
-                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
-                                                                                    <div>Forwarded To:</div>
-                                                                                )}
-                                                                                <ListGroup variant="flush">
-                                                                                    {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).map((log, index) => (
-                                                                                        <ListGroupItem variant="warning text-black" key={log?.user?.profile?.id}>
-                                                                                            {log?.user?.profile?.name}
-                                                                                        </ListGroupItem>
-                                                                                    ))}
-                                                                                </ListGroup> */}
-
                                                                             </Popover.Body>
                                                                         </Popover>
                                                                     }
                                                                 >
                                                                     <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
                                                                 </OverlayTrigger>
-                                                            ) : document.logs[0].from_id === currentUser.id ? (
+
+                                                            )  : document.logs[0].to_id && document.logs[0].from_id === null ? (
+                                                                <Badge bg="warning">Forwarded from RO</Badge>
+
+                                                            ) : document.logs[0].from_id === currentUser.id || document.logs[0].action_id === currentUser.id || currentUser.role.level <= 2 ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
                                                                     placement="left"
@@ -821,16 +796,9 @@ function DocumentView() {
                                                                             </Popover.Header>
                                                                             <Popover.Body>
                                                                                 <ListGroup variant="flush">
-                                                                                    {document.logs.map((log, index) => (
-                                                                                        (currentUser.id === log.from_id) ? (
-                                                                                            <ListGroupItem
-                                                                                                variant="warning text-black"
-                                                                                                key={log.user?.profile.id}
-                                                                                            >
-                                                                                                {log.user?.profile.name}
-                                                                                            </ListGroupItem>
-                                                                                        ) : null
-                                                                                    ))}
+                                                                                    <ListGroupItem variant="warning text-black">
+                                                                                        {document.logs[0]?.user?.profile.name}
+                                                                                    </ListGroupItem>
                                                                                 </ListGroup>
                                                                             </Popover.Body>
                                                                         </Popover>
@@ -838,67 +806,31 @@ function DocumentView() {
                                                                 >
                                                                     <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
                                                                 </OverlayTrigger>
-                                                            ) : document.logs[0].to_id ? (
-                                                                <OverlayTrigger
-                                                                    trigger={['click', 'hover']}
-                                                                    placement="left"
-                                                                    overlay={
-                                                                        <Popover>
-                                                                            <Popover.Header className="bg-warning text-white">
-                                                                                Forwarded from
-                                                                            </Popover.Header>
-                                                                            <Popover.Body>
+
+                                                            ) : document.logs[0].to_id && currentUser.role.level >=2 ? (
+                                                                    <OverlayTrigger
+                                                                        trigger={['click', 'hover']}
+                                                                        placement="left"
+                                                                        overlay={
+                                                                            <Popover>
+                                                                                <Popover.Header className="bg-warning text-white">
+                                                                                    Forwarded from
+                                                                                </Popover.Header>
+                                                                                <Popover.Body>
                                                                                 <ListGroup variant="flush">
-                                                                                    <ListGroupItem>
-                                                                                        {document.logs.map((log, index) => (
-                                                                                            (currentUser.id === log.to_id) ? (
-                                                                                                <ListGroupItem
-                                                                                                    variant="warning text-black"
-                                                                                                    key={log?.from_user?.profile.id}
-                                                                                                >
-                                                                                                    {log?.from_user?.profile.name}
-                                                                                                </ListGroupItem>
-                                                                                            ) : null
-                                                                                        ))}
+                                                                                    <ListGroupItem variant="warning text-black">
+                                                                                        {document.logs[0]?.from_user.profile.name}
                                                                                     </ListGroupItem>
                                                                                 </ListGroup>
-                                                                            </Popover.Body>
-                                                                        </Popover>
-                                                                    }
-                                                                >
-                                                                    <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
-                                                                </OverlayTrigger>
-                                                            ) :
-                                                                (
-                                                                    null
-                                                                )}
-                                    </>
-                                ) : document.assign.length > 0 && document.assign[0].assigned_id !== null ? (
-                                    <OverlayTrigger
-                                        trigger={['click', 'hover']}
-                                        placement="left"
-                                        overlay={
-                                            <Popover>
-                                                <Popover.Header className="bg-primary text-white">
-                                                    Assigned to
-                                                </Popover.Header>
-                                                <Popover.Body>
-                                                    <ListGroup variant="flush">
-                                                        {document.assign.map((assign, index) => (
-                                                            <ListGroupItem
-                                                                variant="primary text-black"
-                                                                key={assign.assigned_user.profile.id}
-                                                            >
-                                                                {assign.assigned_user.profile.name}
-                                                            </ListGroupItem>
-                                                        ))}
-                                                    </ListGroup>
-                                                </Popover.Body>
-                                            </Popover>
+                                                                                </Popover.Body>
+                                                                            </Popover>
+                                                                        }
+                                                                    >
+                                                                        <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
+                                                                    </OverlayTrigger>
+                                                                ) : null
                                         }
-                                    >
-                                        <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
-                                    </OverlayTrigger>
+                                    </>
                                 ) : <Badge bg="secondary">Released</Badge>}
                             </Col>
                         </Row>
