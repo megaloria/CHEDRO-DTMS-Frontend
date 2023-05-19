@@ -660,11 +660,13 @@ function Documents() {
 
                 {
                     (
-                        row.logs[0]?.to_id === null &&
+                       ( row.logs[0]?.to_id === null &&
                         row.logs[0]?.from_id !== null &&
                         row.logs[0]?.action_id !== null &&
                         row.logs[0]?.acknowledge_id === null &&
-                        row.logs[0]?.approved_id !== null
+                        row.logs[0]?.approved_id !== null) ||
+                        (row.logs[0]?.from_id === row.logs[0].action_id && 
+                            row.logs[0].to_id === null)
                     ) && (
                         <Button variant="outline-success" size='sm' onClick={e => showReleaseAlert(row)}>
                             <FontAwesomeIcon icon={faCircleArrowUp} className="" /> Release
@@ -740,7 +742,9 @@ function Documents() {
                                                                 row.logs[0]?.from_id !== null &&
                                                                 row.logs[0]?.action_id !== null &&
                                                                 row.logs[0]?.acknowledge_id === null &&
-                                                                row.logs[0]?.approved_id !== null) ? (
+                                                                row.logs[0]?.approved_id !== null)  ||
+                                                                (row.logs[0]?.from_id === row.logs[0].action_id && 
+                                                                    row.logs[0].to_id === null) ? (
                                                                 <Badge bg="success">For Releasing</Badge>
                                                             ) :
                                                                 (row.logs[0].approved_id !== null) ? (
@@ -787,18 +791,18 @@ function Documents() {
                                                                             <Badge bg="" className="custom-rejected" style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                                         </OverlayTrigger>
                                                                     ) :
-                                                                        (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null) ? (
+                                                                        (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null && row.logs[0].ac !== null) ? (
                                                                             <OverlayTrigger
                                                                                 trigger={['click', 'hover']}
                                                                                 placement="left"
                                                                                 overlay={
                                                                                     <Popover>
-                                                                                        <Popover.Header className="bg-success text-white">
+                                                                                        <Popover.Header className="custom-acted text-white">
                                                                                             Acted by
                                                                                         </Popover.Header>
                                                                                         <Popover.Body>
                                                                                             <ListGroup variant="flush">
-                                                                                                <ListGroupItem variant="success text-black" >
+                                                                                                <ListGroupItem className="custom-acted text-white" >
                                                                                                     {row.logs[0]?.action_user?.profile?.name}
                                                                                                 </ListGroupItem>
                                                                                             </ListGroup>
@@ -806,7 +810,7 @@ function Documents() {
                                                                                     </Popover>
                                                                                 }
                                                                             >
-                                                                                <Badge bg="success" style={{ cursor: 'pointer' }}>Acted</Badge>
+                                                                                <Badge bg="" className='custom-acted' style={{ cursor: 'pointer' }}>Acted</Badge>
                                                                             </OverlayTrigger>
                                                                         ) :
                                                                             (row.logs[0].acknowledge_id !== null && row.logs[0].action_id === null) || (row.logs[0].acknowledge_id !== null && row.logs[0].action_id !== null) ? (
