@@ -68,10 +68,6 @@ function Documents() {
             title: 'All'
         },
         {
-            key: 'mydocument',
-            title: 'My Documents'
-        },
-        {
             key: 'ongoing',
             title: 'Ongoing'
         },
@@ -712,7 +708,7 @@ function Documents() {
                                                             row.logs[0]?.action_id !== null &&
                                                             row.logs[0]?.acknowledge_id === null &&
                                                             row.logs[0]?.approved_id !== null) ? (
-                                                                <Badge bg="success" style={{ cursor: 'pointer' }}>For Releasing</Badge>
+                                                                <Badge bg="success">For Releasing</Badge>
                                                         ) : 
                                                         (row.logs[0].approved_id !== null) ? (
                                                             <OverlayTrigger
