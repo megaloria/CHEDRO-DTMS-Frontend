@@ -791,7 +791,7 @@ function Documents() {
                                                                             <Badge bg="" className="custom-rejected" style={{ cursor: 'pointer' }}>Rejected</Badge>
                                                                         </OverlayTrigger>
                                                                     ) :
-                                                                        (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null && row.logs[0].ac !== null) ? (
+                                                                        (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null && row.logs[0].acknowledge_id !== null) ? (
                                                                             <OverlayTrigger
                                                                                 trigger={['click', 'hover']}
                                                                                 placement="left"

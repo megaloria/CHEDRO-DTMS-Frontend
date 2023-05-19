@@ -659,7 +659,8 @@ function DocumentsUser() {
                                                             row.logs[0]?.from_id !== null &&
                                                             row.logs[0]?.action_id !== null &&
                                                             row.logs[0]?.acknowledge_id === null &&
-                                                            row.logs[0]?.approved_id !== null) ? (
+                                                            row.logs[0]?.approved_id !== null) || 
+                                                            (row.logs[0].from_id === row.logs[0].action_id && row.logs[0].action_id !== null && loaderData.role.level === 2)  ? (
                                                             <Badge bg="success" style={{ cursor: '' }}>For Releasing</Badge>
                                                         ) :
                                                             (row.logs[0].approved_id !== null) ? (
@@ -708,7 +709,7 @@ function DocumentsUser() {
                                                                 ) :
                                                                     // (row.logs[0].action_id !== null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
                                                                         
-                                                                    (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null && row.logs[0].action_id !== loaderData.id) || (row.logs[0].from_id === row.logs[0].action_id && loaderData.role.level === 2) ? (
+                                                                    (row.logs[0].action_id !== null && row.logs[0].from_id !== null && row.logs[0].to_id !== null && row.logs[0].action_id !== loaderData.id) ? (
                                                                         <OverlayTrigger
                                                                             trigger={['click', 'hover']}
                                                                             placement="left"
@@ -749,18 +750,6 @@ function DocumentsUser() {
                                                                                                     </ListGroupItem>
                                                                                                 ) : null}
                                                                                             </ListGroup>
-
-                                                                                            {/* {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
-                                                                                    <div>Forwarded To:</div>
-                                                                                )}
-                                                                                <ListGroup variant="flush">
-                                                                                    {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).map((log, index) => (
-                                                                                        <ListGroupItem variant="warning text-black" key={log?.user?.profile?.id}>
-                                                                                            {log?.user?.profile?.name}
-                                                                                        </ListGroupItem>
-                                                                                    ))}
-                                                                                </ListGroup> */}
-
                                                                                         </Popover.Body>
                                                                                     </Popover>
                                                                                 }
@@ -783,7 +772,6 @@ function DocumentsUser() {
                                                                                         <Popover.Body>
                                                                                             <ListGroup variant="flush">
                                                                                                 <ListGroupItem variant="warning text-black">
-                                                                                                    {row.logs[0]?.user?.profile.name}
                                                                                                     {row.logs[0]?.user?.profile.name}
                                                                                                 </ListGroupItem>
                                                                                             </ListGroup>
