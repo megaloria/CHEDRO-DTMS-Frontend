@@ -69,10 +69,6 @@ function Documents() {
             title: 'All'
         },
         {
-            key: 'mydocument',
-            title: 'My Documents'
-        },
-        {
             key: 'ongoing',
             title: 'Ongoing'
         },
@@ -118,8 +114,23 @@ function Documents() {
                 setIsLoading(false);
             });
         }
-        if (activeTab === 'mydocument') {
-            apiClient.get('/document/mydocument', {
+        if (activeTab === 'releasing') {
+            apiClient.get('/document/releasing', {
+                params: {
+                    query: ''
+                }
+            }).then(response => { //GET ALL function
+                setData(response.data.data.documents);
+                setUsers(response.data.data.user);
+            }).catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsTableLoading(false);
+                setIsLoading(false);
+            });
+        }
+        if (activeTab === 'done') {
+            apiClient.get('/document/done', {
                 params: {
                     query: ''
                 }
@@ -166,8 +177,22 @@ function Documents() {
                 setIsTableLoading(false);
             });
         };
-        if (activeTab === 'mydocument') {
-            apiClient.get(`/document/mydocument?page=${pageNumber}`, {
+        if (activeTab === 'releasing') {
+            apiClient.get(`/document/releasing?page=${pageNumber}`, {
+                params: {
+                    query: ''
+                }
+            }).then(response => {
+                setData(response.data.data.documents);
+                setUsers(response.data.data.user);
+            }).catch(error => {
+                setErrorMessage(error);
+            }).finally(() => {
+                setIsTableLoading(false);
+            });
+        };
+        if (activeTab === 'done') {
+            apiClient.get(`/document/done?page=${pageNumber}`, {
                 params: {
                     query: ''
                 }
