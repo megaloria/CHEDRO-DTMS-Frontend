@@ -713,7 +713,7 @@ function DocumentView() {
                                                     (document.logs[0].rejected_id !== null) ? (
                                                         <OverlayTrigger
                                                             trigger={['click', 'hover']}
-                                                            placement="left"
+                                                            placement="bottom"
                                                             overlay={
                                                                 <Popover>
                                                                     <Popover.Header className="custom-rejected">
@@ -737,7 +737,7 @@ function DocumentView() {
                                                         (document.logs[0].action_id !== null && document.logs[0].from_id !== null && document.logs[0].to_id !== null && document.logs[0].action_id !== currentUser.id) || (document.logs[0].from_id === document.logs[0].action_id && document.logs[0].action_id !== null && currentUser.role.level === 2) ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
-                                                                placement="left"
+                                                                placement="bottom"
                                                                 overlay={
                                                                     <Popover>
                                                                         <Popover.Header className="bg-success text-white">
@@ -759,7 +759,7 @@ function DocumentView() {
                                                             document.logs[0].acknowledge_id !== null ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
-                                                                    placement="left"
+                                                                    placement="bottom"
                                                                     overlay={
                                                                         <Popover>
                                                                             <Popover.Header className="custom-badge text-white" style={{ cursor: 'pointer' }} >
@@ -788,7 +788,7 @@ function DocumentView() {
                                                             ) : document.logs[0].from_id === currentUser.id || document.logs[0].action_id === currentUser.id || currentUser.role.level <= 2 ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
-                                                                    placement="left"
+                                                                    placement="bottom"
                                                                     overlay={
                                                                         <Popover>
                                                                             <Popover.Header className="bg-warning text-white">
@@ -810,7 +810,7 @@ function DocumentView() {
                                                             ) : document.logs[0].to_id && currentUser.role.level >=2 ? (
                                                                     <OverlayTrigger
                                                                         trigger={['click', 'hover']}
-                                                                        placement="left"
+                                                                        placement="bottom"
                                                                         overlay={
                                                                             <Popover>
                                                                                 <Popover.Header className="bg-warning text-white">
