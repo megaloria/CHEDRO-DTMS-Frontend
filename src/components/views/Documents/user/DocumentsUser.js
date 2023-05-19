@@ -805,6 +805,7 @@ function DocumentsUser() {
                                                                                             <ListGroup variant="flush">
                                                                                                 <ListGroupItem variant="warning text-black">
                                                                                                     {row.logs[0]?.user?.profile.name}
+                                                                                                    {row.logs[0]?.user?.profile.name}
                                                                                                 </ListGroupItem>
                                                                                             </ListGroup>
                                                                                         </Popover.Body>
