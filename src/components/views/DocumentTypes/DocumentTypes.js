@@ -1,11 +1,11 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Alert,
-    Button, 
-    Modal, 
-    Form, 
-    Table, 
-    Row, 
+    Button,
+    Modal,
+    Form,
+    Table,
+    Row,
     Col,
     Container,
     Pagination,
@@ -34,7 +34,7 @@ function DocumentTypes() {
     const [data, setData] = useState([]); //data variable
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
-    const [isDisabled, setIsDisabled] = useState(false); 
+    const [isDisabled, setIsDisabled] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -88,12 +88,12 @@ function DocumentTypes() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        
+
         let validation = new Validator(formInputs, {
             code: 'required|string|min:4',
             description: 'required|min:3',
-            days:'required|integer|min:1'
-            
+            days: 'required|integer|min:1'
+
         });
 
         if (validation.fails()) {
@@ -101,7 +101,7 @@ function DocumentTypes() {
                 code: validation.errors.first('code'),
                 description: validation.errors.first('description'),
                 days: validation.errors.first('days')
-                
+
             });
             return;
         } else {
@@ -158,7 +158,7 @@ function DocumentTypes() {
             });
         });
     }
-    
+
     const handleEdit = () => {
         setIsDisabled(true)
         apiClient.post(`/settings/document-types/${modal.data?.id}`, {
@@ -166,9 +166,9 @@ function DocumentTypes() {
         }).then(response => {
             let newData = data.data.map(c => {
                 if (c.id === response.data.data.id) {
-                    return {...response.data.data};
+                    return { ...response.data.data };
                 }
-                return {...c};
+                return { ...c };
             })
             setData({
                 ...data,
@@ -287,7 +287,7 @@ function DocumentTypes() {
                     });
                 });
             }
-            });
+        });
     };
 
     if (isLoading) {
@@ -306,38 +306,38 @@ function DocumentTypes() {
 
     return (
         <Container fluid>
-            <div className='bg-body rounded'> 
-                <Row className= 'justify-content-end mt-4 mb-3'>
+            <div className='bg-body rounded'>
+                <Row className='justify-content-end mt-4 mb-3'>
                     <Col>
                         <h1>Document Types</h1>
                     </Col>
-                </Row> 
+                </Row>
 
-                <div> 
+                <div>
                     <div className='d-md-flex mb-3 justify-content-end'>
-                        <div className='search'> 
+                        <div className='search'>
                             <Form className="d-flex" controlId="" onSubmit={handleSearch}>
-                                    <Form.Control 
-                                        type="search" 
-                                        placeholder="Search" 
-                                        className="me-2"
-                                        value={searchQuery}
-                                        onChange={handleSearchInputChange}
-                                    />
-                                    <Button type='submit'>
-                                        <FontAwesomeIcon icon={faSearch} />
-                                    </Button>
+                                <Form.Control
+                                    type="search"
+                                    placeholder="Search"
+                                    className="me-2"
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
+                                />
+                                <Button type='submit'>
+                                    <FontAwesomeIcon icon={faSearch} />
+                                </Button>
 
-                                    <div className='ms-2'> 
-                                        <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>
-                                            <FontAwesomeIcon icon={faAdd}/> 
-                                            <span className='d-none d-md-inline-block ms-1'> Add </span>
-                                        </Button>
-                                    </div>
+                                <div className='ms-2'>
+                                    <Button variant='primary' onClick={e => handleShowModal()} style={{ whiteSpace: 'nowrap' }}>
+                                        <FontAwesomeIcon icon={faAdd} />
+                                        <span className='d-none d-md-inline-block ms-1'> Add </span>
+                                    </Button>
+                                </div>
                             </Form>
                         </div>
                     </div>
-                </div>    
+                </div>
             </div>
 
             {
@@ -346,59 +346,59 @@ function DocumentTypes() {
                         No Document Type found.
                     </Alert>
                 ) : (
-                     <div className='loading-table-container'>
-                <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
-                    <div className='spinner-icon'>
-                        <Spinner animation='border' />
-                    </div>
-                </div>
-                <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''} >
-                    <thead className='table-primary'>
-                        <tr>
-                            <th>ID</th>
-                            <th>Code</th>
-                            <th>Description</th>
-                            <th>Days</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            data.data.map((row, index) => (
-                                <tr key={index}>
-                                    <td className='table-primary'>{row.id}</td>
-                                    <td>{row.code}</td>
-                                    <td>{row.description}</td>
-                                    <td>{row.days}</td>
-                                    <td>
-                                        <Button onClick={e => handleShowModal(row)} variant='link'>
-                                            <FontAwesomeIcon icon={faEdit} className='text-primary'/>
-                                        </Button>
-                                        <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                            <FontAwesomeIcon icon={faTrash} className='text-danger'/>
-                                        </Button>
-                                    </td>
+                    <div className='loading-table-container'>
+                        <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
+                            <div className='spinner-icon'>
+                                <Spinner animation='border' />
+                            </div>
+                        </div>
+                        <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''} >
+                            <thead className='table-primary'>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Code</th>
+                                    <th>Description</th>
+                                    <th>Days</th>
+                                    <th>Actions</th>
                                 </tr>
-                            ))
-                        }
-                    </tbody>
-                </Table>
-            <div>
-                {data.data.length > 0 && (
-                    <Pagination style={{ float: 'right' }}>
-                        <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
-                        <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
-                        <Pagination.Item disabled>
-                            {`${data.current_page} / ${data.last_page}`}
-                        </Pagination.Item>
-                        <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
-                        <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
-                    </Pagination>
-                )}
-            </div>  
-            </div>
+                            </thead>
+                            <tbody>
+                                {
+                                    data.data.map((row, index) => (
+                                        <tr key={index}>
+                                            <td className='table-primary'>{row.id}</td>
+                                            <td>{row.code}</td>
+                                            <td>{row.description}</td>
+                                            <td>{row.days}</td>
+                                            <td>
+                                                <Button onClick={e => handleShowModal(row)} variant='link'>
+                                                    <FontAwesomeIcon icon={faEdit} className='text-primary' />
+                                                </Button>
+                                                <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                                    <FontAwesomeIcon icon={faTrash} className='text-danger' />
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))
+                                }
+                            </tbody>
+                        </Table>
+                        <div>
+                            {data.data.length > 0 && (
+                                <Pagination style={{ float: 'right' }}>
+                                    <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                    <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                    <Pagination.Item disabled>
+                                        {`${data.current_page} / ${data.last_page}`}
+                                    </Pagination.Item>
+                                    <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                    <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                                </Pagination>
+                            )}
+                        </div>
+                    </div>
                 )
-        }
+            }
 
             <Modal
                 show={modal.show}
@@ -408,7 +408,7 @@ function DocumentTypes() {
                 <Modal.Header closeButton>
                     <Modal.Title>{modal.data ? 'Edit' : 'Add'} Document Types</Modal.Title>
                 </Modal.Header>
-                
+
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
                         <Form.Group className='mb-2'>

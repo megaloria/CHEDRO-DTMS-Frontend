@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import "bootstrap/dist/css/bootstrap.min.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -28,7 +28,7 @@ function Division() {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [isDisabled, setIsDisabled] = useState(false); 
+    const [isDisabled, setIsDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -125,10 +125,10 @@ function Division() {
         }).then(response => {
             let newData = data.map(d => {
                 if (d.id === response.data.data.id) {
-                    return {...response.data.data};
+                    return { ...response.data.data };
                 }
 
-                return {...d};
+                return { ...d };
             })
             setData(newData);
             setIsDisabled(false)
@@ -185,8 +185,8 @@ function Division() {
             data: null,
             isLoading: false
         });
-    } 
-    
+    }
+
     const showDeleteAlert = division => {
         Swal.fire({
             title: `Are you sure you want to delete "${division.description}"?`,
@@ -235,18 +235,18 @@ function Division() {
 
     return (
         <div className="container fluid">
-            <div className="crud bg-body rounded"> 
-                <Row className= "justify-content-end mt-4 mb-3">
+            <div className="crud bg-body rounded">
+                <Row className="justify-content-end mt-4 mb-3">
                     <Col>
                         <h1>Divisions</h1>
                     </Col>
-                </Row> 
+                </Row>
 
-                <div> 
+                <div>
                     <div className='d-flex mb-3 justify-content-end'>
-                        <div className='search'> 
+                        <div className='search'>
                             <Form className="d-flex" controlId="" onSubmit="">
-                                    {/* <Form.Control 
+                                {/* <Form.Control 
                                         type="search" 
                                         placeholder="Search" 
                                         className="me-2"
@@ -257,16 +257,16 @@ function Division() {
                                         <FontAwesomeIcon icon={faSearch} />
                                     </Button> */}
 
-                                    <div className='ms-2'> 
-                                        <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>
-                                            <FontAwesomeIcon icon={faAdd}/> 
-                                            <span className='d-none d-md-inline-block ms-1'> Add </span>
-                                        </Button>
-                                    </div>
+                                <div className='ms-2'>
+                                    <Button variant='primary' onClick={e => handleShowModal()} style={{ whiteSpace: 'nowrap' }}>
+                                        <FontAwesomeIcon icon={faAdd} />
+                                        <span className='d-none d-md-inline-block ms-1'> Add </span>
+                                    </Button>
+                                </div>
                             </Form>
                         </div>
                     </div>
-                </div>    
+                </div>
             </div>
 
             <div className="row">
@@ -287,21 +287,21 @@ function Division() {
                                         <td>{row.description}</td>
                                         <td>
                                             <Button onClick={e => handleShowModal(row)} variant='link'>
-                                                <FontAwesomeIcon icon={faEdit} className='text-primary'/>
+                                                <FontAwesomeIcon icon={faEdit} className='text-primary' />
                                             </Button>
                                             <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                                <FontAwesomeIcon icon={faTrash} className='text-danger'/>
+                                                <FontAwesomeIcon icon={faTrash} className='text-danger' />
                                             </Button>
                                         </td>
                                     </tr>
                                 ))
-                                }
+                            }
                         </tbody>
                     </Table>
-                </div>   
+                </div>
             </div>
-    
-              {/* <!--- Model Box ADD ---> */}
+
+            {/* <!--- Model Box ADD ---> */}
             <Modal
                 show={modal.show}
                 onHide={handleHideModal}
@@ -310,7 +310,7 @@ function Division() {
                 <Modal.Header closeButton>
                     <Modal.Title>{modal.data ? 'Edit' : 'Add'} division</Modal.Title>
                 </Modal.Header>
-                
+
                 <Form onSubmit={handleSubmit}>
                     <Modal.Body>
                         <Row className="margin: 40px">
@@ -342,10 +342,10 @@ function Division() {
                     </Modal.Footer>
                 </Form>
             </Modal>
-        
-       
+
+
         </div>
-       
+
     );
 }
 

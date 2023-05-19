@@ -31,7 +31,7 @@ import ChangePass from './components/views/ChangePassword/ChangePassword';
 import Header from './components/units/Header/Header';
 import UserDocView from './components/views/Documents/user/DocumentView';
 
-async function getCurrentUser (isHome = true) {
+async function getCurrentUser(isHome = true) {
   return axios.get(`${process.env.REACT_APP_API_URL}/sanctum/csrf-cookie`, {
     withCredentials: true
   }).then(() => {
@@ -46,7 +46,7 @@ async function getCurrentUser (isHome = true) {
         return redirect('/login');
       }
       return null;
-      
+
     });
   }).catch(() => {
     if (isHome) {
@@ -57,7 +57,7 @@ async function getCurrentUser (isHome = true) {
 }
 
 //example for document views
-async function getDocument ({ params }) {
+async function getDocument({ params }) {
   let validation = new Validator(params, {
     documentId: 'required|integer|min:1'
   });
@@ -81,7 +81,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <Navigate to=  '/documents'/>
+        element: <Navigate to='/documents' />
       },
       {
         path: '/documents',
@@ -170,7 +170,7 @@ const router = createBrowserRouter([
   },
 ]);
 
-function FirstChangePassword () {
+function FirstChangePassword() {
   let loaderData = useLoaderData();
   return (
     <>
@@ -180,15 +180,15 @@ function FirstChangePassword () {
   );
 }
 
-function UserDocuments () {
+function UserDocuments() {
   let loaderData = useLoaderData();
   return (
     <>
       {
         loaderData.role.level === 1 ? (
-            <Documents />
+          <Documents />
         ) : (
-            <DocumentsUser />
+          <DocumentsUser />
         )
       }
     </>

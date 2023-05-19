@@ -1,11 +1,11 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Alert,
-    Button, 
-    Modal, 
-    Form, 
-    Table, 
-    Row, 
+    Button,
+    Modal,
+    Form,
+    Table,
+    Row,
     Container,
     Col,
     Pagination,
@@ -31,7 +31,7 @@ function CHED() {
     const [data, setData] = useState([]);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [isDisabled, setIsDisabled] = useState(false); 
+    const [isDisabled, setIsDisabled] = useState(false);
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
 
@@ -91,7 +91,7 @@ function CHED() {
         let validation = new Validator(formInputs, {
             code: 'required|string',
             description: 'required|string|min:5',
-            email: 'required|email',    
+            email: 'required|email',
         });
 
         if (validation.fails()) {
@@ -161,10 +161,10 @@ function CHED() {
         }).then(response => {
             let newData = data.data.map(c => {
                 if (c.id === response.data.data.id) {
-                    return {...response.data.data};
+                    return { ...response.data.data };
                 }
 
-                return {...c};
+                return { ...c };
             })
             setData({
                 ...data,
@@ -283,10 +283,10 @@ function CHED() {
                     });
                 });
             }
-            });
+        });
     };
 
-    
+
 
     if (isLoading) {
         return (
@@ -304,38 +304,38 @@ function CHED() {
 
     return (
         <Container fluid>
-            <div className='bg-body rounded'> 
-                <Row className= 'justify-content-end mt-4 mb-3'>
+            <div className='bg-body rounded'>
+                <Row className='justify-content-end mt-4 mb-3'>
                     <Col>
                         <h1>CHED Offices</h1>
                     </Col>
-                </Row> 
+                </Row>
 
-                <div> 
+                <div>
                     <div className='d-md-flex mb-3 justify-content-end'>
-                        <div className='search'> 
+                        <div className='search'>
                             <Form className="d-flex" controlId="" onSubmit={handleSearch}>
-                                    <Form.Control 
-                                        type="search" 
-                                        placeholder="Search" 
-                                        className="me-2"
-                                        value={searchQuery}
-                                        onChange={handleSearchInputChange}
-                                    />
-                                    <Button type='submit'>
-                                        <FontAwesomeIcon icon={faSearch} />
-                                    </Button>
+                                <Form.Control
+                                    type="search"
+                                    placeholder="Search"
+                                    className="me-2"
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
+                                />
+                                <Button type='submit'>
+                                    <FontAwesomeIcon icon={faSearch} />
+                                </Button>
 
-                                    <div className='ms-2'> 
-                                        <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>
-                                            <FontAwesomeIcon icon={faAdd}/> 
-                                            <span className='d-none d-md-inline-block ms-1'> Add </span>
-                                        </Button>
-                                    </div>
+                                <div className='ms-2'>
+                                    <Button variant='primary' onClick={e => handleShowModal()} style={{ whiteSpace: 'nowrap' }}>
+                                        <FontAwesomeIcon icon={faAdd} />
+                                        <span className='d-none d-md-inline-block ms-1'> Add </span>
+                                    </Button>
+                                </div>
                             </Form>
                         </div>
                     </div>
-                </div>    
+                </div>
             </div>
 
             {
@@ -351,38 +351,38 @@ function CHED() {
                                 <Spinner animation='border' />
                             </div>
                         </div>
-                        <div class="table-responsive"> 
-                        <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
-                            <thead className='table-primary'>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Code</th>
-                                    <th>Description</th>
-                                    <th>Email</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    data.data.map((row, index) => (
-                                        <tr key={index}>
-                                            <td className='table-primary'>{row.id}</td>
-                                            <td>{row.code}</td>
-                                            <td>{row.description}</td>
-                                            <td>{row.email}</td>
-                                            <td>
-                                                <Button onClick={e => handleShowModal(row)} variant='link'>
-                                                    <FontAwesomeIcon icon={faEdit} className='text-primary' />
-                                                </Button>
-                                                <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                                    <FontAwesomeIcon icon={faTrash} className='text-danger' />
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))
-                                }
-                            </tbody>
-                        </Table>
+                        <div class="table-responsive">
+                            <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
+                                <thead className='table-primary'>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Code</th>
+                                        <th>Description</th>
+                                        <th>Email</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {
+                                        data.data.map((row, index) => (
+                                            <tr key={index}>
+                                                <td className='table-primary'>{row.id}</td>
+                                                <td>{row.code}</td>
+                                                <td>{row.description}</td>
+                                                <td>{row.email}</td>
+                                                <td>
+                                                    <Button onClick={e => handleShowModal(row)} variant='link'>
+                                                        <FontAwesomeIcon icon={faEdit} className='text-primary' />
+                                                    </Button>
+                                                    <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                                        <FontAwesomeIcon icon={faTrash} className='text-danger' />
+                                                    </Button>
+                                                </td>
+                                            </tr>
+                                        ))
+                                    }
+                                </tbody>
+                            </Table>
                         </div>
 
                         <div>
@@ -416,8 +416,8 @@ function CHED() {
                     <Modal.Body>
                         <Form.Group className='mb-2'>
                             <Form.Label>Code</Form.Label>
-                            <Form.Control type='text' 
-                                placeholder='Enter Code' 
+                            <Form.Control type='text'
+                                placeholder='Enter Code'
                                 name='code'
                                 required
                                 value={formInputs.code}
@@ -456,7 +456,7 @@ function CHED() {
                             </Form.Control.Feedback>
                         </Form.Group>
                     </Modal.Body>
-                    
+
                     <Modal.Footer>
                         <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                             Cancel
@@ -467,7 +467,7 @@ function CHED() {
                     </Modal.Footer>
                 </Form>
             </Modal>
-        </Container>               
+        </Container>
     );
 }
 

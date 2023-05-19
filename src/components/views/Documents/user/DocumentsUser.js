@@ -39,8 +39,8 @@ import Validator from 'validatorjs';
 
 function DocumentsUser() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [isDisabled, setIsDisabled] = useState(false); 
-    const [isSelectDisabled, setIsSelectDisabled] = useState(false); 
+    const [isDisabled, setIsDisabled] = useState(false);
+    const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [forwardError, setForwardError] = useState('');
     const [data, setData] = useState([]);
@@ -159,7 +159,7 @@ function DocumentsUser() {
     //             setSelectedUsers(userIds);
     //         }
     //     }
-        
+
     // }, [modal, users])
 
     //For Approve Modal
@@ -173,7 +173,7 @@ function DocumentsUser() {
         data,
         isLoading: false
     });
-    
+
     //For Reject Modal
     const handleCloseReject = () => setShowModalReject({ //modal variables
         show: false,
@@ -259,61 +259,61 @@ function DocumentsUser() {
     });
 
     const handleAction = event => {
-            setIsDisabled(true)
-            event.preventDefault();
+        setIsDisabled(true)
+        event.preventDefault();
 
-            let validation = new Validator(formInputs, {
-                comment: 'required|string|min:5',
-               
+        let validation = new Validator(formInputs, {
+            comment: 'required|string|min:5',
+
+        });
+
+        if (validation.fails()) {
+            setIsDisabled(false)
+            setFormErrors({
+                comment: validation.errors.first('comment')
             });
-    
-            if (validation.fails()){
-                setIsDisabled(false)
-                setFormErrors({
-                    comment: validation.errors.first('comment')
-                });
-                return;
-            } else {
-                setFormErrors({
-                    comment: ''
-                });
-            }
-            
-            apiClient.post(`/document/${showModalAction.data?.id}/action`, formInputs).then(response => {
-                let newData = [...data.data].map(d => {
-                    if (d.id === response.data.data.id) {
-                        return {
-                            ...response.data.data
-                        };
-                    }
+            return;
+        } else {
+            setFormErrors({
+                comment: ''
+            });
+        }
 
+        apiClient.post(`/document/${showModalAction.data?.id}/action`, formInputs).then(response => {
+            let newData = [...data.data].map(d => {
+                if (d.id === response.data.data.id) {
                     return {
-                        ...d
+                        ...response.data.data
                     };
-                });
-                setData({
-                    ...data,
-                    data: newData
-                });
-                Swal.fire({
-                    title: 'Success',
-                    text: response.data.message,
-                    icon: 'success'
-                })
-            }).catch(error => {
-                Swal.fire({
-                    title: 'Error',
-                    text: error,
-                    icon: 'error'
-                });
-            }).finally(() => {
-                setIsDisabled(false)
-                handleCloseAction();
+                }
+
+                return {
+                    ...d
+                };
             });
-        };
+            setData({
+                ...data,
+                data: newData
+            });
+            Swal.fire({
+                title: 'Success',
+                text: response.data.message,
+                icon: 'success'
+            })
+        }).catch(error => {
+            Swal.fire({
+                title: 'Error',
+                text: error,
+                icon: 'error'
+            });
+        }).finally(() => {
+            setIsDisabled(false)
+            handleCloseAction();
+        });
+    };
 
 
-// ACKNOWLEDGE
+    // ACKNOWLEDGE
     const showAcknowledgeAlert = document => {
         setIsDisabled(true)
         Swal.fire({
@@ -517,7 +517,7 @@ function DocumentsUser() {
     const handleApprove = event => {
         setIsDisabled(true)
         event.preventDefault();
-        
+
         let validation = new Validator(formInputs, {
             comment: 'string|min:5',
 
@@ -572,7 +572,7 @@ function DocumentsUser() {
 
     const renderButtons = row => {
         return (
-            <>         
+            <>
                 {
                     (row.logs[0]?.to_id === loaderData.id && row.logs[0]?.acknowledge_id !== loaderData.id) && (
                         <Button variant="link" size='sm' onClick={e => showAcknowledgeAlert(row)}>
@@ -597,10 +597,10 @@ function DocumentsUser() {
                         </>
                     )
                 }
-                        
+
                 {
                     (row.logs[0]?.action_id !== null && row.logs[0]?.acknowledge_id === loaderData.id &&
-                    row.logs[0]?.approved_id === null && row.logs[0]?.rejected_id === null) && (
+                        row.logs[0]?.approved_id === null && row.logs[0]?.rejected_id === null) && (
                         <>
                             <Button variant="link" size='sm' onClick={e => handleShowApprove(row)}>
                                 <FontAwesomeIcon icon={faThumbsUp} />
@@ -610,8 +610,8 @@ function DocumentsUser() {
                             </Button>
                         </>
                     )
-                }            
-                    
+                }
+
             </>
         )
     }
@@ -630,7 +630,7 @@ function DocumentsUser() {
                 </Alert>
             );
         }
-        
+
 
         return (
             <div className='loading-table-container'>
@@ -640,7 +640,7 @@ function DocumentsUser() {
                     </div>
                 </div>
                 <div className="row">
-                <Table bordered hover responsive size="md" className={isTableLoading ? 'table-loading' : ''}>
+                    <Table bordered hover responsive size="md" className={isTableLoading ? 'table-loading' : ''}>
                         <thead>
                             <tr className="table-primary">
                                 <th>ID</th>
@@ -679,118 +679,118 @@ function DocumentsUser() {
                                                             row.logs[0]?.action_id !== null &&
                                                             row.logs[0]?.acknowledge_id === null &&
                                                             row.logs[0]?.approved_id !== null) ? (
-                                                                <Badge bg="success" style={{ cursor: '' }}>For Releasing</Badge>
+                                                            <Badge bg="success" style={{ cursor: '' }}>For Releasing</Badge>
                                                         ) :
-                                                        (row.logs[0].approved_id !== null) ? (
-                                                            <OverlayTrigger
-                                                                trigger={['click', 'hover']}
-                                                                placement="left"
-                                                                overlay={
-                                                                    <Popover>
-                                                                        <Popover.Header className="bg-success text-white">
-                                                                            Approved by
-                                                                        </Popover.Header>
-                                                                        <Popover.Body>
-                                                                            <ListGroup variant="flush">
-                                                                                <ListGroupItem variant="success text-black" >
-                                                                                    {row.logs[0]?.approved_user?.profile?.name}
-                                                                                </ListGroupItem>
-                                                                            </ListGroup>
-                                                                        </Popover.Body>
-                                                                    </Popover>
-                                                                }
-                                                            >
-                                                                <Badge bg="success" style={{ cursor: 'pointer' }}>Approved</Badge>
-                                                            </OverlayTrigger>
-                                                        ) :
-                                                            (row.logs[0].rejected_id !== null) ? (
+                                                            (row.logs[0].approved_id !== null) ? (
                                                                 <OverlayTrigger
                                                                     trigger={['click', 'hover']}
                                                                     placement="left"
                                                                     overlay={
                                                                         <Popover>
-                                                                            <Popover.Header className="custom-rejected">
-                                                                                Rejected by
+                                                                            <Popover.Header className="bg-success text-white">
+                                                                                Approved by
                                                                             </Popover.Header>
                                                                             <Popover.Body>
                                                                                 <ListGroup variant="flush">
-                                                                                    <ListGroupItem className="custom-rejected">
-                                                                                        {row.logs[0]?.rejected_user?.profile?.name}
+                                                                                    <ListGroupItem variant="success text-black" >
+                                                                                        {row.logs[0]?.approved_user?.profile?.name}
                                                                                     </ListGroupItem>
                                                                                 </ListGroup>
                                                                             </Popover.Body>
                                                                         </Popover>
                                                                     }
                                                                 >
-                                                                    <Badge bg='' className="custom-rejected" style={{ cursor: 'pointer'}}>Rejected</Badge>
+                                                                    <Badge bg="success" style={{ cursor: 'pointer' }}>Approved</Badge>
                                                                 </OverlayTrigger>
                                                             ) :
-                                                        // (row.logs[0].action_id !== null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
-                                                            (row.logs[0].action_id !== null && row.logs[0].acknowledge_id === null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
-                                                            <OverlayTrigger
-                                                                trigger={['click', 'hover']}
-                                                                placement="left"
-                                                                overlay={
-                                                                    <Popover>
-                                                                        <Popover.Header className="bg-success text-white">
-                                                                            Acted by
-                                                                        </Popover.Header>
-                                                                        <Popover.Body>
-                                                                            {/* <ListGroup variant="flush">
+                                                                (row.logs[0].rejected_id !== null) ? (
+                                                                    <OverlayTrigger
+                                                                        trigger={['click', 'hover']}
+                                                                        placement="left"
+                                                                        overlay={
+                                                                            <Popover>
+                                                                                <Popover.Header className="custom-rejected">
+                                                                                    Rejected by
+                                                                                </Popover.Header>
+                                                                                <Popover.Body>
+                                                                                    <ListGroup variant="flush">
+                                                                                        <ListGroupItem className="custom-rejected">
+                                                                                            {row.logs[0]?.rejected_user?.profile?.name}
+                                                                                        </ListGroupItem>
+                                                                                    </ListGroup>
+                                                                                </Popover.Body>
+                                                                            </Popover>
+                                                                        }
+                                                                    >
+                                                                        <Badge bg='' className="custom-rejected" style={{ cursor: 'pointer' }}>Rejected</Badge>
+                                                                    </OverlayTrigger>
+                                                                ) :
+                                                                    // (row.logs[0].action_id !== null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
+                                                                    (row.logs[0].action_id !== null && row.logs[0].acknowledge_id === null && row.logs[0].from_id === null && row.logs[0].to_id === null) ? (
+                                                                        <OverlayTrigger
+                                                                            trigger={['click', 'hover']}
+                                                                            placement="left"
+                                                                            overlay={
+                                                                                <Popover>
+                                                                                    <Popover.Header className="bg-success text-white">
+                                                                                        Acted by
+                                                                                    </Popover.Header>
+                                                                                    <Popover.Body>
+                                                                                        {/* <ListGroup variant="flush">
                                                                                 {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
                                                                                     <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
                                                                                         {log?.action_user?.profile?.name}
                                                                                     </ListGroupItem>
                                                                                 ))}
                                                                             </ListGroup> */}
-                                                                            <ListGroup variant="flush">
-                                                                                <ListGroupItem variant="success text-black" >
-                                                                                    {row.logs[0]?.action_user?.profile?.name}
-                                                                                </ListGroupItem>
-                                                                            </ListGroup>
-                                                                        </Popover.Body>
-                                                                    </Popover>
-                                                                    // <Popover>
-                                                                    //     <Popover.Header className="bg-success text-white">
-                                                                    //         Acted by
-                                                                    //     </Popover.Header>
-                                                                    //     <Popover.Body>
-                                                                    //         <ListGroup variant="flush">
-                                                                    //             {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
-                                                                    //                 <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
-                                                                    //                     {log?.action_user?.profile?.name}
-                                                                    //                 </ListGroupItem>
-                                                                    //             ))}
-                                                                    //         </ListGroup>
-                                                                    //     </Popover.Body>
-                                                                    // </Popover>
-                                                                }
-                                                            >
-                                                                <Badge bg="success" style={{ cursor: 'pointer' }}>Acted</Badge>
-                                                            </OverlayTrigger>
-                                                        ) :
-                                                            row.logs[0].acknowledge_id !== null ? (
-                                                                <OverlayTrigger
-                                                                    trigger={['click', 'hover']}
-                                                                    placement="left"
-                                                                    overlay={
-                                                                        <Popover>
-                                                                            <Popover.Header className="custom-badge text-white" style={{ cursor: 'pointer' }} >
-                                                                                Acknowledged by
-                                                                            </Popover.Header>
-                                                                            <Popover.Body>
-                                                                            <ListGroup variant="flush">
-                                                                                {row.logs.length > 0 ? (
-                                                                                    <ListGroupItem className="custom-badge text-white" 
-                                                                                    key={row.logs[0]?.acknowledge_user.profile.id}
-                                                                                    >
+                                                                                        <ListGroup variant="flush">
+                                                                                            <ListGroupItem variant="success text-black" >
+                                                                                                {row.logs[0]?.action_user?.profile?.name}
+                                                                                            </ListGroupItem>
+                                                                                        </ListGroup>
+                                                                                    </Popover.Body>
+                                                                                </Popover>
+                                                                                // <Popover>
+                                                                                //     <Popover.Header className="bg-success text-white">
+                                                                                //         Acted by
+                                                                                //     </Popover.Header>
+                                                                                //     <Popover.Body>
+                                                                                //         <ListGroup variant="flush">
+                                                                                //             {row.logs.filter(log => log.to_id !== null && log.from_id !== null && log.action_id !== null).map((log, index) => (
+                                                                                //                 <ListGroupItem variant="success text-black" key={log?.action_user?.profile?.id}>
+                                                                                //                     {log?.action_user?.profile?.name}
+                                                                                //                 </ListGroupItem>
+                                                                                //             ))}
+                                                                                //         </ListGroup>
+                                                                                //     </Popover.Body>
+                                                                                // </Popover>
+                                                                            }
+                                                                        >
+                                                                            <Badge bg="success" style={{ cursor: 'pointer' }}>Acted</Badge>
+                                                                        </OverlayTrigger>
+                                                                    ) :
+                                                                        row.logs[0].acknowledge_id !== null ? (
+                                                                            <OverlayTrigger
+                                                                                trigger={['click', 'hover']}
+                                                                                placement="left"
+                                                                                overlay={
+                                                                                    <Popover>
+                                                                                        <Popover.Header className="custom-badge text-white" style={{ cursor: 'pointer' }} >
+                                                                                            Acknowledged by
+                                                                                        </Popover.Header>
+                                                                                        <Popover.Body>
+                                                                                            <ListGroup variant="flush">
+                                                                                                {row.logs.length > 0 ? (
+                                                                                                    <ListGroupItem className="custom-badge text-white"
+                                                                                                        key={row.logs[0]?.acknowledge_user.profile.id}
+                                                                                                    >
 
-                                                                                    {row.logs[0]?.acknowledge_user.profile.name}
-                                                                                    </ListGroupItem>
-                                                                                ) : null}
-                                                                                </ListGroup>
+                                                                                                        {row.logs[0]?.acknowledge_user.profile.name}
+                                                                                                    </ListGroupItem>
+                                                                                                ) : null}
+                                                                                            </ListGroup>
 
-                                                                                {/* {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
+                                                                                            {/* {row.logs.filter(log => log.to_id !== null && log.acknowledge_id === null && !row.logs.some(otherLog => otherLog.acknowledge_id === log.to_id)).length > 0 && (
                                                                                     <div>Forwarded To:</div>
                                                                                 )}
                                                                                 <ListGroup variant="flush">
@@ -801,77 +801,77 @@ function DocumentsUser() {
                                                                                     ))}
                                                                                 </ListGroup> */}
 
-                                                                            </Popover.Body>
-                                                                        </Popover>
-                                                                    }
-                                                                >
-                                                                    <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
-                                                                </OverlayTrigger>
-                                                            ) : row.logs[0].from_id === loaderData.id ? (
-                                                                <OverlayTrigger
-                                                                    trigger={['click', 'hover']}
-                                                                    placement="left"
-                                                                    overlay={
-                                                                        <Popover>
-                                                                            <Popover.Header className="bg-warning text-white">
-                                                                                Forwarded to
-                                                                            </Popover.Header>
-                                                                            <Popover.Body>
-                                                                                <ListGroup variant="flush">
-                                                                                    {row.logs.map((log, index) => (
-                                                                                        (loaderData.id === log.from_id) ? (
-                                                                                            <ListGroupItem
-                                                                                                variant="warning text-black"
-                                                                                                key={log.user?.profile.id}
-                                                                                            >
-                                                                                                {log.user?.profile.name}
-                                                                                            </ListGroupItem>
-                                                                                        ) : null
-                                                                                    ))}
-                                                                                </ListGroup>
-                                                                            </Popover.Body>
-                                                                        </Popover>
-                                                                    }
-                                                                >
-                                                                    <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
-                                                                </OverlayTrigger>
-                                                                
-                                                            ) : row.logs[0].to_id && row.logs[0].from_id === null ? (
-                                                                <Badge bg="warning">Forwarded from RO</Badge>
-                                                            ) :
-                                                            row.logs[0].to_id ? (
-                                                                <OverlayTrigger
-                                                                    trigger={['click', 'hover']}
-                                                                    placement="left"
-                                                                    overlay={
-                                                                        <Popover>
-                                                                            <Popover.Header className="bg-warning text-white">
-                                                                                Forwarded from
-                                                                            </Popover.Header>
-                                                                            <Popover.Body>
-                                                                                <ListGroup variant="flush">
-                                                                                    <ListGroupItem>
-                                                                                        {row.logs.map((log, index) => (
-                                                                                            (loaderData.id === log.to_id) ? (
-                                                                                                <ListGroupItem
-                                                                                                    variant="warning text-black"
-                                                                                                    key={log?.from_user?.profile.id}
-                                                                                                >
-                                                                                                    {log?.from_user?.profile.name}
-                                                                                                </ListGroupItem>
-                                                                                            ) : null
-                                                                                        ))}
-                                                                                    </ListGroupItem>
-                                                                                </ListGroup>
-                                                                            </Popover.Body>
-                                                                        </Popover>
-                                                                    }
-                                                                >
-                                                                    <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
-                                                                </OverlayTrigger>
-                                                            ) : null
+                                                                                        </Popover.Body>
+                                                                                    </Popover>
+                                                                                }
+                                                                            >
+                                                                                <Badge bg='' className="custom-badge" style={{ cursor: 'pointer' }}>Acknowledged</Badge>
+                                                                            </OverlayTrigger>
+                                                                        ) : row.logs[0].from_id === loaderData.id ? (
+                                                                            <OverlayTrigger
+                                                                                trigger={['click', 'hover']}
+                                                                                placement="left"
+                                                                                overlay={
+                                                                                    <Popover>
+                                                                                        <Popover.Header className="bg-warning text-white">
+                                                                                            Forwarded to
+                                                                                        </Popover.Header>
+                                                                                        <Popover.Body>
+                                                                                            <ListGroup variant="flush">
+                                                                                                {row.logs.map((log, index) => (
+                                                                                                    (loaderData.id === log.from_id) ? (
+                                                                                                        <ListGroupItem
+                                                                                                            variant="warning text-black"
+                                                                                                            key={log.user?.profile.id}
+                                                                                                        >
+                                                                                                            {log.user?.profile.name}
+                                                                                                        </ListGroupItem>
+                                                                                                    ) : null
+                                                                                                ))}
+                                                                                            </ListGroup>
+                                                                                        </Popover.Body>
+                                                                                    </Popover>
+                                                                                }
+                                                                            >
+                                                                                <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded to</Badge>
+                                                                            </OverlayTrigger>
 
-                                                            }
+                                                                        ) : row.logs[0].to_id && row.logs[0].from_id === null ? (
+                                                                            <Badge bg="warning">Forwarded from RO</Badge>
+                                                                        ) :
+                                                                            row.logs[0].to_id ? (
+                                                                                <OverlayTrigger
+                                                                                    trigger={['click', 'hover']}
+                                                                                    placement="left"
+                                                                                    overlay={
+                                                                                        <Popover>
+                                                                                            <Popover.Header className="bg-warning text-white">
+                                                                                                Forwarded from
+                                                                                            </Popover.Header>
+                                                                                            <Popover.Body>
+                                                                                                <ListGroup variant="flush">
+                                                                                                    <ListGroupItem>
+                                                                                                        {row.logs.map((log, index) => (
+                                                                                                            (loaderData.id === log.to_id) ? (
+                                                                                                                <ListGroupItem
+                                                                                                                    variant="warning text-black"
+                                                                                                                    key={log?.from_user?.profile.id}
+                                                                                                                >
+                                                                                                                    {log?.from_user?.profile.name}
+                                                                                                                </ListGroupItem>
+                                                                                                            ) : null
+                                                                                                        ))}
+                                                                                                    </ListGroupItem>
+                                                                                                </ListGroup>
+                                                                                            </Popover.Body>
+                                                                                        </Popover>
+                                                                                    }
+                                                                                >
+                                                                                    <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
+                                                                                </OverlayTrigger>
+                                                                            ) : null
+
+                                                    }
                                                 </>
                                             ) : row.assign.length > 0 && row.assign[0].assigned_id !== null ? (
                                                 <OverlayTrigger
@@ -904,11 +904,11 @@ function DocumentsUser() {
 
                                         <td style={{ whiteSpace: 'nowrap' }}>
                                             <Button className='me-1' variant="outline-primary" size='sm' as={Link} to={`user-view/${row.id}`} >
-                                                <FontAwesomeIcon icon={faCircleArrowRight}/> View
+                                                <FontAwesomeIcon icon={faCircleArrowRight} /> View
                                             </Button>
 
                                             {renderButtons(row)}
-                                            
+
                                         </td>
                                     </tr>
 
@@ -993,139 +993,139 @@ function DocumentsUser() {
                 }
             </Tabs>
 
-                         {/* Forward Modal*/}
-                        <Modal
-                            show={modal.show}
-                            onHide={handleHideModal}
-                            backdrop='static'
-                            keyboard={false}>
-                            <Modal.Header closeButton>
-                                <Modal.Title> Forward Document </Modal.Title>
-                            </Modal.Header>
+            {/* Forward Modal*/}
+            <Modal
+                show={modal.show}
+                onHide={handleHideModal}
+                backdrop='static'
+                keyboard={false}>
+                <Modal.Header closeButton>
+                    <Modal.Title> Forward Document </Modal.Title>
+                </Modal.Header>
 
-                            <Modal.Body>
-                                <Row>
-                                    <Col md={'auto'}>
-                                        <Form.Label>Forward to:</Form.Label>
-                                        <Select
-                                        name='assignTo'
-                                        options={options}
-                                        value={options.find(option => option.value === selectedUsers)}
-                                        onChange={handleUserSelection}
-                                        isDisabled={isSelectDisabled}
-                                    />
-                                    {
-                                        forwardError && (
-                                            <p style={{ color: 'red' }}>{forwardError}</p>
-                                        )
-                                    }
-                                    </Col>
-                                </Row>
-                            </Modal.Body>
-
-                            <Modal.Footer>
-                                <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
-                                    Cancel
-                                </Button>
-                                <Button type='submit' variant='primary' onClick={handleForward} disabled={isDisabled}>
-                                    Forward
-                                </Button>
-                            </Modal.Footer>
-                        </Modal>
-
-                        {/* Approve Document Modal*/}
-                        <Modal show={showModalApprove.show} onHide={handleCloseApprove}>
-                            <Modal.Header closeButton>
-                            <Modal.Title>Approve Document</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                            <Form.Label>Add a comment</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                onChange={handleInputChange}
-                                type="text"
-                                name='comment'
-                                value={formInputs.comment}
-                                placeholder="Leave a comment here."
-                                isInvalid={!!formErrors.comment}
+                <Modal.Body>
+                    <Row>
+                        <Col md={'auto'}>
+                            <Form.Label>Forward to:</Form.Label>
+                            <Select
+                                name='assignTo'
+                                options={options}
+                                value={options.find(option => option.value === selectedUsers)}
+                                onChange={handleUserSelection}
+                                isDisabled={isSelectDisabled}
                             />
-                            <Form.Control.Feedback type='invalid'>
-                                {formErrors.comment}
-                            </Form.Control.Feedback>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={handleCloseApprove}>
-                                Cancel
-                                </Button>
-                                <Button variant="primary" onClick={handleApprove} disabled={isDisabled}>
-                                Approve
-                                </Button>
-                            </Modal.Footer>
-                        </Modal> 
-                        
-                        {/* Reject Document Modal*/}
-                        <Modal show={showModalReject.show} onHide={handleCloseReject}>
-                            <Modal.Header closeButton>
-                            <Modal.Title>Reject Document</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                            <Form.Label>Add a comment</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                rows={3}
-                                onChange={handleInputChange}
-                                type="text"
-                                name='comment'
-                                value={formInputs.comment}
-                                placeholder="Leave a comment here."
-                                isInvalid={!!formErrors.comment}
-                            />
-                            <Form.Control.Feedback type='invalid'>
-                                {formErrors.comment}
-                            </Form.Control.Feedback>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={handleCloseReject}>
-                                Cancel
-                                </Button>
-                                <Button variant="danger" onClick={handleReject} disabled={isDisabled}>
-                                Reject
-                                </Button>
-                            </Modal.Footer>
-                        </Modal> 
-                        
+                            {
+                                forwardError && (
+                                    <p style={{ color: 'red' }}>{forwardError}</p>
+                                )
+                            }
+                        </Col>
+                    </Row>
+                </Modal.Body>
 
-                        {/* Took Action Document Modal*/}
-                        <Modal show={showModalAction.show} onHide={handleCloseAction}>
-                            <Modal.Header closeButton>
-                            <Modal.Title>Confirm Taking Action</Modal.Title>
-                            </Modal.Header>
-                            <Modal.Body>
-                            <Form.Label>Add a comment</Form.Label>
-                                <Form.Control 
-                                    as="textarea" 
-                                    rows={3} 
-                                    onChange={handleInputChange}
-                                    type="text" 
-                                    name='comment' 
-                                    value={formInputs.comment}
-                                    placeholder="Leave a comment here."
-                                    isInvalid={!!formErrors.comment}
-                                />
-                            <Form.Control.Feedback type='invalid'>
-                                {formErrors.comment}
-                            </Form.Control.Feedback>
-                            </Modal.Body>
-                            <Modal.Footer>
-                                <Button variant="secondary" onClick={handleCloseAction}>
-                                Cancel
-                                </Button>
-                                <Button type='submit' variant="primary" onClick={handleAction} disabled={isDisabled}>
-                                Confirm
-                                </Button>
-                            </Modal.Footer>
-                        </Modal> 
+                <Modal.Footer>
+                    <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
+                        Cancel
+                    </Button>
+                    <Button type='submit' variant='primary' onClick={handleForward} disabled={isDisabled}>
+                        Forward
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Approve Document Modal*/}
+            <Modal show={showModalApprove.show} onHide={handleCloseApprove}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Approve Document</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Label>Add a comment</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        onChange={handleInputChange}
+                        type="text"
+                        name='comment'
+                        value={formInputs.comment}
+                        placeholder="Leave a comment here."
+                        isInvalid={!!formErrors.comment}
+                    />
+                    <Form.Control.Feedback type='invalid'>
+                        {formErrors.comment}
+                    </Form.Control.Feedback>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseApprove}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={handleApprove} disabled={isDisabled}>
+                        Approve
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Reject Document Modal*/}
+            <Modal show={showModalReject.show} onHide={handleCloseReject}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Reject Document</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Label>Add a comment</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        onChange={handleInputChange}
+                        type="text"
+                        name='comment'
+                        value={formInputs.comment}
+                        placeholder="Leave a comment here."
+                        isInvalid={!!formErrors.comment}
+                    />
+                    <Form.Control.Feedback type='invalid'>
+                        {formErrors.comment}
+                    </Form.Control.Feedback>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseReject}>
+                        Cancel
+                    </Button>
+                    <Button variant="danger" onClick={handleReject} disabled={isDisabled}>
+                        Reject
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
+
+            {/* Took Action Document Modal*/}
+            <Modal show={showModalAction.show} onHide={handleCloseAction}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Confirm Taking Action</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Label>Add a comment</Form.Label>
+                    <Form.Control
+                        as="textarea"
+                        rows={3}
+                        onChange={handleInputChange}
+                        type="text"
+                        name='comment'
+                        value={formInputs.comment}
+                        placeholder="Leave a comment here."
+                        isInvalid={!!formErrors.comment}
+                    />
+                    <Form.Control.Feedback type='invalid'>
+                        {formErrors.comment}
+                    </Form.Control.Feedback>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseAction}>
+                        Cancel
+                    </Button>
+                    <Button type='submit' variant="primary" onClick={handleAction} disabled={isDisabled}>
+                        Confirm
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
 
     );

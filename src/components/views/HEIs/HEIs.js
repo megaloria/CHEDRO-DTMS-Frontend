@@ -1,10 +1,10 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    Button, 
-    Modal, 
-    Form, 
-    Table, 
-    Row, 
+    Button,
+    Modal,
+    Form,
+    Table,
+    Row,
     Container,
     Col,
     Alert,
@@ -31,11 +31,11 @@ function Heis() {
     const navigate = useNavigate();
     const [data, setData] = useState([]);
     const [isLoading, setIsLoading] = useState(true); //loading variable
-    const [isDisabled, setIsDisabled] = useState(false); 
+    const [isDisabled, setIsDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
 
     const [isTableLoading, setIsTableLoading] = useState(false); //loading variable
-    
+
     const [searchQuery, setSearchQuery] = useState();
 
     const [modal, setModal] = useState({ //modal variables
@@ -69,7 +69,7 @@ function Heis() {
             params: {
                 query: ''
             }
-        
+
         }).then(response => { //GET ALL function
             setData(response.data.data);
         }).catch(error => {
@@ -82,9 +82,9 @@ function Heis() {
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
 
-        apiClient.get(`/settings/heis?page=${pageNumber}`,{
-            params:{
-                query:''
+        apiClient.get(`/settings/heis?page=${pageNumber}`, {
+            params: {
+                query: ''
             }
         }).then(response => {
             setData(response.data.data);//GET ALL function
@@ -184,10 +184,10 @@ function Heis() {
         }).then(response => {
             let newData = data.data.map(d => {
                 if (d.id === response.data.data.id) {
-                    return {...response.data.data};
+                    return { ...response.data.data };
                 }
 
-                return {...d};
+                return { ...d };
             })
             setData({
                 ...data,
@@ -333,108 +333,108 @@ function Heis() {
 
     return (
         <Container fluid>
-            <div className='bg-body rounded'> 
-                <Row className= 'justify-content-end mt-4 mb-3'>
+            <div className='bg-body rounded'>
+                <Row className='justify-content-end mt-4 mb-3'>
                     <Col>
                         <h1>HEIs</h1>
                     </Col>
-                </Row> 
+                </Row>
 
-                <div> 
+                <div>
                     <div className='d-md-flex mb-3 justify-content-end'>
-                        <div className='search'> 
+                        <div className='search'>
                             <Form className="d-flex" controlId="" onSubmit={handleSearch}>
-                                    <Form.Control 
-                                        type="search" 
-                                        placeholder="Search" 
-                                        className="me-2"
-                                        value={searchQuery}
-                                        onChange={handleSearchInputChange}
-                                    />
-                                    <Button type='submit'>
-                                        <FontAwesomeIcon icon={faSearch} />
-                                    </Button>
+                                <Form.Control
+                                    type="search"
+                                    placeholder="Search"
+                                    className="me-2"
+                                    value={searchQuery}
+                                    onChange={handleSearchInputChange}
+                                />
+                                <Button type='submit'>
+                                    <FontAwesomeIcon icon={faSearch} />
+                                </Button>
 
-                                    <div className='ms-2'> 
-                                        <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>
-                                            <FontAwesomeIcon icon={faAdd}/> 
-                                            <span className='d-none d-md-inline-block ms-1'> Add </span>
-                                        </Button>
-                                    </div>
+                                <div className='ms-2'>
+                                    <Button variant='primary' onClick={e => handleShowModal()} style={{ whiteSpace: 'nowrap' }}>
+                                        <FontAwesomeIcon icon={faAdd} />
+                                        <span className='d-none d-md-inline-block ms-1'> Add </span>
+                                    </Button>
+                                </div>
                             </Form>
                         </div>
                     </div>
-                </div>    
+                </div>
             </div>
 
-            { data.data.length === 0 ? (
+            {data.data.length === 0 ? (
                 <Alert variant='primary'>
                     No HEIs found.
-                    </Alert>
-                    ) : (
+                </Alert>
+            ) : (
 
-            <div className='loading-table-container'>
-                <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
-                    <div className='spinner-icon'>
-                        <Spinner animation='border' />
+                <div className='loading-table-container'>
+                    <div className={`table-overlay ${isTableLoading ? 'table-loading' : ''}`}>
+                        <div className='spinner-icon'>
+                            <Spinner animation='border' />
+                        </div>
+                    </div>
+                    <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
+                        <thead className='table-primary'>
+                            <tr>
+                                <th>ID</th>
+                                <th>UII</th>
+                                <th>Name</th>
+                                <th>Street/Barangay</th>
+                                <th>City/Municipality</th>
+                                <th>Province</th>
+                                <th>Head of Institution</th>
+                                <th>Email</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                data.data.map((row, index) => (
+                                    <tr key={index}>
+                                        <td className='table-primary'>{row.id}</td>
+                                        <td>{row.uii}</td>
+                                        <td>{row.name}</td>
+                                        <td>{row.street_barangay}</td>
+                                        <td>{row.city_municipality}</td>
+                                        <td>{row.province}</td>
+                                        <td>{row.head_of_institution}</td>
+                                        <td>{row.email}</td>
+                                        <td>
+                                            <Button onClick={e => handleShowModal(row)} variant='link'>
+                                                <FontAwesomeIcon icon={faEdit} className='text-primary' />
+                                            </Button>
+                                            <Button onClick={e => showDeleteAlert(row)} variant='link'>
+                                                <FontAwesomeIcon icon={faTrash} className='text-danger' />
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </Table>
+
+                    <div>
+                        {data.data.length > 0 && (
+                            <Pagination style={{ float: 'right' }}>
+                                <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
+                                <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
+                                <Pagination.Item disabled>
+                                    {`${data.current_page} / ${data.last_page}`}
+                                </Pagination.Item>
+                                <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
+                                <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
+                            </Pagination>
+                        )}
                     </div>
                 </div>
-                <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
-                    <thead className='table-primary'>
-                        <tr>
-                            <th>ID</th>
-                            <th>UII</th>
-                            <th>Name</th>
-                            <th>Street/Barangay</th>
-                            <th>City/Municipality</th>
-                            <th>Province</th>
-                            <th>Head of Institution</th>
-                            <th>Email</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            data.data.map((row, index) => (
-                                <tr key={index}>
-                                    <td className='table-primary'>{row.id}</td>
-                                    <td>{row.uii}</td>
-                                    <td>{row.name}</td>
-                                    <td>{row.street_barangay}</td>
-                                    <td>{row.city_municipality}</td>
-                                    <td>{row.province}</td>
-                                    <td>{row.head_of_institution}</td>
-                                    <td>{row.email}</td>
-                                    <td>
-                                        <Button onClick={e => handleShowModal(row)} variant='link'>
-                                            <FontAwesomeIcon icon={faEdit} className='text-primary' />
-                                        </Button>
-                                        <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                            <FontAwesomeIcon icon={faTrash} className='text-danger' />
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))
-                        }
-                    </tbody>
-                </Table>
-
-                <div>
-                    {data.data.length > 0 && (
-                        <Pagination style={{ float: 'right' }}>
-                            <Pagination.First onClick={e => handlePageChange(1)} disabled={data.current_page === 1} />
-                            <Pagination.Prev onClick={e => handlePageChange(data.current_page - 1)} disabled={data.current_page === 1} />
-                            <Pagination.Item disabled>
-                                {`${data.current_page} / ${data.last_page}`}
-                            </Pagination.Item>
-                            <Pagination.Next onClick={e => handlePageChange(data.current_page + 1)} disabled={data.current_page === data.last_page} />
-                            <Pagination.Last onClick={e => handlePageChange(data.last_page)} disabled={data.current_page === data.last_page} />
-                        </Pagination>
-                    )}
-                </div>  
-            </div>
-)
-}
+            )
+            }
             <div className='model_box'>
 
                 <Modal
@@ -445,18 +445,18 @@ function Heis() {
                     <Modal.Header closeButton>
                         <Modal.Title>{modal.data ? 'Edit' : 'Add'} HEI</Modal.Title>
                     </Modal.Header>
-                    
+
                     <Form onSubmit={handleSubmit}>
                         <Modal.Body>
                             <Row>
                                 <Col md={3}>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>UII</Form.Label>
-                                        <Form.Control  
-                                            type='text' 
-                                            name='uii' 
+                                        <Form.Control
+                                            type='text'
+                                            name='uii'
                                             placeholder='Enter UII'
-                                            value={formInputs.uii} 
+                                            value={formInputs.uii}
                                             onChange={handleInputChange}
                                             isInvalid={!!formErrors.uii} />
                                         <Form.Control.Feedback type='invalid'>
@@ -467,13 +467,13 @@ function Heis() {
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Name</Form.Label>
-                                        <Form.Control 
-                                            type='text' 
+                                        <Form.Control
+                                            type='text'
                                             placeholder='Enter Institution Name'
                                             name='name'
                                             value={formInputs.name}
                                             isInvalid={!!formErrors.name}
-                                            onChange={handleInputChange}  />
+                                            onChange={handleInputChange} />
                                         <Form.Control.Feedback type='invalid'>
                                             {formErrors.name}
                                         </Form.Control.Feedback>
@@ -485,9 +485,9 @@ function Heis() {
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Street/Barangay</Form.Label>
-                                        <Form.Control 
-                                            type='text' 
-                                            placeholder='Enter Street/Barangay' 
+                                        <Form.Control
+                                            type='text'
+                                            placeholder='Enter Street/Barangay'
                                             name='street_barangay'
                                             value={formInputs.street_barangay}
                                             isInvalid={!!formErrors.street_barangay}
@@ -539,15 +539,15 @@ function Heis() {
                                 <Col>
                                     <Form.Group className='mb-2' controlId=''>
                                         <Form.Label>Head of Institution</Form.Label>
-                                        <Form.Control 
-                                            type='text' 
-                                            placeholder='Enter Head of Institution' 
+                                        <Form.Control
+                                            type='text'
+                                            placeholder='Enter Head of Institution'
                                             name='head_of_institution'
                                             value={formInputs.head_of_institution}
                                             isInvalid={!!formErrors.head_of_institution}
                                             onChange={handleInputChange} />
                                         <Form.Control.Feedback type='invalid'>
-                                             {formErrors.head_of_institution}
+                                            {formErrors.head_of_institution}
                                         </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
@@ -577,7 +577,7 @@ function Heis() {
                                 Cancel
                             </Button>
                             <Button type='submit' variant='primary' disabled={modal.isLoading || isDisabled}>
-                                 {modal.data ? 'Edit' : 'Add'} 
+                                {modal.data ? 'Edit' : 'Add'}
                             </Button>
                         </Modal.Footer>
                     </Form>
