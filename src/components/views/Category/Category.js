@@ -1,4 +1,4 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     Alert,
     Button,
@@ -30,7 +30,7 @@ function Category() {
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [data, setData] = useState([]); //data variable
-    const [isDisabled, setIsDisabled] = useState(false); 
+    const [isDisabled, setIsDisabled] = useState(false);
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -60,7 +60,7 @@ function Category() {
 
     const handleSubmit = event => {
         event.preventDefault();
-        
+
         let validation = new Validator(formInputs, {
             description: 'required|min:2',
             is_assignable: 'boolean'
@@ -131,9 +131,9 @@ function Category() {
         }).then(response => {
             let newData = data.map(d => {
                 if (d.id === response.data.data.id) {
-                    return {...response.data.data};
+                    return { ...response.data.data };
                 }
-                return {...d};
+                return { ...d };
             })
             setData(newData);
             setIsDisabled(false)
@@ -250,18 +250,18 @@ function Category() {
 
     return (
         <Container fluid>
-            <div className='bg-body rounded'> 
-                <Row className= 'justify-content-end mt-4 mb-3'>
+            <div className='bg-body rounded'>
+                <Row className='justify-content-end mt-4 mb-3'>
                     <Col>
                         <h1>Categories</h1>
                     </Col>
-                </Row> 
+                </Row>
 
-                <div> 
+                <div>
                     <div className='d-flex mb-3 justify-content-end'>
-                        <div className='search'> 
+                        <div className='search'>
                             <Form className="d-flex" controlId="">
-                                    {/* <Form.Control 
+                                {/* <Form.Control 
                                         type="search" 
                                         placeholder="Search" 
                                         className="me-2"
@@ -272,16 +272,16 @@ function Category() {
                                         <FontAwesomeIcon icon={faSearch} />
                                     </Button> */}
 
-                                    <div className='ms-2'> 
-                                        <Button variant='primary' onClick={e => handleShowModal()} style={{whiteSpace:'nowrap'}}>
-                                            <FontAwesomeIcon icon={faAdd}/> 
-                                            <span className='d-none d-md-inline-block ms-1'> Add </span>
-                                        </Button>
-                                    </div>
+                                <div className='ms-2'>
+                                    <Button variant='primary' onClick={e => handleShowModal()} style={{ whiteSpace: 'nowrap' }}>
+                                        <FontAwesomeIcon icon={faAdd} />
+                                        <span className='d-none d-md-inline-block ms-1'> Add </span>
+                                    </Button>
+                                </div>
                             </Form>
                         </div>
                     </div>
-                </div>    
+                </div>
             </div>
 
             <Table bordered hover responsive size='md'>
@@ -299,13 +299,13 @@ function Category() {
                             <tr key={index}>
                                 <td className='table-primary'>{row.id}</td>
                                 <td>{row.description}</td>
-                                <td>{row.is_assignable ? <FontAwesomeIcon icon={faCheck} className='text-success' /> : <FontAwesomeIcon icon={faTimes} className='text-danger' /> } </td>
+                                <td>{row.is_assignable ? <FontAwesomeIcon icon={faCheck} className='text-success' /> : <FontAwesomeIcon icon={faTimes} className='text-danger' />} </td>
                                 <td>
                                     <Button onClick={e => handleShowModal(row)} variant='link'>
-                                        <FontAwesomeIcon icon={faEdit} className='text-primary'/>
+                                        <FontAwesomeIcon icon={faEdit} className='text-primary' />
                                     </Button>
                                     <Button onClick={e => showDeleteAlert(row)} variant='link'>
-                                        <FontAwesomeIcon icon={faTrash} className='text-danger'/>
+                                        <FontAwesomeIcon icon={faTrash} className='text-danger' />
                                     </Button>
                                 </td>
                             </tr>
@@ -338,12 +338,12 @@ function Category() {
                             </Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group controlId='is_assignable'>
-                            <Form.Check 
-                            type='checkbox'
-                            label='is assignable?'
-                            checked={formInputs.is_assignable}
-                            onChange={handleCheckboxChange}
-                            isInvalid={!!formErrors.is_assignable}
+                            <Form.Check
+                                type='checkbox'
+                                label='is assignable?'
+                                checked={formInputs.is_assignable}
+                                onChange={handleCheckboxChange}
+                                isInvalid={!!formErrors.is_assignable}
                             />
                         </Form.Group>
                     </Modal.Body>
@@ -352,11 +352,11 @@ function Category() {
                         <Button variant='secondary' onClick={handleHideModal} disabled={modal.isLoading}>
                             Cancel
                         </Button>
-                        <Button 
-                        type='submit' 
-                        variant='primary' 
-                        disabled={modal.isLoading || isDisabled}>
-                        {modal.data ? 'Edit' : 'Add'}
+                        <Button
+                            type='submit'
+                            variant='primary'
+                            disabled={modal.isLoading || isDisabled}>
+                            {modal.data ? 'Edit' : 'Add'}
                         </Button>
                     </Modal.Footer>
                 </Form>

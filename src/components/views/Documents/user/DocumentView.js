@@ -1,11 +1,11 @@
-import React, { useEffect,  useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import Timeline from '../../../units/Timeline/Timeline';
 import Card from 'react-bootstrap/Card';
 import {
     Button,
-    Row, 
-    Col, 
-    Breadcrumb, 
+    Row,
+    Col,
+    Breadcrumb,
     Badge,
     OverlayTrigger,
     Popover,
@@ -271,7 +271,7 @@ function DocumentView() {
             setIsLoading(false);
             setIsNavigationLoading(false);
         });
-        
+
     }, [location]);
 
     useEffect(() => {
@@ -289,29 +289,29 @@ function DocumentView() {
 
     useEffect(() => {
         let logsLastIndex = document.logs.findLastIndex(dl => dl.to_id === currentUser.id);
-        let logSlice = document.logs.slice(0, logsLastIndex+1);
+        let logSlice = document.logs.slice(0, logsLastIndex + 1);
         let assignedIds = document.logs.filter(dl => dl.from_id === currentUser.id).map(dl => dl.assigned_id);
         let filteredLogs = logSlice.filter(log => document.logs[logsLastIndex].assigned_id ? log.assigned_id === document.logs[logsLastIndex].assigned_id : (assignedIds.indexOf(log.assigned_id) !== -1 || log.to_id === currentUser.id));
         let newTimelineData = filteredLogs.map(log => {
             return {
-                text: log.rejected_id !== null && log.from_id === null ? <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]} log={log}/> : 
-                        log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} log={log} /> :
-                            log.action_id !== null && log.comment !== null && log.from_id === null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} log={log} /> :
-                                log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} log={log} /> :
-                                    log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} log={log} /> : log.to_id === null ? 'Document for Releasing' : null,
-                    date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss A'),
-                    category: {
-                        tag: currentUser?.role.level > log?.assigned_user?.role.level ? '' : log.assigned_user?.profile.name,
-                        color: '#6dedd4',
-                    },
-                    circleStyle: {
-                        borderColor: '#e17b77',
-                    },
-                };
+                text: log.rejected_id !== null && log.from_id === null ? <RejectedUsersText key={log.id} users={[log?.rejected_user?.profile]} log={log} /> :
+                    log.approved_id !== null && log.from_id === null ? <ApprovedUsersText key={log.id} users={[log?.approved_user?.profile]} log={log} /> :
+                        log.action_id !== null && log.comment !== null && log.from_id === null ? <ActionedUsersText key={log.id} users={[log?.action_user?.profile]} log={log} /> :
+                            log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} log={log} /> :
+                                log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} log={log} /> : log.to_id === null ? 'Document for Releasing' : null,
+                date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss A'),
+                category: {
+                    tag: currentUser?.role.level > log?.assigned_user?.role.level ? '' : log.assigned_user?.profile.name,
+                    color: '#6dedd4',
+                },
+                circleStyle: {
+                    borderColor: '#e17b77',
+                },
+            };
         })
 
         if (filteredLogs.length > 0) {
-            let firstLog = filteredLogs[filteredLogs.length-1];
+            let firstLog = filteredLogs[filteredLogs.length - 1];
             newTimelineData = newTimelineData.concat({
                 text: (
                     <>
@@ -331,7 +331,7 @@ function DocumentView() {
                 },
             });
         }
-        
+
         let isAssignedToUser = document.assign.filter(da => da.assigned_id === currentUser.id || (da.assigned_user.role?.division_id === currentUser.role?.division_id && da.assigned_user.role.level > currentUser.role.level));
 
         if (isAssignedToUser) {
@@ -390,7 +390,7 @@ function DocumentView() {
             {
                 log.comment && (
                     <span className='comment-text'>
-                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left'/> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left' />
                     </span>
                 )
             }
@@ -409,7 +409,7 @@ function DocumentView() {
             {
                 log.comment && (
                     <span className='comment-text'>
-                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left' />
                     </span>
                 )
             }
@@ -428,7 +428,7 @@ function DocumentView() {
             {
                 log.comment && (
                     <span className='comment-text'>
-                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left'/>
+                        <FontAwesomeIcon icon={faQuoteLeft} className='quote-left' /> {log.comment} <FontAwesomeIcon icon={faQuoteRight} className='quote-left' />
                     </span>
                 )
             }
@@ -559,12 +559,12 @@ function DocumentView() {
             isLoading: false
         });
     }
-    
+
     if (isLoading || isNavigationLoading) {
         return (
-           <Spinner animation='border' />
+            <Spinner animation='border' />
         );
-      }
+    }
 
     if (errorMessage) {
         return (
@@ -584,8 +584,8 @@ function DocumentView() {
                         </Button>
                     )
                 }
-                
-                {   
+
+                {
                     document.logs[0]?.action_id === null && document.logs[0]?.acknowledge_id === currentUser.id && (
                         <>
                             <Button className="ms-2" variant="success" onClick={e => handleShowAction(document)}>
@@ -607,10 +607,10 @@ function DocumentView() {
                     document.logs[0]?.approved_id === null && document.logs[0]?.rejected_id === null && (
                         <>
                             <Button className="ms-2" onClick={e => handleShowApprove(document)}>
-                                    <FontAwesomeIcon icon={faThumbsUp} /> <span className='d-none d-md-inline-block'>Approve</span>
+                                <FontAwesomeIcon icon={faThumbsUp} /> <span className='d-none d-md-inline-block'>Approve</span>
                             </Button>
                             <Button className="ms-2" variant='danger' onClick={e => handleShowReject(document)}>
-                                    <FontAwesomeIcon icon={faThumbsDown} /> <span className='d-none d-md-inline-block'>Reject</span>
+                                <FontAwesomeIcon icon={faThumbsDown} /> <span className='d-none d-md-inline-block'>Reject</span>
                             </Button>
                         </>
                     )
@@ -618,28 +618,28 @@ function DocumentView() {
             </>
         )
     }
-   
+
     return (
         <div className="container fluid">
-            <div className="crud bg-body rounded"> 
+            <div className="crud bg-body rounded">
                 <div className='mt-3'>
                     <Breadcrumb>
-                        <Breadcrumb.Item linkAs={Link} linkProps={{  to: '../' }}>Document</Breadcrumb.Item>
+                        <Breadcrumb.Item linkAs={Link} linkProps={{ to: '../' }}>Document</Breadcrumb.Item>
                         <Breadcrumb.Item href="#" active>View</Breadcrumb.Item>
                     </Breadcrumb>
                 </div>
                 <div className='text-end mb-3 m-1'>
-                        {
-                            renderButtons(document)
-                        }
+                    {
+                        renderButtons(document)
+                    }
                 </div>
             </div>
 
-            <div className='m-1'> 
-                <Card 
-                        bg="light"
-                        border="light" style={{ marginRight:'auto'}}>
-    
+            <div className='m-1'>
+                <Card
+                    bg="light"
+                    border="light" style={{ marginRight: 'auto' }}>
+
                     <Card.Body>
                         <div className='text-end'>
                             <div className="d-none d-md-block" style={{ whiteSpace: 'nowrap' }} >
@@ -656,79 +656,79 @@ function DocumentView() {
                                             {moment(document.created_at).format('MMMM DD, YYYY')}
                                         </Tooltip>
                                     }
-                                    >
+                                >
                                     <Button size='sm' variant='outline'>
-                                        <FontAwesomeIcon icon={faClock} style={{color:'#545454'}}/>
+                                        <FontAwesomeIcon icon={faClock} style={{ color: '#545454' }} />
                                     </Button>
                                 </OverlayTrigger>
                             </div>
                         </div>
 
-                        <Row className="mb-3"> 
-                            <Col> 
-                                <FontAwesomeIcon 
-                                icon={faHashtag} className='text-dark me-4'/>
+                        <Row className="mb-3">
+                            <Col>
+                                <FontAwesomeIcon
+                                    icon={faHashtag} className='text-dark me-4' />
                                 {document.tracking_no}
                             </Col>
                         </Row>
-                        
+
                         <Row className="mb-3">
                             <Col>
-                                <FontAwesomeIcon icon={faTimeline} className='text-dark me-3'/>
+                                <FontAwesomeIcon icon={faTimeline} className='text-dark me-3' />
                                 {document.logs.length > 0 ? (
-                                                <>
-                                                    {
-                                                        (document.logs[0]?.to_id === null &&
-                                                            document.logs[0]?.from_id !== null &&
-                                                            document.logs[0]?.action_id !== null &&
-                                                            document.logs[0]?.acknowledge_id === null &&
-                                                            document.logs[0]?.approved_id !== null) ? (
-                                                                <Badge bg="success" style={{ cursor: 'pointer' }}>For Releasing</Badge>
-                                                        ) :
-                                                        (document.logs[0].approved_id !== null) ? (
-                                                            <OverlayTrigger
-                                                                trigger={['click', 'hover']}
-                                                                placement="left"
-                                                                overlay={
-                                                                    <Popover>
-                                                                        <Popover.Header className="bg-success text-white">
-                                                                            Approved by
-                                                                        </Popover.Header>
-                                                                        <Popover.Body>
-                                                                            <ListGroup variant="flush">
-                                                                                    <ListGroupItem variant="success text-black" >
-                                                                                        {document.logs[0]?.approved_user?.profile?.name}
-                                                                                    </ListGroupItem>
-                                                                            </ListGroup>
-                                                                        </Popover.Body>
-                                                                    </Popover>
-                                                                }
-                                                            >
-                                                                <Badge bg="success" style={{ cursor: 'pointer' }}>Approved</Badge>
-                                                            </OverlayTrigger>
-                                                        ) :
-                                                            (document.logs[0].rejected_id !== null) ? (
-                                                                <OverlayTrigger
-                                                                    trigger={['click', 'hover']}
-                                                                    placement="left"
-                                                                    overlay={
-                                                                        <Popover>
-                                                                            <Popover.Header  className="custom-rejected">
-                                                                                Rejected by
-                                                                            </Popover.Header>
-                                                                            <Popover.Body>
-                                                                                <ListGroup variant="flush">
-                                                                                        <ListGroupItem  className="custom-rejected">
-                                                                                            {document.logs[0]?.rejected_user?.profile?.name}
-                                                                                        </ListGroupItem>
-                                                                                </ListGroup>
-                                                                            </Popover.Body>
-                                                                        </Popover>
-                                                                    }
-                                                                >
-                                                                    <Badge bg='' className="custom-rejected" style={{ cursor: 'pointer' }}>Rejected</Badge>
-                                                                </OverlayTrigger>
-                                                            ) :
+                                    <>
+                                        {
+                                            (document.logs[0]?.to_id === null &&
+                                                document.logs[0]?.from_id !== null &&
+                                                document.logs[0]?.action_id !== null &&
+                                                document.logs[0]?.acknowledge_id === null &&
+                                                document.logs[0]?.approved_id !== null) ? (
+                                                <Badge bg="success" style={{ cursor: 'pointer' }}>For Releasing</Badge>
+                                            ) :
+                                                (document.logs[0].approved_id !== null) ? (
+                                                    <OverlayTrigger
+                                                        trigger={['click', 'hover']}
+                                                        placement="left"
+                                                        overlay={
+                                                            <Popover>
+                                                                <Popover.Header className="bg-success text-white">
+                                                                    Approved by
+                                                                </Popover.Header>
+                                                                <Popover.Body>
+                                                                    <ListGroup variant="flush">
+                                                                        <ListGroupItem variant="success text-black" >
+                                                                            {document.logs[0]?.approved_user?.profile?.name}
+                                                                        </ListGroupItem>
+                                                                    </ListGroup>
+                                                                </Popover.Body>
+                                                            </Popover>
+                                                        }
+                                                    >
+                                                        <Badge bg="success" style={{ cursor: 'pointer' }}>Approved</Badge>
+                                                    </OverlayTrigger>
+                                                ) :
+                                                    (document.logs[0].rejected_id !== null) ? (
+                                                        <OverlayTrigger
+                                                            trigger={['click', 'hover']}
+                                                            placement="left"
+                                                            overlay={
+                                                                <Popover>
+                                                                    <Popover.Header className="custom-rejected">
+                                                                        Rejected by
+                                                                    </Popover.Header>
+                                                                    <Popover.Body>
+                                                                        <ListGroup variant="flush">
+                                                                            <ListGroupItem className="custom-rejected">
+                                                                                {document.logs[0]?.rejected_user?.profile?.name}
+                                                                            </ListGroupItem>
+                                                                        </ListGroup>
+                                                                    </Popover.Body>
+                                                                </Popover>
+                                                            }
+                                                        >
+                                                            <Badge bg='' className="custom-rejected" style={{ cursor: 'pointer' }}>Rejected</Badge>
+                                                        </OverlayTrigger>
+                                                    ) :
                                                         (document.logs[0].action_id !== null && document.logs[0].acknowledge_id === null && document.logs[0].from_id === null && document.logs[0].to_id === null) ? (
                                                             <OverlayTrigger
                                                                 trigger={['click', 'hover']}
@@ -900,29 +900,29 @@ function DocumentView() {
                                         <Badge bg="primary" style={{ cursor: 'pointer' }}>Received</Badge>
                                     </OverlayTrigger>
                                 ) : <Badge bg="secondary">Released</Badge>}
-                            </Col> 
-                         </Row>
+                            </Col>
+                        </Row>
 
                         <Row className="mb-3">
                             <Col>
-                                <FontAwesomeIcon icon={faFile} className="text-dark" style={{marginRight:'25px'}}/>
+                                <FontAwesomeIcon icon={faFile} className="text-dark" style={{ marginRight: '25px' }} />
                                 {document.document_type.description}
                             </Col>
                         </Row>
 
                         <Row className="mb-3">
-                                <Col>
-                                    <FontAwesomeIcon icon={faCalendar} className='text-dark me-4'/>
-                                    {moment(document.date_received).format('MMMM DD, YYYY')} 
-                                    {/* <i style={{color:'#545454'}}> (Received {moment(document.date_received).fromNow()})</i>  */}
-                                </Col>
+                            <Col>
+                                <FontAwesomeIcon icon={faCalendar} className='text-dark me-4' />
+                                {moment(document.date_received).format('MMMM DD, YYYY')}
+                                {/* <i style={{color:'#545454'}}> (Received {moment(document.date_received).fromNow()})</i>  */}
+                            </Col>
                         </Row>
 
-                        
+
 
                         <Row className="mb-3">
                             <Col>
-                                <FontAwesomeIcon icon={faBuildingUser} className="text-dark" style={{marginRight:'18px'}}/>
+                                <FontAwesomeIcon icon={faBuildingUser} className="text-dark" style={{ marginRight: '18px' }} />
                                 {document.sender?.receivable?.title ?? document.sender.name}
                             </Col>
                         </Row>
@@ -931,7 +931,7 @@ function DocumentView() {
                             (document.assign && document.assign.length > 0 && document.assign.filter(da => da.assigned_user?.role.level >= currentUser?.role.level).length > 0) && (
                                 <Row className="mb-3">
                                     <Col>
-                                        <FontAwesomeIcon icon={faUserCheck} className='text-dark' style={{marginRight:'18px'}}/>
+                                        <FontAwesomeIcon icon={faUserCheck} className='text-dark' style={{ marginRight: '18px' }} />
                                         {
                                             document.assign.filter(da => da.assigned_user.role.level >= currentUser?.role.level).map((assign, index) => (
                                                 <span key={assign.assigned_user.profile.id}>
@@ -951,9 +951,9 @@ function DocumentView() {
                             </Col>
                         </Row> */}
 
-                         <Row className="mb-3">
-                            <Col >  
-                                <FontAwesomeIcon icon={faTag} className='text-dark me-4'/>
+                        <Row className="mb-3">
+                            <Col >
+                                <FontAwesomeIcon icon={faTag} className='text-dark me-4' />
                                 {document.category.description}
                             </Col>
                         </Row>
@@ -970,17 +970,17 @@ function DocumentView() {
 
                         <Row className="mb-3">
                             <Col row={5}>
-                                <FontAwesomeIcon icon={faQuoteLeft} className='text-dark me-4'/>
+                                <FontAwesomeIcon icon={faQuoteLeft} className='text-dark me-4' />
                                 {document.description}
                             </Col>
-                        </Row>  
+                        </Row>
                     </Card.Body>
                 </Card>
             </div>
-           
+
             <Timeline data={timelineData} />
-          
-          <Modal
+
+            <Modal
                 show={modal.show}
                 onHide={handleHideModal}
                 backdrop='static'
@@ -1054,7 +1054,7 @@ function DocumentView() {
                         Confirm
                     </Button>
                 </Modal.Footer>
-            </Modal> 
+            </Modal>
 
             {/* Approve Document Modal*/}
             <Modal show={showModalApprove.show} onHide={handleCloseApprove}>
@@ -1116,7 +1116,7 @@ function DocumentView() {
                         Reject
                     </Button>
                 </Modal.Footer>
-            </Modal> 
+            </Modal>
 
         </div>
     );

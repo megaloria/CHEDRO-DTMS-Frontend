@@ -1,8 +1,8 @@
-import React, { useEffect, useState }  from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    Button, 
-    Form, 
-    Row, 
+    Button,
+    Form,
+    Row,
     Col,
     Alert,
     Breadcrumb,
@@ -50,7 +50,7 @@ function DocumentEdit() {
         receivable_type: document.sender.receivable_type === 'App\\Models\\Nga' ? 'NGAs' :
             document.sender.receivable_type === 'App\\Models\\ChedOffice' ? 'CHED Offices' :
                 document.sender.receivable_type === 'App\\Models\\Hei' ? 'HEIs' :
-                   'Others',
+                    'Others',
         receivable_id: document.sender.receivable_id,
         receivable_name: document.sender.name,
         province: document.sender.receivable_type === null ? null : document.sender.receivable.province,
@@ -81,32 +81,32 @@ function DocumentEdit() {
 
 
     useEffect(() => {
-    if (formInputs.receivable_type === 'NGAs') {
-      setIsOptionLoading(true);
-      apiClient.get('/settings/ngas/all')
-        .then(response => {
-          setNGAs(response.data.data);
-        })
-        .catch(error => {
-          setErrorMessage(error);
-        })
-        .finally(() => {
-          setIsOptionLoading(false);
-        });
-    }
-       else if (formInputs.receivable_type === 'CHED Offices') {
-             setIsOptionLoading(true);
-             apiClient.get('/settings/ched-offices/all')
-                 .then(response => {
-                     setChedOffices(response.data.data);
-                 })
-                 .catch(error => {
-                     setErrorMessage(error);
-                 })
-                 .finally(() => {
-                     setIsOptionLoading(false);
-                 });
-         }
+        if (formInputs.receivable_type === 'NGAs') {
+            setIsOptionLoading(true);
+            apiClient.get('/settings/ngas/all')
+                .then(response => {
+                    setNGAs(response.data.data);
+                })
+                .catch(error => {
+                    setErrorMessage(error);
+                })
+                .finally(() => {
+                    setIsOptionLoading(false);
+                });
+        }
+        else if (formInputs.receivable_type === 'CHED Offices') {
+            setIsOptionLoading(true);
+            apiClient.get('/settings/ched-offices/all')
+                .then(response => {
+                    setChedOffices(response.data.data);
+                })
+                .catch(error => {
+                    setErrorMessage(error);
+                })
+                .finally(() => {
+                    setIsOptionLoading(false);
+                });
+        }
         else if (formInputs.receivable_type === 'HEIs') {
             setIsOptionLoading(true);
             apiClient.get('/settings/heis/provinces')
@@ -187,7 +187,7 @@ function DocumentEdit() {
                 let temp = docTypeFind ? docTypeFind.code : '';
                 setTrackingNo(moment(document.date_received).format('YY') + '-' + temp + '-' + document.series_no.toString().padStart(4, '0'));
             }
-            
+
         }
     }, [docType, documentTypes, dateReceived, document.date_received, document.document_type_id, document.series_no])
 
@@ -250,7 +250,7 @@ function DocumentEdit() {
         try {
             setIsOptionLoading(true);
             const value = event.target.value;
-            setFormInputs({ 
+            setFormInputs({
                 ...formInputs,
                 municipality: value,
             });
@@ -384,7 +384,7 @@ function DocumentEdit() {
         }
         handleEdit();
     };
-    
+
     const handleEdit = () => {
         setIsDisabled(true);
 
@@ -408,7 +408,7 @@ function DocumentEdit() {
         for (let i = 0; i < assignTo.length; i++) {
             formData.append(`assign_to[${i}]`, assignTo[i]);
         }
-        
+
         apiClient.post(`/document/${document.id}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -506,7 +506,7 @@ function DocumentEdit() {
     };
 
 
-    
+
     return (
         <Form onSubmit={handleSubmit}>
             <div className="container fluid">
@@ -526,9 +526,9 @@ function DocumentEdit() {
                         </Col>
                     </Row>
                 </div>
-            <Row className="mb-3">
-                 <Col>
-                <Form.Label>Document Type</Form.Label>
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Label>Document Type</Form.Label>
                         <Form.Select
                             name='document_type_id'
                             value={formInputs.document_type_id}
@@ -545,71 +545,71 @@ function DocumentEdit() {
                         <Form.Control.Feedback type='invalid'>
                             {formErrors.document_type_id}
                         </Form.Control.Feedback>
-                </Col>
+                    </Col>
 
-                <Row className='d-md-none mb-3'> </Row>
+                    <Row className='d-md-none mb-3'> </Row>
 
-                <Col>
-                    <Form.Label>Tracking No. {isOptionLoading1 ? <Spinner animation='border' size='sm'/> : ""}</Form.Label>
-                    <Form.Control 
+                    <Col>
+                        <Form.Label>Tracking No. {isOptionLoading1 ? <Spinner animation='border' size='sm' /> : ""}</Form.Label>
+                        <Form.Control
                             type='text'
                             name='trackingNo'
                             placeholder='Tracking Number'
                             value={trackingNo}
                             isInvalid={!!formErrors.trackingNo}
                             disabled
-                    />
-                </Col>
-               
-                <Col>
-                    <Form.Label>Attachment <Form.Text className='text-muted'>
-                            {document.attachments?.file_title ? <span onClick={d =>showDeleteAlert()} style={{color:'red', textDecoration: 'underline', cursor: 'pointer'}}>(Delete)</span> : <span> <i>(Optional)</i></span>}
-                    </Form.Text> </Form.Label>
-                    {document.attachments?.file_title ?  
-                        <Form.Control 
-                            type="text"
-                            name="attachment"
-                            value={document.attachments.file_title}
-                            disabled
                         />
+                    </Col>
+
+                    <Col>
+                        <Form.Label>Attachment <Form.Text className='text-muted'>
+                            {document.attachments?.file_title ? <span onClick={d => showDeleteAlert()} style={{ color: 'red', textDecoration: 'underline', cursor: 'pointer' }}>(Delete)</span> : <span> <i>(Optional)</i></span>}
+                        </Form.Text> </Form.Label>
+                        {document.attachments?.file_title ?
+                            <Form.Control
+                                type="text"
+                                name="attachment"
+                                value={document.attachments.file_title}
+                                disabled
+                            />
                             :
-                        <Form.Control 
-                            type="file"
-                            name="attachment"
-                            placeholder="Attachment"
-                            onChange={handleFileInputChange}
-                        />
-                    }
-                </Col>
+                            <Form.Control
+                                type="file"
+                                name="attachment"
+                                placeholder="Attachment"
+                                onChange={handleFileInputChange}
+                            />
+                        }
+                    </Col>
 
 
-           
 
-            </Row>
-            
-            <Row className="mb-3">
 
-            <Col>
-                    <Form.Label>Date Received</Form.Label>
-                    <Form.Control 
+                </Row>
+
+                <Row className="mb-3">
+
+                    <Col>
+                        <Form.Label>Date Received</Form.Label>
+                        <Form.Control
                             type='date'
                             name='date_received'
                             max={moment().format("YYYY-MM-DD")}
                             value={formInputs.date_received}
                             onChange={handleInputChange}
                             isInvalid={!!formErrors.date_received}
-                    />
+                        />
                         <Form.Control.Feedback type='invalid'>
                             {formErrors.date_received}
                         </Form.Control.Feedback>
-                </Col>
+                    </Col>
 
 
-        
-                
-                <Col>
-                    <Form.Label>Receive from {isOptionLoading ? <Spinner animation='border' size='sm'/> : ""} </Form.Label>
-                    <Form.Select 
+
+
+                    <Col>
+                        <Form.Label>Receive from {isOptionLoading ? <Spinner animation='border' size='sm' /> : ""} </Form.Label>
+                        <Form.Select
                             name='receivable_type'
                             value={formInputs.receivable_type}
                             onChange={handleChange}
@@ -620,10 +620,10 @@ function DocumentEdit() {
                             <option value="NGAs">NGAs</option>
                             <option value="CHED Offices">CHED Offices</option>
                             <option value="Others">Others</option>
-                    </Form.Select>
-                    <Form.Control.Feedback type='invalid'>
-                        {formErrors.receivable_type}
-                    </Form.Control.Feedback>
+                        </Form.Select>
+                        <Form.Control.Feedback type='invalid'>
+                            {formErrors.receivable_type}
+                        </Form.Control.Feedback>
 
                         {
                             (formInputs.receivable_type === 'HEIs' && provinces.length !== 0) && (
@@ -738,13 +738,13 @@ function DocumentEdit() {
                         <Form.Control.Feedback type='invalid'>
                             {formErrors.receivable_name}
                         </Form.Control.Feedback>
-                </Col>  
-            </Row>
+                    </Col>
+                </Row>
 
-            <Row className="mb-3">
-                <Col>
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control
+                <Row className="mb-3">
+                    <Col>
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control
                             as="textarea"
                             rows={3}
                             type="text"
@@ -756,18 +756,18 @@ function DocumentEdit() {
                         <Form.Control.Feedback type='invalid'>
                             {formErrors.description}
                         </Form.Control.Feedback>
-                </Col>
-            </Row>
+                    </Col>
+                </Row>
 
-            <Row className="mb-3"> 
-            <Form.Group>
-                <div> 
+                <Row className="mb-3">
+                    <Form.Group>
+                        <div>
                             <Form.Label>
                                 Category {document.logs && document.logs.length > 0 && document.logs[0].acknowledge_id !== null ? <span className='text-muted'>(Already Forwarded):</span> : ''}
                             </Form.Label>
 
-                </div>
-                <div>
+                        </div>
+                        <div>
                             {
                                 categories.map((category, index) => (
                                     <Form.Check key={category.id} type='radio' id={`inline-${category.id}-1`} inline className={formErrors.category_id ? 'is-invalid' : ''} >
@@ -788,15 +788,15 @@ function DocumentEdit() {
                             <Form.Control.Feedback type='invalid'>
                                 {formErrors.category_id}
                             </Form.Control.Feedback>
-                            
+
                             {/* Conditional rendering */}
-                        
+
                             {
                                 selectedCategory && (
                                     <div style={{ marginTop: '10px' }}>
-                                        {selectedCategory.is_assignable &&(
-                                            <Row> 
-                                                <Col md={'auto'}> 
+                                        {selectedCategory.is_assignable && (
+                                            <Row>
+                                                <Col md={'auto'}>
                                                     <Form.Label>
                                                         {document.logs.to_id !== null ? (
                                                             <><span className='text-muted'>Assigned To</span> :</>
@@ -820,29 +820,29 @@ function DocumentEdit() {
                                 )
                             }
                         </div>
-                </Form.Group>
+                    </Form.Group>
                 </Row>
 
-            <div>
-                <Row>
-                    <div className='d-flex justify-content-end mt-4 mb-4'>
-                    <Col md="auto" className="me-2">
-                        <Button 
-                        variant="secondary"
-                        as={Link}
-                        to='../'>
-                            Cancel
-                        </Button>
-                    </Col>
-                    <Col md="auto">
-                        <Button variant="primary" type='submit' disabled={isDisabled}>
-                            Save 
-                        </Button>
-                    </Col>
-                    </div>
-                </Row>  
+                <div>
+                    <Row>
+                        <div className='d-flex justify-content-end mt-4 mb-4'>
+                            <Col md="auto" className="me-2">
+                                <Button
+                                    variant="secondary"
+                                    as={Link}
+                                    to='../'>
+                                    Cancel
+                                </Button>
+                            </Col>
+                            <Col md="auto">
+                                <Button variant="primary" type='submit' disabled={isDisabled}>
+                                    Save
+                                </Button>
+                            </Col>
+                        </div>
+                    </Row>
+                </div>
             </div>
-        </div>
         </Form>
     );
 }
