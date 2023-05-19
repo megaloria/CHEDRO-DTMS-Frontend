@@ -353,6 +353,13 @@ function DocumentView() {
         setTimelineData(newTimelineData);
     }, [document.logs, document.assign, currentUser]);
 
+    const handleFileDownload = () => {
+        let fileTitle = document.attachments?.file_title;
+        if (fileTitle) {
+            fileTitle = fileTitle.substring(0, fileTitle.lastIndexOf('.'))
+            window.open(`${process.env['REACT_APP_API_URL']}/api/document/${document.id}/file/${fileTitle}`, '_blank');
+        }
+    }
 
     const ForwardedUsersText = ({ users }) => (
         <>
@@ -962,7 +969,9 @@ function DocumentView() {
                             <Row className="mb-3">
                                 <Col>
                                     <FontAwesomeIcon icon={faPaperclip} className='text-dark me-4' />
-                                    <Link to={url} target="_blank" download>{document.attachments.file_title}</Link>
+                                    <Button variant='link' className='p-0' onClick={handleFileDownload}>
+                                        {document.attachments.file_title}
+                                    </Button>
                                 </Col>
                             </Row>
                         ) : null}
