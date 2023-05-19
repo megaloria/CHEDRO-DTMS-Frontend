@@ -61,12 +61,8 @@ function DocumentsUser() {
             title: 'Ongoing'
         },
         {
-            key: 'approved',
-            title: 'Approved'
-        },
-        {
-            key: 'rejected',
-            title: 'Rejected'
+            key: 'done',
+            title: 'Done'
         }
     ];
 
@@ -106,36 +102,19 @@ function DocumentsUser() {
 
     useEffect(() => {
         setIsTableLoading(true);
-        if (activeTab === 'all') {
-            apiClient.get('/document', {
-                params: {
-                    query: ''
-                }
-            }).then(response => { //GET ALL function
-                setData(response.data.data.documents);
-                setUsers(response.data.data.user);
-            }).catch(error => {
-                setErrorMessage(error);
-            }).finally(() => {
-                setIsTableLoading(false);
-                setIsLoading(false);
-            });
-        }
-        if (activeTab === 'ongoing') {
-            apiClient.get('/document/ongoing', {
-                params: {
-                    query: ''
-                }
-            }).then(response => { //GET ALL function
-                setData(response.data.data.documents);
-                setUsers(response.data.data.user);
-            }).catch(error => {
-                setErrorMessage(error);
-            }).finally(() => {
-                setIsTableLoading(false);
-                setIsLoading(false);
-            });
-        }
+        apiClient.get(`/document/${activeTab === 'all' ? '' : activeTab}`, {
+            params: {
+                query: ''
+            }
+        }).then(response => { //GET ALL function
+            setData(response.data.data.documents);
+            setUsers(response.data.data.user);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+            setIsLoading(false);
+        });
     }, [activeTab]);
 
     // useEffect(() => {
