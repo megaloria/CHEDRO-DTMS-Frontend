@@ -121,18 +121,14 @@ function DocumentReceive() {
     //     setSelectedUsers(userIds);
     // };
 
-    const handleUserSelection = async (selectedOption) => {
-        let userId = null;
-        if (selectedOption !== null) {
-            userId = selectedOption.value;
-        }
-        setSelectedUsers(userId);
+    const handleUserSelection = selectedOption => {
+        setSelectedUsers(selectedOption);
     };
 
     const handleSubmit = event => {
         event.preventDefault();
 
-        let assignTo = selectedUsers ? [selectedUsers] : [];
+        let assignTo = selectedUsers !== null ? [selectedUsers?.value] : [];
 
         let validation = new Validator({
             ...formInputs,
@@ -194,7 +190,7 @@ function DocumentReceive() {
 
         setIsDisabled(true);
 
-        let assignTo = [selectedUsers];
+        let assignTo = [selectedUsers?.value];
         const formData = new FormData();
 
         if (attachment) {
@@ -244,7 +240,7 @@ function DocumentReceive() {
         event.preventDefault();
         setIsDisabled(true);
 
-        let assignTo = selectedUsers ? [selectedUsers] : [];
+        let assignTo = selectedUsers !== null ? [selectedUsers?.value] : [];
 
         let validation = new Validator({
             ...formInputs,
@@ -362,8 +358,11 @@ function DocumentReceive() {
                 }));
                 setOptions(newOptions);
 
-                let newSelectedUser = users.find(u => u.role.level === 2)?.id;
-                setSelectedUsers(newSelectedUser);
+                let newSelectedUser = users.find(u => u.role.level === 2);
+                setSelectedUsers({
+                    value: newSelectedUser.id,
+                    label: `${newSelectedUser.profile.position_designation} - ${newSelectedUser.profile.first_name} ${newSelectedUser.profile.last_name}`
+                });
             } else {
                 let newOptions = users.filter(u => u.role.level !== 2).map(user => ({
                     value: user.id,
@@ -824,7 +823,7 @@ function DocumentReceive() {
                                                     isClearable
                                                     name='assignTo'
                                                     options={options}
-                                                    value={options.find(option => option.value === selectedUsers)}
+                                                    value={selectedUsers}
                                                     onChange={handleUserSelection}
                                                     isDisabled={!selectedCategory.is_assignable}
                                                 />
