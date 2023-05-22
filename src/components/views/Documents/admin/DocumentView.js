@@ -49,7 +49,6 @@ function DocumentView() {
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [users, setUsers] = useState([]);
     const [options, setOptions] = useState([]);
-    const [url, setUrl] = useState('');
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [isLoading, setIsLoading] = useState(true); //loading variable
     const [forwardError, setForwardError] = useState('');
@@ -80,18 +79,6 @@ function DocumentView() {
 
     }, [location]);
 
-    useEffect(() => {
-        apiClient.get(`/document/${document.id}`, {
-            params: {
-                query: ''
-            }
-        }).then(response => { //GET ALL function
-            setUrl(response.data.data.url);
-        }).catch(error => {
-            setErrorMessage(error);
-        });
-
-    }, [document.id]);
 
     useEffect(() => {
         let newTimelineData = document.logs.map(log =>
