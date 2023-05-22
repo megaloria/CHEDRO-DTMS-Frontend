@@ -19,7 +19,7 @@ export default function Notifications() {
 
     return (
         <div>
-            Hello asdas dasd asdas asd sdas asdasdasdaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+            Hello 
         </div>
     );
 }
