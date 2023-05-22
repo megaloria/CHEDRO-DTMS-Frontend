@@ -8,7 +8,8 @@ import {
   OverlayTrigger,
   Tooltip,
   Modal,
-  Button
+  Button,
+  Popover
 } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -22,6 +23,7 @@ import Swal from 'sweetalert2';
 
 import './styles.css';
 import apiClient from '../../../helpers/apiClient';
+import Notifications from '../Notifications/Notifications';
 
 function Header(props) {
 
@@ -92,7 +94,7 @@ function Header(props) {
         <Navbar.Collapse id='responsive-navbar-nav'>
           
             <Nav className='ms-auto'>
-            <NavDropdown
+            {/* <NavDropdown
               title={ 
                 <span className='text'>
                   <FontAwesomeIcon icon={faBell} className="bell-icon" /> Notifications
@@ -100,7 +102,28 @@ function Header(props) {
               }
               id='collasible-nav-dropdown'
               renderMenuOnMount={true}>
-            </NavDropdown>
+                <NavDropdown.Menu>
+                  Hello
+                </NavDropdown.Menu>
+            </NavDropdown> */}
+            <OverlayTrigger
+              trigger="click"
+              placement='bottom-end'
+              rootClose
+              overlay={
+                <Popover>
+                  <Popover.Body>
+                    <Notifications />
+                  </Popover.Body>
+                </Popover>
+              }
+            >
+              <Nav.Link>
+                <span className='text'>
+                  <FontAwesomeIcon icon={faBell} className="bell-icon" /> Notifications
+                </span>
+              </Nav.Link>
+            </OverlayTrigger>
             <NavDropdown 
               title={
                 <span className='text'>
