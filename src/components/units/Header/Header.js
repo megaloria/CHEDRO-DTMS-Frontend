@@ -111,8 +111,8 @@ function Header(props) {
               placement='bottom-end'
               rootClose
               overlay={
-                <Popover style={{ width: '276px' }}>
-                  <Popover.Header>
+                <Popover style={{ width: '276px' }} className='notifications'>
+                  <Popover.Header className='notif'>
                     Notifications
                   </Popover.Header>
                   <Popover.Body className='px-0'>

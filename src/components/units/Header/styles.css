@@ -67,3 +67,12 @@
 .changepass {
   width: fit-content;
 }
+
+.notif {
+  background-color: #cfe2ff !important;
+  color: #1a4f9e !important;
+}
+
+.notifications.bs-popover-bottom>.popover-arrow::after {
+border-bottom-color: #cfe2ff;
+}
