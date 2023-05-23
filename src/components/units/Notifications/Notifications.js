@@ -30,7 +30,7 @@ export default function Notifications() {
                     </div>
                     <div className={`${notifications.read_at ? '' : ''}`}>
                         <span className='time-notif'>
-                            {moment(notification.created_at).format('MMM DD, YYYY hh:mm A')} • <i> {moment(notification.created_at).fromNow()}</i>
+                            {moment(notification.created_at).format('MMM DD, YYYY hh:mm A')} &bull;<i> {moment(notification.created_at).fromNow()}</i>
                         </span> 
                     </div>
                 </div>
