@@ -382,7 +382,7 @@ function DocumentsUser() {
     const handleShowForward = (data = null) => {
 
         if (data.category.is_assignable) {
-            setOptions(users.filter(user => user.id !== 1).map(user => ({
+            setOptions(users.map(user => ({
                 value: user.id,
                 label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
             })));
@@ -391,7 +391,6 @@ function DocumentsUser() {
                 value: user.id,
                 label: `${user.profile.position_designation} - ${user.profile.first_name} ${user.profile.last_name}`
             })))
-            setIsSelectDisabled(true)
         }
 
 
