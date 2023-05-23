@@ -4,6 +4,7 @@ import { Alert, ListGroup, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faClock } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
+import './styles.css';
 
 export default function Notifications() {
     const [isLoading, setIsLoading] = useState(true);
@@ -25,15 +26,12 @@ export default function Notifications() {
             <>
                 <div>
                     <div>
-                        The document <b>{notification.data.document.tracking_no}</b> has been <b>forwarded</b> to you.
+                        The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded</span> to you.
                     </div>
-                    <div className={`mt-1 ${notifications.read_at ? '' : 'fw-bold'}`}>
-                        <div>
-                            {moment(notification.created_at).format('MMM DD, YYYY hh:mm A')}
-                        </div>
-                        <div>
-                            {moment(notification.created_at).fromNow()}
-                        </div>
+                    <div className={`${notifications.read_at ? '' : ''}`}>
+                        <span className='time-notif'>
+                            {moment(notification.created_at).format('MMM DD, YYYY hh:mm A')} {moment(notification.created_at).fromNow()}
+                        </span> 
                     </div>
                 </div>
                 {
