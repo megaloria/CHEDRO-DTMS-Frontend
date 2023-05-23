@@ -88,7 +88,7 @@ function DocumentView() {
                         log.acknowledge_id !== null && log.from_id === null ? <AcknowledgedUsersText key={log.id} users={[log?.acknowledge_user?.profile]} log={log} /> :
                             log.to_id !== null ? <ForwardedUsersText key={log.id} users={[log?.user?.profile]} /> 
                             : log.to_id === null && log.released_at !== null? <p>Document <span className='released-text'>Released</span></p>
-                            : log.to_id === null ? <p>Document <span className='for-releasing-text'>For Releasing</span></p> : null,
+                            : log.to_id === null && log.released_at === null ? <p>Document <span className='for-releasing-text'>For Releasing</span></p> : null,
             date: moment(log.created_at).format('MMMM DD, YYYY h:mm:ss A'),
             category: {
                 tag: log.assigned_user?.profile.name,
@@ -430,7 +430,8 @@ function DocumentView() {
                                                     document.logs[0]?.from_id !== null &&
                                                     document.logs[0]?.action_id !== null &&
                                                     document.logs[0]?.acknowledge_id === null &&
-                                                    document.logs[0]?.approved_id !== null)  ||
+                                                    document.logs[0]?.approved_id !== null &&
+                                                    document.logs[0]?.released_at === null)  ||
                                                     (document.logs[0].action_id !== null && 
                                                         document.logs[0].to_id === null) ? (
                                                     <Badge bg="success">For Releasing</Badge>
