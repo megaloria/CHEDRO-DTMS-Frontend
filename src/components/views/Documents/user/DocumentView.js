@@ -309,13 +309,13 @@ function DocumentView() {
                     </>
                 ),
                 date: moment(firstLog.created_at).format('MMMM DD, YYYY h:mm:ss A'),
-                category: {
-                    tag: '',
-                    color: '#6dedd4',
-                },
-                circleStyle: {
-                    borderColor: '#e17b77',
-                },
+                // category: {
+                //     tag: '',
+                //     color: '#6dedd4',
+                // },
+                // circleStyle: {
+                //     borderColor: '#e17b77',
+                // },
             });
         }
 
