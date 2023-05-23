@@ -5,11 +5,13 @@ import { Alert, ListGroup, Spinner } from 'react-bootstrap';
 export default function Notifications() {
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
-    const [notifications, setNotifications] = useState({ data: [] });
+    const [userNotifications, setUserNotifications] = useState({ data: [] });
+    const [profileNotifications, setProfileNotifications] = useState({ data: [] });
 
     useEffect(() => {
         apiClient.get('/notifications').then(response => {
-            setNotifications(response.data.data);
+            setUserNotifications(response.data.user_notifications);
+            setProfileNotifications(response.data.profile_notifications);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
@@ -31,7 +33,7 @@ export default function Notifications() {
         );
     }
 
-    if (notifications.data.length === 0) {
+    if (userNotifications.data.length === 0 && profileNotifications.data.length === 0) {
         return (
             <Alert variant='primary'>
                 No notifications found.
@@ -42,12 +44,21 @@ export default function Notifications() {
     return (
         <ListGroup variant='flush'>
             {
-                notifications.data.map(notification => (
+                userNotifications.data.map(notification => (
                     <ListGroup.Item key={notification.id} action>
                         The document {notification.data.document.tracking_no} has been forwarded to you.
                     </ListGroup.Item>
                 ))
             }
+            {
+                profileNotifications.data.map(notification => (
+                    <ListGroup.Item key={notification.id} action>
+                        The document {notification.data.document.tracking_no} has been forwarded to you.
+                    </ListGroup.Item>
+                ))
+            }
+                
+            
         </ListGroup>
     );
 }
