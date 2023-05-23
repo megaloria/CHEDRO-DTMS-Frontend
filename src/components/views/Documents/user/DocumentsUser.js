@@ -659,8 +659,10 @@ function DocumentsUser() {
                                                             row.logs[0]?.from_id !== null &&
                                                             row.logs[0]?.action_id !== null &&
                                                             row.logs[0]?.acknowledge_id === null &&
-                                                            row.logs[0]?.approved_id !== null) || 
-                                                            (row.logs[0].action_id !== null && loaderData.role.level === 2)  ? (
+                                                            row.logs[0]?.approved_id !== null &&
+                                                            row.logs[0]?.released_at === null) || 
+                                                            (row.logs[0].action_id !== null &&
+                                                                row.logs[0]?.released_at === null && loaderData.role.level === 2)  ? (
                                                             <Badge bg="success" style={{ cursor: '' }}>For Releasing</Badge>
                                                         ) :
                                                             (row.logs[0].approved_id !== null) ? (
