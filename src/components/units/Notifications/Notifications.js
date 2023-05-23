@@ -4,8 +4,12 @@ import { Alert, ListGroup, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircle, faClock } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
+import {
+    useRouteLoaderData, Link
+} from 'react-router-dom';
 
 export default function Notifications() {
+    const currentUser = useRouteLoaderData('user');
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
     const [notifications, setNotifications] = useState({ data: [] });
@@ -25,7 +29,14 @@ export default function Notifications() {
             <>
                 <div>
                     <div>
-                        The document <b>{notification.data.document.tracking_no}</b> has been <b>forwarded</b> to you.
+                    {   notification.type === "App\\Notifications\\DocumentForwarded" && notification.data.from.id === currentUser.id ? (
+                            <>The document <b>{notification.data.document.tracking_no}</b> has been <b>forwarded to </b> {notification.data.to.name}.</>
+                        ) : notification.type === "App\\Notifications\\DocumentForwarded" && notification.data.to.id === currentUser.id ? (
+                            <>The document <b>{notification.data.document.tracking_no}</b> has been <b>forwarded from </b> {notification.data.from.name}.</>
+                        ) : notification.type === "App\\Notifications\\DocumentAcknowledged"  ? (
+                            <>The document <b>{notification.data.document.tracking_no}</b> has been <b>acknowledged</b> by {notification.data.by.name}.</>
+                        )  : null
+                    }   
                     </div>
                     <div className={`mt-1 ${notifications.read_at ? '' : 'fw-bold'}`}>
                         <div>
@@ -81,7 +92,7 @@ export default function Notifications() {
             }}>
             {
                 notifications.data.map(notification => (
-                    <ListGroup.Item key={notification.id} action className={`d-flex justify-content-center align-items-center ${notification.read_at ? 'opacity-50' : ''}`}>
+                    <ListGroup.Item as={Link} to={`/documents/view/${notification.data.document.id}`} key={notification.id} action className={`d-flex justify-content-center align-items-center ${notification.read_at ? 'opacity-50' : ''}`}>
                         {renderNotification(notification)}
                     </ListGroup.Item>
                 ))
