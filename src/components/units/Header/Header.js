@@ -125,7 +125,11 @@ function Header(props) {
                 <span className='text'>
                   <span className='fa-layers fa-fw'>
                     <FontAwesomeIcon icon={faBell} size='lg' className="bell-icon" />
-                    <span className='fa-layers-counter fa-2x' >{loaderData.unread_notifications_count}</span>
+                    {
+                      loaderData.unread_notifications_count ? (
+                        <span className='fa-layers-counter fa-2x' >{loaderData.unread_notifications_count}</span>
+                      ) : null
+                    }
                   </span> Notifications
                 </span>
               </Nav.Link>

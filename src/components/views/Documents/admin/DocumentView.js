@@ -431,7 +431,7 @@ function DocumentView() {
                                                     document.logs[0]?.action_id !== null &&
                                                     document.logs[0]?.acknowledge_id === null &&
                                                     document.logs[0]?.approved_id !== null)  ||
-                                                    (document.logs[0]?.from_id === document.logs[0].action_id && 
+                                                    (document.logs[0].action_id !== null && 
                                                         document.logs[0].to_id === null) ? (
                                                     <Badge bg="success">For Releasing</Badge>
                                                 ) :
