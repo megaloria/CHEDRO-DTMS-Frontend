@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import apiClient from '../../../helpers/apiClient';
 import { Alert, ListGroup, Spinner } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircle, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faCircle } from '@fortawesome/free-solid-svg-icons';
 import moment from 'moment';
 import {
     useRouteLoaderData, Link
@@ -30,21 +30,19 @@ export default function Notifications() {
             <>
                 <div>
                     <div>
-                    {   notification.type === "App\\Notifications\\DocumentForwarded" && (notification.data.from.id === currentUser.id || (currentUser.role.level === 2 && (notification.data.to.name !== currentUser.profile.name))) ? (
+                    {   notification.type === "App\\Notifications\\DocumentForwarded" && (notification.data.from.id === currentUser.id || (currentUser.role.level <= 2 && (notification.data.to.name !== currentUser.profile.name))) ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded to</span> {notification.data.to.name}.</>
-                        ) : notification.type === "App\\Notifications\\DocumentForwarded" && notification.data.to.id === currentUser.id ? (
+                        ) : (notification.type === "App\\Notifications\\DocumentForwarded" && notification.data.to.id === currentUser.id) || currentUser.role.level <=2 ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded </span>from<b> {notification.data.from.name}</b>.</>
-                        ) : notification.type === "App\\Notifications\\DocumentAcknowledged"  ? (
+                        ) : notification.type === "App\\Notifications\\DocumentAcknowledged" || currentUser.role.level <=2  ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='ack-text'>acknowledged </span>by<b> {notification.data.by.name}</b>.</>
-                        ) : notification.type === "App\\Notifications\\DocumentActedOn"  ? (
+                        ) : notification.type === "App\\Notifications\\DocumentActedOn" || currentUser.role.level <=2  ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='act-approve-releasing-text'>acted </span>by <b> {notification.data.by.name}</b>.</>
-                        ) :  notification.type === "App\\Notifications\\DocumentApproved" && currentUser.profile.name === notification.data.by.name  ? (
-                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='act-approve-releasing-text'>approved </span> and <span className='forwarded-text'>forwarded</span> to <b> {notification.data.to.name}</b>.</>
-                        ) : notification.type === "App\\Notifications\\DocumentApproved"   ? (
+                        ) : notification.type === "App\\Notifications\\DocumentApproved" || currentUser.role.level <=2  ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='act-approve-releasing-text'>approved </span> by <b> {notification.data.by.name}</b>.</>
-                        ) : notification.type === "App\\Notifications\\DocumentRejected"  ? (
+                        ) : notification.type === "App\\Notifications\\DocumentRejected" || currentUser.role.level <=2  ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='reject-text'>rejected </span>by <b> {notification.data.by.name}</b>.</>
-                        ) : notification.type === "App\\Notifications\\DocumentReleased"  ? (
+                        ) : notification.type === "App\\Notifications\\DocumentReleased" ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='act-approve-releasing-text'>released</span>.</>
                         ) : null
                     }   

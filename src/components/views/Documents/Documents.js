@@ -660,14 +660,9 @@ function Documents() {
 
                 {
                     (
-                       ( row.logs[0]?.to_id === null &&
-                        row.logs[0]?.from_id !== null &&
-                        row.logs[0]?.action_id !== null &&
-                        row.logs[0]?.acknowledge_id === null &&
-                        row.logs[0]?.approved_id !== null &&
-                        row.logs[0]?.released_at === null) ||
-                        ((row.logs[0].action_id !== null && 
-                            row.logs[0].to_id === null))
+                       ( row.logs[0]?.to_id === null && row.logs[0].from_id !== null &&
+                        row.logs[0]?.from_user.position_designation !== 'Regional Director' &&
+                            row.logs[0]?.released_at === null)
                     ) && (
                         <Button variant="outline-success" size='sm' onClick={e => showReleaseAlert(row)}>
                             <FontAwesomeIcon icon={faCircleArrowUp} className="" /> Release
@@ -739,14 +734,9 @@ function Documents() {
                                                         (row.logs[0].released_at !== null) ? (
                                                             <Badge bg="primary">Done</Badge>
                                                         ) :
-                                                            (row.logs[0]?.to_id === null &&
-                                                                row.logs[0]?.from_id !== null &&
-                                                                row.logs[0]?.action_id !== null &&
-                                                                row.logs[0]?.acknowledge_id === null &&
-                                                                row.logs[0]?.approved_id !== null &&
-                                                                row.logs[0]?.released_at === null)  ||
-                                                                (row.logs[0].action_id !== null && 
-                                                                    row.logs[0].to_id === null) ? (
+                                                            (row.logs[0]?.to_id === null && row.logs[0].from_id !== null &&
+                                                                row.logs[0]?.from_user.position_designation !== 'Regional Director' &&
+                                                                    row.logs[0]?.released_at === null) ? (
                                                                 <Badge bg="success">For Releasing</Badge>
                                                             ) :
                                                                 (row.logs[0].approved_id !== null) ? (

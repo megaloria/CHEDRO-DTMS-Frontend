@@ -426,14 +426,9 @@ function DocumentView() {
                                             (document.logs[0].released_at !== null) ? (
                                                 <Badge bg="primary">Done</Badge>
                                             ) :
-                                                (document.logs[0]?.to_id === null &&
-                                                    document.logs[0]?.from_id !== null &&
-                                                    document.logs[0]?.action_id !== null &&
-                                                    document.logs[0]?.acknowledge_id === null &&
-                                                    document.logs[0]?.approved_id !== null &&
-                                                    document.logs[0]?.released_at === null)  ||
-                                                    (document.logs[0].action_id !== null && 
-                                                        document.logs[0].to_id === null) ? (
+                                                (document.logs[0]?.to_id === null && document.logs[0].from_id !== null &&
+                                                    document.logs[0]?.from_user.position_designation !== 'Regional Director' &&
+                                                        document.logs[0]?.released_at === null) ? (
                                                     <Badge bg="success">For Releasing</Badge>
                                                 ) :
                                                     (document.logs[0].approved_id !== null) ? (
