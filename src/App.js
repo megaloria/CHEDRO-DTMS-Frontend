@@ -5,7 +5,8 @@ import {
   Outlet,
   redirect,
   RouterProvider,
-  useLoaderData
+  useLoaderData,
+  useRouteLoaderData
 } from 'react-router-dom';
 import axios from 'axios';
 import Validator from 'validatorjs';
@@ -103,14 +104,10 @@ const router = createBrowserRouter([
           },
           {
             path: 'view/:documentId',
-            element: <AdminDocView />,
+            element: <UserView />,
             loader: getDocument
           },
-          {
-            path: 'user-view/:documentId',
-            element: <UserDocView />,
-            loader: getDocument
-          },
+          
         ]
       },
       {
@@ -189,6 +186,21 @@ function UserDocuments() {
           <Documents />
         ) : (
           <DocumentsUser />
+        )
+      }
+    </>
+  );
+}
+
+function UserView() {
+  let loaderData = useRouteLoaderData('user');
+  return (
+    <>
+      {
+        loaderData.role.level === 1 ? (
+          <AdminDocView />
+        ) : (
+          <UserDocView />
         )
       }
     </>
