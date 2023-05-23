@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import apiClient from '../../../helpers/apiClient';
 import { Alert, ListGroup, Spinner } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle, faClock } from '@fortawesome/free-solid-svg-icons';
+import moment from 'moment';
 
 export default function Notifications() {
     const [isLoading, setIsLoading] = useState(true);
@@ -17,9 +20,38 @@ export default function Notifications() {
         });
     }, []);
 
+    const renderNotification = notification => {
+        return (
+            <>
+                <div>
+                    <div>
+                        The document <b>{notification.data.document.tracking_no}</b> has been <b>forwarded</b> to you.
+                    </div>
+                    <div className={`mt-1 ${notifications.read_at ? '' : 'fw-bold'}`}>
+                        <div>
+                            {moment(notification.created_at).format('MMM DD, YYYY hh:mm A')}
+                        </div>
+                        <div>
+                            {moment(notification.created_at).fromNow()}
+                        </div>
+                    </div>
+                </div>
+                {
+                    !notification.read_at && (
+                        <div className='mx-2'>
+                            <FontAwesomeIcon icon={faCircle} size='xs' className='text-primary' />
+                        </div>
+                    )
+                }
+            </>
+        )
+    }
+
     if (isLoading) {
         return (
-            <Spinner />
+            <div className='mx-3'>
+                <Spinner size='sm' />
+            </div>
         );
     }
 
@@ -40,13 +72,26 @@ export default function Notifications() {
     }
 
     return (
-        <ListGroup variant='flush'>
+        <ListGroup variant='flush'
+            style={{
+                marginTop: '-1rem',
+                marginBottom: '-1rem',
+                borderBottomLeftRadius: '.5rem',
+                borderBottomRightRadius: '.5rem'
+            }}>
             {
                 notifications.data.map(notification => (
-                    <ListGroup.Item key={notification.id} action>
-                        The document {notification.data.document.tracking_no} has been forwarded to you.
+                    <ListGroup.Item key={notification.id} action className={`d-flex justify-content-center align-items-center ${notification.read_at ? 'opacity-50' : ''}`}>
+                        {renderNotification(notification)}
                     </ListGroup.Item>
                 ))
+            }
+            {
+                notifications.next_page_url && (
+                    <ListGroup.Item action style={{ textAlign: 'center' }}>
+                        Show more...
+                    </ListGroup.Item>
+                )
             }
         </ListGroup>
     );
