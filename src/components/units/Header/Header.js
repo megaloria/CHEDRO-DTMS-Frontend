@@ -111,8 +111,8 @@ function Header(props) {
               placement='bottom-end'
               rootClose
               overlay={
-                <Popover style={{ width: '276px' }}>
-                  <Popover.Header>
+                <Popover style={{ width: '276px' }} className='notifications'>
+                  <Popover.Header className='notif'>
                     Notifications
                   </Popover.Header>
                   <Popover.Body className='px-0'>
@@ -124,7 +124,7 @@ function Header(props) {
               <Nav.Link>
                 <span className='text'>
                   <span className='fa-layers fa-fw'>
-                    <FontAwesomeIcon icon={faBell} className="bell-icon" />
+                    <FontAwesomeIcon icon={faBell} size='lg' className="bell-icon" />
                     {
                       loaderData.unread_notifications_count ? (
                         <span className='fa-layers-counter fa-2x' >{loaderData.unread_notifications_count}</span>

@@ -7,6 +7,7 @@ import moment from 'moment';
 import {
     useRouteLoaderData, Link
 } from 'react-router-dom';
+import './styles.css';
 
 export default function Notifications() {
     const currentUser = useRouteLoaderData('user');
@@ -30,21 +31,18 @@ export default function Notifications() {
                 <div>
                     <div>
                     {   notification.type === "App\\Notifications\\DocumentForwarded" && notification.data.from.id === currentUser.id ? (
-                            <>The document <b>{notification.data.document.tracking_no}</b> has been <b>forwarded to </b> {notification.data.to.name}.</>
+                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded to</span> {notification.data.to.name}.</>
                         ) : notification.type === "App\\Notifications\\DocumentForwarded" && notification.data.to.id === currentUser.id ? (
-                            <>The document <b>{notification.data.document.tracking_no}</b> has been <b>forwarded from </b> {notification.data.from.name}.</>
+                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded from</span> {notification.data.from.name}.</>
                         ) : notification.type === "App\\Notifications\\DocumentAcknowledged"  ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <b>acknowledged</b> by {notification.data.by.name}.</>
                         )  : null
                     }   
                     </div>
-                    <div className={`mt-1 ${notifications.read_at ? '' : 'fw-bold'}`}>
-                        <div>
-                            {moment(notification.created_at).format('MMM DD, YYYY hh:mm A')}
-                        </div>
-                        <div>
-                            {moment(notification.created_at).fromNow()}
-                        </div>
+                    <div className={`${notifications.read_at ? '' : ''}`}>
+                        <span className='time-notif'>
+                            {moment(notification.created_at).format('MMM DD, YYYY hh:mm A')} &bull;<i> {moment(notification.created_at).fromNow()}</i>
+                        </span> 
                     </div>
                 </div>
                 {
