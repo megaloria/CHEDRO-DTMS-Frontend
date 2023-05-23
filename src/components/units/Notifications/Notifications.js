@@ -36,12 +36,12 @@ export default function Notifications() {
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded </span>from<b> {notification.data.from.name}</b>.</>
                         ) : notification.type === "App\\Notifications\\DocumentAcknowledged"  ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='ack-text'>acknowledged </span>by<b> {notification.data.by.name}</b>.</>
-                        )  : notification.type === "App\\Notifications\\DocumentActedOn"  ? (
+                        ) : notification.type === "App\\Notifications\\DocumentActedOn"  ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='act-approve-releasing-text'>acted </span>by <b> {notification.data.by.name}</b>.</>
-                        ) : notification.type === "App\\Notifications\\DocumentApproved"  ? (
-                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='act-approve-releasing-text'>approved </span>by <b> {notification.data.by.name}</b>.</>
-                        ) : notification.type === "App\\Notifications\\DocumentApproved" && currentUser.profile.name === notification.data.by.name  ? (
-                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='act-approve-releasing-text'>approved </span> and <span className='forwarded-text'>forwarded</span> to <b> {notification.data.by.name}</b>.</>
+                        ) :  notification.type === "App\\Notifications\\DocumentApproved" && currentUser.profile.name === notification.data.by.name  ? (
+                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='act-approve-releasing-text'>approved </span> and <span className='forwarded-text'>forwarded</span> to <b> {notification.data.to.name}</b>.</>
+                        ) : notification.type === "App\\Notifications\\DocumentApproved"   ? (
+                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='act-approve-releasing-text'>approved </span> by <b> {notification.data.by.name}</b>.</>
                         ) : notification.type === "App\\Notifications\\DocumentRejected"  ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='reject-text'>rejected </span>by <b> {notification.data.by.name}</b>.</>
                         ) : notification.type === "App\\Notifications\\DocumentReleased"  ? (
