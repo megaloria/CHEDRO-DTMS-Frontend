@@ -106,7 +106,9 @@ function Header(props) {
                   Hello
                 </NavDropdown.Menu>
             </NavDropdown> */}
-            <OverlayTrigger
+            {
+              !loaderData.is_first_login && (
+                <OverlayTrigger
               trigger="click"
               placement='bottom-end'
               rootClose
@@ -134,6 +136,9 @@ function Header(props) {
                 </span>
               </Nav.Link>
             </OverlayTrigger>
+              )
+            }
+            
             <NavDropdown 
               title={
                 <span className='text'>
@@ -142,13 +147,20 @@ function Header(props) {
               }
               id='collasible-nav-dropdown'
               renderMenuOnMount={true}>
+              {
+                !loaderData.is_first_login && (
+                  <>
+                    <NavDropdown.Item as={Link} to='update-password'>
+                      <FontAwesomeIcon
+                        icon={faKey}
+                        /> Change Password
+                    </NavDropdown.Item>
+                    <NavDropdown.Divider />
+                  </>
+                )
+              }
+              
 
-              <NavDropdown.Item as={Link} to='update-password'>
-                <FontAwesomeIcon
-                  icon={faKey}
-                  /> Change Password
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
               <NavDropdown.Item onClick={handleShow}>
                 <FontAwesomeIcon
                   icon={faDoorOpen}
