@@ -31,11 +31,11 @@ export default function Notifications() {
                 <div>
                     <div>
                     {   notification.type === "App\\Notifications\\DocumentForwarded" && notification.data.from.id === currentUser.id ? (
-                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded to</span> {notification.data.to.name}.</>
+                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded </span>to<b> {notification.data.to.name}</b>.</>
                         ) : notification.type === "App\\Notifications\\DocumentForwarded" && notification.data.to.id === currentUser.id ? (
-                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded from</span> {notification.data.from.name}.</>
+                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded </span>from<b> {notification.data.from.name}</b>.</>
                         ) : notification.type === "App\\Notifications\\DocumentAcknowledged"  ? (
-                            <>The document <b>{notification.data.document.tracking_no}</b> has been <b>acknowledged</b> by {notification.data.by.name}.</>
+                            <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='ack-text'>acknowledged </span>by<b> {notification.data.by.name}</b>.</>
                         )  : null
                     }   
                     </div>
