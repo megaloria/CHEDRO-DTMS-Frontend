@@ -1,63 +1,103 @@
-import React  from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-    Nav,
-    NavDropdown
+    Nav
 } from 'react-bootstrap';
 import {
     faGear,
     faFileLines,
     faUserGroup,
-    faCaretRight
+    faBuildingColumns,
+    faLandmarkFlag,
+    faSchoolFlag,
+    faFile,
+    faTag,
+    faUserTie,
+    faUsersLine
+    // faCaretRight
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    Link,
+    useLocation,
+    useRouteLoaderData
+} from 'react-router-dom';
+
 import './styles.css';
 
 function Sidebar() {
+    const [activeKey, setActiveKey] = useState('documents');
+    const location = useLocation();
+    let loaderData = useRouteLoaderData('user');
+
+    useEffect(() => {
+        let split = location.pathname.split('/');
+        if (split.length > 1) {
+            setActiveKey(split[1]);
+        }
+    }, [location]);
+
     return(
         <div>
-            <Nav defaultActiveKey='/home' className='flex'>
-                <Nav.Link  href='/document' className='flex1'>
+            <Nav defaultActiveKey='documents' className='flex' activeKey={activeKey}>
+                <Nav.Link eventKey='documents' as={Link} to='documents' className='flex1'>
                     <span style={{ color: 'white', fontSize: '15px' }}>
                         <FontAwesomeIcon icon={faFileLines} className='me-2' />Documents
                     </span>
                 </Nav.Link>
-                <Nav.Link href='/users' className='flex1'>
-                    <span style={{ color: 'white', fontSize: '15px' }}>
-                        <FontAwesomeIcon icon={faUserGroup} className='me-2' />Users
-                    </span>
-                </Nav.Link>
 
-                <NavDropdown
-                    title={
-                            <span style={{ color:'white', fontSize:'15px' }}>
-                                <FontAwesomeIcon icon={faGear} className='me-2' />Settings
-                            </span>
-                        }
-                    id='nav-dropdown'
-                    className='flex1'>
-                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item eventKey='4.1'> <FontAwesomeIcon icon={faCaretRight} className='me-2' /> 
-                            HEIs</NavDropdown.Item>
-                    </span>
-                        <NavDropdown.Divider />
+            {
+                loaderData.role.level === 1 && (
+                    <>
+                            <Nav.Link eventKey='users' as={Link} to='users' className='flex1'>
+                                <span style={{ color: 'white', fontSize: '15px' }}>
+                                    <FontAwesomeIcon icon={faUserGroup} className='me-2' />Users
+                                </span>
+                            </Nav.Link>
+                            <Nav.Link eventKey='settings' className='flex1' onClick={e => setActiveKey('settings')}>
+                                <span style={{ color: 'white', fontSize: '15px' }}>
+                                    <FontAwesomeIcon icon={faGear} className={`me-2 ${activeKey === 'settings' ? 'gear-rotate' : ''}`} />Settings
+                                </span>
+                            </Nav.Link>
 
-                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item eventKey='4.2'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
-                            Document Types</NavDropdown.Item>
-                    </span>
-                        <NavDropdown.Divider />
+                            <Nav className={`dropdown-menu-container ${activeKey === 'settings' ? 'open' : ''} flex-column`}>
+                                <Nav.Link eventKey='heis' as={Link} to='settings/heis' className='flex2'>
+                                    <FontAwesomeIcon className='me-2' icon={faBuildingColumns} />
+                                    HEIs
+                                </Nav.Link>
+                                <Nav.Link eventKey='ngas' as={Link} to='settings/ngas' className='flex2'>
+                                    <FontAwesomeIcon className='me-2' icon={faLandmarkFlag} />
+                                    NGAs
+                                </Nav.Link>
+                                <Nav.Link eventKey='ched-offices' as={Link} to='settings/ched-offices' className='flex2'>
+                                    <FontAwesomeIcon className='me-2' icon={faSchoolFlag} />
+                                    CHED Offices
+                                </Nav.Link>
+                                {/* <NavDropdown.Divider /> */}
+                                <hr style={{ color: 'white', margin: '0 0 0 -1rem' }} />
+                                <Nav.Link eventKey='document-types' as={Link} to='settings/document-types' className='flex2'>
+                                    <FontAwesomeIcon className='me-2' icon={faFile} />
+                                    Document Types
+                                </Nav.Link>
+                                <Nav.Link eventKey='categories' as={Link} to='settings/categories' className='flex2'>
+                                    <FontAwesomeIcon className='me-2' icon={faTag} />
+                                    Categories
+                                </Nav.Link>
+                                <hr style={{ color: 'white', margin: '0 0 0 -1rem' }} />
+                                <Nav.Link eventKey='roles' as={Link} to='settings/roles' className='flex2'>
+                                    <FontAwesomeIcon className='me-2' icon={faUserTie} />
+                                    Roles
+                                </Nav.Link>
+                                <Nav.Link eventKey='divisions' as={Link} to='settings/divisions' className='flex2'>
+                                    <FontAwesomeIcon className='me-2' icon={faUsersLine} />
+                                    Divisions
+                                </Nav.Link>
+                            </Nav>
+                    </>
+                )
+            }
 
-                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item eventKey='4.3'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
-                            Roles</NavDropdown.Item>
-                    </span>
-                        <NavDropdown.Divider />
 
-                    <span style={{ color: 'black', fontSize: '15px', display:'flex'}}>
-                        <NavDropdown.Item eventKey='4.4'> <FontAwesomeIcon icon={faCaretRight} className='me-2' />
-                            Divisions</NavDropdown.Item>
-                    </span>
-                </NavDropdown>
+                
             </Nav>
         </div>
     );

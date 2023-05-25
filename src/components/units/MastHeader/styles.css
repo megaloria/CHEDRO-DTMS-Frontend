@@ -1,7 +1,7 @@
 .Mastheader {
     background-color:#0c2245;
     width: auto;
-    display: flex;
+    /* display: flex; */
 }
 
 .logo {
