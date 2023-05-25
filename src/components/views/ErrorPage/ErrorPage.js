@@ -12,7 +12,6 @@ function ErrorPage() {
 			<Row className='justify-content-center mt-5'>
 				<img style={{ width: '500px', height: 'auto' }} src={img} alt='404' />
 			</Row>
-
 			<Row className='mt-2'>
 				<h1 className='Oops' style={{ fontSize: '90px' }}><b> Oops!</b></h1>
 				<h3> Page Not Found </h3>
