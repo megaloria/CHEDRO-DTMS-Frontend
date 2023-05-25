@@ -1,0 +1,30 @@
+.maindiv {
+    height: auto;
+    width: auto;
+    background-color: #fff;
+  }
+  
+  .container1 {
+    border-color: black 10px solid;
+    height: 100%;
+  }
+  
+  .p-3{
+    margin: auto;
+  } 
+  
+  input[type=password].form-control.is-invalid {
+    background-position: right calc(0.375em + 0.1875rem + 2rem) center;
+  }
+
+  .icon-span {
+    position: absolute;
+    box-sizing: border-box;
+    top: 0%;
+    bottom: 0%;
+    right: 11px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    height: calc(3.5rem + 2px);
+  }

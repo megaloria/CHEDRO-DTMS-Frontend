@@ -1,0 +1,44 @@
+.Mastheader {
+    background-color:#0c2245;
+    width: auto;
+    /* display: flex; */
+}
+
+.logo {
+    padding-top: 1%;
+    padding-bottom: 1%;
+    padding-left: 5%;
+    
+}
+
+.header-p {
+    padding-top: 2%;
+    padding-left: 0.5%;
+    color: rgb(255, 255, 255);
+}
+
+.republic {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 15px;
+    border-bottom: 1px solid ;
+}
+
+.president {
+    font-size: 12px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.ched {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.office {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: gold;
+}
+
+

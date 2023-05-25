@@ -1,0 +1,29 @@
+.maindiv {
+  height: 100vh;
+  width: auto;
+  background-color: #0C2245;
+}
+
+.container1 {
+  height: 100%;
+}
+
+.p-3 {
+  margin: auto;
+} 
+
+.logo {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.icon-span {
+  position: absolute;
+  box-sizing: border-box;
+  top: 0%;
+  bottom: 0%;
+  right: 11px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
