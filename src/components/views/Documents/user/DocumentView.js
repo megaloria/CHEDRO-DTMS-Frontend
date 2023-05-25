@@ -156,6 +156,7 @@ function DocumentView() {
                 text: response.data.message,
                 icon: 'success'
             })
+            handleCloseAction();
         }).catch(error => {
             Swal.fire({
                 title: 'Error',
@@ -164,7 +165,6 @@ function DocumentView() {
             });
         }).finally(() => {
             setIsDisabled(false)
-            handleCloseAction();
         });
     };
 
@@ -198,6 +198,7 @@ function DocumentView() {
                 text: response.data.message,
                 icon: 'success'
             })
+            handleCloseApprove();
         }).catch(error => {
             Swal.fire({
                 title: 'Error',
@@ -206,7 +207,6 @@ function DocumentView() {
             });
         }).finally(() => {
             setIsDisabled(false)
-            handleCloseApprove();
         });
     };
 
@@ -238,6 +238,7 @@ function DocumentView() {
                 text: response.data.message,
                 icon: 'success'
             })
+            handleCloseReject();
         }).catch(error => {
             Swal.fire({
                 title: 'Error',
@@ -246,7 +247,6 @@ function DocumentView() {
             });
         }).finally(() => {
             setIsDisabled(false)
-            handleCloseReject();
         });
     };
 
@@ -467,11 +467,11 @@ function DocumentView() {
             })
             handleHideModal();
             setIsSelectDisabled(false)
+            handleHideModal();
         }).catch(error => {
             setForwardError(error);
         }).finally(() => {
             setIsDisabled(false)
-            handleHideModal();
         });
     };
 
@@ -819,10 +819,10 @@ function DocumentView() {
                                                                     >
                                                                         <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
                                                                     </OverlayTrigger>
-                                                                ) : null
+                                                                ) : <Badge bg="primary">Received</Badge>
                                         }
                                     </>
-                                ) : <Badge bg="secondary">Released</Badge>}
+                                ) : <Badge bg="primary">Received</Badge>}
                             </Col>
                         </Row>
 

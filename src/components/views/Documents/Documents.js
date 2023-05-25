@@ -604,7 +604,6 @@ function Documents() {
         }).finally(() => {
             setIsDisabled(false)
             setIsSelectDisabled(false);
-            handleHideModal();
         });
     };
 
@@ -859,7 +858,7 @@ function Documents() {
                                                                                 <Badge bg="primary">Received</Badge>
                                                                             )}
                                                 </>
-                                            ) : null}
+                                            ) : <Badge bg="primary">Received</Badge>}
                                         </td>
 
                                         <td style={{ whiteSpace: 'nowrap' }}>

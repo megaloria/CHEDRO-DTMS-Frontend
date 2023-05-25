@@ -248,7 +248,6 @@ function DocumentView() {
             setForwardError(error);
         }).finally(() => {
             setIsDisabled(false)
-            handleHideModal();
         });
     };
 
@@ -550,7 +549,7 @@ function DocumentView() {
                                                                     <Badge bg="primary">Received</Badge>
                                                                 )}
                                     </>
-                                ) : null}
+                                ) : <Badge bg="primary">Received</Badge>}
                             </Col>
                         </Row>
 

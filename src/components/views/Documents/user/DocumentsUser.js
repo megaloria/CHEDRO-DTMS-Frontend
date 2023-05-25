@@ -207,6 +207,7 @@ function DocumentsUser() {
                 text: response.data.message,
                 icon: 'success'
             })
+            handleCloseReject();
         }).catch(error => {
             Swal.fire({
                 title: 'Error',
@@ -215,7 +216,6 @@ function DocumentsUser() {
             });
         }).finally(() => {
             setIsDisabled(false)
-            handleCloseReject();
         });
     };
 
@@ -279,6 +279,7 @@ function DocumentsUser() {
                 text: response.data.message,
                 icon: 'success'
             })
+            handleCloseAction();
         }).catch(error => {
             Swal.fire({
                 title: 'Error',
@@ -287,7 +288,6 @@ function DocumentsUser() {
             });
         }).finally(() => {
             setIsDisabled(false)
-            handleCloseAction();
         });
     };
 
@@ -483,12 +483,12 @@ function DocumentsUser() {
                 text: response.data.message,
                 icon: 'success'
             })
+            handleHideModal();
         }).catch(error => {
             setForwardError(error);
         }).finally(() => {
             setIsDisabled(false)
             setIsSelectDisabled(false);
-            handleHideModal();
         });
     };
 
@@ -536,6 +536,7 @@ function DocumentsUser() {
                 text: response.data.message,
                 icon: 'success'
             })
+            handleCloseApprove();
         }).catch(error => {
             Swal.fire({
                 title: 'Error',
@@ -544,7 +545,6 @@ function DocumentsUser() {
             });
         }).finally(() => {
             setIsDisabled(false)
-            handleCloseApprove();
         });
     };
 
@@ -799,11 +799,11 @@ function DocumentsUser() {
                                                                                 >
                                                                                     <Badge bg="warning" style={{ cursor: 'pointer' }}>Forwarded from</Badge>
                                                                                 </OverlayTrigger>
-                                                                            ) : null
+                                                                            ) : <Badge bg="primary">Received</Badge>
 
                                                     }
                                                 </>
-                                            ) : <Badge bg="secondary">Released</Badge>}
+                                            ) : <Badge bg="primary">Received</Badge>}
                                         </td>
 
                                         <td style={{ whiteSpace: 'nowrap' }}>
