@@ -32,7 +32,8 @@ import {
     faUserCheck,
     faQuoteRight,
     faEdit,
-    faThumbsUp
+    faThumbsUp,
+    faCircleArrowUp
 } from '@fortawesome/free-solid-svg-icons'
 import {
     Link, useLoaderData, useLocation
@@ -56,6 +57,7 @@ function DocumentView() {
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const [timelineData, setTimelineData] = useState([]);
+    const date_released = moment().format('YYYY-MM-DD');
 
     const [modal, setModal] = useState({ //modal variables
         show: false,
@@ -285,6 +287,40 @@ function DocumentView() {
         });
     };
 
+    //RELEASE
+    const showReleaseAlert = document => {
+        setIsDisabled(true)
+        Swal.fire({
+            title: `Are you sure you want to Release the document no."${document.tracking_no}"?`,
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#198754',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, Release it!',
+            reverseButtons: true,
+            showLoaderOnConfirm: true,
+            preConfirm: () => {
+                return apiClient.post(`/document/${document.id}/release`, { date_released }).then(response => {
+                    setDocument(response.data.data)
+                    Swal.fire({
+                        title: 'Success',
+                        text: response.data.message,
+                        icon: 'success'
+                    });
+                }).catch(error => {
+                    Swal.fire({
+                        title: 'Error',
+                        text: error,
+                        icon: 'error'
+                    });
+                }).finally(() => {
+                    setIsDisabled(false)
+                });
+            }
+        });
+    };
+
     const handleShowModal = (data = null) => {
 
         if (data.category.is_assignable) {
@@ -375,6 +411,17 @@ function DocumentView() {
                             </>
                         )
                     }
+                    {
+                    (
+                       ( document.logs[0]?.to_id === null && document.logs[0].from_id !== null &&
+                        document.logs[0]?.from_user.position_designation !== 'Regional Director' &&
+                        document.logs[0]?.released_at === null)
+                    ) && (
+                        <Button variant="outline-success" className="ms-2" onClick={e => showReleaseAlert(document)}>
+                            <FontAwesomeIcon icon={faCircleArrowUp} /> <span className='d-none d-md-inline-block'>Release</span>
+                        </Button>
+                    )
+                }
                 </div>
             </div>
 
