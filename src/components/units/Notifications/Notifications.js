@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import './styles.css';
 
-export default function Notifications() {
+export default function Notifications({ onChangeNotificationsCount }) {
     const currentUser = useRouteLoaderData('user');
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
@@ -21,6 +21,7 @@ export default function Notifications() {
     useEffect(() => {
         apiClient.get('/notifications').then(response => {
             setNotifications(response.data.data);
+            onChangeNotificationsCount(response.data.data.unread_notifications_count);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
