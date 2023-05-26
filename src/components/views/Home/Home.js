@@ -46,16 +46,16 @@ window.Echo = new Echo({
   },
 });
 
-  if (Notification.permission !== 'granted') {
-    Notification.requestPermission();
-  }
-
 export default function Home() {
 
   const loaderData = useRouteLoaderData('user');
 
   if (loaderData.is_first_login) {
     return <Navigate to='/change-password' />
+  }
+
+  if (Notification.permission !== 'granted') {
+    Notification.requestPermission();
   }
 
   return (
