@@ -26,6 +26,8 @@ import apiClient from '../../../helpers/apiClient';
 import Notifications from '../Notifications/Notifications';
 import chedLogo from '../../../assets/ched-logo.png';
 
+import notifSound from '../../../assets/notification.wav';
+
 function Header(props) {
 
   let loaderData = useRouteLoaderData('user') ?? props.user;
@@ -79,27 +81,36 @@ function Header(props) {
       if(!("Notification" in window)) {
         console.log("This browser does not support system notifications!")
       } else if (Notification.permission === "granted") {
-        const notification = new Notification("New notification from DTMS", {
-          icon: chedLogo,
-          body: `You have a new notification`
-        });
-        notification.onclick = ()=> function() {
-          window.open("http://localhost:3000/chat")
+        window.document.onvisibilitychange = () => {
+          if (window.document.hidden) {
+            const notification = new Notification("New notification from DTMS", {
+              icon: chedLogo,
+              body: `You have a new notification on document ${e.document.tracking_no}`
+            });
+            notification.onclick = ()=> function() {
+              window.open(`${process.env['REACT_APP_URL']}/documents/view/${e.document.id}`);
+            }
+          }
         }
-      }else if (Notification.permission !== "denied") {
+      } else if (Notification.permission !== "denied") {
          Notification.requestPermission((permission)=> {
             if (permission === "granted") {
-              const notification = new Notification("New notification from DTMS", {
-                icon: chedLogo,
-                body: `You have a new notification`
-              })
-              notification.onclick = ()=> function() {
-                window.open("http://localhost:3000/chat")
+              window.document.onvisibilitychange = () => {
+                if (window.document.hidden) {
+                  const notification = new Notification("New notification from DTMS", {
+                    icon: chedLogo,
+                    body: `You have a new notification on document ${e.document.tracking_no}`
+                  });
+                  notification.onclick = ()=> function() {
+                    window.open(`${process.env['REACT_APP_URL']}/documents/view/${e.document.id}`);
+                  }
+                }
               }
             }
          });
       }
 
+      (new Audio(notifSound)).play();
       setNewNotificationsCount(e.unread_notifications_count);
         setNewNotification(true);
         setTimeout(() => {
