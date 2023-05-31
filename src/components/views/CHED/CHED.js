@@ -314,7 +314,7 @@ function CHED() {
                 <div>
                     <div className='d-md-flex mb-3 justify-content-end'>
                         <div className='search'>
-                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
+                            <Form className="d-flex" onSubmit={handleSearch}>
                                 <Form.Control
                                     type="search"
                                     placeholder="Search"
@@ -351,7 +351,7 @@ function CHED() {
                                 <Spinner animation='border' />
                             </div>
                         </div>
-                        <div class="table-responsive">
+                        <div className="table-responsive">
                             <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
                                 <thead className='table-primary'>
                                     <tr>

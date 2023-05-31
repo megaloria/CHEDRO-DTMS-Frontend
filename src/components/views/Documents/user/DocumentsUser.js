@@ -43,7 +43,7 @@ function DocumentsUser() {
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [forwardError, setForwardError] = useState('');
-    const [data, setData] = useState([]);
+    const [data, setData] = useState({ data: [] });
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [options, setOptions] = useState([]);
@@ -116,6 +116,27 @@ function DocumentsUser() {
             setIsLoading(false);
         });
     }, [activeTab]);
+
+    if (window.Echo) {
+        window.Echo.channel(`private-user.${loaderData.id}`)
+        .notification((e) => {
+            let newData = [...data.data].map(d => {
+                if (d.id === e.document.id){
+                    return {
+                        ...d,
+                        ...e.document
+                    };
+                }
+
+                return {...d};
+            });
+
+            setData({
+                ...data,
+                data: newData
+            });
+        });
+      }
 
     // useEffect(() => {
     //     if (modal.data) {
@@ -864,7 +885,7 @@ function DocumentsUser() {
                 <div>
                     <div className='d-md-flex mb-3 justify-content-end'>
                         <div className="search">
-                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
+                            <Form className="d-flex" onSubmit={handleSearch}>
                                 <Form.Control
                                     type="search"
                                     placeholder="Search"

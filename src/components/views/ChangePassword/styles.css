@@ -13,7 +13,7 @@
     margin: auto;
   } 
   
-  input[type=password].form-control.is-invalid {
+  input[type=password].form-control.is-invalid:has(+ .icon-span) {
     background-position: right calc(0.375em + 0.1875rem + 2rem) center;
   }
 
