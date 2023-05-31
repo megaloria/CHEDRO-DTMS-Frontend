@@ -51,7 +51,13 @@ function Header(props) {
         timer: 1500
       })
 
-      navigate('/')
+      if (window.Pusher) {
+        window.Pusher = null;
+      }
+      if (window.Echo) {
+        window.Echo = null;
+      }
+      navigate('/');
 
     }).catch(error => {
 
@@ -75,7 +81,8 @@ function Header(props) {
     </Tooltip>
   );
 
-  window.Echo.channel(`private-user.${loaderData.id}`)
+  if (window.Echo) {
+    window.Echo.channel(`private-user.${loaderData.id}`)
     .notification((e) => {
 
       if(!("Notification" in window)) {
@@ -117,6 +124,7 @@ function Header(props) {
           setNewNotification(false);
         }, 1000)
     });
+  }
 
   return (
    <>
