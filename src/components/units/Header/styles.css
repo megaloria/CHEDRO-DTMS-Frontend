@@ -20,7 +20,7 @@
   transition: transform 0.2s ease-in-out;
 }
 
-.text:hover .bell-icon {
+.text:hover .bell-icon, .text.active .bell-icon {
   animation: bell-animation 0.5s ease-in-out forwards;
   transform: translateX(-5px);
   color: #ffc107;

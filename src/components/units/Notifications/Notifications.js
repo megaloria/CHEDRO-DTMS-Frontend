@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import './styles.css';
 
-export default function Notifications() {
+export default function Notifications({ onChangeNotificationsCount }) {
     const currentUser = useRouteLoaderData('user');
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
@@ -21,12 +21,13 @@ export default function Notifications() {
     useEffect(() => {
         apiClient.get('/notifications').then(response => {
             setNotifications(response.data.data);
+            onChangeNotificationsCount(response.data.data.unread_notifications_count);
         }).catch(error => {
             setErrorMessage(error);
         }).finally(() => {
             setIsLoading(false);
         });
-    }, []);
+    }, [onChangeNotificationsCount]);
 
     const handleShowMore = () => {
         setIsNextPageLoading(true);
@@ -50,6 +51,16 @@ export default function Notifications() {
         return (
             <>
                 <div>
+                    <div> 
+                        {
+                            (notification.data.document.category?.description === "Confidential") ?
+                                <span className='confidential-text'>Confidential</span> :
+                            (notification.data.document.category?.description === "Urgent") ?
+                                <span className='reject-text'>Urgent</span> : 
+                                (notification.data.document.category?.description === "Ordinary") ?
+                                <span className='act-approve-releasing-text'> Ordinary </span> : null
+                        }
+                    </div>  
                     <div>
                     {   ((notification.type === "App\\Notifications\\DocumentForwarded") && (notification.data?.from?.id === currentUser?.id || (currentUser.role.level <= 2 && notification.data?.to?.id !== currentUser?.id))) ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded to</span> <b>{notification.data.to?.name}</b>.</>
@@ -105,7 +116,7 @@ export default function Notifications() {
 
     if (notifications.data.length === 0) {
         return (
-            <Alert variant='primary'>
+            <Alert variant='primary' className='mx-3 mb-0'>
                 No notifications found.
             </Alert>
         );

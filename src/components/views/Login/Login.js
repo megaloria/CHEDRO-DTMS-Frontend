@@ -121,10 +121,9 @@ function Login() {
                                     <Form.Group
                                         className='mb-3'
                                         value={values.username}
-                                        controlId='formGridusername'
                                         onChange={handleChange}>
 
-                                        <FloatingLabel size="sm" controlId="floatingusername" label="Username">
+                                        <FloatingLabel size="sm" label="Username">
                                             <Form.Control
                                                 type="text"
                                                 placeholder="username"
@@ -141,10 +140,9 @@ function Login() {
                                     <Form.Group
                                         className='mb-3'
                                         value={values.password}
-                                        controlId='formGridpassword'
                                         onChange={handleChange}>
 
-                                        <FloatingLabel controlId="floatingPassword" label="Password">
+                                        <FloatingLabel label="Password">
                                             <Form.Control
                                                 type={passwordType}
                                                 placeholder="Password"
@@ -158,9 +156,7 @@ function Login() {
                                             </Form.Control.Feedback>
                                         </FloatingLabel>
                                     </Form.Group>
-                                    <Form.Group
-                                        className='mb-3'
-                                        controlId='rememberPassword'>
+                                    <Form.Group className='mb-3'>
                                         <Form.Check
                                             type='checkbox'
                                             label='Remember password' />

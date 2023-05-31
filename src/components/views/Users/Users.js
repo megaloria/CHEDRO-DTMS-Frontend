@@ -8,7 +8,6 @@ import {
     Modal,
     Row,
     Table,
-    InputGroup,
     Pagination,
     Spinner
 } from 'react-bootstrap';
@@ -74,6 +73,7 @@ function Users() {
         prefix: '',
         suffix: '',
         position_designation: '',
+        email: ''
     });
 
     const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
@@ -86,6 +86,7 @@ function Users() {
         prefix: '',
         suffix: '',
         position_designation: '',
+        email: ''
     });
 
     useEffect(() => {
@@ -112,10 +113,11 @@ function Users() {
             role_id: 'required|integer|min:1',
             first_name: 'required|string|min:1',
             middle_name: 'string|min:2',
-            last_name: 'required|string|min:4',
+            last_name: 'required|string|min:2',
             prefix: 'string|min:2',
             suffix: 'string|min:2',
             position_designation: 'required|string|min:2',
+            email: 'required|string'
         });
 
         if (validation.fails()) {
@@ -129,6 +131,7 @@ function Users() {
                 prefix: validation.errors.first('prefix'),
                 suffix: validation.errors.first('suffix'),
                 position_designation: validation.errors.first('position_designation'),
+                email: validation.errors.first('email'),
             });
             return;
         } else {
@@ -142,6 +145,7 @@ function Users() {
                 prefix: '',
                 suffix: '',
                 position_designation: '',
+                email: ''
             });
         }
 
@@ -267,11 +271,12 @@ function Users() {
                 username: data.username,
                 role_id: data.role_id,
                 first_name: data.profile.first_name,
-                middle_name: data.profile.middle_name,
+                middle_name: data.profile.middle_name ?? '',
                 last_name: data.profile.last_name,
-                prefix: data.profile.prefix,
-                suffix: data.profile.suffix,
+                prefix: data.profile.prefix ?? '',
+                suffix: data.profile.suffix ?? '',
                 position_designation: data.profile.position_designation,
+                email: data.profile.email,
             });
         }
 
@@ -292,6 +297,7 @@ function Users() {
             prefix: '',
             suffix: '',
             position_designation: '',
+            email: '',
         });
         setModal({
             show: false,
@@ -387,7 +393,7 @@ function Users() {
         if (data !== null) {
             setformInputPass({
                 ...formInputPass,
-                reset_password: data.reset_password,
+                reset_password: data.reset_password ?? '',
             });
         }
 
@@ -475,7 +481,7 @@ function Users() {
                 <div>
                     <div className='d-md-flex mb-3 justify-content-end'>
                         <div className="search">
-                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
+                            <Form className="d-flex" onSubmit={handleSearch}>
                                 <Form.Control
                                     type="search"
                                     placeholder="Search"
@@ -518,6 +524,7 @@ function Users() {
                                     <th>Username</th>
                                     <th>Role</th>
                                     <th>Position/Designation</th>
+                                    <th>Email</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -529,6 +536,7 @@ function Users() {
                                             <td>{row.username}</td>
                                             <td>{getRoleDescription(row.role_id)}</td>
                                             <td>{row.profile.position_designation}</td>
+                                            <td>{row.profile.email}</td>
                                             <td>
                                                 <Button onClick={e => handleShowModal(row)} variant='link'>
                                                     <FontAwesomeIcon icon={faEdit} className='text-primary' />
@@ -582,7 +590,7 @@ function Users() {
                     <Modal.Body>
                         <Row className='mb-2'>
                             <Col>
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Username</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -602,21 +610,19 @@ function Users() {
                             {
                                 !modal.data && (
                                     <Col>
-                                        <Form.Group className='mb-2' controlId=''>
+                                        <Form.Group className='mb-2'>
                                             <Form.Label>Password</Form.Label>
-                                            <InputGroup>
-                                                <Form.Control
-                                                    type='password'
-                                                    onChange={handleInputChange}
-                                                    value={formInputs.password}
-                                                    name='password'
-                                                    placeholder='Enter Password'
-                                                    isInvalid={!!formErrors.password}
-                                                />
-                                                <Form.Control.Feedback type='invalid'>
-                                                    {formErrors.password}
-                                                </Form.Control.Feedback>
-                                            </InputGroup>
+                                            <Form.Control
+                                                type='password'
+                                                onChange={handleInputChange}
+                                                value={formInputs.password}
+                                                name='password'
+                                                placeholder='Enter Password'
+                                                isInvalid={!!formErrors.password}
+                                            />
+                                            <Form.Control.Feedback type='invalid'>
+                                                {formErrors.password}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
                                     </Col>
                                 )
@@ -625,7 +631,7 @@ function Users() {
                             <Row className='d-md-none'> </Row>
 
                             <Col>
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Role</Form.Label>
                                     <Form.Select
                                         aria-label='Default select example'
@@ -667,7 +673,7 @@ function Users() {
                             <Row className='d-md-none'> </Row>
 
                             <Col>
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Middle Name</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -685,7 +691,7 @@ function Users() {
                             <Row className='d-md-none'> </Row>
 
                             <Col>
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Last Name</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -703,7 +709,7 @@ function Users() {
                         <Row className='justify-content-md'>
 
                             <Col >
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Prefix</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -719,7 +725,7 @@ function Users() {
                             </Col>
 
                             <Col >
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Suffix</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -737,7 +743,7 @@ function Users() {
                             <Row className='d-md-none'> </Row>
 
                             <Col >
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Position/Designation</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -752,6 +758,24 @@ function Users() {
                                 </Form.Group>
                             </Col>
 
+                        </Row>
+
+                        <Row>
+                            <Col >
+                                <Form.Group className='mb-2'>
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        type='email'
+                                        placeholder='Enter Email'
+                                        name='email'
+                                        value={formInputs.email}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.email} />
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.email}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Col>
                         </Row>
 
                     </Modal.Body>
