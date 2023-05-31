@@ -450,7 +450,7 @@ function Heis() {
                         <Modal.Body>
                             <Row>
                                 <Col md={3}>
-                                    <Form.Group className='mb-2' controlId=''>
+                                    <Form.Group className='mb-2'>
                                         <Form.Label>UII</Form.Label>
                                         <Form.Control
                                             type='text'
@@ -483,7 +483,7 @@ function Heis() {
 
                             <Row>
                                 <Col>
-                                    <Form.Group className='mb-2' controlId=''>
+                                    <Form.Group className='mb-2'>
                                         <Form.Label>Street/Barangay</Form.Label>
                                         <Form.Control
                                             type='text'
@@ -519,7 +519,7 @@ function Heis() {
 
                             <Row>
                                 <Col>
-                                    <Form.Group className='mb-2' controlId=''>
+                                    <Form.Group className='mb-2'>
                                         <Form.Label>Province</Form.Label>
                                         <Form.Control
                                             type='text'
@@ -555,7 +555,7 @@ function Heis() {
 
                             <Row>
                                 <Col>
-                                    <Form.Group className='mb-2' controlId=''>
+                                    <Form.Group className='mb-2'>
                                         <Form.Label>Email</Form.Label>
                                         <Form.Control
                                             type='text'

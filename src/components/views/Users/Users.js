@@ -8,7 +8,6 @@ import {
     Modal,
     Row,
     Table,
-    InputGroup,
     Pagination,
     Spinner
 } from 'react-bootstrap';
@@ -482,7 +481,7 @@ function Users() {
                 <div>
                     <div className='d-md-flex mb-3 justify-content-end'>
                         <div className="search">
-                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
+                            <Form className="d-flex" onSubmit={handleSearch}>
                                 <Form.Control
                                     type="search"
                                     placeholder="Search"
@@ -591,7 +590,7 @@ function Users() {
                     <Modal.Body>
                         <Row className='mb-2'>
                             <Col>
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Username</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -611,7 +610,7 @@ function Users() {
                             {
                                 !modal.data && (
                                     <Col>
-                                        <Form.Group className='mb-2' controlId=''>
+                                        <Form.Group className='mb-2'>
                                             <Form.Label>Password</Form.Label>
                                             <Form.Control
                                                 type='password'
@@ -632,7 +631,7 @@ function Users() {
                             <Row className='d-md-none'> </Row>
 
                             <Col>
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Role</Form.Label>
                                     <Form.Select
                                         aria-label='Default select example'
@@ -674,7 +673,7 @@ function Users() {
                             <Row className='d-md-none'> </Row>
 
                             <Col>
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Middle Name</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -692,7 +691,7 @@ function Users() {
                             <Row className='d-md-none'> </Row>
 
                             <Col>
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Last Name</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -710,7 +709,7 @@ function Users() {
                         <Row className='justify-content-md'>
 
                             <Col >
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Prefix</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -726,7 +725,7 @@ function Users() {
                             </Col>
 
                             <Col >
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Suffix</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -744,7 +743,7 @@ function Users() {
                             <Row className='d-md-none'> </Row>
 
                             <Col >
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Position/Designation</Form.Label>
                                     <Form.Control
                                         type='text'
@@ -763,7 +762,7 @@ function Users() {
 
                         <Row>
                             <Col >
-                                <Form.Group className='mb-2' controlId=''>
+                                <Form.Group className='mb-2'>
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control
                                         type='email'
