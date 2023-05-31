@@ -766,7 +766,7 @@ function Users() {
                                 <Form.Group className='mb-2' controlId=''>
                                     <Form.Label>Email</Form.Label>
                                     <Form.Control
-                                        type='text'
+                                        type='email'
                                         placeholder='Enter Email'
                                         name='email'
                                         value={formInputs.email}
