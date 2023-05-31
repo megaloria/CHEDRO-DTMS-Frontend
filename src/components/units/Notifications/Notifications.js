@@ -106,7 +106,7 @@ export default function Notifications({ onChangeNotificationsCount }) {
 
     if (notifications.data.length === 0) {
         return (
-            <Alert variant='primary'>
+            <Alert variant='primary' className='mx-3 mb-0'>
                 No notifications found.
             </Alert>
         );
