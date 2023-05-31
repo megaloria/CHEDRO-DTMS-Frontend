@@ -24,5 +24,11 @@
     font-weight: bold;
 }
 
+.confidential-text {
+    /* color: #708090;    */
+    color: #284ea3;
+    font-weight: bold;
+}
+
 
 

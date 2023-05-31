@@ -51,6 +51,16 @@ export default function Notifications({ onChangeNotificationsCount }) {
         return (
             <>
                 <div>
+                    <div> 
+                        {
+                            (notification.data.document.category?.description === "Confidential") ?
+                                <span className='confidential-text'>Confidential</span> :
+                            (notification.data.document.category?.description === "Urgent") ?
+                                <span className='reject-text'>Urgent</span> : 
+                                (notification.data.document.category?.description === "Ordinary") ?
+                                <span className='act-approve-releasing-text'> Ordinary </span> : null
+                        }
+                    </div>  
                     <div>
                     {   ((notification.type === "App\\Notifications\\DocumentForwarded") && (notification.data?.from?.id === currentUser?.id || (currentUser.role.level <= 2 && notification.data?.to?.id !== currentUser?.id))) ? (
                             <>The document <b>{notification.data.document.tracking_no}</b> has been <span className='forwarded-text'>forwarded to</span> <b>{notification.data.to?.name}</b>.</>
