@@ -74,6 +74,7 @@ function Users() {
         prefix: '',
         suffix: '',
         position_designation: '',
+        email: ''
     });
 
     const [formErrors, setFormErrors] = useState({ //errors for the inputs in the modal
@@ -86,6 +87,7 @@ function Users() {
         prefix: '',
         suffix: '',
         position_designation: '',
+        email: ''
     });
 
     useEffect(() => {
@@ -112,10 +114,11 @@ function Users() {
             role_id: 'required|integer|min:1',
             first_name: 'required|string|min:1',
             middle_name: 'string|min:2',
-            last_name: 'required|string|min:4',
+            last_name: 'required|string|min:2',
             prefix: 'string|min:2',
             suffix: 'string|min:2',
             position_designation: 'required|string|min:2',
+            email: 'required|string'
         });
 
         if (validation.fails()) {
@@ -129,6 +132,7 @@ function Users() {
                 prefix: validation.errors.first('prefix'),
                 suffix: validation.errors.first('suffix'),
                 position_designation: validation.errors.first('position_designation'),
+                email: validation.errors.first('email'),
             });
             return;
         } else {
@@ -142,6 +146,7 @@ function Users() {
                 prefix: '',
                 suffix: '',
                 position_designation: '',
+                email: ''
             });
         }
 
@@ -272,6 +277,7 @@ function Users() {
                 prefix: data.profile.prefix,
                 suffix: data.profile.suffix,
                 position_designation: data.profile.position_designation,
+                email: data.profile.email,
             });
         }
 
@@ -292,6 +298,7 @@ function Users() {
             prefix: '',
             suffix: '',
             position_designation: '',
+            email: '',
         });
         setModal({
             show: false,
@@ -518,6 +525,7 @@ function Users() {
                                     <th>Username</th>
                                     <th>Role</th>
                                     <th>Position/Designation</th>
+                                    <th>Email</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -529,6 +537,7 @@ function Users() {
                                             <td>{row.username}</td>
                                             <td>{getRoleDescription(row.role_id)}</td>
                                             <td>{row.profile.position_designation}</td>
+                                            <td>{row.profile.email}</td>
                                             <td>
                                                 <Button onClick={e => handleShowModal(row)} variant='link'>
                                                     <FontAwesomeIcon icon={faEdit} className='text-primary' />
@@ -604,19 +613,17 @@ function Users() {
                                     <Col>
                                         <Form.Group className='mb-2' controlId=''>
                                             <Form.Label>Password</Form.Label>
-                                            <InputGroup>
-                                                <Form.Control
-                                                    type='password'
-                                                    onChange={handleInputChange}
-                                                    value={formInputs.password}
-                                                    name='password'
-                                                    placeholder='Enter Password'
-                                                    isInvalid={!!formErrors.password}
-                                                />
-                                                <Form.Control.Feedback type='invalid'>
-                                                    {formErrors.password}
-                                                </Form.Control.Feedback>
-                                            </InputGroup>
+                                            <Form.Control
+                                                type='password'
+                                                onChange={handleInputChange}
+                                                value={formInputs.password}
+                                                name='password'
+                                                placeholder='Enter Password'
+                                                isInvalid={!!formErrors.password}
+                                            />
+                                            <Form.Control.Feedback type='invalid'>
+                                                {formErrors.password}
+                                            </Form.Control.Feedback>
                                         </Form.Group>
                                     </Col>
                                 )
@@ -752,6 +759,24 @@ function Users() {
                                 </Form.Group>
                             </Col>
 
+                        </Row>
+
+                        <Row>
+                            <Col >
+                                <Form.Group className='mb-2' controlId=''>
+                                    <Form.Label>Email</Form.Label>
+                                    <Form.Control
+                                        type='text'
+                                        placeholder='Enter Email'
+                                        name='email'
+                                        value={formInputs.email}
+                                        onChange={handleInputChange}
+                                        isInvalid={!!formErrors.email} />
+                                    <Form.Control.Feedback type='invalid'>
+                                        {formErrors.email}
+                                    </Form.Control.Feedback>
+                                </Form.Group>
+                            </Col>
                         </Row>
 
                     </Modal.Body>
