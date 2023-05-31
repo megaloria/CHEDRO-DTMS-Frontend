@@ -343,7 +343,7 @@ function Heis() {
                 <div>
                     <div className='d-md-flex mb-3 justify-content-end'>
                         <div className='search'>
-                            <Form className="d-flex" controlId="" onSubmit={handleSearch}>
+                            <Form className="d-flex" onSubmit={handleSearch}>
                                 <Form.Control
                                     type="search"
                                     placeholder="Search"
@@ -465,7 +465,7 @@ function Heis() {
                                     </Form.Group>
                                 </Col>
                                 <Col>
-                                    <Form.Group className='mb-2' controlId=''>
+                                    <Form.Group className='mb-2'>
                                         <Form.Label>Name</Form.Label>
                                         <Form.Control
                                             type='text'
@@ -501,7 +501,7 @@ function Heis() {
 
                             <Row>
                                 <Col>
-                                    <Form.Group className='mb-2' controlId=''>
+                                    <Form.Group className='mb-2'>
                                         <Form.Label>City/Municipality</Form.Label>
                                         <Form.Control
                                             type='text'
@@ -537,7 +537,7 @@ function Heis() {
 
                             <Row>
                                 <Col>
-                                    <Form.Group className='mb-2' controlId=''>
+                                    <Form.Group className='mb-2'>
                                         <Form.Label>Head of Institution</Form.Label>
                                         <Form.Control
                                             type='text'

@@ -233,7 +233,7 @@ function Roles() {
         if (data !== null) {
             setFormInputs({
                 ...formInputs,
-                division: data.division_id,
+                division: data.division_id ?? '',
                 description: data.description,
                 level: data.level
             });

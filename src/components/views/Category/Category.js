@@ -337,10 +337,10 @@ function Category() {
                                 {formErrors.description}
                             </Form.Control.Feedback>
                         </Form.Group>
-                        <Form.Group controlId='is_assignable'>
+                        <Form.Group>
                             <Form.Check
                                 type='checkbox'
-                                label='is assignable?'
+                                label='Is assignable?'
                                 checked={formInputs.is_assignable}
                                 onChange={handleCheckboxChange}
                                 isInvalid={!!formErrors.is_assignable}

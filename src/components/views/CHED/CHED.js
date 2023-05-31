@@ -351,7 +351,7 @@ function CHED() {
                                 <Spinner animation='border' />
                             </div>
                         </div>
-                        <div class="table-responsive">
+                        <div className="table-responsive">
                             <Table bordered hover responsive size='md' className={isTableLoading ? 'table-loading' : ''}>
                                 <thead className='table-primary'>
                                     <tr>

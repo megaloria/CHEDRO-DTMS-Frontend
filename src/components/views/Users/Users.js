@@ -271,10 +271,10 @@ function Users() {
                 username: data.username,
                 role_id: data.role_id,
                 first_name: data.profile.first_name,
-                middle_name: data.profile.middle_name,
+                middle_name: data.profile.middle_name ?? '',
                 last_name: data.profile.last_name,
-                prefix: data.profile.prefix,
-                suffix: data.profile.suffix,
+                prefix: data.profile.prefix ?? '',
+                suffix: data.profile.suffix ?? '',
                 position_designation: data.profile.position_designation,
                 email: data.profile.email,
             });
@@ -393,7 +393,7 @@ function Users() {
         if (data !== null) {
             setformInputPass({
                 ...formInputPass,
-                reset_password: data.reset_password,
+                reset_password: data.reset_password ?? '',
             });
         }
 

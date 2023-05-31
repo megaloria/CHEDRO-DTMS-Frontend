@@ -27,7 +27,7 @@ export default function Notifications({ onChangeNotificationsCount }) {
         }).finally(() => {
             setIsLoading(false);
         });
-    }, []);
+    }, [onChangeNotificationsCount]);
 
     const handleShowMore = () => {
         setIsNextPageLoading(true);

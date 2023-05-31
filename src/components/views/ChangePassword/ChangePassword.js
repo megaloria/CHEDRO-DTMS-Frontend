@@ -162,9 +162,8 @@ function Changepassword() {
                                     <Form.Group
                                         className='mb-3'
                                         value={values.password}
-                                        controlId='formGridpassword'
                                         onChange={handleChange}>
-                                        <FloatingLabel controlId="floatingPassword" label="Current Password">
+                                        <FloatingLabel label="Current Password">
                                             <Form.Control
                                                 type={passwordType1}
                                                 placeholder="Password"
@@ -182,9 +181,8 @@ function Changepassword() {
                                     <Form.Group
                                         className='mb-3'
                                         value={values.new_password}
-                                        controlId='formGridpassword'
                                         onChange={handleChange}>
-                                        <FloatingLabel controlId="floatingPassword" label="New password">
+                                        <FloatingLabel label="New password">
                                             <Form.Control
                                                 type={passwordType}
                                                 placeholder="New Password"
@@ -202,9 +200,8 @@ function Changepassword() {
                                     <Form.Group
                                         className='mb-3'
                                         value={values.confirm_password}
-                                        controlId='formGridpassword'
                                         onChange={handleChange}>
-                                        <FloatingLabel controlId="floatingPassword" label="Confirm password">
+                                        <FloatingLabel label="Confirm password">
                                             <Form.Control
                                                 type={passwordType}
                                                 placeholder="Confirm Password"
