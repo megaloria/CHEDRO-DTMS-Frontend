@@ -43,7 +43,7 @@ function DocumentsUser() {
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const [errorMessage, setErrorMessage] = useState(''); //error message variable
     const [forwardError, setForwardError] = useState('');
-    const [data, setData] = useState([]);
+    const [data, setData] = useState({ data: [] });
     const [users, setUsers] = useState([]);
     const [selectedUsers, setSelectedUsers] = useState([]);
     const [options, setOptions] = useState([]);
@@ -116,6 +116,27 @@ function DocumentsUser() {
             setIsLoading(false);
         });
     }, [activeTab]);
+
+    if (window.Echo) {
+        window.Echo.channel(`private-user.${loaderData.id}`)
+        .notification((e) => {
+            let newData = [...data.data].map(d => {
+                if (d.id === e.document.id){
+                    return {
+                        ...d,
+                        ...e.document
+                    };
+                }
+
+                return {...d};
+            });
+
+            setData({
+                ...data,
+                data: newData
+            });
+        });
+      }
 
     // useEffect(() => {
     //     if (modal.data) {
