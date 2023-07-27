@@ -18,7 +18,7 @@ import {
     ListGroupItem
 } from 'react-bootstrap';
 import {
-    Link, useNavigate
+    Link, useNavigate, useLoaderData
 } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
@@ -51,6 +51,7 @@ function Documents() {
     const [isSelectDisabled, setIsSelectDisabled] = useState(false);
     const [isDisabled, setIsDisabled] = useState(false);
     const date_released = moment().format('YYYY-MM-DD');
+    const loaderData = useLoaderData();
 
     const [activeTab, setActiveTab] = useState('all');
 
@@ -84,67 +85,41 @@ function Documents() {
 
     useEffect(() => {
         setIsTableLoading(true);
-        if (activeTab === 'all') {
-            apiClient.get('/document', {
-                params: {
-                    query: ''
-                }
-            }).then(response => { //GET ALL function
-                setData(response.data.data.documents);
-                setUsers(response.data.data.user);
-            }).catch(error => {
-                setErrorMessage(error);
-            }).finally(() => {
-                setIsTableLoading(false);
-                setIsLoading(false);
-            });
-        }
-        if (activeTab === 'ongoing') {
-            apiClient.get('/document/ongoing', {
-                params: {
-                    query: ''
-                }
-            }).then(response => { //GET ALL function
-                setData(response.data.data.documents);
-                setUsers(response.data.data.user);
-            }).catch(error => {
-                setErrorMessage(error);
-            }).finally(() => {
-                setIsTableLoading(false);
-                setIsLoading(false);
-            });
-        }
-        if (activeTab === 'releasing') {
-            apiClient.get('/document/releasing', {
-                params: {
-                    query: ''
-                }
-            }).then(response => { //GET ALL function
-                setData(response.data.data.documents);
-                setUsers(response.data.data.user);
-            }).catch(error => {
-                setErrorMessage(error);
-            }).finally(() => {
-                setIsTableLoading(false);
-                setIsLoading(false);
-            });
-        }
-        if (activeTab === 'done') {
-            apiClient.get('/document/done', {
-                params: {
-                    query: ''
-                }
-            }).then(response => { //GET ALL function
-                setData(response.data.data.documents);
-                setUsers(response.data.data.user);
-            }).catch(error => {
-                setErrorMessage(error);
-            }).finally(() => {
-                setIsTableLoading(false);
-                setIsLoading(false);
-            });
-        }
+        apiClient.get(`/document/${activeTab === 'all' ? '' : activeTab}`, {
+            params: {
+                query: ''
+            }
+        }).then(response => { //GET ALL function
+            setData(response.data.data.documents);
+            setUsers(response.data.data.user);
+        }).catch(error => {
+            setErrorMessage(error);
+        }).finally(() => {
+            setIsTableLoading(false);
+            setIsLoading(false);
+        });
     }, [activeTab]);
+
+    if (window.Echo) {
+        window.Echo.channel(`private-user.${loaderData.id}`)
+        .notification((e) => {
+            let newData = [...data.data].map(d => {
+                if (d.id === e.document.id) {
+                    return {
+                        ...d,
+                        ...e.document
+                    };
+                }
+
+                return {...d};
+            });
+
+            setData({
+                ...data,
+                data: newData
+            });
+        });
+    }
 
     const handlePageChange = (pageNumber) => {
         setIsTableLoading(true);
