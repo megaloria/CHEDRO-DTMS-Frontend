@@ -136,7 +136,7 @@ function DocumentsUser() {
                 data: newData
             });
         });
-      }
+    }
 
     // useEffect(() => {
     //     if (modal.data) {
